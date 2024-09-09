@@ -89,7 +89,7 @@ class MessageTableViewController: UITableViewController, Themeable {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		self.navigationItem.title = "Messages".localized
+		self.navigationItem.title = OCLocalizedString("Messages", nil)
 	}
 
 	override func viewDidAppear(_ animated: Bool) {

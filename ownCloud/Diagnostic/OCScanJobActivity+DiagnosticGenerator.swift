@@ -27,9 +27,9 @@ extension OCScanJobActivity : DiagnosticNodeGenerator {
 	func provideDiagnosticNode(for context: OCDiagnosticContext, completion: @escaping (OCDiagnosticNode?, DiagnosticViewController.Style) -> Void) {
 		var diagnosticNodes : [OCDiagnosticNode] = []
 
-		diagnosticNodes.append(OCDiagnosticNode.withLabel("Completed update scans".localized, content: "\(self.completedUpdateJobs)"))
-		diagnosticNodes.append(OCDiagnosticNode.withLabel("Total update scans".localized, content: "\(self.totalUpdateJobs)"))
+		diagnosticNodes.append(OCDiagnosticNode.withLabel(OCLocalizedString("Completed update scans", nil), content: "\(self.completedUpdateJobs)"))
+		diagnosticNodes.append(OCDiagnosticNode.withLabel(OCLocalizedString("Total update scans", nil), content: "\(self.totalUpdateJobs)"))
 
-		completion(OCDiagnosticNode.withLabel("Update Status".localized, children: diagnosticNodes), .flat)
+		completion(OCDiagnosticNode.withLabel(OCLocalizedString("Update Status", nil), children: diagnosticNodes), .flat)
 	}
 }

@@ -22,7 +22,7 @@ import ownCloudAppShared
 
 extension AccountController {
 	public var localizedDeleteTitle: String {
-		return VendorServices.shared.isBranded ? "Log out".localized : "Delete".localized
+		return VendorServices.shared.isBranded ? OCLocalizedString("Log out", nil) : OCLocalizedString("Delete", nil)
 	}
 
 	public func editBookmark(on hostViewController: UIViewController, completion completionHandler: (() -> Void)? = nil) {
@@ -103,7 +103,7 @@ extension AccountController: ownCloudAppShared.DataItemContextMenuInteraction {
 
 			// Open in a new window
 			if UIDevice.current.isIpad {
-				let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { [weak self] _ in
+				let openWindow = UIAction(title: OCLocalizedString("Open in a new Window", nil), image: UIImage(systemName: "uiwindow.split.2x1")) { [weak self] _ in
 					if let clientContext = self?.clientContext, let userActivity = self?.openInNewWindowUserActivity(with: clientContext) {
 						UIApplication.shared.requestSceneSessionActivation(nil, userActivity: userActivity, options: nil)
 					}
@@ -119,7 +119,7 @@ extension AccountController: ownCloudAppShared.DataItemContextMenuInteraction {
 
 					self?.editBookmark(on: hostViewController)
 				})
-				editAction.title = "Edit".localized
+				editAction.title = OCLocalizedString("Edit", nil)
 				editAction.image = OCSymbol.icon(forSymbolName: "pencil")
 
 				menuItems.append(editAction)
@@ -131,7 +131,7 @@ extension AccountController: ownCloudAppShared.DataItemContextMenuInteraction {
 
 				self?.manageBookmark(on: hostViewController)
 			})
-			manageAction.title = "Manage".localized
+			manageAction.title = OCLocalizedString("Manage", nil)
 			manageAction.image = OCSymbol.icon(forSymbolName: "gearshape")
 
 			menuItems.append(manageAction)
@@ -141,7 +141,7 @@ extension AccountController: ownCloudAppShared.DataItemContextMenuInteraction {
 				let disconnectAction = UIAction(handler: { [weak self] _ in
 					self?.disconnect(completion: nil)
 				})
-				disconnectAction.title = "Disconnect".localized
+				disconnectAction.title = OCLocalizedString("Disconnect", nil)
 				disconnectAction.image = OCSymbol.icon(forSymbolName: "eject.circle.fill")
 
 				menuItems.append(disconnectAction)

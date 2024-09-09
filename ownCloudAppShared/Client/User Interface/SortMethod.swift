@@ -42,17 +42,17 @@ public enum SortMethod: Int {
 
 		switch self {
 			case .alphabetically:
-				name = "name".localized
+				name = OCLocalizedString("name", nil)
 			case .kind:
-				name = "kind".localized
+				name = OCLocalizedString("kind", nil)
 			case .size:
-				name = "size".localized
+				name = OCLocalizedString("size", nil)
 			case .date:
-				name = "date".localized
+				name = OCLocalizedString("date", nil)
 			case .shared:
-				name = "shared".localized
+				name = OCLocalizedString("shared", nil)
 			case .lastUsed:
-				name = "last used".localized
+				name = OCLocalizedString("last used", nil)
 		}
 
 		return name

@@ -27,11 +27,11 @@ class LicenseTransactionsViewController: StaticTableViewController {
 	init() {
 		super.init(style: .grouped)
 
-		self.navigationItem.title = "Purchases & Subscriptions".localized
+		self.navigationItem.title = OCLocalizedString("Purchases & Subscriptions", nil)
 
 		self.toolbarItems = [
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil),
-			UIBarButtonItem(title: "Restore purchases".localized, style: .plain, target: self, action: #selector(restorePurchases)),
+			UIBarButtonItem(title: OCLocalizedString("Restore purchases", nil), style: .plain, target: self, action: #selector(restorePurchases)),
 			UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 		]
 
@@ -41,9 +41,9 @@ class LicenseTransactionsViewController: StaticTableViewController {
 	func fetchTransactions() {
 		OCLicenseManager.shared.retrieveAllTransactions(completionHandler: { (error, transactionsByProvider) in
 			if let error = error {
-				let alert = ThemedAlertController(title: "Error fetching transactions".localized, message: error.localizedDescription, preferredStyle: .alert)
+				let alert = ThemedAlertController(title: OCLocalizedString("Error fetching transactions", nil), message: error.localizedDescription, preferredStyle: .alert)
 
-				alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+				alert.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
 
 				self.present(alert, animated: true, completion: nil)
 			}

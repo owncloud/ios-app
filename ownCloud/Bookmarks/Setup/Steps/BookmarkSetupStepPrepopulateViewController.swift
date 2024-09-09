@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudAppShared
+import ownCloudSDK
 
 class BookmarkSetupStepProgressViewController: BookmarkSetupStepViewController {
 	open var cancelled : Bool = false
@@ -84,10 +85,10 @@ class BookmarkSetupStepPrepopulateViewController: BookmarkSetupStepProgressViewC
 	public override init(with setupViewController: BookmarkSetupViewController, step: BookmarkComposer.Step) {
 		super.init(with: setupViewController, step: step)
 
-		self.stepTitle = "Preparing account".localized
-		self.stepMessage = "Please wait…".localized
+		self.stepTitle = OCLocalizedString("Preparing account", nil)
+		self.stepMessage = OCLocalizedString("Please wait…", nil)
 
-		self.continueButtonLabelText = "Skip".localized
+		self.continueButtonLabelText = OCLocalizedString("Skip", nil)
 
 		self.progress = setupViewController.composer?.prepopulate(completion: self.composerCompletion)
 	}

@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 extension PasscodeViewController {
 	// Moved over from KeyCommands.swift to be usable across app and extensions
@@ -35,7 +36,7 @@ extension PasscodeViewController {
 			UIKeyCommand.ported(input: "\u{8}",
 					    modifierFlags: [],
 					    action: #selector(self.performKeyCommand(sender:)),
-					    discoverabilityTitle: "Delete".localized)
+					    discoverabilityTitle: OCLocalizedString("Delete", nil))
 		)
 
 		if cancelButton?.isHidden == false {
@@ -44,7 +45,7 @@ extension PasscodeViewController {
 				UIKeyCommand.ported(input: UIKeyCommand.inputEscape,
 						    modifierFlags: [],
 						    action: #selector(self.performKeyCommand(sender:)),
-						    discoverabilityTitle: "Cancel".localized)
+						    discoverabilityTitle: OCLocalizedString("Cancel", nil))
 			)
 		}
 

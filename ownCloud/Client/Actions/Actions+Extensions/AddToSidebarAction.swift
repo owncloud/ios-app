@@ -24,7 +24,7 @@ import ownCloudAppShared
 class AddToSidebarAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.addToSidebar") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Add to sidebar".localized }
+	override class var name : String? { return OCLocalizedString("Add to sidebar", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.contextMenuItem, .moreItem, .accessibilityCustomAction] }
 
 	// MARK: - Extension matching

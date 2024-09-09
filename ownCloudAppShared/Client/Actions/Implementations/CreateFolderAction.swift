@@ -21,7 +21,7 @@ import ownCloudSDK
 open class CreateFolderAction : Action {
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createFolder") }
 	override open class var category : ActionCategory? { return .normal }
-	override open class var name : String? { return "Create folder".localized }
+	override open class var name : String? { return OCLocalizedString("Create folder", nil) }
 	override open class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut, .emptyFolder, .locationPickerBar] }
 	override open class var keyCommand : String? { return "N" }
 	override open class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
@@ -61,19 +61,19 @@ open class CreateFolderAction : Action {
 			return
 		}
 
-		core?.suggestUnusedNameBased(on: "New Folder".localized, at: itemLocation, isDirectory: true, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
+		core?.suggestUnusedNameBased(on: OCLocalizedString("New Folder", nil), at: itemLocation, isDirectory: true, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
 			guard let suggestedName = suggestedName else { return }
 
 			OnMainThread {
 				let createFolderVC = NamingViewController( with: self.core, defaultName: suggestedName, stringValidator: { name in
 					// return (true, nil, nil) // Uncomment to allow errors (for f.ex. testing)
 					if name.contains("/") || name.contains("\\") {
-						return (false, nil, "File name cannot contain / or \\".localized)
+						return (false, nil, OCLocalizedString("File name cannot contain / or \\", nil))
 					} else {
 						if let item = item {
 							if ((try? self.core?.cachedItem(inParent: item, withName: name, isDirectory: true)) != nil) ||
 							   ((try? self.core?.cachedItem(inParent: item, withName: name, isDirectory: false)) != nil) {
-								return (false, "Item with same name already exists".localized, "An item with the same name already exists in this location.".localized)
+								return (false, OCLocalizedString("Item with same name already exists", nil), OCLocalizedString("An item with the same name already exists in this location.", nil))
 							}
 						}
 
@@ -96,7 +96,7 @@ open class CreateFolderAction : Action {
 					}
 				})
 
-				createFolderVC.navigationItem.title = "Create folder".localized
+				createFolderVC.navigationItem.title = OCLocalizedString("Create folder", nil)
 
 				let createFolderNavigationVC = ThemeNavigationController(rootViewController: createFolderVC)
 				createFolderNavigationVC.modalPresentationStyle = .formSheet

@@ -79,9 +79,9 @@ class PhotoPickerPresenter: NSObject, PHPickerViewControllerDelegate, PHPhotoLib
 		guard let viewController = self.parentViewController else { return }
 		let library = PHPhotoLibrary.shared()
 
-		let alert = ThemedAlertController(title: "Limited Photo Access".localized, message: "Access for the media selected for upload is limited".localized, preferredStyle: .alert)
+		let alert = ThemedAlertController(title: OCLocalizedString("Limited Photo Access", nil), message: OCLocalizedString("Access for the media selected for upload is limited", nil), preferredStyle: .alert)
 
-		alert.addAction(UIAlertAction(title: "Change".localized, style: .default, handler: {_ in
+		alert.addAction(UIAlertAction(title: OCLocalizedString("Change", nil), style: .default, handler: {_ in
 			library.presentLimitedLibraryPicker(from: viewController)
 		}))
 		alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { (_) in
@@ -118,9 +118,9 @@ class PhotoPickerPresenter: NSObject, PHPickerViewControllerDelegate, PHPhotoLib
 			if assets.count > 0 {
 				self.completionHandler?(assets)
 			} else {
-				let alert = ThemedAlertController(title: "Limited Photo Access".localized, message: "No Access to the media selected for upload".localized, preferredStyle: .alert)
+				let alert = ThemedAlertController(title: OCLocalizedString("Limited Photo Access", nil), message: OCLocalizedString("No Access to the media selected for upload", nil), preferredStyle: .alert)
 
-				alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+				alert.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
 
 				self.parentViewController?.present(alert, animated: true)
 			}
@@ -132,7 +132,7 @@ class UploadMediaAction: UploadBaseAction {
 
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadphotos") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String { return "Upload from your photo library".localized }
+	override class var name : String { return OCLocalizedString("Upload from your photo library", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut, .emptyFolder] }
 	override class var keyCommand : String? { return "M" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }

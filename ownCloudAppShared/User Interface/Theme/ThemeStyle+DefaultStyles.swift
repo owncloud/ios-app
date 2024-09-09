@@ -27,9 +27,9 @@ extension UIColor {
 
 extension ThemeStyle {
 	static public func systemLight(with tintColor: UIColor? = nil, cssRecordStrings: [String]? = nil) -> ThemeStyle {
-		return (ThemeStyle(styleIdentifier: "com.owncloud.light", darkStyleIdentifier: "com.owncloud.dark", localizedName: "Light".localized, lightColor: tintColor ?? .tintColor, darkColor: .label, themeStyle: .light, useSystemColors: true, systemTintColor: tintColor, cssRecordStrings: cssRecordStrings))
+		return (ThemeStyle(styleIdentifier: "com.owncloud.light", darkStyleIdentifier: "com.owncloud.dark", localizedName: OCLocalizedString("Light", nil), lightColor: tintColor ?? .tintColor, darkColor: .label, themeStyle: .light, useSystemColors: true, systemTintColor: tintColor, cssRecordStrings: cssRecordStrings))
 	}
 	static public func systemDark(with tintColor: UIColor? = nil, cssRecordStrings: [String]? = nil) -> ThemeStyle {
-		return (ThemeStyle(styleIdentifier: "com.owncloud.dark", localizedName: "Dark".localized, lightColor: tintColor ?? .tintColor, darkColor: .secondarySystemGroupedBackground, themeStyle: .dark, useSystemColors: true, systemTintColor: tintColor, cssRecordStrings: cssRecordStrings))
+		return (ThemeStyle(styleIdentifier: "com.owncloud.dark", localizedName: OCLocalizedString("Dark", nil), lightColor: tintColor ?? .tintColor, darkColor: .secondarySystemGroupedBackground, themeStyle: .dark, useSystemColors: true, systemTintColor: tintColor, cssRecordStrings: cssRecordStrings))
 	}
 }

@@ -251,7 +251,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				})
 
 				authFailureResolveAction.selectable = false
-				authFailureResolveAction.buttonLabel = "More".localized
+				authFailureResolveAction.buttonLabel = OCLocalizedString("More", nil)
 				authFailureResolveAction.type = .warning
 
 				controllerDataSource.setVersionedItems([
@@ -332,7 +332,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			// Personal Folder, Shared Files + Drives
 			if core.useDrives {
 				// Spaces
-				let spacesDataSource = self.buildTopFolder(with: core.projectDrivesDataSource, title: "Spaces".localized, icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"), topItem: .spacesFolder, viewControllerProvider: { [weak self] context, action in
+				let spacesDataSource = self.buildTopFolder(with: core.projectDrivesDataSource, title: OCLocalizedString("Spaces", nil), icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"), topItem: .spacesFolder, viewControllerProvider: { [weak self] context, action in
 					return self?.provideViewController(for: .spacesFolder, in: context)
 				})
 
@@ -354,25 +354,25 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 			// Sharing
 			if configuration.showShared {
-				let (sharingFolderDataSource, sharingFolderItem) = self.buildFolder(with: sharingItemsDataSource, title: "Shares".localized, icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left"), folderItemRef: specialItemsDataReferences[.sharingFolder]!)
+				let (sharingFolderDataSource, sharingFolderItem) = self.buildFolder(with: sharingItemsDataSource, title: OCLocalizedString("Shares", nil), icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left"), folderItemRef: specialItemsDataReferences[.sharingFolder]!)
 
 				specialItems[.sharingFolder] = sharingFolderItem
 				specialItemsDataSources[.sharingFolder] = sharingFolderDataSource
 
 				if specialItems[.sharedWithMe] == nil {
-					specialItems[.sharedWithMe] = CollectionSidebarAction(with: "Shared with me".localized, icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left"), identifier: specialItemsDataReferences[.sharedWithMe], viewControllerProvider: { [weak self] context, action in
+					specialItems[.sharedWithMe] = CollectionSidebarAction(with: OCLocalizedString("Shared with me", nil), icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left"), identifier: specialItemsDataReferences[.sharedWithMe], viewControllerProvider: { [weak self] context, action in
 						return self?.provideViewController(for: .sharedWithMe, in: context)
 					}, cacheViewControllers: false)
 				}
 
 				if specialItems[.sharedByMe] == nil {
-					specialItems[.sharedByMe] = CollectionSidebarAction(with: "Shared by me".localized, icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.right"), identifier: specialItemsDataReferences[.sharedByMe], viewControllerProvider: { [weak self] context, action in
+					specialItems[.sharedByMe] = CollectionSidebarAction(with: OCLocalizedString("Shared by me", nil), icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.right"), identifier: specialItemsDataReferences[.sharedByMe], viewControllerProvider: { [weak self] context, action in
 						return self?.provideViewController(for: .sharedByMe, in: context)
 					}, cacheViewControllers: false)
 				}
 
 				if specialItems[.sharedByLink] == nil {
-					specialItems[.sharedByLink] = CollectionSidebarAction(with: "Shared by link".localized, icon: OCSymbol.icon(forSymbolName: "link"), identifier: specialItemsDataReferences[.sharedByLink], viewControllerProvider: { [weak self] context, action in
+					specialItems[.sharedByLink] = CollectionSidebarAction(with: OCLocalizedString("Shared by link", nil), icon: OCSymbol.icon(forSymbolName: "link"), identifier: specialItemsDataReferences[.sharedByLink], viewControllerProvider: { [weak self] context, action in
 						return self?.provideViewController(for: .sharedByLink, in: context)
 					}, cacheViewControllers: false)
 				}
@@ -395,14 +395,14 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			if configuration.showSearch, let savedSearchesDataSource {
 				if useFolderForSearches {
 					// Use "Search" item in sidebar, showing saved searches when unfolded
-					let savedSearchesFolderDataSource = self.buildTopFolder(with: savedSearchesDataSource, title: "Search".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), topItem: .globalSearch) { [weak self] context, action in
+					let savedSearchesFolderDataSource = self.buildTopFolder(with: savedSearchesDataSource, title: OCLocalizedString("Search", nil), icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), topItem: .globalSearch) { [weak self] context, action in
 						return self?.provideViewController(for: .globalSearch, in: context)
 					}
 
 					sources.append(savedSearchesFolderDataSource)
 				} else {
 					// Add "Search" item to sidebar, making saved searches standalone items
-					let globalSearchItem = CollectionSidebarAction(with: "Search".localized, icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), identifier: specialItemsDataReferences[.globalSearch], viewControllerProvider: { [weak self] context, action in
+					let globalSearchItem = CollectionSidebarAction(with: OCLocalizedString("Search", nil), icon: OCSymbol.icon(forSymbolName: "magnifyingglass"), identifier: specialItemsDataReferences[.globalSearch], viewControllerProvider: { [weak self] context, action in
 						return self?.provideViewController(for: .globalSearch, in: context)
 					}, cacheViewControllers: false)
 
@@ -439,21 +439,21 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			if configuration.showRecents {
 				// Recents
 				addSidebarItem(.recents) {
-					return OCSavedSearch(scope: .account, location: nil, name: "Recents".localized, isTemplate: false, searchTerm: ":recent :file").withCustomIcon(name: "clock.arrow.circlepath").useNameAsTitle(true).useSortDescriptor(SortDescriptor(method: .lastUsed, direction: .ascending))
+					return OCSavedSearch(scope: .account, location: nil, name: OCLocalizedString("Recents", nil), isTemplate: false, searchTerm: ":recent :file").withCustomIcon(name: "clock.arrow.circlepath").useNameAsTitle(true).useSortDescriptor(SortDescriptor(method: .lastUsed, direction: .ascending))
 				}
 			}
 
 			// Favorites
 			if configuration.showFavorites, bookmark?.hasCapability(.favorites) == true {
 				addSidebarItem(.favoriteItems) {
-					return buildSidebarSpecialItem(with: "Favorites".localized, icon: OCSymbol.icon(forSymbolName: "star"), for: .favoriteItems)
+					return buildSidebarSpecialItem(with: OCLocalizedString("Favorites", nil), icon: OCSymbol.icon(forSymbolName: "star"), for: .favoriteItems)
 				}
 			}
 
 			// Available offline
 			if configuration.showAvailableOffline {
 				addSidebarItem(.availableOfflineItems) {
-					return buildSidebarSpecialItem(with: "Available Offline".localized, icon: OCItem.cloudAvailableOfflineStatusIcon, for: .availableOfflineItems)
+					return buildSidebarSpecialItem(with: OCLocalizedString("Available Offline", nil), icon: OCItem.cloudAvailableOfflineStatusIcon, for: .availableOfflineItems)
 				}
 			}
 
@@ -550,8 +550,8 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 					let availableOfflineFilesDataSource = core.availableOfflineFilesDataSource
 					let sortedDataSource = SortedItemDataSource(itemDataSource: availableOfflineFilesDataSource)
 
-					let availableOfflineViewController = ClientItemViewController(context: context, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true, emptyItemListIcon: OCItem.cloudAvailableOfflineStatusIcon, emptyItemListTitleLocalized: "No files available offline".localized, emptyItemListMessageLocalized: "Files selected and downloaded for offline availability will show up here.".localized)
-					availableOfflineViewController.navigationTitle = "Available Offline".localized
+					let availableOfflineViewController = ClientItemViewController(context: context, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true, emptyItemListIcon: OCItem.cloudAvailableOfflineStatusIcon, emptyItemListTitleLocalized: OCLocalizedString("No files available offline", nil), emptyItemListMessageLocalized: OCLocalizedString("Files selected and downloaded for offline availability will show up here.", nil))
+					availableOfflineViewController.navigationTitle = OCLocalizedString("Available Offline", nil)
 
 					sortedDataSource.sortingFollowsContext = availableOfflineViewController.clientContext
 
@@ -561,14 +561,14 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 					locationsSection.hideIfEmptyDataSource = availableOfflineFilesDataSource
 					locationsSection.boundarySupplementaryItems = [
-						.title("Locations".localized, pinned: true)
+						.title(OCLocalizedString("Locations", nil), pinned: true)
 					]
 					locationsSection.hidden = true
 
 					let downloadedFilesHeaderSection = CollectionViewSection(identifier: "downloadedFilesHeader", dataSource: nil, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain), clientContext: context)
 					downloadedFilesHeaderSection.hideIfEmptyDataSource = sortedDataSource
 					downloadedFilesHeaderSection.boundarySupplementaryItems = [
-						.title("Downloaded Files".localized)
+						.title(OCLocalizedString("Downloaded Files", nil))
 					]
 					downloadedFilesHeaderSection.hidden = true
 
@@ -587,8 +587,8 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 					let sortedDataSource = SortedItemDataSource(itemDataSource: favoritesDataSource)
 
-					let favoritesViewController = ClientItemViewController(context: favoritesContext, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true, emptyItemListIcon: OCSymbol.icon(forSymbolName: "star.fill"), emptyItemListTitleLocalized: "No favorites found".localized, emptyItemListMessageLocalized: "If you make an item a favorite, it will turn up here.".localized)
-					favoritesViewController.navigationTitle = "Favorites".localized
+					let favoritesViewController = ClientItemViewController(context: favoritesContext, query: nil, itemsDatasource: sortedDataSource, showRevealButtonForItems: true, emptyItemListIcon: OCSymbol.icon(forSymbolName: "star.fill"), emptyItemListTitleLocalized: OCLocalizedString("No favorites found", nil), emptyItemListMessageLocalized: OCLocalizedString("If you make an item a favorite, it will turn up here.", nil))
+					favoritesViewController.navigationTitle = OCLocalizedString("Favorites", nil)
 
 					sortedDataSource.sortingFollowsContext = favoritesViewController.clientContext
 
@@ -661,8 +661,8 @@ extension AccountController: DataItemSelectionInteraction {
 				if let error = error {
 					Log.error("Connected with \(error)")
 
-					let alert = ThemedAlertController(title: NSString(format: "Error opening %@".localized as NSString, bookmark.shortName) as String, message: error.localizedDescription, preferredStyle: .alert)
-					alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+					let alert = ThemedAlertController(title: NSString(format: OCLocalizedString("Error opening %@", nil) as NSString, bookmark.shortName) as String, message: error.localizedDescription, preferredStyle: .alert)
+					alert.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
 
 					context?.rootViewController?.present(alert, animated: true)
 				} else {

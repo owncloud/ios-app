@@ -17,25 +17,26 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 class BookmarkSetupStepFinishedViewController: BookmarkSetupStepViewController {
 	var bookmarkNameField: UITextField?
 
 	override func loadView() {
-		stepTitle = "Account setup complete".localized
+		stepTitle = OCLocalizedString("Account setup complete", nil)
 
 		if setupViewController?.configuration.nameEditable == true {
-			stepMessage = "If you'd like to give the account a custom name, please enter it below:".localized
+			stepMessage = OCLocalizedString("If you'd like to give the account a custom name, please enter it below:", nil)
 		}
 
-		continueButtonLabelText = "Done".localized
+		continueButtonLabelText = OCLocalizedString("Done", nil)
 
 		super.loadView()
 
 		if setupViewController?.configuration.nameEditable == true {
 			bookmarkNameField = buildTextField(withAction: UIAction(handler: { [weak self] _ in
 				self?.updateName()
-			}), placeholder: setupViewController?.composer?.bookmark.shortName ?? "Name", value: setupViewController?.composer?.bookmark.name ?? "", autocorrectionType: .no, autocapitalizationType: .none, accessibilityLabel: "Name".localized, borderStyle: .roundedRect)
+			}), placeholder: setupViewController?.composer?.bookmark.shortName ?? "Name", value: setupViewController?.composer?.bookmark.name ?? "", autocorrectionType: .no, autocapitalizationType: .none, accessibilityLabel: OCLocalizedString("Name", nil), borderStyle: .roundedRect)
 
 			contentView = bookmarkNameField
 		}

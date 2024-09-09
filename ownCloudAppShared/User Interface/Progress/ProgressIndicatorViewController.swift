@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 open class ProgressIndicatorViewController: UIViewController, Themeable {
 	open var cancelled : Bool = false
@@ -101,7 +102,7 @@ open class ProgressIndicatorViewController: UIViewController, Themeable {
 			cancelButton = ThemeButton(withSelectors: [.cancel])
 			cancelButton?.translatesAutoresizingMaskIntoConstraints = false
 
-			cancelButton?.setTitle(cancelLabel ?? "Cancel".localized, for: .normal)
+			cancelButton?.setTitle(cancelLabel ?? OCLocalizedString("Cancel", nil), for: .normal)
 
 			cancelButton?.addTarget(self, action: #selector(self.cancel), for: .primaryActionTriggered)
 		}

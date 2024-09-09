@@ -105,7 +105,7 @@ class CameraViewPresenter: NSObject, UIImagePickerControllerDelegate, UINavigati
 
 		imagePickerController.dismiss(animated: true)
 
-		let hud = ProgressHUDViewController(on: self.parentViewController, label: "Saving".localized)
+		let hud = ProgressHUDViewController(on: self.parentViewController, label: OCLocalizedString("Saving", nil))
 
 		var image: UIImage?
 		var outputURL: URL?
@@ -221,7 +221,7 @@ class UploadCameraMediaAction: UploadBaseAction, UIImagePickerControllerDelegate
 
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.upload.camera_media") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String { return "Take photo or video".localized }
+	override class var name : String { return OCLocalizedString("Take photo or video", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut] }
 	override class var keyCommand : String? { return "3" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }

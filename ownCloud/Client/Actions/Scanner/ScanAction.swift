@@ -24,7 +24,7 @@ import VisionKit
 class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.scan") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Scan document".localized }
+	override class var name : String? { return OCLocalizedString("Scan document", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [ .folderAction, .keyboardShortcut, .emptyFolder ] }
 	override class var keyCommand : String? { return "S" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }
@@ -85,7 +85,7 @@ class ScanAction: Action, VNDocumentCameraViewControllerDelegate {
 							.replacingOccurrences(of: "/", with: "-")  // Remove reserved character ("/" used to delimit paths on macOS, iOS, Linux, …)
 							.replacingOccurrences(of: "\\", with: "-") // Remove reserved character ("\" used to delimit paths on Windows)
 
-				core?.suggestUnusedNameBased(on: filename ?? "\("Scan".localized) \(currentDate).pdf", at: itemLocation, isDirectory: true, using: .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
+				core?.suggestUnusedNameBased(on: filename ?? "\(OCLocalizedString("Scan", nil)) \(currentDate).pdf", at: itemLocation, isDirectory: true, using: .bracketed, filteredBy: nil, resultHandler: { (suggestedName, _) in
 					guard let suggestedName = suggestedName else { return }
 
 					OnMainThread {

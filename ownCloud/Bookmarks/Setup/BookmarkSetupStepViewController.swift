@@ -62,14 +62,14 @@ class BookmarkSetupStepViewController: UIViewController, UITextFieldDelegate {
 
 	var stepTitle: String?
 	var stepMessage: String?
-	var continueButtonLabelText: String? = "Proceed".localized {
+	var continueButtonLabelText: String? = OCLocalizedString("Proceed", nil) {
 		didSet {
 			var buttonConfiguration = continueButton.configuration
 			buttonConfiguration?.title = continueButtonLabelText
 			continueButton.configuration = buttonConfiguration
 		}
 	}
-	var backButtonLabelText: String? = "Back".localized {
+	var backButtonLabelText: String? = OCLocalizedString("Back", nil) {
 		didSet {
 			var buttonConfiguration = backButton.configuration
 			buttonConfiguration?.title = backButtonLabelText
@@ -282,7 +282,7 @@ class BookmarkSetupStepViewController: UIViewController, UITextFieldDelegate {
 
 	func textOverride(for label: String) -> String? {
 		let key = "setup-\(step.cssSelector.rawValue)-\(label)"
-		let localization = key.localized
+		let localization = OCLocalizedString(key, nil)
 
 		if localization != key {
 			return localization

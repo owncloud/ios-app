@@ -149,8 +149,8 @@ class DisplayHostViewController: UIPageViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(handlePlayNextMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackNextTrackNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handlePlayPreviousMedia(notification:)), name: MediaDisplayViewController.MediaPlaybackPreviousTrackNotification, object: nil)
 
-		addKeyCommand(UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: .shift, action: #selector(keyCommandPreviousItem), discoverabilityTitle: "Previous item".localized))
-		addKeyCommand(UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: .shift, action: #selector(keyCommandNextItem), discoverabilityTitle: "Next item".localized))
+		addKeyCommand(UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: .shift, action: #selector(keyCommandPreviousItem), discoverabilityTitle: OCLocalizedString("Previous item", nil)))
+		addKeyCommand(UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: .shift, action: #selector(keyCommandNextItem), discoverabilityTitle: OCLocalizedString("Next item", nil)))
 	}
 
 	private var registered = false

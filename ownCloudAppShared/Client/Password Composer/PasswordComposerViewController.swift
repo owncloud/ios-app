@@ -33,7 +33,7 @@ class PasswordComposerViewController: UIViewController {
 	let validationReportContainerView = ThemeCSSView(withSelectors: [ .cell ])
 
 	lazy var showPasswordSegment: SegmentViewItem = {
-		return SegmentViewItem.button(title: "Show".localized, customizeButton: { _, config in
+		return SegmentViewItem.button(title: OCLocalizedString("Show", nil), customizeButton: { _, config in
 			var buttonConfig = config
 			buttonConfig.image = OCSymbol.icon(forSymbolName: "eye")?.applyingSymbolConfiguration(UIImage.SymbolConfiguration(scale: .small))
 			buttonConfig.imagePadding = 5
@@ -43,7 +43,7 @@ class PasswordComposerViewController: UIViewController {
 		}))
 	}()
 	lazy var hidePasswordSegment: SegmentViewItem = {
-		return SegmentViewItem.button(title: "Hide".localized, customizeButton: { _, config in
+		return SegmentViewItem.button(title: OCLocalizedString("Hide", nil), customizeButton: { _, config in
 			var buttonConfig = config
 			buttonConfig.image = OCSymbol.icon(forSymbolName: "eye.slash")?.applyingSymbolConfiguration(UIImage.SymbolConfiguration(scale: .small))
 			buttonConfig.imagePadding = 5
@@ -53,12 +53,12 @@ class PasswordComposerViewController: UIViewController {
 		}))
 	}()
 	lazy var generatePasswordSegment: SegmentViewItem = {
-		return SegmentViewItem.button(title: "Generate".localized, action: UIAction(handler: { [weak self] _ in
+		return SegmentViewItem.button(title: OCLocalizedString("Generate", nil), action: UIAction(handler: { [weak self] _ in
 			self?.generatePassword()
 		}))
 	}()
 	lazy var copyPasswordSegment: SegmentViewItem = {
-		return SegmentViewItem.button(title: "Copy".localized, action: UIAction(handler: { [weak self] _ in
+		return SegmentViewItem.button(title: OCLocalizedString("Copy", nil), action: UIAction(handler: { [weak self] _ in
 			self?.copyToClipboard()
 		}))
 	}()
@@ -82,9 +82,9 @@ class PasswordComposerViewController: UIViewController {
 
 		saveButton = UIBarButtonItem(title: saveButtonTitle, style: .done, target: self, action: #selector(save))
 
-		navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Cancel".localized, style: .plain, target: self, action: #selector(cancel))
+		navigationItem.leftBarButtonItem = UIBarButtonItem(title: OCLocalizedString("Cancel", nil), style: .plain, target: self, action: #selector(cancel))
 		navigationItem.rightBarButtonItem = saveButton
-		navigationItem.title = "Password".localized
+		navigationItem.title = OCLocalizedString("Password", nil)
 	}
 
 	required init?(coder: NSCoder) {
@@ -119,10 +119,10 @@ class PasswordComposerViewController: UIViewController {
 		rootView.addSubview(componentToolbar)
 		rootView.addSubview(validationReportContainerView)
 
-		passwordLabel.text = "Password".localized
+		passwordLabel.text = OCLocalizedString("Password", nil)
 		passwordLabel.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
 
-		passwordField.placeholder = "Password".localized
+		passwordField.placeholder = OCLocalizedString("Password", nil)
 		passwordField.clearButtonMode = .always
 		passwordField.addAction(UIAction(handler: { [weak self] _ in
 			self?.passwordChanged()
@@ -262,7 +262,7 @@ class PasswordComposerViewController: UIViewController {
 	func copyToClipboard() {
 		UIPasteboard.general.string = password
 
-		_ = NotificationHUDViewController(on: self, title: "Password".localized, subtitle: "The password was copied to the clipboard".localized, completion: nil)
+		_ = NotificationHUDViewController(on: self, title: OCLocalizedString("Password", nil), subtitle: OCLocalizedString("The password was copied to the clipboard", nil), completion: nil)
 	}
 
 	func viewControllerForPresentation() -> ThemeNavigationController {

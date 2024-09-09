@@ -5540,6 +5540,7 @@
 					NSLocalizedString,
 					CFCopyLocalizedString,
 					OCLocalizedString,
+					OCLocalizedFormat,
 				);
 				MARKETING_VERSION = "${APP_SHORT_VERSION}";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
@@ -5577,6 +5578,7 @@
 					NSLocalizedString,
 					CFCopyLocalizedString,
 					OCLocalizedString,
+					OCLocalizedFormat,
 				);
 				MARKETING_VERSION = "${APP_SHORT_VERSION}";
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app";
@@ -5659,6 +5661,12 @@
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedFormat,
+					OCLocalizedString,
+				);
 				MARKETING_VERSION = "${APP_SHORT_VERSION}";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -5699,6 +5707,12 @@
 					"@executable_path/../../Frameworks",
 				);
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedFormat,
+					OCLocalizedString,
+				);
 				MARKETING_VERSION = "${APP_SHORT_VERSION}";
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Action-Extension";
@@ -5738,6 +5752,13 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedFormat,
+					OCLocalizedString,
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudAppShared;
@@ -5775,6 +5796,13 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedFormat,
+					OCLocalizedString,
+				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudAppShared;
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
@@ -5807,6 +5835,13 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedFormat,
+					OCLocalizedString,
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Intents";
@@ -5831,6 +5866,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedFormat,
+					OCLocalizedString,
 				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-Intents";
@@ -5861,6 +5903,13 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedFormat,
+					OCLocalizedString,
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-ProviderUI";
@@ -5885,6 +5934,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedFormat,
+					OCLocalizedString,
 				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-ProviderUI";
@@ -5949,6 +6005,13 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedFormat,
+					OCLocalizedString,
+				);
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudApp;
@@ -5984,6 +6047,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedFormat,
+					OCLocalizedString,
 				);
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.owncloud.ownCloudApp;
@@ -6057,6 +6127,13 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedFormat,
+					OCLocalizedString,
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -6080,6 +6157,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedFormat,
+					OCLocalizedString,
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "com.owncloud.ios-app.ownCloud-File-Provider";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -6110,6 +6194,13 @@
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
 				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedString,
+					OCLocalizedFormat,
+				);
 				MARKETING_VERSION = "${APP_SHORT_VERSION}";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -6137,6 +6228,13 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@executable_path/../../Frameworks",
+				);
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				LOCALIZED_STRING_MACRO_NAMES = (
+					NSLocalizedString,
+					CFCopyLocalizedString,
+					OCLocalizedString,
+					OCLocalizedFormat,
 				);
 				MARKETING_VERSION = "${APP_SHORT_VERSION}";
 				MTL_FAST_MATH = YES;

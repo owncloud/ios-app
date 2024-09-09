@@ -25,7 +25,7 @@ extension AccountController: ownCloudAppShared.AccountControllerExtraItems {
 		var sideBarItem: CollectionSidebarAction? = specialItems[.activity] as? CollectionSidebarAction
 
 		if sideBarItem == nil {
-			sideBarItem = CollectionSidebarAction(with: "Status".localized, icon: OCSymbol.icon(forSymbolName: "bolt"), viewControllerProvider: { [weak self] (context, action) in
+			sideBarItem = CollectionSidebarAction(with: OCLocalizedString("Status", nil), icon: OCSymbol.icon(forSymbolName: "bolt"), viewControllerProvider: { [weak self] (context, action) in
 				if let context {
 					return self?.provideExtraItemViewController(for: .activity, in: context)
 				}

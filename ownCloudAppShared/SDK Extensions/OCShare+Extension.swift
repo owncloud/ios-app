@@ -26,42 +26,42 @@ extension OCShare {
 
 		if self.type == .link {
 			if self.canRead {
-				permissionsDescription.append("Download / View".localized)
+				permissionsDescription.append(OCLocalizedString("Download / View", nil))
 			}
 			if self.canReadWrite {
-				permissionsDescription.append("Create".localized)
+				permissionsDescription.append(OCLocalizedString("Create", nil))
 			}
 			if self.canUpdate {
-				permissionsDescription.append("Upload".localized)
-				permissionsDescription.append("Edit".localized)
+				permissionsDescription.append(OCLocalizedString("Upload", nil))
+				permissionsDescription.append(OCLocalizedString("Edit", nil))
 			}
 			if self.canDelete {
-				permissionsDescription.append("Delete".localized)
+				permissionsDescription.append(OCLocalizedString("Delete", nil))
 			}
 			if self.canCreate, self.canUpdate == false {
-				permissionsDescription.append("Upload (File Drop)".localized)
+				permissionsDescription.append(OCLocalizedString("Upload (File Drop)", nil))
 			}
 			if self.expirationDate != nil {
-				permissionsDescription.append("Expiration date".localized)
+				permissionsDescription.append(OCLocalizedString("Expiration date", nil))
 			}
 			if self.protectedByPassword {
-				permissionsDescription.append("Password".localized)
+				permissionsDescription.append(OCLocalizedString("Password", nil))
 			}
 		} else {
 			if self.canRead {
-				permissionsDescription.append("Read".localized)
+				permissionsDescription.append(OCLocalizedString("Read", nil))
 			}
 			if self.canShare, capabilities?.sharingResharing == true, capabilities?.sharingAPIEnabled == true, capabilities?.sharingAllowed == true {
-				permissionsDescription.append("Share".localized)
+				permissionsDescription.append(OCLocalizedString("Share", nil))
 			}
 			if self.canCreate {
-				permissionsDescription.append("Create".localized)
+				permissionsDescription.append(OCLocalizedString("Create", nil))
 			}
 			if self.canUpdate {
-				permissionsDescription.append("Change".localized)
+				permissionsDescription.append(OCLocalizedString("Change", nil))
 			}
 			if self.canDelete {
-				permissionsDescription.append("Delete".localized)
+				permissionsDescription.append(OCLocalizedString("Delete", nil))
 			}
 		}
 

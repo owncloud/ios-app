@@ -80,7 +80,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 	}
 
 	func showLocationPicker() {
-		let locationPicker = ClientLocationPicker(location: .accounts, selectButtonTitle: "Save here".localized, avoidConflictsWith: nil, choiceHandler: { [weak self] folderItem, folderLocation, _, cancelled in
+		let locationPicker = ClientLocationPicker(location: .accounts, selectButtonTitle: OCLocalizedString("Save here", nil), avoidConflictsWith: nil, choiceHandler: { [weak self] folderItem, folderLocation, _, cancelled in
 			if cancelled {
 				self?.cancel()
 				return
@@ -103,7 +103,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 		if let targetFolder = selectedFolder, let bookmarkUUID = targetFolder.bookmarkUUID ?? location?.bookmarkUUID?.uuidString {
 			if let bookmark = OCBookmarkManager.shared.bookmark(forUUIDString: bookmarkUUID) {
 				OnMainThread {
-					self.progressViewController = ProgressIndicatorViewController(initialProgressLabel: "Preparing…".localized, progress: nil, cancelHandler: { [weak self] in
+					self.progressViewController = ProgressIndicatorViewController(initialProgressLabel: OCLocalizedString("Preparing…", nil), progress: nil, cancelHandler: { [weak self] in
 						self?.uploadCoreProgress?.cancel() // Cancel transfers (!) via Progress instances provided by upload methods
 						self?.cancel()
 					})
@@ -172,7 +172,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 
 				OnMainThread {
 					importProgress.completedUnitCount = importedItems
-					totalProgress.localizedDescription = NSString(format: "Importing item %ld of %ld".localized as NSString, importedItems, totalItems) as String
+					totalProgress.localizedDescription = NSString(format: OCLocalizedString("Importing item %ld of %ld", nil) as NSString, importedItems, totalItems) as String
 					// self.progressViewController?.update(text: NSString(format: "Importing item %ld of %ld".localized as NSString, importedItems, totalItems) as String)
 				}
 			}
@@ -180,7 +180,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 			let updateUploadMessage = {
 				OnMainThread {
 					if importedItems == totalItems {
-						totalProgress.localizedDescription = "Uploading {{remainingFileCount}} files…".localized(["remainingFileCount" : "\(totalItems - uploadedItems)"])
+						totalProgress.localizedDescription = OCLocalizedFormat("Uploading {{remainingFileCount}} files…", ["remainingFileCount" : "\(totalItems - uploadedItems)"])
 					}
 				}
 			}
@@ -217,7 +217,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 										type = "public.file-url"
 									}
 
-									let suggestedTextFileName = attachment.suggestedName ?? "Text".localized
+									let suggestedTextFileName = attachment.suggestedName ?? OCLocalizedString("Text", nil)
 
 									attachment.loadItem(forTypeIdentifier: type, options: nil, completionHandler: { (item, error) -> Void in
 										if error == nil {
@@ -262,7 +262,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 										} else if let error {
 											Log.error("Error loading item: \(String(describing: error))")
 
-											self.showAlert(title: "Error loading item".localized, error: error, decisionHandler: { [weak self] (doContinue) in
+											self.showAlert(title: OCLocalizedString("Error loading item", nil), error: error, decisionHandler: { [weak self] (doContinue) in
 												if !doContinue {
 													self?.cancel()
 												}
@@ -294,7 +294,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 										} else if let error {
 											Log.error("Error loading item: \(String(describing: error))")
 
-											self.showAlert(title: "Error loading item".localized, error: error, decisionHandler: { [weak self] (doContinue) in
+											self.showAlert(title: OCLocalizedString("Error loading item", nil), error: error, decisionHandler: { [weak self] (doContinue) in
 												if !doContinue {
 													self?.cancel()
 												}
@@ -318,8 +318,8 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 				}
 
 				uploadWaitGroup.notify(queue: .main, execute: {
- 					self.finish(with: ((self.progressViewController?.cancelled ?? false) ? NSError(ocError: .cancelled) : uploadError))
- 					jobDone()
+					self.finish(with: ((self.progressViewController?.cancelled ?? false) ? NSError(ocError: .cancelled) : uploadError))
+					jobDone()
 				})
 			})
 		}
@@ -337,7 +337,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 			if let error {
 				Log.error("Error importing item at \(sourceURL) through share extension: \(String(describing: error))")
 
-				self?.showAlert(title: NSString(format: "Error importing %@".localized as NSString, sourceURL.lastPathComponent) as String, error: error, decisionHandler: { [weak self] (doContinue) in
+				self?.showAlert(title: NSString(format: OCLocalizedString("Error importing %@", nil) as NSString, sourceURL.lastPathComponent) as String, error: error, decisionHandler: { [weak self] (doContinue) in
 					if !doContinue {
 						completionHandler(error)
 						self?.progressViewController?.cancel()
@@ -381,19 +381,19 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 				// Check for show stoppers
 				if !Branding.shared.isImportMethodAllowed(.shareExtension) {
 					// Share extension disabled, alert user
-					showErrorMessage(title: "Share Extension disabled".localized, message: "Importing files through the Share Extension is not allowed on this device.".localized)
+					showErrorMessage(title: OCLocalizedString("Share Extension disabled", nil), message: OCLocalizedString("Importing files through the Share Extension is not allowed on this device.", nil))
 					return
 				}
 
 				if !OCVault.hostHasFileProvider {
 					// No file provider -> share extension unavailable
-					showErrorMessage(title: "Share Extension unavailable".localized, message: "The {{app.name}} share extension is not available on this system.".localized)
+					showErrorMessage(title: OCLocalizedString("Share Extension unavailable", nil), message: OCLocalizedString("The {{app.name}} share extension is not available on this system.", nil))
 					return
 				}
 
 				if OCBookmarkManager.shared.bookmarks.count == 0 {
 					// No account configured
-					showErrorMessage(title: "No account configured".localized, message: "Setup a new account in the app to save to.".localized)
+					showErrorMessage(title: OCLocalizedString("No account configured", nil), message: OCLocalizedString("Setup a new account in the app to save to.", nil))
 					return
 				}
 
@@ -438,7 +438,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 			.spacing(5),
 			.subtitle(message, alignment: .centered),
 			.spacing(15),
-			.button("OK".localized, action: UIAction(handler: { [weak self] action in
+			.button(OCLocalizedString("OK", nil), action: UIAction(handler: { [weak self] action in
 				self?.cancel()
 			}))
 		])
@@ -452,14 +452,14 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 			let message = message ?? ((error != nil) ? error?.localizedDescription : nil)
 			let alert = ThemedAlertController(title: title, message: message, preferredStyle: .alert)
 
-			alert.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { (_) in
+			alert.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel, handler: { (_) in
 				decisionHandler(false)
 			}))
 
 			if let nsError = error as NSError?, nsError.domain == NSCocoaErrorDomain, nsError.code == NSXPCConnectionInvalid || nsError.code == NSXPCConnectionInterrupted {
 				Log.error("XPC connection error: \(String(describing: error))")
 			} else {
-				alert.addAction(UIAlertAction(title: "Continue".localized, style: .default, handler: { (_) in
+				alert.addAction(UIAlertAction(title: OCLocalizedString("Continue", nil), style: .default, handler: { (_) in
 					decisionHandler(true)
 				}))
 			}

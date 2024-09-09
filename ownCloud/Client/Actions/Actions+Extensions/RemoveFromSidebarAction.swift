@@ -24,7 +24,7 @@ import ownCloudAppShared
 class RemoveFromSidebarAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.removeFromSidebar") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Remove from sidebar".localized }
+	override class var name : String? { return OCLocalizedString("Remove from sidebar", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.contextMenuItem, .moreItem, .accessibilityCustomAction] }
 
 	// MARK: - Extension matching

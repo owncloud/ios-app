@@ -456,7 +456,7 @@ extension Branding {
 		   let darkBrandColor = theme["darkBrandColor"] as? String,
 		   let lightBrandColor = theme["lightBrandColor"] as? String {
 			let styles = theme["Styles"] as? NSDictionary
-			return ThemeStyle(styleIdentifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, interfaceStyles: styles, cssRecordStrings: cssRecordStrings)
+			return ThemeStyle(styleIdentifier: identifier, localizedName: OCLocalizedString(name, nil) , lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, interfaceStyles: styles, cssRecordStrings: cssRecordStrings)
 		}
 
 		return nil

@@ -36,12 +36,12 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 
 		self.revoke(in: gridContext, when: [ .connectionClosed ])
 
-		navigationItem.title = "Spaces".localized
+		navigationItem.title = OCLocalizedString("Spaces", nil)
 
 		if let projectDrivesDataSource = context.core?.projectDrivesDataSource {
 			let noSpacesMessage = ComposedMessageView(elements: [
 				.image(OCSymbol.icon(forSymbolName: "square.grid.2x2")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.title("No spaces".localized, alignment: .centered)
+				.title(OCLocalizedString("No spaces", nil), alignment: .centered)
 			])
 
 			noSpacesCondition = DataSourceCondition(.empty, with: projectDrivesDataSource, initial: true, action: { [weak self] condition in

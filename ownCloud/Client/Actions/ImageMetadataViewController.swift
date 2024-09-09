@@ -25,12 +25,12 @@ import ownCloudAppShared
 
 extension CLLocation {
 	var dmsLatitude: String {
-		let direction = self.coordinate.latitude >= 0 ? "N".localized : "S".localized
+		let direction = self.coordinate.latitude >= 0 ? OCLocalizedString("N", nil) : OCLocalizedString("S", nil)
 		return dms(from: self.coordinate.latitude) + "\"\(direction)"
 	}
 
 	var dmsLongitude: String {
-		let direction = self.coordinate.longitude >= 0 ? "E".localized : "W".localized
+		let direction = self.coordinate.longitude >= 0 ? OCLocalizedString("E", nil) : OCLocalizedString("W", nil)
 		return dms(from: self.coordinate.longitude) + "\"\(direction)"
 	}
 
@@ -95,17 +95,17 @@ class ImageMetadataParser {
 		var description: String {
 			switch self {
 			case .cameraDetails:
-				return "Camera details".localized
+				return OCLocalizedString("Camera details", nil)
 			case .captureParameters:
-				return "Capture settings".localized
+				return OCLocalizedString("Capture settings", nil)
 			case .timestamps:
-				return "Time".localized
+				return OCLocalizedString("Time", nil)
 			case .exifAuxSection:
-				return "EXIF aux info".localized
+				return OCLocalizedString("EXIF aux info", nil)
 			case .iptcSection:
-				return "Authoring".localized
+				return OCLocalizedString("Authoring", nil)
 			case .tiffSection:
-				return "TIFF".localized
+				return OCLocalizedString("TIFF", nil)
 			}
 		}
 
@@ -206,19 +206,19 @@ class ImageMetadataParser {
 		var transformers = [CFString : MetadataValueTransformer]()
 
 		// Camera Details
-		transformers[kCGImagePropertyExifLensMake] = {(value) in return MetadataItem(name: "Lens make".localized, value: value as? String ?? "") }
+		transformers[kCGImagePropertyExifLensMake] = {(value) in return MetadataItem(name: OCLocalizedString("Lens make", nil), value: value as? String ?? "") }
 
-		transformers[kCGImagePropertyExifLensModel] = {(value) in return MetadataItem(name: "Lens model".localized, value: value as? String ?? "") }
+		transformers[kCGImagePropertyExifLensModel] = {(value) in return MetadataItem(name: OCLocalizedString("Lens model", nil), value: value as? String ?? "") }
 
-		transformers[kCGImagePropertyExifAuxLensInfo] = {(value) in return MetadataItem(name: "Lens info".localized, value: value as? String ?? "") }
+		transformers[kCGImagePropertyExifAuxLensInfo] = {(value) in return MetadataItem(name: OCLocalizedString("Lens info", nil), value: value as? String ?? "") }
 
 		// Capture parameters
 		transformers[kCGImagePropertyExifFocalLength] = {(value) in
-			return MetadataItem(name: "Focal length".localized, value: "\(value) mm")
+			return MetadataItem(name: OCLocalizedString("Focal length", nil), value: "\(value) mm")
 		}
 
 		transformers[kCGImagePropertyExifFocalLenIn35mmFilm] = {(value) in
-			return MetadataItem(name: "Focal length @ 35 mm".localized, value: "\(value) mm")
+			return MetadataItem(name: OCLocalizedString("Focal length @ 35 mm", nil), value: "\(value) mm")
 		}
 
 		transformers[kCGImagePropertyExifShutterSpeedValue] = {(value) in
@@ -226,7 +226,7 @@ class ImageMetadataParser {
 			if let apexValue = value as? Double {
 				Tv = round(pow(2.0, -apexValue) * 10000) / 10000
 			}
-			return MetadataItem(name: "Shutter speed".localized, value: "\(Tv) s")
+			return MetadataItem(name: OCLocalizedString("Shutter speed", nil), value: "\(Tv) s")
 		}
 
 		transformers[kCGImagePropertyExifApertureValue] = {(value) in
@@ -235,7 +235,7 @@ class ImageMetadataParser {
 				aperture = round(pow(2.0, apexValue / 2.0) * 10) / 10
 			}
 
-			return MetadataItem(name: "Aperture".localized, value: "f/\(aperture)")
+			return MetadataItem(name: OCLocalizedString("Aperture", nil), value: "f/\(aperture)")
 		}
 
 		transformers[kCGImagePropertyExifISOSpeedRatings] = {(value) in
@@ -243,7 +243,7 @@ class ImageMetadataParser {
 			if let isoSpeedRatings = value as? [Int], isoSpeedRatings.count > 0 {
 				isoValue = "\(isoSpeedRatings[0])"
 			}
-			return MetadataItem(name: "ISO".localized, value: "\(isoValue)")
+			return MetadataItem(name: OCLocalizedString("ISO", nil), value: "\(isoValue)")
 		}
 
 		transformers[kCGImagePropertyExifExposureProgram] = {(value) in
@@ -252,42 +252,42 @@ class ImageMetadataParser {
 
 			if let programType = value as? Int {
 				switch programType {
-				case 0: program = "Not defined".localized
-				case 1: program = "Manual".localized
-				case 2: program = "Normal".localized
-				case 3: program = "Aperture priority".localized
-				case 4: program = "Shutter priority".localized
-				case 5: program = "Creative".localized
-				case 6: program = "Action".localized
-				case 7: program = "Portrait".localized
-				case 8: program = "Landscape".localized
+				case 0: program = OCLocalizedString("Not defined", nil)
+				case 1: program = OCLocalizedString("Manual", nil)
+				case 2: program = OCLocalizedString("Normal", nil)
+				case 3: program = OCLocalizedString("Aperture priority", nil)
+				case 4: program = OCLocalizedString("Shutter priority", nil)
+				case 5: program = OCLocalizedString("Creative", nil)
+				case 6: program = OCLocalizedString("Action", nil)
+				case 7: program = OCLocalizedString("Portrait", nil)
+				case 8: program = OCLocalizedString("Landscape", nil)
 
 				default: break
 				}
 			}
 
-			return MetadataItem(name: "Program".localized, value: program)
+			return MetadataItem(name: OCLocalizedString("Program", nil), value: program)
 		}
 
 		transformers[kCGImagePropertyExifMeteringMode] = {(value)
 				in
 			guard let mode = value as? Int else {
-				return MetadataItem(name: "Metering".localized, value: "")
+				return MetadataItem(name: OCLocalizedString("Metering", nil), value: "")
 			}
 
-			var modeString = "unknown".localized
+			var modeString = OCLocalizedString("unknown", nil)
 			switch mode {
-			case 1: modeString = "Average".localized
-			case 2: modeString = "CenterWeightedAverage".localized
-			case 3: modeString = "Spot".localized
-			case 4: modeString = "MultiSpot".localized
-			case 5: modeString = "Pattern".localized
-			case 6: modeString = "Partial".localized
-			case 255: modeString = "CenterWeightedAverage".localized
+			case 1: modeString = OCLocalizedString("Average", nil)
+			case 2: modeString = OCLocalizedString("CenterWeightedAverage", nil)
+			case 3: modeString = OCLocalizedString("Spot", nil)
+			case 4: modeString = OCLocalizedString("MultiSpot", nil)
+			case 5: modeString = OCLocalizedString("Pattern", nil)
+			case 6: modeString = OCLocalizedString("Partial", nil)
+			case 255: modeString = OCLocalizedString("CenterWeightedAverage", nil)
 			default: break
 			}
 
-			return MetadataItem(name: "Metering".localized, value: modeString)
+			return MetadataItem(name: OCLocalizedString("Metering", nil), value: modeString)
 		}
 
 		transformers[kCGImagePropertyExifExposureBiasValue] = {(value) in
@@ -299,7 +299,7 @@ class ImageMetadataParser {
 					bias = String(format: "%.2f EV", expBias)
 				}
 			}
-			return MetadataItem(name: "Exposure bias".localized, value: "\(bias)")
+			return MetadataItem(name: OCLocalizedString("Exposure bias", nil), value: "\(bias)")
 		}
 
 		transformers[kCGImagePropertyExifFlash] = {(value)
@@ -310,36 +310,36 @@ class ImageMetadataParser {
 				if flashPresent {
 					// Did flash fire?
 					if flashBitMask & 0b01 != 0 {
-						flashInfo.append("Fired".localized)
+						flashInfo.append(OCLocalizedString("Fired", nil))
 					} else {
-						flashInfo.append("Didn't fire".localized)
+						flashInfo.append(OCLocalizedString("Didn't fire", nil))
 					}
 
 					switch (flashBitMask >> 1) & 0b11 {
-					case 0b00: flashInfo.append("No strobe return detection".localized)
-					case 0b10: flashInfo.append("Strobe return light not detected".localized)
-					case 0b11: flashInfo.append("Strobe return light detected".localized)
+					case 0b00: flashInfo.append(OCLocalizedString("No strobe return detection", nil))
+					case 0b10: flashInfo.append(OCLocalizedString("Strobe return light not detected", nil))
+					case 0b11: flashInfo.append(OCLocalizedString("Strobe return light detected", nil))
 					default: break
 					}
 
 					switch (flashBitMask >> 3) & 0b11 {
-					case 0b01: flashInfo.append("Compulsory flash firing".localized)
-					case 0b10: flashInfo.append("Compulsory flash supression".localized)
-					case 0b11: flashInfo.append("Auto mode".localized)
+					case 0b01: flashInfo.append(OCLocalizedString("Compulsory flash firing", nil))
+					case 0b10: flashInfo.append(OCLocalizedString("Compulsory flash supression", nil))
+					case 0b11: flashInfo.append(OCLocalizedString("Auto mode", nil))
 					default: break
 					}
 
 					if flashBitMask  & 0b1000000 != 0 {
-						flashInfo.append("Red eye detection supported".localized)
+						flashInfo.append(OCLocalizedString("Red eye detection supported", nil))
 					}
 
 				} else {
-					flashInfo.append("not present".localized)
+					flashInfo.append(OCLocalizedString("not present", nil))
 				}
 
 			}
 
-			return MetadataItem(name: "Flash".localized, value: flashInfo.joined(separator: ", "))
+			return MetadataItem(name: OCLocalizedString("Flash", nil), value: flashInfo.joined(separator: ", "))
 		}
 
 		transformers[kCGImagePropertyExifWhiteBalance] = {(value)
@@ -348,21 +348,21 @@ class ImageMetadataParser {
 			var wbMode = ""
 			if let wb = value as? Int {
 				switch wb {
-				case 0: wbMode = "Auto".localized
-				case 1: wbMode = "Manual".localized
+				case 0: wbMode = OCLocalizedString("Auto", nil)
+				case 1: wbMode = OCLocalizedString("Manual", nil)
 				default: break
 				}
 			}
-			return MetadataItem(name: "White balance".localized, value: wbMode)
+			return MetadataItem(name: OCLocalizedString("White balance", nil), value: wbMode)
 		}
 
 		transformers[kCGImagePropertyExifColorSpace] = {(value) in
 
-			var space = "Uncalibrated".localized
+			var space = OCLocalizedString("Uncalibrated", nil)
 			if let value = value as? Int, value == 1 {
 				space = "sRGB"
 			}
-			return MetadataItem(name: "Color space".localized, value: space)
+			return MetadataItem(name: OCLocalizedString("Color space", nil), value: space)
 		}
 
 		// Time
@@ -373,7 +373,7 @@ class ImageMetadataParser {
 					convertedTimestamp = self.displayDateFormatter.string(from: date)
 				}
 			}
-			return MetadataItem(name: "Original date".localized, value: convertedTimestamp)
+			return MetadataItem(name: OCLocalizedString("Original date", nil), value: convertedTimestamp)
 		}
 
 		transformers[kCGImagePropertyExifDateTimeDigitized] = {(value) in
@@ -383,17 +383,17 @@ class ImageMetadataParser {
 					convertedTimestamp = self.displayDateFormatter.string(from: date)
 				}
 			}
-			return MetadataItem(name: "Digitized date".localized, value: convertedTimestamp)
+			return MetadataItem(name: OCLocalizedString("Digitized date", nil), value: convertedTimestamp)
 		}
 
 		// Exif Aux info
-		transformers[kCGImagePropertyExifAuxLensModel] = {(value) in return MetadataItem(name: "Lens model".localized, value: "\(value)") }
-		transformers[kCGImagePropertyExifAuxLensID] = {(value) in return MetadataItem(name: "Lens ID".localized, value: "\(value)") }
-		transformers[kCGImagePropertyExifAuxLensSerialNumber] = {(value) in return MetadataItem(name: "Lens serial".localized, value: "\(value)") }
-		transformers[kCGImagePropertyExifAuxSerialNumber] = {(value) in return MetadataItem(name: "Serial number".localized, value: "\(value)") }
-		transformers[kCGImagePropertyExifAuxFlashCompensation] = {(value) in return MetadataItem(name: "Flash compensation".localized, value: "\(value)") }
-		transformers[kCGImagePropertyExifAuxOwnerName] = {(value) in return MetadataItem(name: "Owner".localized, value: "\(value)") }
-		transformers[kCGImagePropertyExifAuxFirmware] = {(value) in return MetadataItem(name: "Firmware".localized, value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxLensModel] = {(value) in return MetadataItem(name: OCLocalizedString("Lens model", nil), value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxLensID] = {(value) in return MetadataItem(name: OCLocalizedString("Lens ID", nil), value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxLensSerialNumber] = {(value) in return MetadataItem(name: OCLocalizedString("Lens serial", nil), value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxSerialNumber] = {(value) in return MetadataItem(name: OCLocalizedString("Serial number", nil), value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxFlashCompensation] = {(value) in return MetadataItem(name: OCLocalizedString("Flash compensation", nil), value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxOwnerName] = {(value) in return MetadataItem(name: OCLocalizedString("Owner", nil), value: "\(value)") }
+		transformers[kCGImagePropertyExifAuxFirmware] = {(value) in return MetadataItem(name: OCLocalizedString("Firmware", nil), value: "\(value)") }
 
 		// IPTC / XMP meta-data
 		transformers[kCGImagePropertyIPTCKeywords] = {(value) in
@@ -401,9 +401,9 @@ class ImageMetadataParser {
 			if let keywordArray = value as? [String] {
 				keywords = keywordArray.joined(separator: ", ")
 			}
-			return MetadataItem(name: "Keywords".localized, value: "\(keywords)")
+			return MetadataItem(name: OCLocalizedString("Keywords", nil), value: "\(keywords)")
 		}
-		transformers[kCGImagePropertyIPTCCopyrightNotice] = {(value) in return MetadataItem(name: "Copyright".localized, value: "\(value)") }
+		transformers[kCGImagePropertyIPTCCopyrightNotice] = {(value) in return MetadataItem(name: OCLocalizedString("Copyright", nil), value: "\(value)") }
 		transformers[kCGImagePropertyIPTCCreatorContactInfo] = {(value) in
 			var contactDetails = [String]()
 			if let contactDict = value as? [String : String] {
@@ -421,28 +421,28 @@ class ImageMetadataParser {
 				}
 
 			}
-			return MetadataItem(name: "Contact info".localized, value: "\(contactDetails.joined(separator: ", "))")
+			return MetadataItem(name: OCLocalizedString("Contact info", nil), value: "\(contactDetails.joined(separator: ", "))")
 		}
-		transformers[kCGImagePropertyIPTCRightsUsageTerms] = {(value) in return MetadataItem(name: "Usage terms".localized, value: "\(value)") }
-		transformers[kCGImagePropertyIPTCScene] = {(value) in return MetadataItem(name: "Scene".localized, value: "\(value)") }
+		transformers[kCGImagePropertyIPTCRightsUsageTerms] = {(value) in return MetadataItem(name: OCLocalizedString("Usage terms", nil), value: "\(value)") }
+		transformers[kCGImagePropertyIPTCScene] = {(value) in return MetadataItem(name: OCLocalizedString("Scene", nil), value: "\(value)") }
 
 		// TIFF
 		transformers[kCGImagePropertyTIFFPhotometricInterpretation] = {(value) in
-			var textValue = "none".localized
+			var textValue = OCLocalizedString("none", nil)
 			if let piValue = value as? Int {
 				switch piValue {
 				case 2:
-					textValue = "RGB".localized
+					textValue = OCLocalizedString("RGB", nil)
 				case 6:
-					textValue = "YCbCr".localized
+					textValue = OCLocalizedString("YCbCr", nil)
 				default:
 					break
 				}
 			}
-			return MetadataItem(name: "Photometric interpretation".localized, value: textValue)
+			return MetadataItem(name: OCLocalizedString("Photometric interpretation", nil), value: textValue)
 		}
 
-		transformers[kCGImagePropertyTIFFImageDescription ] = {(value) in return MetadataItem(name: "Description".localized, value: "\(value)") }
+		transformers[kCGImagePropertyTIFFImageDescription ] = {(value) in return MetadataItem(name: OCLocalizedString("Description", nil), value: "\(value)") }
 
 		return transformers
 	}()
@@ -558,7 +558,7 @@ class ImageMetadataViewController: StaticTableViewController {
 
 	private var imageProperties: [String : Any]?
 
-	private let gpsSection = StaticTableViewSection(headerTitle: "GPS Location".localized)
+	private let gpsSection = StaticTableViewSection(headerTitle: OCLocalizedString("GPS Location", nil))
 	private let activityIndicatorView = UIActivityIndicatorView(style: Theme.shared.activeCollection.css.getActivityIndicatorStyle() ?? .medium)
 
 	public init(core inCore: OCCore, item inItem: OCItem, url:URL) {
@@ -587,7 +587,7 @@ class ImageMetadataViewController: StaticTableViewController {
 		super.viewDidLoad()
 		self.tableView.allowsSelection = false
 		self.tableView.separatorStyle = .none
-		self.navigationItem.title = "Image metadata".localized
+		self.navigationItem.title = OCLocalizedString("Image metadata", nil)
 
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))
 
@@ -608,11 +608,11 @@ class ImageMetadataViewController: StaticTableViewController {
 				if let location = result.location {
 
 					OnMainThread {
-						let latLongRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Coordinates".localized, subtitle: "\(location.dmsLatitude), \(location.dmsLongitude)", style: .value2, accessoryType: .none, identifier: "location-gps-lat-long")
+						let latLongRow = StaticTableViewRow(subtitleRowWithAction: nil, title: OCLocalizedString("Coordinates", nil), subtitle: "\(location.dmsLatitude), \(location.dmsLongitude)", style: .value2, accessoryType: .none, identifier: "location-gps-lat-long")
 						self.gpsSection.add(row: latLongRow)
 
 						if location.altitude != 0 {
-							let altitudeRow = StaticTableViewRow(subtitleRowWithAction: nil, title: "Altitude".localized, subtitle: location.altitudeString, style: .value2, accessoryType: .none, identifier: "location-gps-alt")
+							let altitudeRow = StaticTableViewRow(subtitleRowWithAction: nil, title: OCLocalizedString("Altitude", nil), subtitle: location.altitudeString, style: .value2, accessoryType: .none, identifier: "location-gps-alt")
 							self.gpsSection.add(row: altitudeRow)
 						}
 
@@ -634,7 +634,7 @@ class ImageMetadataViewController: StaticTableViewController {
 					self.lookup(location: location) { (placemark) in
 						if let address = placemark?.formattedAddress {
 							OnMainThread {
-								let placeRow = ImageMetadataViewController.createMetadataRow(with: "Place".localized, subtitle: "\(address)", identifier: "location-place")
+								let placeRow = ImageMetadataViewController.createMetadataRow(with: OCLocalizedString("Place", nil), subtitle: "\(address)", identifier: "location-place")
 								self.gpsSection.add(row: placeRow)
 							}
 						}
@@ -642,27 +642,27 @@ class ImageMetadataViewController: StaticTableViewController {
 				}
 
 				OnMainThread {
-					let imageDetailsSection = StaticTableViewSection(headerTitle: "Image details".localized)
+					let imageDetailsSection = StaticTableViewSection(headerTitle: OCLocalizedString("Image details", nil))
 
 					if let profile = result.profile {
-						let profileRow = ImageMetadataViewController.createMetadataRow(with: "Profile".localized, subtitle: profile, identifier: "image-profile")
+						let profileRow = ImageMetadataViewController.createMetadataRow(with: OCLocalizedString("Profile", nil), subtitle: profile, identifier: "image-profile")
 						imageDetailsSection.add(row: profileRow)
 					}
 
 					let mp = round((result.size.width * result.size.height) / 1000_000.0 * 10.0) / 10.0
 					let size = "\(Int(result.size.width)) x \(Int(result.size.height)) px (\(mp) MP)"
-					let sizeRow = ImageMetadataViewController.createMetadataRow(with: "Size".localized, subtitle: size, identifier: "image-size")
+					let sizeRow = ImageMetadataViewController.createMetadataRow(with: OCLocalizedString("Size", nil), subtitle: size, identifier: "image-size")
 					imageDetailsSection.add(row: sizeRow)
 
 					if let dpi = result.dpi {
 						let dpiString = "\(dpi) DPI"
-						let dpiRow = ImageMetadataViewController.createMetadataRow(with: "Density".localized, subtitle: dpiString, identifier: "image-dpi")
+						let dpiRow = ImageMetadataViewController.createMetadataRow(with: OCLocalizedString("Density", nil), subtitle: dpiString, identifier: "image-dpi")
 						imageDetailsSection.add(row: dpiRow)
 					}
 
 					if let colorModel = result.colorModel, let depth = result.depth {
-						let colorInfo = String(format: "%@ (%d bits/channel)".localized, colorModel, depth)
-						let colorInfoRow = ImageMetadataViewController.createMetadataRow(with: "Color model".localized, subtitle: colorInfo, identifier: "image-color-info")
+						let colorInfo = String(format: OCLocalizedString("%@ (%d bits/channel)", nil), colorModel, depth)
+						let colorInfoRow = ImageMetadataViewController.createMetadataRow(with: OCLocalizedString("Color model", nil), subtitle: colorInfo, identifier: "image-color-info")
 						imageDetailsSection.add(row: colorInfoRow)
 					}
 
@@ -686,7 +686,7 @@ class ImageMetadataViewController: StaticTableViewController {
 
 				if let histogram = self.histogramImage(for: self.imageURL) {
 					OnMainThread {
-						let section = StaticTableViewSection(headerTitle: "Histogram".localized)
+						let section = StaticTableViewSection(headerTitle: OCLocalizedString("Histogram", nil))
 						let imageView = UIImageView(image: histogram)
 						let row = StaticTableViewRow(customView: imageView)
 

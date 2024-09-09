@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudAppShared
+import ownCloudSDK
 
 extension UserDefaults {
 
@@ -43,20 +44,20 @@ class MediaFilesSettingsSection: SettingsSection {
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
 
-		self.headerTitle = "Media Files".localized
+		self.headerTitle = OCLocalizedString("Media Files", nil)
 		self.identifier = "media-files"
 
 		enableStreamingSwitchRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 			if let enableSwitch = sender as? UISwitch {
 				self?.userDefaults.downloadMediaFiles = enableSwitch.isOn
 			}
-			}, title: "Download instead of streaming".localized, value: self.userDefaults.downloadMediaFiles, identifier: "download-media")
+			}, title: OCLocalizedString("Download instead of streaming", nil), value: self.userDefaults.downloadMediaFiles, identifier: "download-media")
 
 		self.add(row: enableStreamingSwitchRow!)
 
 		mediaUploadSettingsRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushMediaUploadSettings()
-		}, title: "Media Upload".localized, value: "", accessoryType: .disclosureIndicator, identifier: "media-upload")
+		}, title: OCLocalizedString("Media Upload", nil), value: "", accessoryType: .disclosureIndicator, identifier: "media-upload")
 
 		self.add(row: mediaUploadSettingsRow!)
 	}

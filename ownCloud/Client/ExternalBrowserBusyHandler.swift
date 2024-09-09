@@ -55,7 +55,7 @@ class ExternalBrowserBusyHandler: UIViewController, Themeable {
 		backgroundView.addSubview(activityIndicator)
 
 		cancelButton.translatesAutoresizingMaskIntoConstraints = false
-		cancelButton.setTitle("Cancel".localized, for: .normal)
+		cancelButton.setTitle(OCLocalizedString("Cancel", nil), for: .normal)
 		cancelButton.addTarget(self, action: #selector(ExternalBrowserBusyHandler.cancel), for: UIControl.Event.touchUpInside)
 		backgroundView.addSubview(cancelButton)
 
@@ -63,7 +63,7 @@ class ExternalBrowserBusyHandler: UIViewController, Themeable {
 		infoLabel.adjustsFontForContentSizeCategory = true
 		infoLabel.textAlignment = .center
 		infoLabel.font = UIFont.preferredFont(forTextStyle: .body)
-		infoLabel.text = "Waiting for response from login session in external browser…".localized
+		infoLabel.text = OCLocalizedString("Waiting for response from login session in external browser…", nil)
 		infoLabel.numberOfLines = 0
 		infoLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 		infoLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)

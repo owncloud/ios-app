@@ -26,20 +26,20 @@ public extension OCBookmarkManager {
 			presentationStyle = .alert
 		}
 
-		var alertTitle = "Really delete '%@'?".localized
-		var destructiveTitle = "Delete".localized
-		var failureTitle = "Deletion of '%@' failed".localized
+		var alertTitle = OCLocalizedString("Really delete '%@'?", nil)
+		var destructiveTitle = OCLocalizedString("Delete", nil)
+		var failureTitle = OCLocalizedString("Deletion of '%@' failed", nil)
 		if VendorServices.shared.isBranded {
-			alertTitle = "Do you want to log out from '%@'?".localized
-			destructiveTitle = "Log out".localized
-			failureTitle = "Log out of '%@' failed".localized
+			alertTitle = OCLocalizedString("Do you want to log out from '%@'?", nil)
+			destructiveTitle = OCLocalizedString("Log out", nil)
+			failureTitle = OCLocalizedString("Log out of '%@' failed", nil)
 		}
 
 		let alertController = ThemedAlertController(title: NSString(format: alertTitle as NSString, bookmark.shortName) as String,
-													message: "This will also delete all locally stored file copies.".localized,
+													message: OCLocalizedString("This will also delete all locally stored file copies.", nil),
 													preferredStyle: presentationStyle)
 
-		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: { _ in
+		alertController.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel, handler: { _ in
 			completion?()
 		}))
 
@@ -56,7 +56,7 @@ public extension OCBookmarkManager {
 																			message: error?.localizedDescription,
 																			preferredStyle: .alert)
 
-								alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+								alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
 
 								hostViewController.present(alertController, animated: true)
 							} else {

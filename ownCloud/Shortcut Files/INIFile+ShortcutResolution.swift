@@ -29,13 +29,13 @@ public extension INIFile {
 						var effectiveError = error
 
 						if let nsError = error as? NSError, nsError.isOCError(withCode: .itemDestinationNotFound) {
-							effectiveError = NSError(domain: OCErrorDomain, code: Int(OCError.itemDestinationNotFound.rawValue), userInfo: [NSLocalizedDescriptionKey : "The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it.".localized])
+							effectiveError = NSError(domain: OCErrorDomain, code: Int(OCError.itemDestinationNotFound.rawValue), userInfo: [NSLocalizedDescriptionKey : OCLocalizedString("The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it.", nil)])
 						}
 
 						if effectiveError == nil, item != nil {
 							switch OpenShortcutFileAction.openShortcutMode {
 								case .linksOnly, .none:
-									effectiveError = NSError(domain: OCErrorDomain, code: Int(OCError.itemDestinationNotFound.rawValue), userInfo: [NSLocalizedDescriptionKey : "The shortcut points to another item, but the configuration of this app prohibits opening it.".localized])
+									effectiveError = NSError(domain: OCErrorDomain, code: Int(OCError.itemDestinationNotFound.rawValue), userInfo: [NSLocalizedDescriptionKey : OCLocalizedString("The shortcut points to another item, but the configuration of this app prohibits opening it.", nil)])
 
 								default: break
 							}
@@ -50,7 +50,7 @@ public extension INIFile {
 
 					switch OpenShortcutFileAction.openShortcutMode {
 						case .itemsOnly, .none:
-							effectiveError = NSError(domain: OCErrorDomain, code: Int(OCError.itemDestinationNotFound.rawValue), userInfo: [NSLocalizedDescriptionKey : "The shortcut points to a URL, but the configuration of this app prohibits opening it.".localized])
+							effectiveError = NSError(domain: OCErrorDomain, code: Int(OCError.itemDestinationNotFound.rawValue), userInfo: [NSLocalizedDescriptionKey : OCLocalizedString("The shortcut points to a URL, but the configuration of this app prohibits opening it.", nil)])
 
 						default: break
 					}

@@ -36,12 +36,12 @@ public extension OCLocation {
 				if let core = context?.core, let driveID, let drive = core.drive(withIdentifier: driveID, attachedOnly: false), let driveName = drive.name {
 					return driveName
 				}
-				return "Space".localized
+				return OCLocalizedString("Space", nil)
 
 			case .folder, .file:
 				if driveID == nil, isRoot {
 					// OC 10 root folder
-					return "Files".localized
+					return OCLocalizedString("Files", nil)
 				}
 
 				if let lastPathComponent {

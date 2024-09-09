@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 open class BottomButtonBar: ThemeCSSView {
 	open var selectButton: UIButton = UIButton()
@@ -90,7 +91,7 @@ open class BottomButtonBar: ThemeCSSView {
 		}
 	}
 
-	public init(prompt: String? = nil, selectButtonTitle: String, alternativeButtonTitle: String? = nil, cancelButtonTitle: String? = "Cancel".localized, hasAlternativeButton: Bool = false, hasCancelButton: Bool, selectAction: UIAction?, alternativeAction:UIAction? = nil, cancelAction: UIAction?) {
+	public init(prompt: String? = nil, selectButtonTitle: String, alternativeButtonTitle: String? = nil, cancelButtonTitle: String? = OCLocalizedString("Cancel", nil), hasAlternativeButton: Bool = false, hasCancelButton: Bool, selectAction: UIAction?, alternativeAction:UIAction? = nil, cancelAction: UIAction?) {
 		self.selectButtonTitle = selectButtonTitle
 		self.hasAlternativeButton = hasAlternativeButton && (alternativeButtonTitle != nil)
 		self.hasCancelButton = hasCancelButton
@@ -135,7 +136,7 @@ open class BottomButtonBar: ThemeCSSView {
 
 		if hasCancelButton {
 			var cancelButtonConfig = UIButton.Configuration.bordered()
-			cancelButtonConfig.title = cancelButtonTitle ?? "Cancel".localized
+			cancelButtonConfig.title = cancelButtonTitle ?? OCLocalizedString("Cancel", nil)
 			cancelButtonConfig.cornerStyle = .large
 			cancelButton.configuration = cancelButtonConfig
 			if let cancelAction {

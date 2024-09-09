@@ -136,7 +136,7 @@ class ImageDisplayViewController : DisplayViewController {
 			}
 
 		} else {
-			let alert = ThemedAlertController(with: "Error".localized, message: "Could not get the picture".localized, okLabel: "OK")
+			let alert = ThemedAlertController(with: OCLocalizedString("Error", nil), message: OCLocalizedString("Could not get the picture", nil), okLabel: "OK")
 			self.parent?.present(alert, animated: true) {
 				self.parent?.dismiss(animated: true)
 			}

@@ -125,16 +125,16 @@ extension OCItem: UniversalItemListCellContentProvider {
 				case .cloudOnly:
 					cloudStatusIcon = OCItem.cloudOnlyStatusIcon
 					cloudStatusIconAlpha = 1.0
-					accessibilityLabel = "In the cloud".localized
+					accessibilityLabel = OCLocalizedString("In the cloud", nil)
 
 				case .localCopy:
 					cloudStatusIcon = (downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? OCItem.cloudAvailableOfflineStatusIcon : nil
-					accessibilityLabel = "Local copy".localized
+					accessibilityLabel = OCLocalizedString("Local copy", nil)
 
 				case .locallyModified, .localOnly:
 					cloudStatusIcon = OCItem.cloudLocalOnlyStatusIcon
 					cloudStatusIconAlpha = 1.0
-					accessibilityLabel = "Local version".localized
+					accessibilityLabel = OCLocalizedString("Local version", nil)
 			}
 		} else {
 			if availableOfflineCoverage == .none {
@@ -142,7 +142,7 @@ extension OCItem: UniversalItemListCellContentProvider {
 				accessibilityLabel = nil
 			} else {
 				cloudStatusIcon = OCItem.cloudAvailableOfflineStatusIcon
-				accessibilityLabel = "Available offline".localized
+				accessibilityLabel = OCLocalizedString("Available offline", nil)
 			}
 		}
 
@@ -189,13 +189,13 @@ extension OCItem: UniversalItemListCellContentProvider {
 
 		// - Sharing
 		if isSharedWithUser || sharedByUserOrGroup {
-			let segmentItem = SegmentViewItem(with: OCItem.groupIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary], accessibilityLabel: "Shared".localized)
+			let segmentItem = SegmentViewItem(with: OCItem.groupIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary], accessibilityLabel: OCLocalizedString("Shared", nil))
 			segmentItem.insets = .zero
 			detailItems.append(segmentItem)
 		}
 
 		if sharedByPublicLink {
-			let segmentItem = SegmentViewItem(with: OCItem.linkIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary], accessibilityLabel: "Shared by link".localized)
+			let segmentItem = SegmentViewItem(with: OCItem.linkIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary], accessibilityLabel: OCLocalizedString("Shared by link", nil))
 			segmentItem.insets = .zero
 			detailItems.append(segmentItem)
 		}
@@ -204,10 +204,10 @@ extension OCItem: UniversalItemListCellContentProvider {
 		var detailString: String = sizeLocalized
 
 		if size < 0 {
-			detailString = "Pending".localized
+			detailString = OCLocalizedString("Pending", nil)
 		}
 		if state == .serverSideProcessing {
-			detailString = "Processing on server".localized
+			detailString = OCLocalizedString("Processing on server", nil)
 		}
 
 		let primaryLineSizeSegment = SegmentViewItem(with: nil, title: detailString, style: .plain, titleTextStyle: .footnote, lines: [.primary])

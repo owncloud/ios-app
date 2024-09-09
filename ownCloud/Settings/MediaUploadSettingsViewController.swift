@@ -33,7 +33,7 @@ class MediaUploadSettingsViewController: StaticTableViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		navigationItem.title = "Media Upload".localized
+		navigationItem.title = OCLocalizedString("Media Upload", nil)
 
 		if let userDefaults = OCAppIdentity.shared.userDefaults {
 			proPhotoSettingsSection = ProPhotoUploadSettingsSection(userDefaults: userDefaults)

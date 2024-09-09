@@ -22,7 +22,7 @@ import ownCloudAppShared
 class RenameAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.rename") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Rename".localized }
+	override class var name : String? { return OCLocalizedString("Rename", nil) }
 	override class var keyCommand : String? { return "\r" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem, .accessibilityCustomAction] }
@@ -57,12 +57,12 @@ class RenameAction : Action {
 
 		let renameViewController = NamingViewController(with: item, core: self.core, stringValidator: { name in
 			if name.contains("/") || name.contains("\\") {
-				return (false, nil, "File name cannot contain / or \\".localized)
+				return (false, nil, OCLocalizedString("File name cannot contain / or \\", nil))
 			} else {
 				if let rootItem = rootItem {
 					if ((try? self.core?.cachedItem(inParent: rootItem, withName: name, isDirectory: true)) != nil) ||
 					   ((try? self.core?.cachedItem(inParent: rootItem, withName: name, isDirectory: false)) != nil) {
-						return (false, "Item with same name already exists".localized, "An item with the same name already exists in this location.".localized)
+						return (false, OCLocalizedString("Item with same name already exists", nil), OCLocalizedString("An item with the same name already exists in this location.", nil))
 					}
 				}
 
@@ -84,7 +84,7 @@ class RenameAction : Action {
 			self.completed()
 		})
 
-		renameViewController.navigationItem.title = "Rename".localized
+		renameViewController.navigationItem.title = OCLocalizedString("Rename", nil)
 
 		let navigationController = ThemeNavigationController(rootViewController: renameViewController)
 		navigationController.modalPresentationStyle = .formSheet

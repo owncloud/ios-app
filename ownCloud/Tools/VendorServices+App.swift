@@ -48,10 +48,10 @@ extension VendorServices {
 
 	public func sendFeedback(from viewController: UIViewController) {
 		if let feedbackMail {
-			var buildType = "release".localized
+			var buildType = OCLocalizedString("release", nil)
 
 			if self.isBetaBuild {
-				buildType = "beta".localized
+				buildType = OCLocalizedString("beta", nil)
 			}
 
 			var appSuffix = ""
@@ -83,8 +83,8 @@ extension VendorServices {
 
 			viewController.present(mail, animated: true)
 		} else {
-			let alert = ThemedAlertController(title: "Please configure an email account".localized,
-											  message: "You need to configure an email account first to be able to send emails.".localized,
+			let alert = ThemedAlertController(title: OCLocalizedString("Please configure an email account", nil),
+											  message: OCLocalizedString("You need to configure an email account first to be able to send emails.", nil),
 											  preferredStyle: .alert)
 
 			let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
@@ -95,14 +95,14 @@ extension VendorServices {
 
 	public func openSFWebView(on viewController: UIViewController, for url: URL, withConfirmation: Bool = true) {
 		if withConfirmation {
-			let alert = ThemedAlertController(title: "Do you want to open the following URL?".localized,
+			let alert = ThemedAlertController(title: OCLocalizedString("Do you want to open the following URL?", nil),
 						      message: url.absoluteString,
 						      preferredStyle: .alert)
 
 			let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
 				viewController.present(SFSafariViewController(url: url), animated: true)
 			}
-			let cancelAction = UIAlertAction(title: "Cancel".localized, style: .cancel)
+			let cancelAction = UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel)
 			alert.addAction(okAction)
 			alert.addAction(cancelAction)
 			viewController.present(alert, animated: true)

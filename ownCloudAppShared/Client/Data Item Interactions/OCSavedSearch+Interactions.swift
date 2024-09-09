@@ -55,15 +55,15 @@ extension OCSavedSearch {
 			return
 		}
 
-		let namePrompt = UIAlertController(title: "Name of saved search".localized, message: nil, preferredStyle: .alert)
+		let namePrompt = UIAlertController(title: OCLocalizedString("Name of saved search", nil), message: nil, preferredStyle: .alert)
 
 		namePrompt.addTextField(configurationHandler: { textField in
-			textField.placeholder = "Saved search".localized
+			textField.placeholder = OCLocalizedString("Saved search", nil)
 			textField.text = self.isNameUserDefined ? self.name : ""
 		})
 
-		namePrompt.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel))
-		namePrompt.addAction(UIAlertAction(title: "Save".localized, style: .default, handler: { [weak self, weak namePrompt] action in
+		namePrompt.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel))
+		namePrompt.addAction(UIAlertAction(title: OCLocalizedString("Save", nil), style: .default, handler: { [weak self, weak namePrompt] action in
 			guard let self else {
 				return
 			}
@@ -202,11 +202,11 @@ extension OCSavedSearch: DataItemSelectionInteraction {
 				}
 			})
 
-			let viewController = ClientItemViewController(context: resultsContext, query: query, showRevealButtonForItems: true, emptyItemListIcon: OCSymbol.icon(forSymbolName: "magnifyingglass"), emptyItemListTitleLocalized: "No matches".localized, emptyItemListMessageLocalized: "No items found matching the search criteria.".localized)
+			let viewController = ClientItemViewController(context: resultsContext, query: query, showRevealButtonForItems: true, emptyItemListIcon: OCSymbol.icon(forSymbolName: "magnifyingglass"), emptyItemListTitleLocalized: OCLocalizedString("No matches", nil), emptyItemListMessageLocalized: OCLocalizedString("No items found matching the search criteria.", nil))
 			if self.useNameAsTitle == true {
 				viewController.navigationTitle = sideBarDisplayName
 			} else {
-				viewController.navigationTitle = sideBarDisplayName + " (" + (isTemplate ? "Search template".localized : "Saved search".localized) + ")"
+				viewController.navigationTitle = sideBarDisplayName + " (" + (isTemplate ? OCLocalizedString("Search template", nil) : OCLocalizedString("Saved search", nil)) + ")"
 			}
 			viewController.revoke(in: context, when: .connectionClosed)
 			viewController.navigationBookmark = BrowserNavigationBookmark.from(dataItem: self, clientContext: context, restoreAction: .handleSelection)
@@ -247,7 +247,7 @@ extension OCSavedSearch: DataItemSwipeInteraction {
 			return nil
 		}
 
-		let deleteAction = UIContextualAction(style: .destructive, title: "Delete".localized, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
+		let deleteAction = UIContextualAction(style: .destructive, title: OCLocalizedString("Delete", nil), handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
 			uiCompletionHandler(false)
 			self?.delete(in: context)
 		})
@@ -270,7 +270,7 @@ extension OCSavedSearch: DataItemContextMenuInteraction {
 			let renameAction = UIAction(handler: { [weak self] action in
 				self?.rename(in: context)
 			})
-			renameAction.title = "Rename".localized
+			renameAction.title = OCLocalizedString("Rename", nil)
 			renameAction.image = OCSymbol.icon(forSymbolName: "pencil")
 
 			actions.append(renameAction)
@@ -280,7 +280,7 @@ extension OCSavedSearch: DataItemContextMenuInteraction {
 			let deleteAction = UIAction(handler: { [weak self] action in
 				self?.delete(in: context)
 			})
-			deleteAction.title = "Delete".localized
+			deleteAction.title = OCLocalizedString("Delete", nil)
 			deleteAction.image = OCSymbol.icon(forSymbolName: "trash")
 			deleteAction.attributes = .destructive
 

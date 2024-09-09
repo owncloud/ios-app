@@ -48,7 +48,7 @@ public extension UIAlertController {
 		}
 	}
 
-	convenience init(with title: String, message: String, cancelLabel: String = "Cancel".localized, destructiveLabel: String, preferredStyle: UIAlertController.Style, destructiveAction action: @escaping () -> Void) {
+	convenience init(with title: String, message: String, cancelLabel: String = OCLocalizedString("Cancel", nil), destructiveLabel: String, preferredStyle: UIAlertController.Style, destructiveAction action: @escaping () -> Void) {
 
 		self.init(title: title, message: message, preferredStyle: preferredStyle)
 
@@ -61,7 +61,7 @@ public extension UIAlertController {
 		self.addAction(cancelAction)
 	}
 
-	convenience init(with title: String, message: String, okLabel: String = "OK".localized, action: (() -> Void)? = nil) {
+	convenience init(with title: String, message: String, okLabel: String = OCLocalizedString("OK", nil), action: (() -> Void)? = nil) {
 		self.init(title: title, message: message, preferredStyle: UIDevice.current.isIpad ? .alert : .actionSheet)
 
 		let okAction: UIAlertAction = UIAlertAction(title: okLabel, style: .default, handler: { (_) in

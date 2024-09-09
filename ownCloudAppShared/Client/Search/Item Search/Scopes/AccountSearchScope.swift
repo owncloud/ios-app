@@ -31,7 +31,7 @@ open class CustomQuerySearchScope : ItemSearchScope {
 		didSet {
 			if isSelected {
 				resultActionSource.setItems([
-					OCAction(title: "Show more results".localized, icon: nil, action: { [weak self] action, options, completion in
+					OCAction(title: OCLocalizedString("Show more results", nil), icon: nil, action: { [weak self] action, options, completion in
 						self?.showMoreResults()
 						completion(nil)
 					})

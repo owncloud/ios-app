@@ -49,7 +49,7 @@ extension OCItemPolicy: DataItemSwipeInteraction {
 			return nil
 		}
 
-		let deleteAction = UIContextualAction(style: .destructive, title: "Make unavailable offline".localized, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
+		let deleteAction = UIContextualAction(style: .destructive, title: OCLocalizedString("Make unavailable offline", nil), handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
 			uiCompletionHandler(false)
 			self?.delete(in: context)
 		})
@@ -68,7 +68,7 @@ extension OCItemPolicy: DataItemContextMenuInteraction {
 		let deleteAction = UIAction(handler: { [weak self] action in
 			self?.delete(in: context)
 		})
-		deleteAction.title = "Make unavailable offline".localized
+		deleteAction.title = OCLocalizedString("Make unavailable offline", nil)
 		deleteAction.image = OCItem.cloudUnavailableOfflineStatusIcon
 		deleteAction.attributes = .destructive
 
