@@ -102,7 +102,6 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling, OCCoreDele
 			}
 		}
 		let filePath = path + newFilename
-		let waitForCompletion = (intent.waitForCompletion as? Bool) ?? false
 		let shouldOverwrite = (intent.shouldOverwrite as? Bool) ?? false
 
 		let completeWithCode = { (code: SaveFileIntentResponseCode) in
@@ -132,7 +131,7 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling, OCCoreDele
 			if error == nil, let targetItem = item {
 				// Check if file already exists
 				OCItemTracker(for: bookmark, at: .legacyRootPath(filePath), waitOnlineTimeout: 5) { (error, core, fileItem) in
-					if let core = core {
+					if core != nil {
 						if error == nil, let fileItem = fileItem {
 							// File already exists
 							if !shouldOverwrite {
@@ -147,26 +146,10 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling, OCCoreDele
 
 										OnBackgroundQueue {
 											if let parentItem = fileItem.parentItem(from: core) {
-												if waitForCompletion {
-													// Wait for completion: report local modification from extension
-													core.reportLocalModification(of: fileItem, parentItem: parentItem, withContentsOfFileAt: fileURL, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _, item, _) in
-														completeWithResult(error, item?.path)
-													})
-												} else {
-													// Delegate local modification report to File Provider
-													let fpServiceSession = OCFileProviderServiceSession(vault: core.vault)
-													self.fpServiceSession = fpServiceSession
-
-													let didStartSecurityScopedResource = fileURL.startAccessingSecurityScopedResource()
-
-													fpServiceSession.reportModificationThroughFileProvider(url: fileURL, as: fileItem.name, for: fileItem, to: parentItem, lastModifiedDate: nil, completion: { (error) in
-														completeWithResult(error, fileItem.path)
-
-														if didStartSecurityScopedResource {
-															fileURL.stopAccessingSecurityScopedResource()
-														}
-													})
-												}
+												// Wait for completion: report local modification from extension
+												core.reportLocalModification(of: fileItem, parentItem: parentItem, withContentsOfFileAt: fileURL, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _, item, _) in
+													completeWithResult(error, item?.path)
+												})
 											} else {
 												completeWithCode(.pathFailure)
 											}
@@ -178,39 +161,22 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling, OCCoreDele
 							}
 						} else {
 							// File does NOT exist => import file
-							if waitForCompletion {
-								// Wait for completion: import from extension
-								OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in
-									core?.delegate = self
-								}, completionHandler: { (core, error) in
-									if let core = core {
-										self.core = core
+							// Wait for completion: import from extension
+							OCCoreManager.shared.requestCore(for: bookmark, setup: { (core, error) in
+								core?.delegate = self
+							}, completionHandler: { (core, error) in
+								if let core = core {
+									self.core = core
 
-										OnBackgroundQueue {
-											core.importFileNamed(newFilename, at: targetItem, from: fileURL, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _, item, _) in
-												completeWithResult(error, item?.path)
-											})
-										}
-									} else {
-										completeWithResult(error, nil)
+									OnBackgroundQueue {
+										core.importFileNamed(newFilename, at: targetItem, from: fileURL, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: nil, resultHandler: { (error, _, item, _) in
+											completeWithResult(error, item?.path)
+										})
 									}
-								})
-							} else {
-								// Delegate import to File Provider
-								let fpServiceSession = OCFileProviderServiceSession(vault: core.vault)
-								self.fpServiceSession = fpServiceSession
-
-								let didStartSecurityScopedResource = fileURL.startAccessingSecurityScopedResource()
-
-								fpServiceSession.importThroughFileProvider(url: fileURL, as: newFilename, to: targetItem, completion: { (error, _) in
-									let itemPath = (targetItem.path as NSString? ?? path as NSString?)?.appendingPathComponent(newFilename)
-									completeWithResult(error, itemPath)
-
-									if didStartSecurityScopedResource {
-										fileURL.stopAccessingSecurityScopedResource()
-									}
-								})
-							}
+								} else {
+									completeWithResult(error, nil)
+								}
+							})
 						}
 					} else {
 						failWithError(error)
@@ -275,14 +241,6 @@ public class SaveFileIntentHandler: NSObject, SaveFileIntentHandling, OCCoreDele
 			shouldOverwrite = overwrite
 		}
 		completion(INBooleanResolutionResult.success(with: shouldOverwrite))
-	}
-
-	func resolveWaitForCompletion(for intent: SaveFileIntent, with completion: @escaping (INBooleanResolutionResult) -> Void) {
-		var waitForCompletion = false
-		if let doWait = intent.waitForCompletion?.boolValue {
-			waitForCompletion = doWait
-		}
-		completion(INBooleanResolutionResult.success(with: waitForCompletion))
 	}
 }
 
