@@ -113,7 +113,6 @@ class SecuritySettingsSection: SettingsSection {
 					let newVC = StaticTableViewController(style: .insetGrouped)
 					newVC.title = OCLocalizedString("Lock application", nil)
 					let frequencySection = StaticTableViewSection(headerTitle: OCLocalizedString("Lock application", nil), footerTitle: OCLocalizedString("If you choose \"Immediately\" the App will be locked, when it is no longer in foreground.", nil))
-					
 					var radioButtons: [[String : Any]] = []
 
 					for frequency in SecurityAskFrequency.allCases {
