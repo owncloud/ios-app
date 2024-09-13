@@ -18,6 +18,15 @@
         }
       }
     },
+    "File Provider access has been disabled by the administrator. Please use the app to create new folders." : {
+
+    },
+    "File Provider access has been disabled by the administrator. Please use the share extension to import files." : {
+
+    },
+    "Importing files through the File Provider is not allowed on this device." : {
+
+    },
     "Log into your account %@ in the app for more details." : {
       "extractionState" : "manual",
       "localizations" : {
@@ -36,7 +45,6 @@
       }
     },
     "Log into your account in the app for more details." : {
-      "extractionState" : "stale",
       "localizations" : {
         "en" : {
           "stringUnit" : {

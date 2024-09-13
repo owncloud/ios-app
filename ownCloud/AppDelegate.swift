@@ -246,21 +246,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 											if let intVal = Int(value) as? NSNumber {
 												let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(intVal, forFlatIdentifier: targetID)
 												if error == nil {
-													relaunchReason = OCLocalizedString("Changed \(targetID) to int(\(intVal)).", nil)
+													relaunchReason = OCLocalizedFormat("Changed {{settingID}} to {{newValue}}.", [
+														"settingID" : targetID,
+														"newValue" : "int(\(intVal))"
+													])
 												}
 											}
 
 										case "string":
 											let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(value, forFlatIdentifier: targetID)
 											if error == nil {
-												relaunchReason = OCLocalizedString("Changed \(targetID) to string(\(value)).", nil)
+												relaunchReason = OCLocalizedFormat("Changed {{settingID}} to {{newValue}}.", [
+													"settingID" : targetID,
+													"newValue" : "string(\(value))"
+												])
 											}
 
 										case "sarray":
 											let strings = (value as NSString).components(separatedBy: ".")
 											let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(strings, forFlatIdentifier: targetID)
 											if error == nil {
-												relaunchReason = OCLocalizedString("Changed \(targetID) to stringArray(\(strings.joined(separator: ", "))).", nil)
+												relaunchReason = OCLocalizedFormat("Changed {{settingID}} to {{newValue}}.", [
+													"settingID" : targetID,
+													"newValue" : "stringArray(\(strings.joined(separator: ", ")))"
+												])
 											}
 
 										default: break
@@ -280,7 +289,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 						// Clear specific setting
 						let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(nil, forFlatIdentifier: targetID)
 						if error == nil {
-							relaunchReason = OCLocalizedString("Cleared \(targetID).", nil)
+							relaunchReason = OCLocalizedFormat("Cleared {{settingID}}.", [ "settingID" : targetID ])
 						}
 
 					default: break

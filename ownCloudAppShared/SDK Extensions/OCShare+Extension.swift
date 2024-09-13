@@ -20,54 +20,6 @@ import UIKit
 import ownCloudSDK
 
 extension OCShare {
-
-	func permissionDescription(for capabilities: OCCapabilities?) -> String {
-		var permissionsDescription : [String] = []
-
-		if self.type == .link {
-			if self.canRead {
-				permissionsDescription.append(OCLocalizedString("Download / View", nil))
-			}
-			if self.canReadWrite {
-				permissionsDescription.append(OCLocalizedString("Create", nil))
-			}
-			if self.canUpdate {
-				permissionsDescription.append(OCLocalizedString("Upload", nil))
-				permissionsDescription.append(OCLocalizedString("Edit", nil))
-			}
-			if self.canDelete {
-				permissionsDescription.append(OCLocalizedString("Delete", nil))
-			}
-			if self.canCreate, self.canUpdate == false {
-				permissionsDescription.append(OCLocalizedString("Upload (File Drop)", nil))
-			}
-			if self.expirationDate != nil {
-				permissionsDescription.append(OCLocalizedString("Expiration date", nil))
-			}
-			if self.protectedByPassword {
-				permissionsDescription.append(OCLocalizedString("Password", nil))
-			}
-		} else {
-			if self.canRead {
-				permissionsDescription.append(OCLocalizedString("Read", nil))
-			}
-			if self.canShare, capabilities?.sharingResharing == true, capabilities?.sharingAPIEnabled == true, capabilities?.sharingAllowed == true {
-				permissionsDescription.append(OCLocalizedString("Share", nil))
-			}
-			if self.canCreate {
-				permissionsDescription.append(OCLocalizedString("Create", nil))
-			}
-			if self.canUpdate {
-				permissionsDescription.append(OCLocalizedString("Change", nil))
-			}
-			if self.canDelete {
-				permissionsDescription.append(OCLocalizedString("Delete", nil))
-			}
-		}
-
-		return permissionsDescription.joined(separator:", ")
-	}
-
 	func copyToClipboard() -> Bool {
 		if let url {
 			UIPasteboard.general.url = url

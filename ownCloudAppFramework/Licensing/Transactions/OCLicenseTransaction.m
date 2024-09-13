@@ -79,35 +79,35 @@
 	if (_tableRows == nil)
 	{
 		NSMutableArray<NSDictionary<NSString *,id> *> *tableRows = [@[
-			@{ OCLocalized(@"Type") 	: [OCLicenseProduct stringForType:self.type] 	},
-			@{ OCLocalized(@"Quantity") : @(self.quantity) 				}
+			@{ OCLocalizedString(@"Type", nil) 	: [OCLicenseProduct stringForType:self.type] 	},
+			@{ OCLocalizedString(@"Quantity", nil) : @(self.quantity) 				}
 		] mutableCopy];
 
 		if (_name != nil)
 		{
 			[tableRows insertObject:@{
-				OCLocalized(@"Product")	: _name
+				OCLocalizedString(@"Product", nil)	: _name
 			} atIndex:0];
 		}
 
 		if (_date != nil)
 		{
 			[tableRows addObject:@{
-				OCLocalized(@"Date")	 : _date
+				OCLocalizedString(@"Date", nil)	 : _date
 			}];
 		}
 
 		if (_cancellationDate != nil)
 		{
 			[tableRows addObject:@{
-				OCLocalized(@"Cancelled"): _cancellationDate
+				OCLocalizedString(@"Cancelled", nil): _cancellationDate
 			}];
 		}
 
 		if (_endDate != nil)
 		{
 			[tableRows addObject:@{
-				OCLocalized(@"Ends")	: _endDate
+				OCLocalizedString(@"Ends", nil)	: _endDate
 			}];
 		}
 
@@ -147,7 +147,7 @@
 						obj = ((NSObject *)obj).description;
 					}
 
-					row[OCLocalized(key)] = obj;
+					row[OCLocalizedString(key, nil)] = obj;
 				}];
 
 				[displayTableRows addObject:row];

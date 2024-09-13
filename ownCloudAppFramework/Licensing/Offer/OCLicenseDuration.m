@@ -68,44 +68,44 @@
 		case OCLicenseDurationUnitDay:
 			if (_length == 1)
 			{
-				format = OCLocalized(@"day");
+				format = OCLocalizedString(@"day", nil);
 			}
 			else
 			{
-				format = OCLocalized(@"%lu days");
+				format = OCLocalizedString(@"%lu days", nil);
 			}
 		break;
 
 		case OCLicenseDurationUnitWeek:
 			if (_length == 1)
 			{
-				format = OCLocalized(@"week");
+				format = OCLocalizedString(@"week", nil);
 			}
 			else
 			{
-				format = OCLocalized(@"%lu weeks");
+				format = OCLocalizedString(@"%lu weeks", nil);
 			}
 		break;
 
 		case OCLicenseDurationUnitMonth:
 			if (_length == 1)
 			{
-				format = OCLocalized(@"month");
+				format = OCLocalizedString(@"month", nil);
 			}
 			else
 			{
-				format = OCLocalized(@"%lu months");
+				format = OCLocalizedString(@"%lu months", nil);
 			}
 		break;
 
 		case OCLicenseDurationUnitYear:
 			if (_length == 1)
 			{
-				format = OCLocalized(@"year");
+				format = OCLocalizedString(@"year", nil);
 			}
 			else
 			{
-				format = OCLocalized(@"%lu years");
+				format = OCLocalizedString(@"%lu years", nil);
 			}
 		break;
 
@@ -130,44 +130,44 @@
 		case OCLicenseDurationUnitDay:
 			if (_length == 1)
 			{
-				format = OCLocalized(@"day");
+				format = OCLocalizedString(@"day", nil);
 			}
 			else
 			{
-				format = OCLocalized(@"%lu day");
+				format = OCLocalizedString(@"%lu day", nil);
 			}
 		break;
 
 		case OCLicenseDurationUnitWeek:
 			if (_length == 1)
 			{
-				format = OCLocalized(@"week");
+				format = OCLocalizedString(@"week", nil);
 			}
 			else
 			{
-				format = OCLocalized(@"%lu week");
+				format = OCLocalizedString(@"%lu week", nil);
 			}
 		break;
 
 		case OCLicenseDurationUnitMonth:
 			if (_length == 1)
 			{
-				format = OCLocalized(@"month");
+				format = OCLocalizedString(@"month", nil);
 			}
 			else
 			{
-				format = OCLocalized(@"%lu month");
+				format = OCLocalizedString(@"%lu month", nil);
 			}
 		break;
 
 		case OCLicenseDurationUnitYear:
 			if (_length == 1)
 			{
-				format = OCLocalized(@"year");
+				format = OCLocalizedString(@"year", nil);
 			}
 			else
 			{
-				format = OCLocalized(@"%lu year");
+				format = OCLocalizedString(@"%lu year", nil);
 			}
 		break;
 

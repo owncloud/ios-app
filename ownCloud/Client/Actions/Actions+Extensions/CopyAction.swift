@@ -95,7 +95,7 @@ class CopyAction : Action {
 		alertController.addAction(UIAlertAction(title: OCLocalizedString("Choose destination directory…", nil), style: .default) { (_) in
 			self.showDirectoryPicker()
 		})
-		alertController.addAction(UIAlertAction(title: OCLocalizedString("Copy to Clipboard", nil), style: .default) { (_) in
+		alertController.addAction(UIAlertAction(title: OCLocalizedString("Copy to clipboard", nil), style: .default) { (_) in
 			self.copyToPasteboard()
 		})
 		alertController.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel, handler: nil))
