@@ -26,7 +26,7 @@
 	if ((self = [super initWithIdentifier:OCLicenseProviderIdentifierEMM]) != nil)
 	{
 		_unlockedProductIdentifiers = unlockedProductIdentifiers;
-		self.localizedName = OCLocalized(@"EMM");
+		self.localizedName = OCLocalizedString(@"EMM", nil);
 	}
 
 	return (self);

@@ -556,7 +556,7 @@
 
 	if (!OCFileProviderSettings.browseable)
 	{
-		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalized(@"File Provider access has been disabled by the administrator. Please use the app to create new folders.")) translatedError]);
+		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalizedString(@"File Provider access has been disabled by the administrator. Please use the app to create new folders.", nil)) translatedError]);
 		return;
 	}
 
@@ -673,7 +673,7 @@
 			// a cross-server move using OCCore actions. The complexity of such an undertaking should not be underestimated, though, as in
 			// the case of moving folders, we'd have to download and upload entire hierarchies of files - that could change while we're at it.
 			FPLogCmd(@"parentItem not found. Likely a cross-domain move. Changing error message accordingly.");
-			error = OCErrorWithDescription(OCErrorItemNotFound, OCLocalized(@"The destination folder couldn't be found on this server. Moving items across servers is currently not supported."));
+			error = OCErrorWithDescription(OCErrorItemNotFound, OCLocalizedString(@"The destination folder couldn't be found on this server. Moving items across servers is currently not supported.", nil));
 		}
 
 		FPLogCmd(@"Completed with item=%@ or parentItem=%@ not found, error=%@", item, parentItem, error);
@@ -744,13 +744,13 @@
 
 	if (!OCFileProviderSettings.browseable)
 	{
-		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalized(@"File Provider access has been disabled by the administrator. Please use the share extension to import files.")) translatedError]);
+		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalizedString(@"File Provider access has been disabled by the administrator. Please use the share extension to import files.", nil)) translatedError]);
 		return;
 	}
 
 	if (![Branding.sharedBranding isImportMethodAllowed:BrandingFileImportMethodFileProvider])
 	{
-		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalized(@"Importing files through the File Provider is not allowed on this device.")) translatedError]);
+		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalizedString(@"Importing files through the File Provider is not allowed on this device.", nil)) translatedError]);
 
 		return;
 	}
@@ -1328,18 +1328,18 @@
 
 				OCBookmark *bookmark;
 
-				content.title = OCLocalized(@"Authorization failed");
+				content.title = OCLocalizedString(@"Authorization failed", nil);
 
 				if ((OCBookmarkManager.sharedBookmarkManager.bookmarks.count > 1) &&
 				    (((bookmark = core.bookmark) != nil) &&
 				     (bookmark.shortName != nil))
 				   )
 				{
-					content.body = [NSString stringWithFormat:OCLocalized(@"Log into your account %@ in the app for more details."), bookmark.shortName];
+					content.body = [NSString stringWithFormat:OCLocalizedString(@"Log into your account %@ in the app for more details.", nil), bookmark.shortName];
 				}
 				else
 				{
-					content.body = OCLocalized(@"Log into your account in the app for more details.");
+					content.body = OCLocalizedString(@"Log into your account in the app for more details.", nil);
 				}
 
 				UNNotificationRequest *request;

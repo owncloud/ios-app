@@ -504,15 +504,8 @@
       }
     },
     "{{attribute}} {{direction}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "{{attribute}} {{direction}}"
-          }
-        },
-        "en" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "{{attribute}} {{direction}}"
@@ -522,41 +515,26 @@
     },
     "{{fileName}} (file)" : {
       "comment" : "Accessibility descriptions of items",
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "{{fileName}} (Datei)"
           }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "{{fileName}} (file)"
-          }
         }
       }
     },
     "{{folderName}} (folder)" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "{{folderName}} (Ordner)"
           }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "{{folderName}} (folder)"
-          }
         }
       }
     },
     "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -568,12 +546,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "{{itemCount}} Elemente mit Gesamtgröße {{totalSize}} ({{fileCount}} Dateien, {{folderCount}} Ordner)"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)"
           }
         },
         "en-GB" : {
@@ -627,41 +599,26 @@
       }
     },
     "{{itemName}} ({{link}}) | password: {{password}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "{{itemName}} ({{link}}) | Passwort: {{password}}"
           }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "{{itemName}} ({{link}}) | password: {{password}}"
-          }
         }
       }
     },
     "{{link}} | password: {{password}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "{{link}} | Passwort: {{password}}"
           }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "{{link}} | password: {{password}}"
-          }
         }
       }
     },
     "{{remaining}} available" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -673,12 +630,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "{{remaining}} noch frei"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "{{remaining}} available"
           }
         },
         "en-GB" : {
@@ -732,18 +683,11 @@
       }
     },
     "{{spaceName}} (space)" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "{{spaceName}} (Space)"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "{{spaceName}} (space)"
           }
         }
       }
@@ -1021,17 +965,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ / %@ – starting immediately"
-          }
-        }
-      }
-    },
-    "%@ %@ version %@ build %@ (app: %@, sdk: %@)" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "%@ %@ bertsioa %@ eraiketa %@ (app: %@, sdk: %@)"
           }
         }
       }
@@ -5066,53 +4999,6 @@
         }
       }
     },
-    "All Files" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Files"
-          }
-        },
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fitxategi denak"
-          }
-        },
-        "mk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Files"
-          }
-        },
-        "nb-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Files"
-          }
-        },
-        "nn-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Files"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "All Files"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "所有文件"
-          }
-        }
-      }
-    },
     "All Photos" : {
       "localizations" : {
         "ar" : {
@@ -6313,6 +6199,12 @@
     "App Store" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store"
+          }
+        },
         "eu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7494,7 +7386,14 @@
       }
     },
     "Audios" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audios"
+          }
+        }
+      }
     },
     "Authenticated as %@ via %@" : {
       "localizations" : {
@@ -7938,7 +7837,14 @@
       }
     },
     "Authentication failed" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anmeldung fehlgeschlagen"
+          }
+        }
+      }
     },
     "Authentication with %@ is no longer allowed. Re-authentication needed." : {
       "localizations" : {
@@ -8403,7 +8309,14 @@
       }
     },
     "Auto upload disabled" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Autoupload deaktiviert"
+          }
+        }
+      }
     },
     "Auto upload of media was disabled since configured account / folder was not found" : {
       "localizations" : {
@@ -12518,14 +12431,15 @@
         }
       }
     },
-    "Changed (targetID) to int((intVal))." : {
-
-    },
-    "Changed (targetID) to string((value))." : {
-
-    },
-    "Changed (targetID) to stringArray((strings.joined(separator: \", \")))." : {
-
+    "Changed {{settingID}} to {{newValue}}." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellung {{settingID}} geändert auf {{newValue}}."
+          }
+        }
+      }
     },
     "Choose an account and folder to import into." : {
       "extractionState" : "manual",
@@ -12630,17 +12544,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Choose an account and folder to import into."
-          }
-        }
-      }
-    },
-    "Choose an account and folder to import the file into.\n\nOnly one file can be imported at once." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Fitxategia inportatzeko kontu eta karpeta hautatu.\n\nAldi bakoitzean fitxategi bakarra inportatu daiteke."
           }
         }
       }
@@ -12823,13 +12726,34 @@
       }
     },
     "Clear" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leeren"
+          }
+        }
+      }
     },
-    "Cleared (targetID)." : {
-
+    "Cleared {{settingID}}." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellung {{settingID}} gelöscht."
+          }
+        }
+      }
     },
     "Cleared all." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle gelöscht."
+          }
+        }
+      }
     },
     "Close actions menu" : {
       "localizations" : {
@@ -15228,7 +15152,6 @@
       }
     },
     "Copy \"{{itemName}}\"" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -15240,12 +15163,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kopiere \"{{itemName}}\""
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy \"{{itemName}}\""
           }
         },
         "en-GB" : {
@@ -15299,7 +15216,6 @@
       }
     },
     "Copy {{itemCount}} items" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -15311,12 +15227,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kopiere {{itemCount}} Elemente"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy {{itemCount}} items"
           }
         },
         "en-GB" : {
@@ -15695,110 +15605,11 @@
       }
     },
     "Copy to clipboard" : {
-
-    },
-    "Copy to Clipboard" : {
       "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy to Clipboard"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy to Clipboard"
-          }
-        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "In die Zwischenablage kopieren"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy to Clipboard"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copiar al portapapeles"
-          }
-        },
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy to Clipboard"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copier dans le presse-papier"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "클립보드에 복사"
-          }
-        },
-        "mk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy to Clipboard"
-          }
-        },
-        "nb-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy to Clipboard"
-          }
-        },
-        "nn-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy to Clipboard"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copiar para área de transferência "
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Copy to Clipboard"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Скопировать в буфер обмена"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Kopjoje në të Papastër"
-          }
-        },
-        "th-TH" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "คัดลอกไปที่คลิปบอร์ด"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "复制到剪贴板"
           }
         }
       }
@@ -18157,7 +17968,14 @@
       }
     },
     "Debug" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Debug"
+          }
+        }
+      }
     },
     "Decline" : {
       "localizations" : {
@@ -20354,6 +20172,12 @@
     },
     "Deletion of '%@' failed" : {
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Löschung von '%@' fehlgeschlagen"
+          }
+        },
         "eu" : {
           "stringUnit" : {
             "state" : "translated",
@@ -20936,7 +20760,14 @@
       }
     },
     "Disable" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deaktivieren"
+          }
+        }
+      }
     },
     "Disable gestures" : {
       "localizations" : {
@@ -21916,7 +21747,14 @@
       }
     },
     "Download" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Download"
+          }
+        }
+      }
     },
     "Download / View" : {
       "localizations" : {
@@ -22974,54 +22812,6 @@
         }
       }
     },
-    "Empty folder" : {
-      "comment" : "Client Messages",
-      "extractionState" : "manual",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Prázdný adresář"
-          }
-        },
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Karpeta hutsa"
-          }
-        },
-        "mk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Empty folder"
-          }
-        },
-        "nb-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Tom mappe"
-          }
-        },
-        "nn-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Empty folder"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Pasta vazia"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "空文件夹"
-          }
-        }
-      }
-    },
     "Enable" : {
       "localizations" : {
         "ar" : {
@@ -23514,7 +23304,14 @@
       }
     },
     "Enable Pro Features (QA)" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pro Features freischalten (QA)"
+          }
+        }
+      }
     },
     "enabled" : {
       "localizations" : {
@@ -24632,7 +24429,6 @@
       }
     },
     "Error creating {{itemName}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -24644,12 +24440,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fehler beim Erstellen von {{itemName}}"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error creating {{itemName}}"
           }
         },
         "en-GB" : {
@@ -25115,7 +24905,6 @@
       }
     },
     "Error opening {{itemName}} in {{appName}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -25127,12 +24916,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fehler beim Öffnen von {{itemName}} in {{appName}}"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Error opening {{itemName}} in {{appName}}"
           }
         },
         "en-GB" : {
@@ -25833,7 +25616,6 @@
       }
     },
     "Expires {{expirationDate}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -25845,12 +25627,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Läuft ab {{expirationDate}}"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Expires {{expirationDate}}"
           }
         },
         "en-GB" : {
@@ -26693,7 +26469,14 @@
       }
     },
     "Fetching server information…" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erfrage Serverinformation…"
+          }
+        }
+      }
     },
     "Fetching user information…" : {
       "localizations" : {
@@ -26866,7 +26649,14 @@
       }
     },
     "File an issue" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Issue erstellen"
+          }
+        }
+      }
     },
     "File couldn't be opened" : {
       "localizations" : {
@@ -27741,7 +27531,14 @@
       }
     },
     "Find information, answers and solutions in the detailed documentation." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Finden Sie Informationen, Antworten und Lösungen in der ausführlichen Dokumentation."
+          }
+        }
+      }
     },
     "Find Next" : {
       "extractionState" : "manual",
@@ -29097,7 +28894,14 @@
       }
     },
     "Get in touch with our community in the forums - or file a GitHub issue to report a bug or request a feature." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nehmen Sie in den Foren Kontakt mit unserer Community auf – oder erstellen Sie eine GitHub-Issue, um einen Fehler zu melden oder ein Feature vorzuschlagen."
+          }
+        }
+      }
     },
     "Go to Beginning" : {
       "extractionState" : "manual",
@@ -29406,7 +29210,14 @@
       }
     },
     "Group" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gruppe"
+          }
+        }
+      }
     },
     "Groups" : {
       "extractionState" : "manual",
@@ -29628,7 +29439,15 @@
       }
     },
     "Help & Contact" : {
-      "comment" : "Help and support"
+      "comment" : "Help and support",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilfe & Kontakt"
+          }
+        }
+      }
     },
     "Hide" : {
       "localizations" : {
@@ -29932,7 +29751,6 @@
       }
     },
     "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -29944,12 +29762,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wenn Sie auf 'Fortsetzen' klicken, werden Sie aufgefordert, der App '{{app.name}}' das Öffnen der {{authmethodName}} Login Seite zu erlauben, wo Sie Ihre Zugangsdaten eingeben können."
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials."
           }
         },
         "en-GB" : {
@@ -30066,53 +29878,6 @@
         }
       }
     },
-    "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials."
-          }
-        },
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "'Jarraitzen' baduzu, '%@' App-ak OAuth2 logina ireki ahal izateko baimena eskatuko zaizu. Bertan zure kredentzialak sartu ahal izango dituzu."
-          }
-        },
-        "mk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials."
-          }
-        },
-        "nb-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials."
-          }
-        },
-        "nn-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials."
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "If you 'Continue', you will be prompted to allow the '%@' App to open OAuth2 login where you can enter your credentials."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "如果你选择“继续”，你将被建议允许应用“%@”打开OAuth2登录，在那里你可以输入你的凭据。"
-          }
-        }
-      }
-    },
     "If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." : {
       "localizations" : {
         "ar" : {
@@ -30208,7 +29973,14 @@
       }
     },
     "If you have a moment to give us your feedback, please take our survey." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn Sie einen Moment Zeit haben uns Ihr Feedback mitzuteilen, nehmen Sie bitte an der Umfrage teil."
+          }
+        }
+      }
     },
     "If you make an item a favorite, it will turn up here." : {
       "localizations" : {
@@ -30270,23 +30042,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "If you make an item a favorite, it will turn up here."
-          }
-        }
-      }
-    },
-    "if you would like background media uploads to be more reliable, you should enable background location updates." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "mk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "if you would like background media uploads to be more reliable, you should enable background location updates."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "if you would like background media uploads to be more reliable, you should enable background location updates."
           }
         }
       }
@@ -30977,7 +30732,6 @@
       }
     },
     "Import \"{{itemName}}\"" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -30989,12 +30743,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importiere \"{{itemName}}\""
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import \"{{itemName}}\""
           }
         },
         "en-GB" : {
@@ -31048,7 +30796,6 @@
       }
     },
     "Import {{itemCount}} files" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -31060,12 +30807,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Importiere {{itemCount}} Dateien"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Import {{itemCount}} files"
           }
         },
         "en-GB" : {
@@ -35210,7 +34951,14 @@
       }
     },
     "Log out of '%@' failed" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abmeldung von '%@' fehlgeschlagen"
+          }
+        }
+      }
     },
     "Logging" : {
       "localizations" : {
@@ -36870,7 +36618,14 @@
       }
     },
     "Messages" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nachrichten"
+          }
+        }
+      }
     },
     "Metering" : {
       "comment" : "EXIF: exposure metering mode",
@@ -37327,18 +37082,11 @@
       }
     },
     "More for {{title}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mehr zu {{title}}"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "More for {{title}}"
           }
         }
       }
@@ -37514,7 +37262,6 @@
       }
     },
     "Move \"{{itemName}}\"" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -37526,12 +37273,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verschiebe \"{{itemName}}\""
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Move \"{{itemName}}\""
           }
         },
         "en-GB" : {
@@ -37585,7 +37326,6 @@
       }
     },
     "Move {{itemCount}} items" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -37597,12 +37337,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verschiebe {{itemCount}} Elemente"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Move {{itemCount}} items"
           }
         },
         "en-GB" : {
@@ -39254,7 +38988,14 @@
       }
     },
     "No account configured" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kein Account konfiguriert"
+          }
+        }
+      }
     },
     "No account configured.\nSetup an new account in the app to save to." : {
       "extractionState" : "manual",
@@ -40188,53 +39929,6 @@
         }
       }
     },
-    "No items have been selected for offline availability." : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No items have been selected for offline availability."
-          }
-        },
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ez da alerik hautatu konexiorik gabe eskuragarri jartzeko."
-          }
-        },
-        "mk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No items have been selected for offline availability."
-          }
-        },
-        "nb-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No items have been selected for offline availability."
-          }
-        },
-        "nn-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No items have been selected for offline availability."
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "No items have been selected for offline availability."
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "还没有对象被设置为离线可用"
-          }
-        }
-      }
-    },
     "No items shared by link" : {
       "localizations" : {
         "ar" : {
@@ -40747,7 +40441,14 @@
       }
     },
     "No spaces" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Spaces"
+          }
+        }
+      }
     },
     "No strobe return detection" : {
       "localizations" : {
@@ -40814,7 +40515,14 @@
       }
     },
     "No user or group matches your search." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keine Benutzer oder Gruppen für Ihre Suche gefunden"
+          }
+        }
+      }
     },
     "none" : {
       "localizations" : {
@@ -41614,7 +41322,14 @@
       }
     },
     "on" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "an"
+          }
+        }
+      }
     },
     "Online" : {
       "localizations" : {
@@ -41693,53 +41408,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares."
-          }
-        }
-      }
-    },
-    "Only recipients can use this link. Use it as a permanent link to point to this resource" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only recipients can use this link. Use it as a permanent link to point to this resource"
-          }
-        },
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hartzaileek bakarrik erabili dezakete esteka hau. Erabili baliabide honen esteka iraunkor gisa"
-          }
-        },
-        "mk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only recipients can use this link. Use it as a permanent link to point to this resource"
-          }
-        },
-        "nb-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only recipients can use this link. Use it as a permanent link to point to this resource"
-          }
-        },
-        "nn-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only recipients can use this link. Use it as a permanent link to point to this resource"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Only recipients can use this link. Use it as a permanent link to point to this resource"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "只有接收者可以使用该链接。把它作为指向该源的永久链接"
           }
         }
       }
@@ -41923,7 +41591,14 @@
       }
     },
     "Open help page" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilfeseite öffnen"
+          }
+        }
+      }
     },
     "Open in" : {
       "localizations" : {
@@ -42032,7 +41707,6 @@
       }
     },
     "Open in {{appName}} (web)" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -42044,12 +41718,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Öffnen in {{appName}} (web)"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Open in {{appName}} (web)"
           }
         },
         "en-GB" : {
@@ -42722,7 +42390,14 @@
       }
     },
     "Optic ID" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Optic ID"
+          }
+        }
+      }
     },
     "Options" : {
       "localizations" : {
@@ -43096,53 +42771,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "概述"
-          }
-        }
-      }
-    },
-    "Overview" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overview"
-          }
-        },
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Ikuspegi orokorra"
-          }
-        },
-        "mk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overview"
-          }
-        },
-        "nb-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overview"
-          }
-        },
-        "nn-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overview"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Overview"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "概览"
           }
         }
       }
@@ -45281,10 +44909,24 @@
       }
     },
     "Pick a destination for photo uploads" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ziel für Photo-Uploads wählen"
+          }
+        }
+      }
     },
     "Pick a destination for video uploads" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ziel für Videouploads wählen"
+          }
+        }
+      }
     },
     "Pick a document type to create:" : {
       "localizations" : {
@@ -46007,7 +45649,14 @@
       }
     },
     "Please open the app and select the account to re-authenticate." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte öffnen Sie die App und wählen Sie das Benutzerkonto um sich neu anzumelden."
+          }
+        }
+      }
     },
     "Please pick a profile to begin setup" : {
       "extractionState" : "manual",
@@ -48622,53 +48271,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ซื้อแอปแล้ว"
-          }
-        }
-      }
-    },
-    "Purchases" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Purchases"
-          }
-        },
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Purchases"
-          }
-        },
-        "mk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Purchases"
-          }
-        },
-        "nb-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Purchases"
-          }
-        },
-        "nn-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Purchases"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Purchases"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Purchases"
           }
         }
       }
@@ -53510,65 +53112,6 @@
         }
       }
     },
-    "Saved search templates" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saved search templates"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saved search templates"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Plantillas de búsqueda guardadas"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saved search templates"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saved search templates"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Modelos de pesquisa salvos"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Сохраненные шаблоны поиска"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Gjedhe kërkimesh të ruajtur"
-          }
-        },
-        "th-TH" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Saved search templates"
-          }
-        }
-      }
-    },
     "Saved searches" : {
       "localizations" : {
         "ar" : {
@@ -54873,7 +54416,6 @@
       }
     },
     "Search {{space.name}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -54885,12 +54427,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "{{space.name}} durchsuchen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search {{space.name}}"
           }
         },
         "en-GB" : {
@@ -55136,7 +54672,6 @@
       }
     },
     "Search from {{folder.name}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -55148,12 +54683,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Suche von {{folder.name}}"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search from {{folder.name}}"
           }
         },
         "en-GB" : {
@@ -55572,53 +55101,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Search templates"
-          }
-        }
-      }
-    },
-    "Search this folder" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Hledat v tomto adresáři"
-          }
-        },
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Karpeta honetan bilatu"
-          }
-        },
-        "mk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search this folder"
-          }
-        },
-        "nb-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Lagre denne mappen"
-          }
-        },
-        "nn-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Search this folder"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Procurar esta pasta"
-          }
-        },
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "在此文件夹搜索"
           }
         }
       }
@@ -56233,10 +55715,24 @@
       }
     },
     "Select Destination" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ziel wählen"
+          }
+        }
+      }
     },
     "Select folder" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ordner auswählen"
+          }
+        }
+      }
     },
     "Select Items" : {
       "extractionState" : "manual",
@@ -58161,7 +57657,14 @@
       }
     },
     "Setup a new account in the app to save to." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fügen Sie in der App einen Account hinzu um in ihn abzuspeichern."
+          }
+        }
+      }
     },
     "Setup complete" : {
       "extractionState" : "manual",
@@ -58613,7 +58116,14 @@
       }
     },
     "Share Extension unavailable" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share-Erweiterung nicht verfügbar"
+          }
+        }
+      }
     },
     "Share link" : {
       "extractionState" : "manual",
@@ -59277,7 +58787,6 @@
       }
     },
     "Shared by {{owner}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -59295,12 +58804,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geteilt von {{owner}}"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shared by {{owner}}"
           }
         },
         "en-GB" : {
@@ -59624,7 +59127,6 @@
       }
     },
     "Shared with {{recipient}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -59636,12 +59138,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geteilt mit {{recipient}}"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shared with {{recipient}}"
           }
         },
         "en-GB" : {
@@ -59695,7 +59191,6 @@
       }
     },
     "Shared with {{recipients}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -59707,12 +59202,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geteilt mit {{recipients}}"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shared with {{recipients}}"
           }
         },
         "en-GB" : {
@@ -60344,18 +59833,11 @@
       }
     },
     "Shortcut to '{{hostname}}'" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verknüpfung zu '{{hostname}}'"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Shortcut to '{{hostname}}'"
           }
         }
       }
@@ -60802,41 +60284,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "显示证书信息"
-          }
-        }
-      }
-    },
-    "Show folders at the top" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show folders at the top"
-          }
-        },
-        "mk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show folders at the top"
-          }
-        },
-        "nb-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show folders at the top"
-          }
-        },
-        "nn-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show folders at the top"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Show folders at the top"
           }
         }
       }
@@ -62109,18 +61556,11 @@
       }
     },
     "Sort by {{attribute}} in {{direction}} order" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "{{direction}} sortiert nach {{attribute}}"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sort by {{attribute}} in {{direction}} order"
           }
         }
       }
@@ -62239,10 +61679,24 @@
       }
     },
     "Space" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Space"
+          }
+        }
+      }
     },
     "Spaces" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spaces"
+          }
+        }
+      }
     },
     "Spot" : {
       "localizations" : {
@@ -63801,7 +63255,14 @@
       }
     },
     "Take survey" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "An Umfrage teilnehmen"
+          }
+        }
+      }
     },
     "Tap to launch the app." : {
       "localizations" : {
@@ -64469,7 +63930,14 @@
       }
     },
     "The {{app.name}} share extension is not available on this system." : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die {{app.name}} Share-Extension ist auf diesem System nicht verfügbar."
+          }
+        }
+      }
     },
     "The account has been disabled." : {
       "extractionState" : "migrated",
@@ -65302,7 +64770,14 @@
       }
     },
     "The password was copied to the clipboard" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Passwort wurde ins Clipboard kopiert."
+          }
+        }
+      }
     },
     "The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." : {
       "extractionState" : "manual",
@@ -66898,18 +66373,11 @@
       }
     },
     "This shortcut points to:\n{{url}}" : {
-      "extractionState" : "migrated",
       "localizations" : {
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Diese Verknüpfung verweist auf:\n{{url}}"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "This shortcut points to:\n{{url}}"
           }
         }
       }
@@ -68328,7 +67796,14 @@
       }
     },
     "undated" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "undatiert"
+          }
+        }
+      }
     },
     "Unfavorite item" : {
       "localizations" : {
@@ -68543,7 +68018,14 @@
       }
     },
     "Unknown" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unbekannt"
+          }
+        }
+      }
     },
     "Unlock" : {
       "localizations" : {
@@ -69672,9 +69154,6 @@
         }
       }
     },
-    "Upload (File Drop)" : {
-
-    },
     "Upload file" : {
       "localizations" : {
         "ar" : {
@@ -70113,17 +69592,6 @@
         }
       }
     },
-    "Upload Path" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "eu" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Igotzetarako Bidea"
-          }
-        }
-      }
-    },
     "Upload pictures via WiFi only" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -70350,6 +69818,16 @@
         }
       }
     },
+    "Uploading {{remainingFileCount}} files…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lade {{remainingFileCount}} Dateien hoch…"
+          }
+        }
+      }
+    },
     "Uploading %ld files…" : {
       "localizations" : {
         "ar" : {
@@ -70457,7 +69935,14 @@
       }
     },
     "URL" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "URL"
+          }
+        }
+      }
     },
     "URL of webpage or item" : {
       "localizations" : {
@@ -71483,10 +70968,24 @@
       }
     },
     "Verbose" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ausführlich"
+          }
+        }
+      }
     },
     "Verifying password…" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Überprüfe Passwort…"
+          }
+        }
+      }
     },
     "Version information were copied to the clipboard" : {
       "localizations" : {
@@ -71901,10 +71400,24 @@
       }
     },
     "View documentation" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dokumentation anzeigen"
+          }
+        }
+      }
     },
     "Visit the forums" : {
-
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Foren besuchen"
+          }
+        }
+      }
     },
     "W" : {
       "localizations" : {
@@ -73022,120 +72535,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "你"
-          }
-        }
-      }
-    },
-    "You are connected as\n%@" : {
-      "comment" : "Single AccountSingle Account",
-      "extractionState" : "manual",
-      "localizations" : {
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "أنت متصل كما%@"
-          }
-        },
-        "cs" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You are connected as\n%@"
-          }
-        },
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Sie sind verbunden als\n%@"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You are connected as\n%@"
-          }
-        },
-        "en-GB" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You are connected as\n%@"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Está conectado como \n%@"
-          }
-        },
-        "fr" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Vous êtes connecté en tant que\n%@"
-          }
-        },
-        "ko" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "귀하는 %@으로 연결되어 있습니다."
-          }
-        },
-        "mk" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You are connected as\n%@"
-          }
-        },
-        "nb-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You are connected as\n%@"
-          }
-        },
-        "nn-NO" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You are connected as\n%@"
-          }
-        },
-        "pt-BR" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Você está conectado como\n%@"
-          }
-        },
-        "pt-PT" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You are connected as\n%@"
-          }
-        },
-        "ru" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Вы подключены, как\n%@"
-          }
-        },
-        "sq" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Jeni i lidhur si\n%@"
-          }
-        },
-        "th-TH" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "คุณเชื่อมต่อด้วยบัญชี %@"
-          }
-        }
-      }
-    },
-    "You are connected as\n%@ to %@" : {
-      "comment" : "Single Account",
-      "extractionState" : "manual",
-      "localizations" : {
-        "zh-Hans" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "You are connected as\n%@ to %@"
           }
         }
       }
