@@ -22,6 +22,8 @@
 #import "OCItem+FileProviderItem.h"
 #import "NSError+MessageResolution.h"
 
+#if OC_FEATURE_AVAILABLE_FILEPROVIDER
+
 static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 
 @implementation OCItem (FileProviderItem)
@@ -409,3 +411,5 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 }
 
 @end
+
+#endif /* OC_FEATURE_AVAILABLE_FILEPROVIDER */
