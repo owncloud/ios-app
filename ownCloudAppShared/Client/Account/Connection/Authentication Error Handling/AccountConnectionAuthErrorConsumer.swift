@@ -100,7 +100,7 @@ class AccountConnectionAuthErrorConsumer: AccountConnectionConsumer, AccountConn
 					authFailureHasEditOption = false
 					authFailureIgnoreStyle = .cancel
 					authFailureIgnoreLabel = OCLocalizedString("Continue offline", nil)
-					authFailureMessage = "The account has been disabled."
+					authFailureMessage = OCLocalizedString("The account has been disabled.", nil)
 				} else {
 					if connection.bookmark.isTokenBased == true {
 						authFailureTitle = OCLocalizedString("Access denied", nil)
