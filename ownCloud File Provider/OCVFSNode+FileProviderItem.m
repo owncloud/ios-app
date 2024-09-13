@@ -20,6 +20,8 @@
 #import "OCItem+FileProviderItem.h"
 #import <UniformTypeIdentifiers/UniformTypeIdentifiers.h>
 
+#if OC_FEATURE_AVAILABLE_FILEPROVIDER
+
 @implementation OCVFSNode (FileProviderItem)
 
 - (NSString *)filename
@@ -81,3 +83,5 @@
 }
 
 @end
+
+#endif /* OC_FEATURE_AVAILABLE_FILEPROVIDER */
