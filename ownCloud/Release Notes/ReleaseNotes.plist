@@ -1979,6 +1979,12 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>12.3</string>
+			<key>ReleaseNotes</key>
+			<array/>
+		</dict>
 	</array>
 </dict>
 </plist>
