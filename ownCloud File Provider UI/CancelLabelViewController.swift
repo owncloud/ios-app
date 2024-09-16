@@ -40,7 +40,7 @@ class CancelLabelViewController: UIViewController {
 		label.apply(css: collection.css, properties: [.stroke])
 
 		self.label.text = message
-		self.button.setTitle(buttonLabel ?? "Cancel".localized, for: .normal)
+		self.button.setTitle(buttonLabel ?? OCLocalizedString("Cancel", nil), for: .normal)
 	}
 
 	@IBAction func cancelScreen() {

@@ -29,16 +29,16 @@ public enum ItemLayout: CaseIterable {
 	public func labelAndIcon() -> (String, UIImage?) {
 		switch self {
 			case .list:
-				return ("List".localized, OCSymbol.icon(forSymbolName: "list.bullet"))
+				return (OCLocalizedString("List", nil), OCSymbol.icon(forSymbolName: "list.bullet"))
 
 			case .grid:
-				return ("Grid".localized, OCSymbol.icon(forSymbolName: "square.grid.2x2"))
+				return (OCLocalizedString("Grid", nil), OCSymbol.icon(forSymbolName: "square.grid.2x2"))
 
 			case .gridLowDetail:
-				return ("Item grid".localized, OCSymbol.icon(forSymbolName: "text.below.photo"))
+				return (OCLocalizedString("Item grid", nil), OCSymbol.icon(forSymbolName: "text.below.photo"))
 
 			case .gridNoDetail:
-				return ("Image grid".localized, OCSymbol.icon(forSymbolName: "photo"))
+				return (OCLocalizedString("Image grid", nil), OCSymbol.icon(forSymbolName: "photo"))
 		}
 	}
 

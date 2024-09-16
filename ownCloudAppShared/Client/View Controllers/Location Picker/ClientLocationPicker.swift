@@ -109,7 +109,7 @@ public class ClientLocationPicker : NSObject {
 	public init(location: OCLocation, maximumLevel: LocationLevel = .folder, showFavorites: Bool = true, showRecents: Bool = true, selectButtonTitle: String?, selectPrompt: String? = nil, headerTitle: String? = nil, headerSubTitle: String? = nil, headerView: UIView? = nil, requiredPermissions: OCItemPermissions? = [.createFile], avoidConflictsWith conflictItems: [OCItem]?, choiceHandler: @escaping ChoiceHandler) {
 		self.startLocation = location
 		self.showFavorites = showFavorites
-		self.selectButtonTitle = selectButtonTitle ?? "Select folder".localized
+		self.selectButtonTitle = selectButtonTitle ?? OCLocalizedString("Select folder", nil)
 		self.selectPrompt = selectPrompt
 		self.headerTitle = headerTitle
 		self.headerSubTitle = headerSubTitle
@@ -270,11 +270,11 @@ public class ClientLocationPicker : NSObject {
 
 			switch location.clientLocationLevel {
 				case .accounts:
-					title = "Accounts".localized
+					title = OCLocalizedString("Accounts", nil)
 					viewController.cssSelector = .accountList
 
 				case .account:
-					title = "Account".localized
+					title = OCLocalizedString("Account", nil)
 					viewController.cssSelector = .accountList
 					if let bookmarkUUID = location.bookmarkUUID {
 						title = OCBookmarkManager.shared.bookmark(for: bookmarkUUID)?.displayName

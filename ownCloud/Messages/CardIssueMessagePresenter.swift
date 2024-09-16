@@ -63,7 +63,7 @@ class CardIssueMessagePresenter: OCMessagePresenter {
 		}
 
 		if options.count == 0 {
-			options.append(AlertOption(label: "OK".localized, type: .default, handler: { [weak self] (_, _) in
+			options.append(AlertOption(label: OCLocalizedString("OK", nil), type: .default, handler: { [weak self] (_, _) in
 				self?.isShowingCard = false
 				completionHandler(.didPresent, nil)
 			}))

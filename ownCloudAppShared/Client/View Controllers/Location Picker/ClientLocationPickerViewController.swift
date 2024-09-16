@@ -44,7 +44,7 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 
 		let showCancelButton = locationPicker.headerView != nil
 
-		bottomButtonBar = BottomButtonBar(prompt: locationPicker.selectPrompt, selectButtonTitle: locationPicker.selectButtonTitle, cancelButtonTitle: "Cancel".localized, hasCancelButton: showCancelButton, selectAction: UIAction(handler: { [weak self] _ in
+		bottomButtonBar = BottomButtonBar(prompt: locationPicker.selectPrompt, selectButtonTitle: locationPicker.selectButtonTitle, cancelButtonTitle: OCLocalizedString("Cancel", nil), hasCancelButton: showCancelButton, selectAction: UIAction(handler: { [weak self] _ in
 			self?.chooseCurrentLocation()
 		}), cancelAction: UIAction(handler: { [weak self] _ in
 			self?.cancel()

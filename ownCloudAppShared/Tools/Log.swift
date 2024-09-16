@@ -24,19 +24,19 @@ public extension OCLogLevel {
 	var label : String {
 		switch self {
 			case .verbose:
- 				return "Verbose".localized
+ 				return OCLocalizedString("Verbose", nil)
 			case .debug:
-				return "Debug".localized
+				return OCLocalizedString("Debug", nil)
 			case .info:
-				return "Info".localized
+				return OCLocalizedString("Info", nil)
 			case .warning:
-				return "Warning".localized
+				return OCLocalizedString("Warning", nil)
 			case .error:
-				return "Error".localized
+				return OCLocalizedString("Error", nil)
 			case .off:
-				return "Off".localized
+				return OCLocalizedString("Off", nil)
 			default:
-				return "Unknown".localized
+				return OCLocalizedString("Unknown", nil)
 		}
 	}
 }
@@ -99,7 +99,7 @@ public class Log {
 	}
 }
 
-extension OCLogger : OCLogIntroFormat {
+extension OCLogger : ownCloudSDK.OCLogIntroFormat {
 	public func logIntroFormat() -> String {
 		return "{{stdIntro}}; Log options: \(Log.logOptionStatus)"
 	}

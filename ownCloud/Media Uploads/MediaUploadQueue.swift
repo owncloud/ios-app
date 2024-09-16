@@ -52,8 +52,8 @@ class MediaUploadQueue : OCActivitySource {
 	// MARK: - Public interface
 
 	func setup() {
-		let photoCellularSwitch = OCCellularSwitch(identifier: .photoUploadCellularSwitchIdentifier, localizedName: "Photo upload".localized, defaultValue: true, maximumTransferSize: 0)
-		let videoCellularSwitch = OCCellularSwitch(identifier: .videoUploadCellularSwitchIdentifier, localizedName: "Video upload".localized, defaultValue: true, maximumTransferSize: 0)
+		let photoCellularSwitch = OCCellularSwitch(identifier: .photoUploadCellularSwitchIdentifier, localizedName: OCLocalizedString("Photo upload", nil), defaultValue: true, maximumTransferSize: 0)
+		let videoCellularSwitch = OCCellularSwitch(identifier: .videoUploadCellularSwitchIdentifier, localizedName: OCLocalizedString("Video upload", nil), defaultValue: true, maximumTransferSize: 0)
 
 		OCCellularManager.shared.registerSwitch(photoCellularSwitch)
 		OCCellularManager.shared.registerSwitch(videoCellularSwitch)

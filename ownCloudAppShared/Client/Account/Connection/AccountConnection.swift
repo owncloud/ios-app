@@ -295,10 +295,12 @@ open class AccountConnection: NSObject {
 			connection.fpServiceStandby?.stop()
 
 			// Return core
-			OCCoreManager.shared.returnCore(for: self.bookmark, completionHandler: {
+			OCCoreManager.shared.returnCore(for: self.bookmark, completionHandler: { [weak self] in
 				connection.richStatus = nil
 				connection.core = nil
 				connection.status = .noCore
+
+				self?.progressSummarizer.resetPrioritySummaries()
 
 				OnMainThread {
 					completion?(nil)
@@ -514,10 +516,10 @@ open class AccountConnection: NSObject {
 
 				case .connecting:
 					_authFailureStatus = nil
-					summary?.message = "Connecting…".localized
+					summary?.message = OCLocalizedString("Connecting…", nil)
 
 				case .offline, .unavailable:
-					summary?.message = String(format: "%@%@", connectionShortDescription!, "Contents from cache.".localized)
+					summary?.message = String(format: "%@%@", connectionShortDescription!, OCLocalizedString("Contents from cache.", nil))
 					status = _authFailureStatus ?? .coreAvailable
 			}
 

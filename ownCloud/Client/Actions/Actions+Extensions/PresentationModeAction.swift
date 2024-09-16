@@ -23,7 +23,7 @@ import ownCloudAppShared
 class PresentationModeAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.presentationmode") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Presentation Mode".localized }
+	override class var name : String? { return OCLocalizedString("Presentation Mode", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreDetailItem, .keyboardShortcut] }
 	override class var keyCommand : String? { return "P" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
@@ -51,9 +51,9 @@ class PresentationModeAction: Action {
 		}
 
 		if !DisplaySleepPreventer.shared.isPreventing(for: PresentationModeAction.reason) {
-			let alertController = ThemedAlertController(title: "Presentation Mode".localized, message: "Enabling presentation mode will prevent the display from sleep mode until the view is closed.".localized, preferredStyle: .alert)
-			alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
-			alertController.addAction(UIAlertAction(title: "Enable".localized, style: .default, handler: { (_) in
+			let alertController = ThemedAlertController(title: OCLocalizedString("Presentation Mode", nil), message: OCLocalizedString("Enabling presentation mode will prevent the display from sleep mode until the view is closed.", nil), preferredStyle: .alert)
+			alertController.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel, handler: nil))
+			alertController.addAction(UIAlertAction(title: OCLocalizedString("Enable", nil), style: .default, handler: { (_) in
 				DisplaySleepPreventer.shared.startPreventingDisplaySleep(for: PresentationModeAction.reason)
 
 				guard let navigationController = hostViewController.navigationController else {

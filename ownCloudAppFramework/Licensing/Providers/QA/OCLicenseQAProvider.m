@@ -126,7 +126,7 @@ static OCLicenseQAProvider *sharedProvider = nil;
 		if (OCLicenseQAProvider.isQAUnlockEnabled && OCLicenseQAProvider.isQAUnlockPossible)
 		{
 			NSString *subject = (feature.localizedName != nil) ? feature.localizedName : unlockedProduct.localizedName;
-			iapMessage = [NSString stringWithFormat:OCLocalized(@"%@ unlocked for QA."), subject];
+			iapMessage = [NSString stringWithFormat:OCLocalizedString(@"%@ unlocked for QA.", nil), subject];
 		}
 	}
 

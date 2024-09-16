@@ -22,7 +22,7 @@ import ownCloudAppShared
 class MoveAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.move") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Move".localized }
+	override class var name : String? { return OCLocalizedString("Move", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem, .accessibilityCustomAction] }
 	override class var keyCommand : String? { return "V" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
@@ -64,12 +64,12 @@ class MoveAction : Action {
 		var titleText: String
 
 		if items.count > 1 {
-			titleText = "Move {{itemCount}} items".localized(["itemCount" : "\(items.count)"])
+			titleText = OCLocalizedFormat("Move {{itemCount}} items", ["itemCount" : "\(items.count)"])
 		} else {
-			titleText = "Move \"{{itemName}}\"".localized(["itemName" : items.first?.name ?? "?"])
+			titleText = OCLocalizedFormat("Move \"{{itemName}}\"", ["itemName" : items.first?.name ?? "?"])
 		}
 
-		let locationPicker = ClientLocationPicker(location: startLocation, selectButtonTitle: "Move here".localized, headerTitle: titleText, headerSubTitle: "Select target.".localized, avoidConflictsWith: items, choiceHandler: { (selectedDirectoryItem, location, _, cancelled) in
+		let locationPicker = ClientLocationPicker(location: startLocation, selectButtonTitle: OCLocalizedString("Move here", nil), headerTitle: titleText, headerSubTitle: OCLocalizedString("Select target.", nil), avoidConflictsWith: items, choiceHandler: { (selectedDirectoryItem, location, _, cancelled) in
 			guard !cancelled, let selectedDirectoryItem else {
 				self.completed(with: NSError(ocError: OCError.cancelled))
 				return

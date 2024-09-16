@@ -70,7 +70,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 
 		_commitErrorHandlerByProductIdentifier = [NSMutableDictionary new];
 
-		self.localizedName = OCLocalized(@"App Store");
+		self.localizedName = OCLocalizedString(@"App Store", nil);
 
 		__weak OCLicenseAppStoreProvider *weakSelf = self;
 
@@ -168,8 +168,8 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 		if (receipt.originalAppVersion != nil)
 		{
 			[transactions addObject:[OCLicenseTransaction transactionWithProvider:self tableRows:@[
-				@{ OCLocalized(@"Purchased App Version") : receipt.originalAppVersion },
-				@{ OCLocalized(@"Receipt Date") : (receipt.creationDate != nil) ? receipt.creationDate : @"-" }
+				@{ OCLocalizedString(@"Purchased App Version", nil) : receipt.originalAppVersion },
+				@{ OCLocalizedString(@"Receipt Date", nil) : (receipt.creationDate != nil) ? receipt.creationDate : @"-" }
 			]]];
 		}
 
@@ -192,7 +192,7 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 									     cancellationDate:iap.cancellationDate];
 			if ((transaction.type == OCLicenseTypeSubscription) && (iap.subscriptionExpirationDate.timeIntervalSinceNow > 0) && ((iap.cancellationDate==nil) || (iap.cancellationDate.timeIntervalSinceNow > 0)))
 			{
-				transaction.links = @{ OCLocalized(@"Manage subscription") : OCLicenseAppStoreProvider.appStoreManagementURL };
+				transaction.links = @{ OCLocalizedString(@"Manage subscription", nil) : OCLicenseAppStoreProvider.appStoreManagementURL };
 			}
 
 			[transactions addObject:transaction];
@@ -516,8 +516,8 @@ OCIPCNotificationName OCIPCNotificationNameLicenseAppStoreProviderDataChanged = 
 						{
 							errorHandler([NSError errorWithDomain:OCLicenseAppStoreProviderErrorDomain code:(appStoreProvider.isVolumePurchase ? OCLicenseAppStoreProviderErrorPurchasesNotAllowedForVPPCopies :  OCLicenseAppStoreProviderErrorPurchasesNotAllowed) userInfo:@{
 								NSLocalizedDescriptionKey : (appStoreProvider.isVolumePurchase ?
-									 OCLocalized(@"In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version.") :
-									 OCLocalized(@"Purchases are not allowed on this device."))
+									 OCLocalizedString(@"In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version.", nil) :
+									 OCLocalizedString(@"Purchases are not allowed on this device.", nil))
 							}]);
 						}
 					}

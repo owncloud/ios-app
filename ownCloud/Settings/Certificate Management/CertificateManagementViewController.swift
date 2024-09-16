@@ -29,25 +29,25 @@ class CertificateManagementViewController: StaticTableViewController {
 
 		super.viewDidLoad()
 
-		self.navigationItem.title = "Certificates".localized
+		self.navigationItem.title = OCLocalizedString("Certificates", nil)
 
 		if let userAcceptedCertificates = OCCertificate.userAcceptedCertificates {
-			let uacSection = StaticTableViewSection(headerTitle: "User-approved certificates".localized)
+			let uacSection = StaticTableViewSection(headerTitle: OCLocalizedString("User-approved certificates", nil))
 
 			for certificate in userAcceptedCertificates {
-				var shortReason = "Approved".localized
+				var shortReason = OCLocalizedString("Approved", nil)
 
 				if let userAcceptedReason = certificate.userAcceptedReason {
 					switch userAcceptedReason {
 						case .autoAccepted:
-							shortReason = "Auto-approved".localized
+							shortReason = OCLocalizedString("Auto-approved", nil)
 
 						case .userAccepted: break
 						default: break
 					}
 				}
 
-				let approvalDate = shortReason + " " + ((certificate.userAcceptedDate==nil) ? " \("undated".localized)" : DateFormatter.localizedString(from: certificate.userAcceptedDate!, dateStyle: .medium, timeStyle: .short))
+				let approvalDate = shortReason + " " + ((certificate.userAcceptedDate==nil) ? " \(OCLocalizedString("undated", nil))" : DateFormatter.localizedString(from: certificate.userAcceptedDate!, dateStyle: .medium, timeStyle: .short))
 				let certificateRow = CertificateManagementRow(subtitleRowWithAction: { (row, _) in
 					let certificateDetailsViewController = ThemeCertificateViewController(certificate: certificate, compare: nil)
 					row.viewController?.navigationController?.pushViewController(certificateDetailsViewController, animated: true)
@@ -63,7 +63,7 @@ class CertificateManagementViewController: StaticTableViewController {
 	}
 
 	override func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-		return UISwipeActionsConfiguration(actions: [UIContextualAction(style: .destructive, title: "Revoke approval".localized, handler: { [weak self] (_, _, completionHandler) in
+		return UISwipeActionsConfiguration(actions: [UIContextualAction(style: .destructive, title: OCLocalizedString("Revoke approval", nil), handler: { [weak self] (_, _, completionHandler) in
 			if let certificateRow = self?.staticRowForIndexPath(indexPath) as? CertificateManagementRow {
 				certificateRow.certificate?.userAccepted = false
 

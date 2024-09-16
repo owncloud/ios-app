@@ -36,24 +36,24 @@ extension OCCertificate {
 					break
 				case .error:
 					color = css.getColor(.stroke, selectors: [.error], for: nil) ?? .systemRed // Theme.shared.activeCollection.errorColor
-					shortDescription = "Error".localized
-					longDescription = "\("Validation Error".localized) \(error.localizedDescription)"
+					shortDescription = OCLocalizedString("Error", nil)
+					longDescription = "\(OCLocalizedString("Validation Error", nil)) \(error.localizedDescription)"
 				case .reject:
 					color = css.getColor(.stroke, selectors: [.error], for: nil) ?? .systemRed // Theme.shared.activeCollection.errorColor
-					shortDescription = "Rejected".localized
-					longDescription = "Certificate was rejected by user.".localized
+					shortDescription = OCLocalizedString("Rejected", nil)
+					longDescription = OCLocalizedString("Certificate was rejected by user.", nil)
 				case .promptUser:
 					color = css.getColor(.stroke, selectors: [.warning], for: nil) ?? .systemYellow
-					shortDescription = "Warning".localized
-					longDescription = "Certificate has issues.\nOpen 'Certificate Details' for more informations.".localized
+					shortDescription = OCLocalizedString("Warning", nil)
+					longDescription = OCLocalizedString("Certificate has issues.\nOpen 'Certificate Details' for more informations.", nil)
 				case .passed:
 					color = css.getColor(.stroke, selectors: [.success], for: nil) ?? .systemGreen
-					shortDescription = "Passed".localized
-					longDescription = "No issues found. Certificate passed validation.".localized
+					shortDescription = OCLocalizedString("Passed", nil)
+					longDescription = OCLocalizedString("No issues found. Certificate passed validation.", nil)
 				case .userAccepted:
 					color = css.getColor(.stroke, selectors: [.warning], for: nil) ?? .systemYellow
-					shortDescription = "Accepted".localized
-					longDescription = "Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.".localized
+					shortDescription = OCLocalizedString("Accepted", nil)
+					longDescription = OCLocalizedString("Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations.", nil)
 			}
 			completionHandler(status, shortDescription, longDescription, color, error)
 		})

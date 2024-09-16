@@ -39,7 +39,7 @@ class MoreSettingsSection: SettingsSection {
 
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
-		self.headerTitle = "More".localized
+		self.headerTitle = OCLocalizedString("More", nil)
 
 		self.identifier = "settings-more-section"
 
@@ -55,40 +55,40 @@ class MoreSettingsSection: SettingsSection {
 			if let url = VendorServices.shared.documentationURL, let viewController = self?.viewController {
 				VendorServices.shared.openSFWebView(on: viewController, for: url)
 			}
-		}, title: "Documentation".localized, accessoryType: .disclosureIndicator, identifier: "documentation")
+		}, title: OCLocalizedString("Documentation", nil), accessoryType: .disclosureIndicator, identifier: "documentation")
 
 		if let helpURL = VendorServices.shared.helpURL {
 			helpRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 				if let viewController = self?.viewController {
 					VendorServices.shared.openSFWebView(on: viewController, for: helpURL)
 				}
-			}, title: "Help".localized, accessoryType: .disclosureIndicator, identifier: "help")
+			}, title: OCLocalizedString("Help", nil), accessoryType: .disclosureIndicator, identifier: "help")
 		}
 
 		sendFeedbackRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let viewController = self?.viewController {
 				VendorServices.shared.sendFeedback(from: viewController)
 			}
-		}, title: "Send feedback".localized, accessoryType: .disclosureIndicator, identifier: "send-feedback")
+		}, title: OCLocalizedString("Send feedback", nil), accessoryType: .disclosureIndicator, identifier: "send-feedback")
 
 		helpAndSupportRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let viewController = self?.viewController {
 				VendorServices.shared.showHelpAndSupportOptions(from: viewController)
 			}
-		}, title: "Help & Contact".localized, accessoryType: .disclosureIndicator, identifier: "help-and-contact")
+		}, title: OCLocalizedString("Help & Contact", nil), accessoryType: .disclosureIndicator, identifier: "help-and-contact")
 
 		recommendRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let viewController = self?.viewController {
 				VendorServices.shared.recommendToFriend(from: viewController)
 			}
-		}, title: "Recommend to a friend".localized, accessoryType: .disclosureIndicator, identifier: "recommend-friend")
+		}, title: OCLocalizedString("Recommend to a friend", nil), accessoryType: .disclosureIndicator, identifier: "recommend-friend")
 
 		if let privacyURL = VendorServices.shared.privacyURL {
 			privacyPolicyRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 				if let viewController = self?.viewController {
 					VendorServices.shared.openSFWebView(on: viewController, for: privacyURL)
 				}
-			}, title: "Privacy Policy".localized, accessoryType: .disclosureIndicator, identifier: "privacy-policy")
+			}, title: OCLocalizedString("Privacy Policy", nil), accessoryType: .disclosureIndicator, identifier: "privacy-policy")
 		}
 
 		if let termsOfUseURL = VendorServices.shared.termsOfUseURL {
@@ -96,16 +96,16 @@ class MoreSettingsSection: SettingsSection {
 				if let viewController = self?.viewController {
 					VendorServices.shared.openSFWebView(on: viewController, for: termsOfUseURL)
 				}
-			}, title: "Terms Of Use".localized, accessoryType: .disclosureIndicator, identifier: "terms-of-use")
+			}, title: OCLocalizedString("Terms Of Use", nil), accessoryType: .disclosureIndicator, identifier: "terms-of-use")
 		}
 
 		acknowledgementsRow = StaticTableViewRow(rowWithAction: { (row, _) in
 			row.viewController?.navigationController?.pushViewController(AcknowledgementsTableViewController(style: .insetGrouped), animated: true)
-		}, title: "Acknowledgements".localized, accessoryType: .disclosureIndicator, identifier: "acknowledgements")
+		}, title: OCLocalizedString("Acknowledgements", nil), accessoryType: .disclosureIndicator, identifier: "acknowledgements")
 
-		var buildType = "release".localized
+		var buildType = OCLocalizedString("release", nil)
 		if VendorServices.shared.isBetaBuild {
-			buildType = "beta".localized
+			buildType = OCLocalizedString("beta", nil)
 		}
 
 		var appSuffix = ""
@@ -113,14 +113,14 @@ class MoreSettingsSection: SettingsSection {
 			appSuffix = "-EMM"
 		}
 
-		let localizedFooter = "%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)".localized
+		let localizedFooter = OCLocalizedString("%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)", nil)
 		let footerTitle = String(format: localizedFooter, VendorServices.shared.appName, appSuffix, buildType, VendorServices.shared.appVersion, "\(VendorServices.shared.appBuildNumber) (\(GitInfo.app.buildDate ?? ""))", GitInfo.app.versionInfo, GitInfo.sdk.versionInfo)
 
 		appVersionRow = StaticTableViewRow(rowWithAction: { (_, _) in
 			UIPasteboard.general.string = footerTitle
 			guard let viewController = self.viewController else { return }
-			_ = NotificationHUDViewController(on: viewController, title: "App Version".localized, subtitle: "Version information were copied to the clipboard".localized, completion: nil)
-		}, title: "App Version".localized, subtitle: footerTitle, identifier: "app-version")
+			_ = NotificationHUDViewController(on: viewController, title: OCLocalizedString("App Version", nil), subtitle: OCLocalizedString("Version information were copied to the clipboard", nil), completion: nil)
+		}, title: OCLocalizedString("App Version", nil), subtitle: footerTitle, identifier: "app-version")
 	}
 
 	// MARK: - Update UI

@@ -192,7 +192,7 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 						if accountController == self?.accountController {
 							self?.disconnectButton.isHidden = !showDisconnectButton
 							self?.accessibilityCustomActions = showDisconnectButton ? [
-								UIAccessibilityCustomAction(name: "Disconnect".localized, image: OCSymbol.icon(forSymbolName: "eject.circle.fill"), actionHandler: { [weak self] _ in
+								UIAccessibilityCustomAction(name: OCLocalizedString("Disconnect", nil), image: OCSymbol.icon(forSymbolName: "eject.circle.fill"), actionHandler: { [weak self] _ in
 									self?.accountController?.disconnect(completion: nil)
 									return true
 								})
@@ -245,23 +245,23 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 
 				case .offline:
 					color = .systemGray
-					statusDescription = "Offline".localized
+					statusDescription = OCLocalizedString("Offline", nil)
 
 				case .connecting, .coreAvailable:
 					color = .systemYellow
-					statusDescription = "Connecting".localized
+					statusDescription = OCLocalizedString("Connecting", nil)
 
 				case .online:
 					color = .systemGreen
-					statusDescription = "Online".localized
+					statusDescription = OCLocalizedString("Online", nil)
 
 				case .busy:
 					color = .systemBlue
-					statusDescription = "Busy".localized
+					statusDescription = OCLocalizedString("Busy", nil)
 
 				case .authenticationError:
 					color = .systemRed
-					statusDescription = "Authentication error".localized
+					statusDescription = OCLocalizedString("Authentication error", nil)
 			}
 		}
 
@@ -298,7 +298,7 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 	}
 
 	func updateAccessibilityLabel() {
-		accessibilityLabel = "\("Account".localized) \(title ?? "") \(detail ?? "") \(statusIconView.accessibilityLabel != nil ? "Status".localized + " " + statusIconView.accessibilityLabel! : "")"
+		accessibilityLabel = "\(OCLocalizedString("Account", nil)) \(title ?? "") \(detail ?? "") \(statusIconView.accessibilityLabel != nil ? OCLocalizedString("Status", nil) + " " + statusIconView.accessibilityLabel! : "")"
 	}
 
 	// MARK: - Message Badge

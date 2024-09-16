@@ -16,7 +16,11 @@
  *
  */
 
-#import <ownCloudApp/ownCloudApp.h>
+#import <ownCloudSDK/ownCloudSDK.h>
+
+// BEGIN: Shared with ownCloudApp.framework
+#import "DisplaySettings.h"
+// END: shared with ownCloudApp.framework
 
 #import "FileProviderContentEnumerator.h"
 #import "FileProviderEnumeratorObserver.h"

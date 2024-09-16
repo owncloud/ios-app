@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudSDK
 
 // MARK: - Color Sets
 private struct ThemeColorSet {
@@ -128,8 +129,8 @@ public enum ThemeCollectionStyle : String, CaseIterable {
 
 	public var name : String {
 		switch self {
-			case .dark:	return "Dark".localized
-			case .light:	return "Light".localized
+			case .dark:	return OCLocalizedString("Dark", nil)
+			case .light:	return OCLocalizedString("Light", nil)
 		}
 	}
 

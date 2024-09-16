@@ -65,7 +65,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 			if recipient != nil {
 				searchViewController?.endSearch()
 				recipientsSection?.boundarySupplementaryItems = [
-					.mediumTitle("Share with".localized)
+					.mediumTitle(OCLocalizedString("Share with", nil))
 				]
 			} else {
 				recipientsSection?.boundarySupplementaryItems = nil
@@ -184,9 +184,9 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 			textField.translatesAutoresizingMaskIntoConstraints = false
 			textField.setContentHuggingPriority(.required, for: .vertical)
 			textField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-			textField.placeholder = share?.token ?? "Link".localized
+			textField.placeholder = share?.token ?? OCLocalizedString("Link", nil)
 			textField.text = share?.name
-			textField.accessibilityLabel = "Name".localized
+			textField.accessibilityLabel = OCLocalizedString("Name", nil)
 
 			nameTextField = textField
 
@@ -197,7 +197,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 			let nameSectionDatasource = OCDataSourceArray(items: [spacerView])
 			let nameSection = CollectionViewSection(identifier: "name", dataSource: nameSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: shareControllerContext)
 			nameSection.boundarySupplementaryItems = [
-				.mediumTitle("Name".localized)
+				.mediumTitle(OCLocalizedString("Name", nil))
 			]
 
 			sections.append(nameSection)
@@ -208,7 +208,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 		rolesSection = CollectionViewSection(identifier: "roles", dataSource: rolesSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: shareControllerContext)
 		rolesSection?.boundarySupplementaryItems = [
-			.mediumTitle("Permissions".localized)
+			.mediumTitle(OCLocalizedString("Permissions", nil))
 		]
 		rolesSection?.hidden = true
 
@@ -229,7 +229,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		optionsSection = CollectionViewSection(identifier: "options", dataSource: optionsSectionDatasource, cellStyle: managementLineCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: shareControllerContext)
 		optionsSection?.hideIfEmptyDataSource = optionsSectionDatasource
 		optionsSection?.boundarySupplementaryItems = [
-			.mediumTitle("Options".localized)
+			.mediumTitle(OCLocalizedString("Options", nil))
 		]
 
 		if let optionsSection {
@@ -275,19 +275,19 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 		switch mode {
 		case .create:
-			navigationTitle = (type == .link) ? "Create link".localized : "Invite".localized
+			navigationTitle = (type == .link) ? OCLocalizedString("Create link", nil) : OCLocalizedString("Invite", nil)
 
 		case .edit:
-			navigationTitle = "Edit".localized
+			navigationTitle = OCLocalizedString("Edit", nil)
 		}
 		navigationItem.titleLabelText = navigationTitle
 
 		// Add bottom button bar
 		let isLinkCreation = (mode == .create) && (type == .link)
- 		let title = (mode == .create) ? ((type == .link) ? "Share".localized : "Invite".localized) : "Save changes".localized
-		let altTitle = isLinkCreation ? "Create".localized : nil
+ 		let title = (mode == .create) ? ((type == .link) ? OCLocalizedString("Share", nil) : OCLocalizedString("Invite", nil)) : OCLocalizedString("Save changes", nil)
+		let altTitle = isLinkCreation ? OCLocalizedString("Create", nil) : nil
 
-		bottomButtonBar = BottomButtonBar(selectButtonTitle: title, alternativeButtonTitle: altTitle, cancelButtonTitle: "Cancel".localized, hasAlternativeButton: isLinkCreation, hasCancelButton: true, selectAction: UIAction(handler: { [weak self] _ in
+		bottomButtonBar = BottomButtonBar(selectButtonTitle: title, alternativeButtonTitle: altTitle, cancelButtonTitle: OCLocalizedString("Cancel", nil), hasAlternativeButton: isLinkCreation, hasCancelButton: true, selectAction: UIAction(handler: { [weak self] _ in
 			self?.save(andShare: isLinkCreation)
 		}), alternativeAction: isLinkCreation ? UIAction(handler: { [weak self] _ in
 			self?.save()
@@ -301,7 +301,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 		// - Add delete button for existing shares
 		if mode == .edit {
-			let unshare = UIBarButtonItem(title: "Unshare".localized, style: .plain, target: self, action: #selector(deleteShare))
+			let unshare = UIBarButtonItem(title: OCLocalizedString("Unshare", nil), style: .plain, target: self, action: #selector(deleteShare))
 			unshare.tintColor = .red
 
 			self.navigationItem.rightBarButtonItem = unshare
@@ -417,14 +417,14 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 			}
 
 			if type == .link {
-				addPermissionOption(title: "Download / View".localized, iconName: "eye", permission: .read)
+				addPermissionOption(title: OCLocalizedString("Download / View", nil), iconName: "eye", permission: .read)
 			} else {
-				addPermissionOption(title: "Read".localized, iconName: "eye", permission: .read)
+				addPermissionOption(title: OCLocalizedString("Read", nil), iconName: "eye", permission: .read)
 			}
-			addPermissionOption(title: "Edit".localized, iconName: "character.cursor.ibeam", permission: .update)
-			addPermissionOption(title: "Upload".localized, iconName: "arrow.up.circle.fill", permission: .create)
-			addPermissionOption(title: "Delete".localized, iconName: "trash", permission: .delete)
-			addPermissionOption(title: "Share".localized, iconName: "person.badge.plus", permission: .share)
+			addPermissionOption(title: OCLocalizedString("Edit", nil), iconName: "character.cursor.ibeam", permission: .update)
+			addPermissionOption(title: OCLocalizedString("Upload", nil), iconName: "arrow.up.circle.fill", permission: .create)
+			addPermissionOption(title: OCLocalizedString("Delete", nil), iconName: "trash", permission: .delete)
+			addPermissionOption(title: OCLocalizedString("Share", nil), iconName: "person.badge.plus", permission: .share)
 
 			customPermissionsSectionOptionGroup = OptionGroup()
 			customPermissionsSectionOptionGroup?.items = permissionOptions
@@ -485,14 +485,14 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 				// No results
 				let noResultContent = SearchViewController.Content(type: .noResults, source: OCDataSourceArray(), style: placeholderCellStyle)
-				let noResultsView = ComposedMessageView.infoBox(image: OCSymbol.icon(forSymbolName: "magnifyingglass"), title: "No matches".localized, subtitle: "No user or group matches your search.".localized, withRoundedBackgroundView: false)
+				let noResultsView = ComposedMessageView.infoBox(image: OCSymbol.icon(forSymbolName: "magnifyingglass"), title: OCLocalizedString("No matches", nil), subtitle: OCLocalizedString("No user or group matches your search.", nil), withRoundedBackgroundView: false)
 
 				(noResultContent.source as? OCDataSourceArray)?.setVersionedItems([
 					noResultsView
 				])
 
 				// Suggestion view
-				let suggestionsSource = OCDataSourceArray(items: [ ComposedMessageView.infoBox(image: nil, subtitle: "Enter the user or group you want to invite.".localized, withRoundedBackgroundView: false) ])
+				let suggestionsSource = OCDataSourceArray(items: [ ComposedMessageView.infoBox(image: nil, subtitle: OCLocalizedString("Enter the user or group you want to invite.", nil), withRoundedBackgroundView: false) ])
 				let suggestionsContent = SearchViewController.Content(type: .suggestion, source: suggestionsSource, style: placeholderCellStyle)
 
 				// Create and install SearchViewController
@@ -663,10 +663,10 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 			if ((share?.protectedByPassword == true) && !removePassword) || (password != nil) {
 				if password != nil {
-					let copyButton = makeButton("Copy".localized, { [weak self] action in
+					let copyButton = makeButton(OCLocalizedString("Copy", nil), { [weak self] action in
 						if let self, let password = self.password {
 							UIPasteboard.general.string = password
-							_ = NotificationHUDViewController(on: self, title: "Password".localized, subtitle: "The password was copied to the clipboard".localized, completion: nil)
+							_ = NotificationHUDViewController(on: self, title: OCLocalizedString("Password", nil), subtitle: OCLocalizedString("The password was copied to the clipboard", nil), completion: nil)
 						}
 					})
 
@@ -685,12 +685,12 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 				}
 
 				accessories = [
-					.button(image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), accessibilityLabel: "Remove password".localized, action: UIAction(handler: { _ in
+					.button(image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), accessibilityLabel: OCLocalizedString("Remove password", nil), action: UIAction(handler: { _ in
 						removePassword()
 					}))
 				]
 
-				customActions.append(UIAccessibilityCustomAction(name: "Remove password".localized, actionHandler: { _ in
+				customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Remove password", nil), actionHandler: { _ in
 					removePassword()
 					return true
 				}))
@@ -699,18 +699,18 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					details.append(.detailText("⚠️"))
 				}
 
-				let generateButton = makeButton("Generate".localized, { [weak self] action in
+				let generateButton = makeButton(OCLocalizedString("Generate", nil), { [weak self] action in
 					self?.generatePassword()
 				})
 
-				let addButton = makeButton("Set".localized, { [weak self] action in
+				let addButton = makeButton(OCLocalizedString("Set", nil), { [weak self] action in
 					self?.requestPassword()
 				})
 
 				details.append(contentsOf: [SegmentViewItem(view: generateButton), SegmentViewItem(title: "|", style: .label), SegmentViewItem(view: addButton)])
 			}
 
-			let content = UniversalItemListCell.Content(with: .text("Password".localized), iconSymbolName: "key.fill", accessories: accessories)
+			let content = UniversalItemListCell.Content(with: .text(OCLocalizedString("Password", nil)), iconSymbolName: "key.fill", accessories: accessories)
 			content.details = details
 			content.accessibilityCustomActions = customActions
 
@@ -769,12 +769,12 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 				}
 
 				accessories = [
-					.button(image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), accessibilityLabel: "Remove expiration date".localized, action: UIAction(handler: { _ in
+					.button(image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), accessibilityLabel: OCLocalizedString("Remove expiration date", nil), action: UIAction(handler: { _ in
 						removeExpirationDate()
 					}))
 				]
 
-				customActions.append(UIAccessibilityCustomAction(name: "Extend by one week".localized, actionHandler: { [weak self] _ in
+				customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Extend by one week", nil), actionHandler: { [weak self] _ in
 					if let expirationDate = self?.expirationDate {
 						self?.expirationDate = expirationDate.addingTimeInterval(7 * 24 * 60 * 60)
 						self?.updateOptions()
@@ -783,7 +783,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 				}))
 
 				if expirationDate.timeIntervalSinceNow > (7 * 24 * 60 * 60) {
-					customActions.append(UIAccessibilityCustomAction(name: "Shorten by one week".localized, actionHandler: { [weak self] _ in
+					customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Shorten by one week", nil), actionHandler: { [weak self] _ in
 						if let expirationDate = self?.expirationDate {
 							self?.expirationDate = expirationDate.addingTimeInterval(-7 * 24 * 60 * 60)
 							self?.updateOptions()
@@ -792,13 +792,13 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					}))
 				}
 
-				customActions.append(UIAccessibilityCustomAction(name: "Remove expiration date".localized, actionHandler: { _ in
+				customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Remove expiration date", nil), actionHandler: { _ in
 					removeExpirationDate()
 					return true
 				}))
 			} else {
 				var buttonConfig = UIButton.Configuration.plain()
-				buttonConfig.title = "Add".localized
+				buttonConfig.title = OCLocalizedString("Add", nil)
 				buttonConfig.contentInsets = .zero
 
 				let button = ThemeCSSButton()
@@ -813,16 +813,16 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 				details.append(SegmentViewItem(view: button))
 
-				customActions.append(UIAccessibilityCustomAction(name: "Add".localized, actionHandler: { _ in
+				customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Add", nil), actionHandler: { _ in
 					addExpirationDate()
 					return true
 				}))
 			}
 
-			let content = UniversalItemListCell.Content(with: .text("Expiration date".localized), iconSymbolName: "calendar", accessories: accessories)
+			let content = UniversalItemListCell.Content(with: .text(OCLocalizedString("Expiration date", nil)), iconSymbolName: "calendar", accessories: accessories)
 			content.details = details
 			content.accessibilityCustomActions = customActions
-			content.accessibilityLabel = "Expiration date".localized + " " + ((expirationDate != nil) ? OCItem.accessibilityDateFormatter.string(for: expirationDate!) ?? "" : "")
+			content.accessibilityLabel = OCLocalizedString("Expiration date", nil) + " " + ((expirationDate != nil) ? OCItem.accessibilityDateFormatter.string(for: expirationDate!) ?? "" : "")
 
 			if expiryOption == nil {
 				expiryOption = OptionItem(kind: .single, content: content, state: false)
@@ -850,7 +850,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		return ((share?.protectedByPassword == true) && !removePassword) || (password != nil)
 	}
 	func requestPassword() {
-		let passwordViewController = PasswordComposerViewController(password: password ?? "", policy: passwordPolicy, saveButtonTitle: "Set".localized, resultHandler: { [weak self] password, cancelled in
+		let passwordViewController = PasswordComposerViewController(password: password ?? "", policy: passwordPolicy, saveButtonTitle: OCLocalizedString("Set", nil), resultHandler: { [weak self] password, cancelled in
 			if !cancelled, let password {
 				self?.password = password
 				self?.updateOptions()
@@ -859,7 +859,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		let navigationViewController = passwordViewController.viewControllerForPresentation()
 
 		if mode == .edit, hasPassword {
-			passwordViewController.navigationItem.title = "Change password".localized
+			passwordViewController.navigationItem.title = OCLocalizedString("Change password", nil)
 		}
 
 		self.clientContext?.present(navigationViewController, animated: true)
@@ -938,13 +938,13 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 								if let password = self.password {
 									// Message consists of Link + Password
 									if let displayName = self.location?.displayName(in: nil) {
-										shareMessage = "{{itemName}} ({{link}}) | password: {{password}}".localized([
+										shareMessage = OCLocalizedFormat("{{itemName}} ({{link}}) | password: {{password}}", [
 											"itemName" : displayName,
 											"link" : absoluteURLString,
 											"password" : password
 										])
 									} else {
-										shareMessage = "{{link}} | password: {{password}}".localized([
+										shareMessage = OCLocalizedFormat("{{link}} | password: {{password}}", [
 											"link" : absoluteURLString,
 											"password" : password
 										])
@@ -1049,7 +1049,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 	func showError(_ error: Error) {
 		OnMainThread {
-			let alertController = ThemedAlertController(with: "An error occurred".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
+			let alertController = ThemedAlertController(with: OCLocalizedString("An error occurred", nil), message: error.localizedDescription, okLabel: OCLocalizedString("OK", nil), action: nil)
 			self.present(alertController, animated: true)
 		}
 	}

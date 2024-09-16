@@ -455,7 +455,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		didSet {
 			titleLabel.attributedText = title
 			if let titleString = title?.string {
-				moreButtonAccessibilityLabel = "More for {{title}}".localized(["title" : titleString])
+				moreButtonAccessibilityLabel = OCLocalizedFormat("More for {{title}}", ["title" : titleString])
 				moreButton?.accessibilityLabel = moreButtonAccessibilityLabel
 			}
 		}
@@ -577,15 +577,15 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 						case .file(name: let name):
 							set(title: name, isFileName: true)
-							accessibilityTitle = "{{fileName}} (file)".localized(["fileName" : name])
+							accessibilityTitle = OCLocalizedFormat("{{fileName}} (file)", ["fileName" : name])
 
 						case .folder(name: let name):
 							set(title: name)
-							accessibilityTitle = "{{folderName}} (folder)".localized(["folderName" : name])
+							accessibilityTitle = OCLocalizedFormat("{{folderName}} (folder)", ["folderName" : name])
 
 						case .drive(name: let name):
 							set(title: name)
-							accessibilityTitle = "{{spaceName}} (space)".localized(["spaceName" : name])
+							accessibilityTitle = OCLocalizedFormat("{{spaceName}} (space)", ["spaceName" : name])
 					}
 				} else {
 					set(title: nil)
@@ -729,15 +729,15 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 
 		// Provide keyboard access to all buttons' actions via Tab + Z
 		if moreButton != nil {
-			customActions.append(UIAccessibilityCustomAction(name: "Actions".localized, image: UIImage(named: "more-dots"), target: self, selector: #selector(moreButtonTapped)))
+			customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Actions", nil), image: UIImage(named: "more-dots"), target: self, selector: #selector(moreButtonTapped)))
 		}
 
 		if revealButton != nil {
-			customActions.append(UIAccessibilityCustomAction(name: "Reveal".localized, image: OCSymbol.icon(forSymbolName: "arrow.right.circle.fill"), target: self, selector: #selector(revealButtonTapped)))
+			customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Reveal", nil), image: OCSymbol.icon(forSymbolName: "arrow.right.circle.fill"), target: self, selector: #selector(revealButtonTapped)))
 		}
 
 		if messageButton != nil {
-			customActions.append(UIAccessibilityCustomAction(name: "Show message".localized, image: OCSymbol.icon(forSymbolName: "exclamationmark.triangle.fill"), target: self, selector: #selector(messageButtonTapped)))
+			customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Show message", nil), image: OCSymbol.icon(forSymbolName: "exclamationmark.triangle.fill"), target: self, selector: #selector(messageButtonTapped)))
 		}
 
 		// Add accessibility custom actions attached to accessories
@@ -778,7 +778,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.setImage(UIImage(named: "more-dots"), for: .normal)
 		button.contentMode = .center
 		button.isPointerInteractionEnabled = true
-		button.accessibilityLabel = moreButtonAccessibilityLabel ?? "More".localized
+		button.accessibilityLabel = moreButtonAccessibilityLabel ?? OCLocalizedString("More", nil)
 		button.addTarget(self, action: #selector(moreButtonTapped), for: .primaryActionTriggered)
 
 		button.frame = CGRect(x: 0, y: 0, width: 32, height: 42) // Avoid _UITemporaryLayoutWidths auto-layout warnings
@@ -812,7 +812,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		button.setImage(OCSymbol.icon(forSymbolName: "arrow.right.circle.fill"), for: .normal)
 		button.contentMode = .center
 		button.isPointerInteractionEnabled = true
-		button.accessibilityLabel = "Reveal".localized
+		button.accessibilityLabel = OCLocalizedString("Reveal", nil)
 		button.addTarget(self, action: #selector(revealButtonTapped), for: .primaryActionTriggered)
 
 		button.frame = CGRect(x: 0, y: 0, width: 32, height: 42) // Avoid _UITemporaryLayoutWidths auto-layout warnings
@@ -846,7 +846,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		let button = UIButton()
 		button.contentMode = .center
 		button.isPointerInteractionEnabled = true
-		button.accessibilityLabel = "Show message".localized
+		button.accessibilityLabel = OCLocalizedString("Show message", nil)
 		button.setTitle("⚠️", for: .normal)
 		button.addTarget(self, action: #selector(messageButtonTapped), for: .touchUpInside)
 

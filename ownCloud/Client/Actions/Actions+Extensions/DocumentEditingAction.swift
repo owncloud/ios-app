@@ -24,7 +24,7 @@ import QuickLook
 class DocumentEditingAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.markup") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Markup".localized }
+	override class var name : String? { return OCLocalizedString("Markup", nil) }
 	override class var keyCommand : String? { return "E" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem, .accessibilityCustomAction] }
@@ -74,7 +74,7 @@ class DocumentEditingAction : Action {
 				}
 
 				let appName = VendorServices.shared.appName
-				let alertController = ThemedAlertController(with: "Cannot connect to ".localized + appName, message: appName + " couldn't download file(s)".localized, okLabel: "OK".localized, action: nil)
+				let alertController = ThemedAlertController(with: OCLocalizedString("Cannot connect to ", nil) + appName, message: appName + OCLocalizedString(" couldn't download file(s)", nil), okLabel: OCLocalizedString("OK", nil), action: nil)
 
 				hostViewController?.present(alertController, animated: true)
 			} else {
@@ -89,7 +89,7 @@ class DocumentEditingAction : Action {
 						navigationController.modalPresentationStyle = .overFullScreen
 						viewController.present(navigationController, animated: true)
 					} else {
-						let alertController = ThemedAlertController(with: "Markup".localized, message: "File couldn't be opened".localized, okLabel: "OK".localized, action: nil)
+						let alertController = ThemedAlertController(with: OCLocalizedString("Markup", nil), message: OCLocalizedString("File couldn't be opened", nil), okLabel: OCLocalizedString("OK", nil), action: nil)
 
 						hostViewController?.present(alertController, animated: true)
 					}

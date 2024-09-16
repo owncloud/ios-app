@@ -24,7 +24,7 @@ import ownCloudAppShared
 class CutAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.cutpasteboard") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Cut".localized }
+	override class var name : String? { return OCLocalizedString("Cut", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem, .accessibilityCustomAction] }
 	override class var keyCommand : String? { return "X" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
@@ -71,19 +71,19 @@ class CutAction : Action {
 		})
 		globalPasteboard.itemProviders = itemProviderItems
 
-		var subtitle = "%ld Item was copied to the clipboard".localized
+		var subtitle = OCLocalizedString("%ld Item was copied to the clipboard", nil)
 		if itemProviderItems.count > 1 {
-			subtitle = "%ld Items were copied to the clipboard".localized
+			subtitle = OCLocalizedString("%ld Items were copied to the clipboard", nil)
 		}
 
 		if containsFolders {
-			let subtitleFolder = String(format:"Please note: Folders can only be pasted into the %@ app and the same account.".localized, VendorServices.shared.appName)
+			let subtitleFolder = String(format:OCLocalizedString("Please note: Folders can only be pasted into the %@ app and the same account.", nil), VendorServices.shared.appName)
 			subtitle = String(format: "%@\n\n%@", subtitle, subtitleFolder)
 		}
 
 		OnMainThread {
 			if let navigationController = viewController.navigationController {
-				_ = NotificationHUDViewController(on: navigationController, title: "Cut".localized, subtitle: String(format: subtitle, itemProviderItems.count))
+				_ = NotificationHUDViewController(on: navigationController, title: OCLocalizedString("Cut", nil), subtitle: String(format: subtitle, itemProviderItems.count))
 			}
 		}
 

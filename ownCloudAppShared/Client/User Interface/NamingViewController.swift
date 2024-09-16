@@ -169,7 +169,7 @@ open class NamingViewController: UIViewController {
 		nameTextField.autocorrectionType = .no
 		nameTextField.borderStyle = .roundedRect
 		nameTextField.clearButtonMode = .always
-		nameTextField.accessibilityLabel = "Folder name".localized
+		nameTextField.accessibilityLabel = OCLocalizedString("Folder name", nil)
 
 		// Name container view
 		nameContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -295,9 +295,9 @@ open class NamingViewController: UIViewController {
 						self.completion(self.nameTextField.text!, self)
 					}
 				} else {
-					let controller = ThemedAlertController(title: validationErrorTitle ?? "Forbidden Characters".localized, message: validationErrorMessage, preferredStyle: .alert)
+					let controller = ThemedAlertController(title: validationErrorTitle ?? OCLocalizedString("Forbidden Characters", nil), message: validationErrorMessage, preferredStyle: .alert)
 					controller.view.accessibilityIdentifier = "forbidden-characters-alert"
-					let okAction = UIAlertAction(title: "OK".localized, style: .default)
+					let okAction = UIAlertAction(title: OCLocalizedString("OK", nil), style: .default)
 					controller.addAction(okAction)
 					self.present(controller, animated: true)
 				}

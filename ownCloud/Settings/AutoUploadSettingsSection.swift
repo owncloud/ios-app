@@ -220,7 +220,7 @@ class AutoUploadSettingsSection: SettingsSection {
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
 
-		self.headerTitle = "Auto Upload".localized
+		self.headerTitle = OCLocalizedString("Auto Upload", nil)
 		self.identifier = "auto-upload"
 
 		// Instant upload requires at least one configured account
@@ -231,7 +231,7 @@ class AutoUploadSettingsSection: SettingsSection {
 						self?.setupPhotoAutoUpload(enabled: switchState)
 					})
 				}
-			}, title: "Auto Upload Photos".localized, value: self.userDefaults.instantUploadPhotos, identifier: "auto-upload-photos")
+			}, title: OCLocalizedString("Auto Upload Photos", nil), value: self.userDefaults.instantUploadPhotos, identifier: "auto-upload-photos")
 
 			instantUploadVideosRow = StaticTableViewRow(switchWithAction: { [weak self] (_, sender) in
 				if let convertSwitch = sender as? UISwitch {
@@ -239,15 +239,15 @@ class AutoUploadSettingsSection: SettingsSection {
 						self?.setupVideoAutoUpload(enabled: switchState)
 					})
 				}
-			}, title: "Auto Upload Videos".localized, value: self.userDefaults.instantUploadVideos, identifier: "auto-upload-videos")
+			}, title: OCLocalizedString("Auto Upload Videos", nil), value: self.userDefaults.instantUploadVideos, identifier: "auto-upload-videos")
 
 			photoBookmarkAndPathSelectionRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
 				self?.showAccountSelectionViewController(for: .photo)
-			}, title: "Photo upload path".localized, subtitle: "", accessoryType: .disclosureIndicator, identifier: AutoUploadSettingsSection.photoUploadBookmarkAndPathSelectionRowIdentifier)
+			}, title: OCLocalizedString("Photo upload path", nil), subtitle: "", accessoryType: .disclosureIndicator, identifier: AutoUploadSettingsSection.photoUploadBookmarkAndPathSelectionRowIdentifier)
 
 			videoBookmarkAndPathSelectionRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
 				self?.showAccountSelectionViewController(for: .video)
-			}, title: "Video upload path".localized, subtitle: "", accessoryType: .disclosureIndicator, identifier: AutoUploadSettingsSection.videoUploadBookmarkAndPathSelectionRowIdentifier)
+			}, title: OCLocalizedString("Video upload path", nil), subtitle: "", accessoryType: .disclosureIndicator, identifier: AutoUploadSettingsSection.videoUploadBookmarkAndPathSelectionRowIdentifier)
 
 			self.add(row: instantUploadPhotosRow!)
 			self.add(row: instantUploadVideosRow!)
@@ -386,17 +386,17 @@ class AutoUploadSettingsSection: SettingsSection {
 
 		switch mediaType {
 			case .photo:
-				prompt = "Pick a destination for photo uploads".localized
+				prompt = OCLocalizedString("Pick a destination for photo uploads", nil)
 
 			case .video:
-				prompt = "Pick a destination for video uploads".localized
+				prompt = OCLocalizedString("Pick a destination for video uploads", nil)
 		}
 
-		let locationPicker = ClientLocationPicker(location: .accounts, selectButtonTitle: "Select Destination".localized, selectPrompt: prompt, requiredPermissions: [ .createFile ], avoidConflictsWith: nil, choiceHandler: { [weak self] (chosenItem, location, _, cancelled) in
+		let locationPicker = ClientLocationPicker(location: .accounts, selectButtonTitle: OCLocalizedString("Select Destination", nil), selectPrompt: prompt, requiredPermissions: [ .createFile ], avoidConflictsWith: nil, choiceHandler: { [weak self] (chosenItem, location, _, cancelled) in
 			if let chosenItem, !chosenItem.permissions.contains(.createFile) {
 				OnMainThread { [weak self] in
-					let alert = ThemedAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
-					alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+					let alert = ThemedAlertController(title: OCLocalizedString("Missing permissions", nil), message: OCLocalizedString("This permission is needed to upload photos and videos from your photo library.", nil), preferredStyle: .alert)
+					alert.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
 					self?.viewController?.present(alert, animated: true, completion: nil)
 				}
 			} else {
@@ -427,8 +427,8 @@ class AutoUploadSettingsSection: SettingsSection {
 	}
 
 	private func showAutoUploadDisabledAlert() {
-		let alertController = ThemedAlertController(with: "Auto upload disabled".localized,
-							    message: "Auto upload of media was disabled since configured account / folder was not found".localized)
+		let alertController = ThemedAlertController(with: OCLocalizedString("Auto upload disabled", nil),
+							    message: OCLocalizedString("Auto upload of media was disabled since configured account / folder was not found", nil))
 		self.viewController?.present(alertController, animated: true, completion: nil)
 	}
 }

@@ -18,6 +18,7 @@
 
 import Foundation
 import UIKit
+import ownCloudSDK
 
 private enum CardPosition {
 	case half
@@ -238,7 +239,7 @@ final class CardPresentationController: UIPresentationController, Themeable {
 		}
 
 		dragHandleView.accessibilityTraits = [.button]
-		dragHandleView.accessibilityLabel = "Close actions menu".localized
+		dragHandleView.accessibilityLabel = OCLocalizedString("Close actions menu", nil)
 		dragHandleView.isAccessibilityElement = true
 
 		PointerEffect.install(on: dragHandleView, effectStyle: .hoverScaled)

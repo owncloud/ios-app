@@ -49,7 +49,7 @@ extension OCIdentity: UniversalItemListCellContentProvider {
 		}
 
 		if group != nil {
-			detailText = "Group".localized
+			detailText = OCLocalizedString("Group", nil)
 		}
 
 		if let detailText {

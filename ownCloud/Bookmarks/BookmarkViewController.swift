@@ -53,7 +53,7 @@ class BookmarkViewController: StaticTableViewController {
 
 	var userActionCompletionHandler : BookmarkViewControllerUserActionCompletionHandler?
 
-	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: "Continue".localized, style: .done, target: self, action: #selector(handleContinue))
+	lazy var continueBarButtonItem: UIBarButtonItem = UIBarButtonItem(title: OCLocalizedString("Continue", nil), style: .done, target: self, action: #selector(handleContinue))
 	lazy var saveBarButtonItem: UIBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(BookmarkViewController.userActionSave))
 	lazy var nextBarButtonItem = UIBarButtonItem(image: UIImage(named: "arrow-down"), style: .plain, target: self, action: #selector(toogleTextField))
 	lazy var previousBarButtonItem = UIBarButtonItem(image: UIImage(named: "arrow-up"), style: .plain, target: self, action: #selector(toogleTextField))
@@ -144,14 +144,14 @@ class BookmarkViewController: StaticTableViewController {
 				self?.nameChanged = true
 				self?.bookmark?.name = (textField.text?.count == 0) ? nil : textField.text
 			}
-		}, placeholder: "Name".localized, value: editBookmark?.name ?? "", identifier: "row-name-name", accessibilityLabel: "Server name".localized)
+		}, placeholder: OCLocalizedString("Name", nil), value: editBookmark?.name ?? "", identifier: "row-name-name", accessibilityLabel: OCLocalizedString("Server name", nil))
 
-		nameSection = StaticTableViewSection(headerTitle: "Name".localized, footerTitle: nil, identifier: "section-name", rows: [ nameRow! ])
+		nameSection = StaticTableViewSection(headerTitle: OCLocalizedString("Name", nil), footerTitle: nil, identifier: "section-name", rows: [ nameRow! ])
 
 		// URL section + row
 		urlRow = StaticTableViewRow(textFieldWithAction: { [weak self]  (_, sender, action) in
 			if let textField = sender as? UITextField, action == .changed {
-				var placeholderString = "Name".localized
+				var placeholderString = OCLocalizedString("Name", nil)
 				var changedBookmark = false
 				self?.urlChanged = true
 
@@ -197,7 +197,7 @@ class BookmarkViewController: StaticTableViewController {
 					nameRowTextField.attributedPlaceholder = NSAttributedString(string: placeholderString, attributes: [.foregroundColor : placeholderColor])
 				}
 			}
-		}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url", accessibilityLabel: "Server URL".localized)
+		}, placeholder: "https://", keyboardType: .URL, autocorrectionType: .no, identifier: "row-url-url", accessibilityLabel: OCLocalizedString("Server URL", nil))
 
 		certificateRow = StaticTableViewRow(rowWithAction: { [weak self] (_, _) in
 			if let certificate = self?.bookmark?.primaryCertificate {
@@ -206,9 +206,9 @@ class BookmarkViewController: StaticTableViewController {
 
 				self?.present(navigationController, animated: true, completion: nil)
 			}
-		}, title: "Certificate Details".localized, accessoryType: .disclosureIndicator, accessoryView: BorderedLabel(), identifier: "row-url-certificate")
+		}, title: OCLocalizedString("Certificate Details", nil), accessoryType: .disclosureIndicator, accessoryView: BorderedLabel(), identifier: "row-url-certificate")
 
-		urlSection = StaticTableViewSection(headerTitle: "Server URL".localized, footerTitle: nil, identifier: "section-url", rows: [ urlRow! ])
+		urlSection = StaticTableViewSection(headerTitle: OCLocalizedString("Server URL", nil), footerTitle: nil, identifier: "section-url", rows: [ urlRow! ])
 
 		// Credentials section + rows
 		usernameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender, action) in
@@ -216,7 +216,7 @@ class BookmarkViewController: StaticTableViewController {
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
-		}, placeholder: "Username".localized, autocorrectionType: .no, identifier: "row-credentials-username", accessibilityLabel: "Server Username".localized)
+		}, placeholder: OCLocalizedString("Username", nil), autocorrectionType: .no, identifier: "row-credentials-username", accessibilityLabel: OCLocalizedString("Server Username", nil))
 		usernameRow?.textField?.textContentType = .username
 
 		passwordRow = StaticTableViewRow(secureTextFieldWithAction: { [weak self] (_, sender, action) in
@@ -224,7 +224,7 @@ class BookmarkViewController: StaticTableViewController {
 				self?.bookmark?.authenticationData = nil
 				self?.composeSectionsAndRows(animated: true)
 			}
-		}, placeholder: "Password".localized, autocorrectionType: .no, identifier: "row-credentials-password", accessibilityLabel: "Server Password".localized)
+		}, placeholder: OCLocalizedString("Password", nil), autocorrectionType: .no, identifier: "row-credentials-password", accessibilityLabel: OCLocalizedString("Server Password", nil))
 		passwordRow?.textField?.textContentType = .password
 
 		addPasswordManagerButton()
@@ -253,9 +253,9 @@ class BookmarkViewController: StaticTableViewController {
 				self?.composeSectionsAndRows(animated: true)
 				self?.updateInputFocus()
 			}
-		}, title: "Delete Authentication Data".localized, style: .destructive, identifier: "row-credentials-auth-data-delete")
+		}, title: OCLocalizedString("Delete Authentication Data", nil), style: .destructive, identifier: "row-credentials-auth-data-delete")
 
-		credentialsSection = StaticTableViewSection(headerTitle: "Credentials".localized, footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
+		credentialsSection = StaticTableViewSection(headerTitle: OCLocalizedString("Credentials", nil), footerTitle: nil, identifier: "section-credentials", rows: [ usernameRow!, passwordRow! ])
 
 		// Input focus tracking
 		urlRow?.textField?.delegate = self
@@ -269,7 +269,7 @@ class BookmarkViewController: StaticTableViewController {
 
 		switch mode {
 			case .create:
-				self.navigationItem.title = Branding.shared.organizationName ?? "Add account".localized
+				self.navigationItem.title = Branding.shared.organizationName ?? OCLocalizedString("Add account", nil)
 				self.navigationItem.rightBarButtonItem = continueBarButtonItem
 
 				// Support for bookmark default name
@@ -296,7 +296,7 @@ class BookmarkViewController: StaticTableViewController {
 						UIApplication.shared.open(url)
 					}, title: title, alignment: .center, accessoryView: imageView)
 
-					helpSection = StaticTableViewSection(headerTitle: "Help".localized, footerTitle: Branding.shared.profileOpenHelpMessage, identifier: "section-help", rows: [ helpButtonRow! ])
+					helpSection = StaticTableViewSection(headerTitle: OCLocalizedString("Help", nil), footerTitle: Branding.shared.profileOpenHelpMessage, identifier: "section-help", rows: [ helpButtonRow! ])
 				}
 
 			case .edit:
@@ -314,7 +314,7 @@ class BookmarkViewController: StaticTableViewController {
 				(bookmark?.authenticationMethodIdentifier == nil) ||	// Enable if no authentication method was set (to keep it available)
 				((bookmark?.authenticationMethodIdentifier != nil) && (bookmark?.isPassphraseBased == true) && (((self.usernameRow?.value as? String) ?? "").count == 0)) // Enable if authentication method was set, is not tokenbased, but username is not available (i.e. when keychain was deleted/not migrated)
 
-				self.navigationItem.title = "Edit account".localized
+				self.navigationItem.title = OCLocalizedString("Edit account", nil)
 				self.navigationItem.rightBarButtonItem = saveBarButtonItem
 		}
 
@@ -431,9 +431,9 @@ class BookmarkViewController: StaticTableViewController {
 				// Check for zero-length host name
 				if (serverURL.host == nil) || ((serverURL.host != nil) && (serverURL.host?.count==0)) {
 					// Missing hostname
-					let alertController = ThemedAlertController(title: "Missing hostname".localized, message: "The entered URL does not include a hostname.", preferredStyle: .alert)
+					let alertController = ThemedAlertController(title: OCLocalizedString("Missing hostname", nil), message: "The entered URL does not include a hostname.", preferredStyle: .alert)
 
-					alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+					alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
 
 					self.present(alertController, animated: true, completion: nil)
 
@@ -458,7 +458,7 @@ class BookmarkViewController: StaticTableViewController {
 					let connection = instantiateConnection(for: connectionBookmark)
 					let previousCertificate = bookmark?.primaryCertificate
 
-					hud?.present(on: self, label: "Contacting server…".localized)
+					hud?.present(on: self, label: OCLocalizedString("Contacting server…", nil))
 
 					connection.prepareForSetup(options: nil) { (issue, _, _, preferredAuthenticationMethods, generationOptions) in
 						hudCompletion({
@@ -536,7 +536,7 @@ class BookmarkViewController: StaticTableViewController {
 
 			guard let bookmarkAuthenticationMethodIdentifier = bookmark?.authenticationMethodIdentifier else { return }
 
-			hud?.present(on: self, label: "Authenticating…".localized)
+			hud?.present(on: self, label: OCLocalizedString("Authenticating…", nil))
 
 			connection.generateAuthenticationData(withMethod: bookmarkAuthenticationMethodIdentifier, options: options) { (error, authMethodIdentifier, authMethodData) in
 				if error == nil, let authMethodIdentifier, let authMethodData {
@@ -544,7 +544,7 @@ class BookmarkViewController: StaticTableViewController {
 					self.bookmark?.authenticationData = authMethodData
 					self.bookmark?.scanForAuthenticationMethodsRequired = false
 					OnMainThread {
-						hud?.updateLabel(with: "Fetching user information…".localized)
+						hud?.updateLabel(with: OCLocalizedString("Fetching user information…", nil))
 					}
 
 					// Retrieve available instances for this account to chose from
@@ -635,7 +635,7 @@ class BookmarkViewController: StaticTableViewController {
 			}
 		}
 
-		hud?.present(on: self, label: "Updating connection…".localized)
+		hud?.present(on: self, label: OCLocalizedString("Updating connection…", nil))
 
 		save(hudCompletion: hudCompletion)
 	}
@@ -741,7 +741,7 @@ class BookmarkViewController: StaticTableViewController {
 											// Present progress
 											if let prepopulateProgress = prepopulateProgress {
 
-												progressViewController = ProgressIndicatorViewController(initialTitleLabel: "Preparing account".localized, initialProgressLabel: "Please wait…".localized, progress: nil, cancelLabel: "Skip".localized, cancelHandler: {
+												progressViewController = ProgressIndicatorViewController(initialTitleLabel: OCLocalizedString("Preparing account", nil), initialProgressLabel: OCLocalizedString("Please wait…", nil), progress: nil, cancelLabel: OCLocalizedString("Skip", nil), cancelHandler: {
 													prepopulateProgress.cancel()
 												})
 												progressViewController?.progress = prepopulateProgress // work around compiler bug (https://forums.swift.org/t/didset-is-not-triggered-while-called-after-super-init/45226/10)
@@ -910,9 +910,9 @@ class BookmarkViewController: StaticTableViewController {
 
 					case .token:
 						if let authData = self.bookmark?.authenticationData, let userName = authenticationMethodClass.userName(fromAuthenticationData: authData) {
-							tokenInfoRow?.value = NSString(format:"Authenticated as %@ via %@".localized as NSString, userName, authenticationMethodClass.name)
+							tokenInfoRow?.value = NSString(format:OCLocalizedString("Authenticated as %@ via %@", nil) as NSString, userName, authenticationMethodClass.name)
 						} else {
-							tokenInfoRow?.value = "Authenticated via".localized + " " + authenticationMethodClass.name
+							tokenInfoRow?.value = OCLocalizedString("Authenticated via", nil) + " " + authenticationMethodClass.name
 						}
 
 						if self.bookmark?.authenticationData != nil {
@@ -953,7 +953,7 @@ class BookmarkViewController: StaticTableViewController {
 				authMethodName = localizedAuthMethodName
 			}
 
-			let messageText = "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.".localized(["authmethodName" :  authMethodName])
+			let messageText = OCLocalizedFormat("If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials.", ["authmethodName" :  authMethodName])
 
 			tokenHelpRow?.value = messageText
 
@@ -1042,7 +1042,7 @@ class BookmarkViewController: StaticTableViewController {
 			}
 
 			// - Placeholder
-			var placeholderString = "Name".localized
+			var placeholderString = OCLocalizedString("Name", nil)
 
 			if (bookmark.url != nil) || (bookmark.originURL != nil) {
 				placeholderString = bookmark.shortName
@@ -1151,7 +1151,7 @@ extension BookmarkViewController {
 					AccountConnectionPool.shared.connection(for: bookmark)?.connect()
 				}
 			})
-			setupViewController.navigationItem.titleLabelText = "Add account".localized
+			setupViewController.navigationItem.titleLabelText = OCLocalizedString("Add account", nil)
 
 			let navigationViewController = ThemeNavigationController(rootViewController: setupViewController)
 			navigationViewController.modalPresentationStyle = .fullScreen

@@ -18,6 +18,7 @@
 
 import UIKit
 import PDFKit
+import ownCloudSDK
 
 typealias PDFSearchResultsViewCloseHandler = () -> Void
 typealias PDFSearchResultsViewUpdateHandler = (PDFSelection) -> Void
@@ -42,7 +43,7 @@ class PDFSearchResultsView : UIView {
 			if let match = currentMatch, let matches = self.matches {
 				if let index = matches.firstIndex(of: match), let matchString = match.string {
 					currentIndex = index
-					let searchResultsText = "\(matchString) (" + String(format: "%@ of %@".localized, "\(index + 1)", "\(matches.count)") + ")"
+					let searchResultsText = "\(matchString) (" + String(format: OCLocalizedString("%@ of %@", nil), "\(index + 1)", "\(matches.count)") + ")"
 					searchTermButton.setTitle(searchResultsText, for: .normal)
 					backButton.isEnabled = currentIndex == 0 ? false : true
 					forwardButton.isEnabled = currentIndex == matches.count - 1 ? false : true

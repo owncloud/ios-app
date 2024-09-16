@@ -83,7 +83,7 @@ class MediaDisplayViewController : DisplayViewController {
 						.spacing(25),
 						.progressCircle(with: indeterminateProgress),
 						.spacing(25),
-						.title("Loading…".localized, alignment: .centered)
+						.title(OCLocalizedString("Loading…", nil), alignment: .centered)
 					], withRoundedBackgroundView: true)
 
 					loadingIndicator = messageView
@@ -290,7 +290,7 @@ class MediaDisplayViewController : DisplayViewController {
 		guard let error = error else { return }
 
 		OnMainThread { [weak self] in
-			let alert = ThemedAlertController(with: "Error".localized, message: error.localizedDescription, okLabel: "OK".localized, action: {
+			let alert = ThemedAlertController(with: OCLocalizedString("Error", nil), message: error.localizedDescription, okLabel: OCLocalizedString("OK", nil), action: {
 				self?.navigationController?.popViewController(animated: true)
 			})
 

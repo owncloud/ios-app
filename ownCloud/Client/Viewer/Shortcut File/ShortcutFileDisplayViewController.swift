@@ -26,7 +26,7 @@ class ShortcutFileDisplayViewController: DisplayViewController {
 			INIFile.resolveShortcutFile(at: itemDirectURL, core: core, result: { [weak self] error, url, item in
 				OnMainThread {
 					if let error {
-						let alertController = ThemedAlertController(with: "Error".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
+						let alertController = ThemedAlertController(with: OCLocalizedString("Error", nil), message: error.localizedDescription, okLabel: OCLocalizedString("OK", nil), action: nil)
 						self?.present(alertController, animated: true)
 					} else if item != nil {
 						self?.presentShortcutWith(item: item)
@@ -62,7 +62,7 @@ class ShortcutFileDisplayViewController: DisplayViewController {
 
 			urlTitleLabel.textAlignment = .center
 			urlTitleLabel.font = UIFont.preferredFont(forTextStyle: .headline, with: .bold)
-			urlTitleLabel.text = "Shortcut".localized
+			urlTitleLabel.text = OCLocalizedString("Shortcut", nil)
 
 			urlLabel.textAlignment = .center
 			urlLabel.font = UIFont.preferredFont(forTextStyle: .subheadline, with: .regular)
@@ -81,7 +81,7 @@ class ShortcutFileDisplayViewController: DisplayViewController {
 				openButton.centerXAnchor.constraint(equalTo: rootView.centerXAnchor)
 			])
 
-			openButtonConfig.title = "Open link".localized
+			openButtonConfig.title = OCLocalizedString("Open link", nil)
 		}
 
 		if let item, let core = clientContext?.core {
@@ -99,7 +99,7 @@ class ShortcutFileDisplayViewController: DisplayViewController {
 				openButton.centerXAnchor.constraint(equalTo: rootView.centerXAnchor)
 			])
 
-			openButtonConfig.title = "Open shortcut".localized
+			openButtonConfig.title = OCLocalizedString("Open shortcut", nil)
 		}
 
 		openButtonConfig.cornerStyle = .large
@@ -119,8 +119,8 @@ class ShortcutFileDisplayViewController: DisplayViewController {
 			UIApplication.shared.open(url) { success in
 				if !success {
 					OnMainThread {
-						let alert = ThemedAlertController(title: "Opening link failed".localized, message: nil, preferredStyle: .alert)
-						alert.addAction(UIAlertAction(title: "OK".localized, style: .default))
+						let alert = ThemedAlertController(title: OCLocalizedString("Opening link failed", nil), message: nil, preferredStyle: .alert)
+						alert.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default))
 						self.present(alert, animated: true)
 					}
 				}

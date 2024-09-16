@@ -77,9 +77,9 @@ class AccountConnectionAuthErrorConsumer: AccountConnectionConsumer, AccountConn
 		var issue = inIssue
 		var isAuthFailure : Bool = false
 		var authFailureMessage : String?
-		var authFailureTitle : String = "Authorization failed".localized
+		var authFailureTitle : String = OCLocalizedString("Authorization failed", nil)
 		var authFailureHasEditOption : Bool = true
-		var authFailureIgnoreLabel = "Continue offline".localized
+		var authFailureIgnoreLabel = OCLocalizedString("Continue offline", nil)
 		var authFailureIgnoreStyle = UIAlertAction.Style.destructive
 		let editBookmark = connection.bookmark
 		var nsError = error as NSError?
@@ -99,18 +99,18 @@ class AccountConnectionAuthErrorConsumer: AccountConnectionConsumer, AccountConn
 				if let underlyingError = nsError.userInfo[NSUnderlyingErrorKey] as? NSError, underlyingError.isDAVException, underlyingError.davExceptionMessage == "User disabled" {
 					authFailureHasEditOption = false
 					authFailureIgnoreStyle = .cancel
-					authFailureIgnoreLabel = "Continue offline".localized
-					authFailureMessage = "The account has been disabled."
+					authFailureIgnoreLabel = OCLocalizedString("Continue offline", nil)
+					authFailureMessage = OCLocalizedString("The account has been disabled.", nil)
 				} else {
 					if connection.bookmark.isTokenBased == true {
-						authFailureTitle = "Access denied".localized
-						authFailureMessage = "The connection's access token has expired or become invalid. Sign in again to re-gain access.".localized
+						authFailureTitle = OCLocalizedString("Access denied", nil)
+						authFailureMessage = OCLocalizedString("The connection's access token has expired or become invalid. Sign in again to re-gain access.", nil)
 
 						if let localizedDescription = nsError.userInfo[NSLocalizedDescriptionKey] {
 							authFailureMessage = "\(authFailureMessage!)\n\n(\(localizedDescription))"
 						}
 					} else {
-						authFailureMessage = "The server declined access with the credentials stored for this connection.".localized
+						authFailureMessage = OCLocalizedString("The server declined access with the credentials stored for this connection.", nil)
 					}
 				}
 
@@ -118,13 +118,13 @@ class AccountConnectionAuthErrorConsumer: AccountConnectionConsumer, AccountConn
 			}
 
 			if nsError.isOCError(withCode: .authorizationNoMethodData) || nsError.isOCError(withCode: .authorizationMissingData) {
-				authFailureMessage = "No authentication data has been found for this connection.".localized
+				authFailureMessage = OCLocalizedString("No authentication data has been found for this connection.", nil)
 
 				isAuthFailure = true
 			}
 
 			if nsError.isOCError(withCode: .authorizationMethodNotAllowed) {
-				authFailureMessage = NSString(format: "Authentication with %@ is no longer allowed. Re-authentication needed.".localized as NSString, core.connection.authenticationMethod?.name ?? "??") as String
+				authFailureMessage = NSString(format: OCLocalizedString("Authentication with %@ is no longer allowed. Re-authentication needed.", nil) as NSString, core.connection.authenticationMethod?.name ?? "??") as String
 
 				isAuthFailure = true
 			}
@@ -216,7 +216,7 @@ class AccountConnectionAuthErrorConsumer: AccountConnectionConsumer, AccountConn
 		}))
 
 		if authFailure.hasEditOption {
-			let action = UIAlertAction(title: "Sign in".localized, style: .default, handler: { [weak self] (_) in
+			let action = UIAlertAction(title: OCLocalizedString("Sign in", nil), style: .default, handler: { [weak self] (_) in
 				completionHandler()
 
 				var notifyAuthDelegate = true
@@ -238,7 +238,7 @@ class AccountConnectionAuthErrorConsumer: AccountConnectionConsumer, AccountConn
 							} else if let nsError = error as NSError?, !nsError.isOCError(withCode: .authorizationCancelled) {
 								// Error updating authentication -> inform the user and provide option to retry
 								context.alertQueue?.async { [weak self] (queueCompletionHandler) in
-									let newAuthFail = AccountConnection.AuthFailure(bookmark: authFailure.bookmark, error: error as NSError?, title: "Error".localized, message: error?.localizedDescription, ignoreLabel: authFailure.ignoreLabel, ignoreStyle: authFailure.ignoreStyle, hasEditOption: authFailure.hasEditOption)
+									let newAuthFail = AccountConnection.AuthFailure(bookmark: authFailure.bookmark, error: error as NSError?, title: OCLocalizedString("Error", nil), message: error?.localizedDescription, ignoreLabel: authFailure.ignoreLabel, ignoreStyle: authFailure.ignoreStyle, hasEditOption: authFailure.hasEditOption)
 
 									self?.presentAuthAlert(for: newAuthFail, preferredAuthenticationMethods: preferredAuthenticationMethods, context: context, completionHandler: queueCompletionHandler)
 								}
@@ -254,11 +254,11 @@ class AccountConnectionAuthErrorConsumer: AccountConnectionConsumer, AccountConn
 						})
 					} else {
 						context.alertQueue?.async({ [weak context] (queueCompletionHandler) in
-							let alertController = ThemedAlertController(title: "Authentication failed".localized,
-												    message: "Please open the app and select the account to re-authenticate.".localized,
+							let alertController = ThemedAlertController(title: OCLocalizedString("Authentication failed", nil),
+												    message: OCLocalizedString("Please open the app and select the account to re-authenticate.", nil),
 												    preferredStyle: .alert)
 
-							alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { _ in
+							alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: { _ in
 								queueCompletionHandler()
 							}))
 

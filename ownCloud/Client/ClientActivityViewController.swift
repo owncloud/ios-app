@@ -190,7 +190,7 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 			self.tableView.reloadData()
 
 			if (activities?.count ?? 0) == 0, (messageGroups?.count ?? 0) == 0 {
-				self.messageView?.message(show: true, imageName: "status-flash", title: "All done".localized, message: "No pending messages or ongoing actions.".localized)
+				self.messageView?.message(show: true, imageName: "status-flash", title: OCLocalizedString("All done", nil), message: OCLocalizedString("No pending messages or ongoing actions.", nil))
 			} else {
 				self.messageView?.message(show: false)
 			}
@@ -220,7 +220,7 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 
-		self.navigationItem.title = "Status".localized
+		self.navigationItem.title = OCLocalizedString("Status", nil)
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
@@ -323,7 +323,7 @@ class ClientActivityViewController: UITableViewController, Themeable, MessageGro
 		   let activities = activities,
 		   let nodeGenerator = activities[indexPath.row] as? DiagnosticNodeGenerator, nodeGenerator.isDiagnosticNodeGenerationAvailable {
 			return UISwipeActionsConfiguration(actions: [
-				UIContextualAction(style: .normal, title: "Info".localized, handler: { [weak self] (_, _, completionHandler) in
+				UIContextualAction(style: .normal, title: OCLocalizedString("Info", nil), handler: { [weak self] (_, _, completionHandler) in
 					let diagnosticContext = OCDiagnosticContext(core: self?.core)
 
 					nodeGenerator.provideDiagnosticNode(for: diagnosticContext, completion: { [weak self] (groupNode, style) in

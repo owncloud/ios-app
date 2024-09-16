@@ -18,16 +18,17 @@
 
 import UIKit
 import ownCloudAppShared
+import ownCloudSDK
 
 extension UIAlertController {
 
 	class func alertControllerForPhotoLibraryAuthorizationInSettings() -> UIAlertController {
-		let alert = ThemedAlertController(title: "Missing permissions".localized, message: "This permission is needed to upload photos and videos from your photo library.".localized, preferredStyle: .alert)
+		let alert = ThemedAlertController(title: OCLocalizedString("Missing permissions", nil), message: OCLocalizedString("This permission is needed to upload photos and videos from your photo library.", nil), preferredStyle: .alert)
 
-		let settingAction = UIAlertAction(title: "Settings".localized, style: .default, handler: { _ in
+		let settingAction = UIAlertAction(title: OCLocalizedString("Settings", nil), style: .default, handler: { _ in
 			UIApplication.shared.open(URL(string: UIApplication.openSettingsURLString)!, options: [:], completionHandler: nil)
 		})
-		let notNowAction = UIAlertAction(title: "Not now".localized, style: .cancel)
+		let notNowAction = UIAlertAction(title: OCLocalizedString("Not now", nil), style: .cancel)
 
 		alert.addAction(settingAction)
 		alert.addAction(notNowAction)

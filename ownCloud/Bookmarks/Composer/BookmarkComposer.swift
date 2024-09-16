@@ -135,7 +135,7 @@ class BookmarkComposer: NSObject {
 		// Check for zero-length host name
 		if (serverURL.host == nil) || ((serverURL.host != nil) && (serverURL.host?.count==0)) {
 			// Missing hostname
-			completion(nil, OCIssue(localizedTitle: "Missing hostname".localized, localizedDescription: "The entered URL does not include a hostname.".localized, level: .error), nil)
+			completion(nil, OCIssue(localizedTitle: OCLocalizedString("Missing hostname", nil), localizedDescription: OCLocalizedString("The entered URL does not include a hostname.", nil), level: .error), nil)
 			return
 		}
 
@@ -153,7 +153,7 @@ class BookmarkComposer: NSObject {
 
 		let connection = instantiateConnection(for: bookmark)
 
-		hudMessage = "Contacting server…".localized
+		hudMessage = OCLocalizedString("Contacting server…", nil)
 
 		connection.prepareForSetup(options: nil) { [weak self] (issue, _, _, preferredAuthenticationMethods, generationOptions) in
 			self?.hudMessage = nil
@@ -231,7 +231,7 @@ class BookmarkComposer: NSObject {
 
 		guard let bookmarkAuthenticationMethodIdentifier = bookmark.authenticationMethodIdentifier else { return }
 
-		hudMessage = "Authenticating…".localized
+		hudMessage = OCLocalizedString("Authenticating…", nil)
 
 		connection.generateAuthenticationData(withMethod: bookmarkAuthenticationMethodIdentifier, options: options) { (error, authMethodIdentifier, authMethodData) in
 			if error == nil, let authMethodIdentifier, let authMethodData {
@@ -239,7 +239,7 @@ class BookmarkComposer: NSObject {
 				self.bookmark.authenticationData = authMethodData
 				self.bookmark.scanForAuthenticationMethodsRequired = false
 
-				self.hudMessage = "Fetching user information…".localized
+				self.hudMessage = OCLocalizedString("Fetching user information…", nil)
 
 				// Retrieve available instances for this account to chose from
 				connection.retrieveAvailableInstances(options: options, authenticationMethodIdentifier: authMethodIdentifier, authenticationData: authMethodData, completionHandler: { error, instances in
@@ -315,7 +315,7 @@ class BookmarkComposer: NSObject {
 	func retrieveServerConfiguration(completion: @escaping Completion) {
 		let connection = instantiateConnection(for: bookmark)
 
-		self.hudMessage = "Fetching server information…".localized
+		self.hudMessage = OCLocalizedString("Fetching server information…", nil)
 
 		connection.connect { [weak self] (error, issue) in
 			guard let strongSelf = self else { return }

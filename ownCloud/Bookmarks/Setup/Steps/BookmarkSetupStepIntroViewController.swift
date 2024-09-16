@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudAppShared
+import ownCloudSDK
 
 class BookmarkSetupStepIntroViewController: BookmarkSetupStepViewController {
 	var hasSettings: Bool {
@@ -27,15 +28,15 @@ class BookmarkSetupStepIntroViewController: BookmarkSetupStepViewController {
 	override func loadView() {
 		super.loadView()
 
-		continueButtonLabelText = "Start setup".localized
+		continueButtonLabelText = OCLocalizedString("Start setup", nil)
 
 		if hasSettings {
-			backButtonLabelText = "Settings".localized
+			backButtonLabelText = OCLocalizedString("Settings", nil)
 		}
 
 		let messageView = ComposedMessageView(elements: [
-			.title(String(format: "Welcome to %@".localized, VendorServices.shared.appName), alignment: .centered, cssSelectors: [.title], insets: NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0)),
-			.subtitle("The following steps will guide you through the setup process.".localized, alignment: .centered, cssSelectors: [.message])
+			.title(String(format: OCLocalizedString("Welcome to %@", nil), VendorServices.shared.appName), alignment: .centered, cssSelectors: [.title], insets: NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0)),
+			.subtitle(OCLocalizedString("The following steps will guide you through the setup process.", nil), alignment: .centered, cssSelectors: [.message])
 		])
 		messageView.elementInsets = .zero
 		messageView.cssSelectors = [ .welcome ]

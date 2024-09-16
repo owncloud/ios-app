@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-extension UIView : OCDataItem, OCDataItemVersioning {
+extension UIView : ownCloudSDK.OCDataItem, ownCloudSDK.OCDataItemVersioning {
 	private static let associatedKeyViewUUID = malloc(1)!
 
 	public var dataItemType: OCDataItemType {

@@ -76,7 +76,7 @@ class OpenShortcutFileAction: Action {
 
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openShortcutFile") }
 	override open class var category : ActionCategory? { return .normal }
-	override open class var name : String? { return "Open shortcut".localized }
+	override open class var name : String? { return OCLocalizedString("Open shortcut", nil) }
 	override open class var locations : [OCExtensionLocationIdentifier]? { return [.directOpen] }
 
 	// MARK: - Extension matching
@@ -130,24 +130,24 @@ class OpenShortcutFileAction: Action {
 
 	func open(error: Error? = nil, url: URL? = nil, item: OCItem? = nil) {
 		if let error {
-			let alertController = ThemedAlertController(with: "Error".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
+			let alertController = ThemedAlertController(with: OCLocalizedString("Error", nil), message: error.localizedDescription, okLabel: OCLocalizedString("OK", nil), action: nil)
 			self.context.viewController?.present(alertController, animated: true)
 		} else if let item {
 			_ = item.openItem(from: context.viewController, with: context.clientContext, animated: true, pushViewController: true, completion: nil)
 		} else if let url {
-			let alert = ThemedAlertController(title: "Shortcut to '{{hostname}}'".localized(["hostname" : url.host ?? "URL"]), message: "This shortcut points to:\n{{url}}".localized(["url" :  url.absoluteString]), preferredStyle: .alert)
-			alert.addAction(UIAlertAction(title: "Open link".localized, style: .default, handler: { _ in
+			let alert = ThemedAlertController(title: OCLocalizedFormat("Shortcut to '{{hostname}}'", ["hostname" : url.host ?? "URL"]), message: OCLocalizedFormat("This shortcut points to:\n{{url}}", ["url" :  url.absoluteString]), preferredStyle: .alert)
+			alert.addAction(UIAlertAction(title: OCLocalizedString("Open link", nil), style: .default, handler: { _ in
 				UIApplication.shared.open(url) { success in
 					if !success {
 						OnMainThread {
-							let alert = ThemedAlertController(title: "Opening link failed".localized, message: nil, preferredStyle: .alert)
-							alert.addAction(UIAlertAction(title: "OK".localized, style: .default))
+							let alert = ThemedAlertController(title: OCLocalizedString("Opening link failed", nil), message: nil, preferredStyle: .alert)
+							alert.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default))
 							self.context.viewController?.present(alert, animated: true)
 						}
 					}
 				}
 			}))
-			alert.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel))
+			alert.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel))
 			self.context.viewController?.present(alert, animated: true)
 		}
 	}

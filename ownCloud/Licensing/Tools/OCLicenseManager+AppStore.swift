@@ -27,15 +27,15 @@ extension OCLicenseManager {
 		if let appStoreProvider = OCLicenseManager.appStoreProvider {
 			let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
 
-			hud?.present(on: viewController, label: "Restoring purchases…".localized)
+			hud?.present(on: viewController, label: OCLocalizedString("Restoring purchases…", nil))
 
 			appStoreProvider.restorePurchases(completionHandler: { (error) in
 				let completion = {
 					OnMainThread {
 						if let error = error {
-							let alert = ThemedAlertController(title: "Error restoring purchases".localized, message: error.localizedDescription, preferredStyle: .alert)
+							let alert = ThemedAlertController(title: OCLocalizedString("Error restoring purchases", nil), message: error.localizedDescription, preferredStyle: .alert)
 
-							alert.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+							alert.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
 
 							viewController.present(alert, animated: true, completion: nil)
 						}

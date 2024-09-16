@@ -23,7 +23,7 @@ import ownCloudAppShared
 class AvailableOfflineAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.availableOffline") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Make available offline".localized }
+	override class var name : String? { return OCLocalizedString("Make available offline", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .keyboardShortcut, .contextMenuItem, .accessibilityCustomAction] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .alternate] }
@@ -38,7 +38,7 @@ class AvailableOfflineAction: Action {
 			if let itemLocation = item.location, let policies = core.retrieveAvailableOfflinePoliciesCovering(item, completionHandler: nil) {
 				for policy in policies {
 					// Only show if item is not already available offline via parent item
-					if let policyLocation = policy.location, itemLocation.isLocated(in: policyLocation) && itemLocation != policyLocation {
+					if let policyLocation = policy.location, itemLocation.isLocated(in: policyLocation) && !itemLocation.isEqual(policyLocation) {
 						return .none
 					}
 				}
@@ -126,9 +126,9 @@ class AvailableOfflineAction: Action {
 		let customAction = super.provideAccessibilityCustomAction()
 
 		if self.isAvailableOffline {
-			customAction.name = "Make unavailable offline".localized
+			customAction.name = OCLocalizedString("Make unavailable offline", nil)
 		} else {
-			customAction.name = "Make available offline".localized
+			customAction.name = OCLocalizedString("Make available offline", nil)
 		}
 
 		return customAction

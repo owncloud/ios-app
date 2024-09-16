@@ -171,7 +171,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 				containerView.addArrangedSubview(pdfView)
 
 				pageCountButton.translatesAutoresizingMaskIntoConstraints = false
-				pageCountButton.accessibilityLabel = "Go to page".localized
+				pageCountButton.accessibilityLabel = OCLocalizedString("Go to page", nil)
 				pageCountButton.addTarget(self, action: #selector(goToPage), for: .touchDown)
 				pageCountContainerView.translatesAutoresizingMaskIntoConstraints = false
 				pageCountContainerView.addSubview(pageCountButton)
@@ -273,16 +273,16 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 
 		guard let pdfDocument = pdfView.document else { return }
 
-		let alertMessage = NSString(format: "This document has %@ pages".localized as NSString, "\(pdfDocument.pageCount)") as String
-		let alertController = ThemedAlertController(title: "Go to page".localized, message: alertMessage, preferredStyle: .alert)
-		alertController.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel, handler: nil))
+		let alertMessage = NSString(format: OCLocalizedString("This document has %@ pages", nil) as NSString, "\(pdfDocument.pageCount)") as String
+		let alertController = ThemedAlertController(title: OCLocalizedString("Go to page", nil), message: alertMessage, preferredStyle: .alert)
+		alertController.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel, handler: nil))
 
 		alertController.addTextField(configurationHandler: { textField in
-			textField.placeholder = "Page".localized
+			textField.placeholder = OCLocalizedString("Page", nil)
 			textField.keyboardType = .decimalPad
 		})
 
-		alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { [unowned self] _ in
+		alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: { [unowned self] _ in
 			if let pageLabel = alertController.textFields?.first?.text {
 				self.selectPage(with: pageLabel)
 			}
@@ -415,8 +415,8 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 		searchButtonItem = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(search))
 		outlineItem = UIBarButtonItem(image: UIImage(named: "ic_pdf_outline"), style: .plain, target: self, action: #selector(showOutline))
 
-		searchButtonItem?.accessibilityLabel = "Search PDF".localized
-		outlineItem?.accessibilityLabel = "Outline".localized
+		searchButtonItem?.accessibilityLabel = OCLocalizedString("Search PDF", nil)
+		outlineItem?.accessibilityLabel = OCLocalizedString("Outline", nil)
 
 		return [
 			actionBarButtonItem,
@@ -486,10 +486,10 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 					self.pdfView.go(to: page)
 				}
 			} else {
-				let alertController = ThemedAlertController(title: "Invalid Page".localized,
-									    message: "The entered page number doesn't exist".localized,
+				let alertController = ThemedAlertController(title: OCLocalizedString("Invalid Page", nil),
+									    message: OCLocalizedString("The entered page number doesn't exist", nil),
 									    preferredStyle: .alert)
-				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+				alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
 				self.present(alertController, animated: true, completion: nil)
 			}
 		}
@@ -502,7 +502,7 @@ class PDFViewerViewController: DisplayViewController, DisplayExtension, UIPopove
 
 		let pageNrText = "\(pdf.index(for: page) + 1)"
 		let maxPageCountText = "\(pdf.pageCount)"
-		let title = NSString(format: "%@ of %@".localized as NSString, pageNrText, maxPageCountText) as String
+		let title = NSString(format: OCLocalizedString("%@ of %@", nil) as NSString, pageNrText, maxPageCountText) as String
 		pageCountButton.setTitle(title, for: .normal)
 	}
 }

@@ -17,7 +17,21 @@
  */
 
 #import <ownCloudSDK/ownCloudSDK.h>
-#import <ownCloudApp/ownCloudApp.h>
+
+// BEGIN: Shared with ownCloudApp.framework
+#import "Branding.h"
+#import "BrandingClassSettingsSource.h"
+#import "NotificationManager.h"
+#import "NotificationMessagePresenter.h"
+#import "NotificationAuthErrorForwarder.h"
+#import "OCBookmark+AppExtensions.h"
+#import "OCBookmark+FPServices.h"
+#import "OCCore+BundleImport.h"
+#import "OCFileProviderSettings.h"
+#import "VFSManager.h"
+#import "AppLockSettings.h"
+#import "ZIPArchive.h"
+// END: shared with ownCloudApp.framework
 
 #import "FileProviderExtension.h"
 #import "OCItem+FileProviderItem.h"
@@ -362,6 +376,12 @@
 		 {
 			FPLogCmdBegin(@"StartProviding", @"Downloading %@", item);
 
+			if (((OCItem *)item).type == OCItemTypeCollection) {
+				// Can't download folders
+				completionHandler([NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
+				return;
+			}
+
 			[self.core downloadItem:(OCItem *)item options:@{
 
 				OCCoreOptionAddFileClaim : [OCClaim claimForLifetimeOfCore:core explicitIdentifier:OCClaimExplicitIdentifierFileProvider withLockType:OCClaimLockTypeRead]
@@ -536,7 +556,7 @@
 
 	if (!OCFileProviderSettings.browseable)
 	{
-		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalized(@"File Provider access has been disabled by the administrator. Please use the app to create new folders.")) translatedError]);
+		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalizedString(@"File Provider access has been disabled by the administrator. Please use the app to create new folders.", nil)) translatedError]);
 		return;
 	}
 
@@ -653,7 +673,7 @@
 			// a cross-server move using OCCore actions. The complexity of such an undertaking should not be underestimated, though, as in
 			// the case of moving folders, we'd have to download and upload entire hierarchies of files - that could change while we're at it.
 			FPLogCmd(@"parentItem not found. Likely a cross-domain move. Changing error message accordingly.");
-			error = OCErrorWithDescription(OCErrorItemNotFound, OCLocalized(@"The destination folder couldn't be found on this server. Moving items across servers is currently not supported."));
+			error = OCErrorWithDescription(OCErrorItemNotFound, OCLocalizedString(@"The destination folder couldn't be found on this server. Moving items across servers is currently not supported.", nil));
 		}
 
 		FPLogCmd(@"Completed with item=%@ or parentItem=%@ not found, error=%@", item, parentItem, error);
@@ -724,13 +744,13 @@
 
 	if (!OCFileProviderSettings.browseable)
 	{
-		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalized(@"File Provider access has been disabled by the administrator. Please use the share extension to import files.")) translatedError]);
+		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalizedString(@"File Provider access has been disabled by the administrator. Please use the share extension to import files.", nil)) translatedError]);
 		return;
 	}
 
 	if (![Branding.sharedBranding isImportMethodAllowed:BrandingFileImportMethodFileProvider])
 	{
-		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalized(@"Importing files through the File Provider is not allowed on this device.")) translatedError]);
+		completionHandler(nil, [OCErrorWithDescription(OCErrorInternal, OCLocalizedString(@"Importing files through the File Provider is not allowed on this device.", nil)) translatedError]);
 
 		return;
 	}
@@ -786,6 +806,7 @@
 				OCCoreOptionImportByCopying : @(importByCopying)
 			} placeholderCompletionHandler:^(NSError *error, OCItem *item) {
 				FPLogCmd(@"Completed with placeholderItem=%@, error=%@", item, error);
+				item.bookmarkUUID = self.core.bookmark.uuid.UUIDString; // ensure bookmarkUUID is present so that vfsItemID / itemIdentifier succeed
 				completionHandler(item, [error translatedError]);
 			} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 				if ([error.domain isEqual:OCHTTPStatusErrorDomain] && (error.code == OCHTTPStatusCodePRECONDITION_FAILED))
@@ -1307,18 +1328,18 @@
 
 				OCBookmark *bookmark;
 
-				content.title = OCLocalized(@"Authorization failed");
+				content.title = OCLocalizedString(@"Authorization failed", nil);
 
 				if ((OCBookmarkManager.sharedBookmarkManager.bookmarks.count > 1) &&
 				    (((bookmark = core.bookmark) != nil) &&
 				     (bookmark.shortName != nil))
 				   )
 				{
-					content.body = [NSString stringWithFormat:OCLocalized(@"Log into your account %@ in the app for more details."), bookmark.shortName];
+					content.body = [NSString stringWithFormat:OCLocalizedString(@"Log into your account %@ in the app for more details.", nil), bookmark.shortName];
 				}
 				else
 				{
-					content.body = OCLocalized(@"Log into your account in the app for more details.");
+					content.body = OCLocalizedString(@"Log into your account in the app for more details.", nil);
 				}
 
 				UNNotificationRequest *request;
@@ -1382,7 +1403,6 @@
 @end
 
 OCClaimExplicitIdentifier OCClaimExplicitIdentifierFileProvider = @"fileProvider";
-OCClassSettingsIdentifier OCClassSettingsIdentifierFileProvider = @"file-provider";
 OCClassSettingsKey OCClassSettingsKeyFileProviderSkipLocalErrorChecks = @"skip-local-error-checks";
 
 /*

@@ -23,7 +23,7 @@ import ownCloudAppShared
 class UnfavoriteAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unfavorite") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Unfavorite item".localized }
+	override class var name : String? { return OCLocalizedString("Unfavorite item", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut, .contextMenuItem] }
 	override class var keyCommand : String? { return "F" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }
