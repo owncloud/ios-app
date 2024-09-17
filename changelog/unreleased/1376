@@ -1,0 +1,9 @@
+Enhancement: Reduce memory footprint
+
+- reduced memory consumption of the File Provider
+- avoid use of FileProvider via XPC due to stability issues
+- add code handling iOS/iPadOS 18 requests to the File Provider to download folder items
+- fix spurious "invalid parameter" error on import in File Provider
+- properly clean up status of ProgressSummarizer after disconnect
+
+https://github.com/owncloud/ios-app/pull/1376
