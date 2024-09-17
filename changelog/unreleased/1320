@@ -1,0 +1,18 @@
+Enhancement: Improved sidebar with account-wide search
+
+This PR:
+- removes `Quick Access` from the sidebar, redistributing its prior contents as follows:
+  - `Recents`: promoted to a top-level sidebar item
+  - `Favorites`: promoted to a top-level sidebar item
+  - `Available Offline`: promoted to a top-level sidebar item
+  - other Quick Access items: moved as suggestions to new top-level sidebar `Search` item, with a dedicated `Add to sidebar` button that allows re-adding the previous Quick Access items as saved search
+  - Saved searches now appear as top-level items in the sidebar
+- adds custom user sidebar items
+  - can be added via `Add to sidebar`
+  - support drag and drop (also cross-account)
+  - managed via context menu, swipe and `Remove from sidebar` actions
+- in the share extension automatically connects to the first account if only one account is in the account (superseding [#1296](https://github.com/owncloud/ios-app/pull/1296))
+- incorporates the latest SDK with important fixes
+
+https://github.com/owncloud/ios-app/pull/1320
+
