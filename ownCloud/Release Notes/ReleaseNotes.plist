@@ -1983,7 +1983,28 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 			<key>Version</key>
 			<string>12.3</string>
 			<key>ReleaseNotes</key>
-			<array/>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>iOS 18</string>
+					<key>Subtitle</key>
+					<string>The app is now compatible with iOS 18.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>wand.and.stars</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>General Improvements</string>
+					<key>Subtitle</key>
+					<string>General app improvements and internal fixes to enhance performance, synchronization, and stability.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+			</array>
 		</dict>
 	</array>
 </dict>
