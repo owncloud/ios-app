@@ -20,7 +20,6 @@
 		025FC745247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 025FC744247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift */; };
 		02633EFF2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02633EFE2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift */; };
 		0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0287DD7C249131E000C912CA /* AppStatistics.swift */; };
-		02AE32E424D2FA8B00A19476 /* CrashReporter in Frameworks */ = {isa = PBXBuildFile; productRef = 02AE32E324D2FA8B00A19476 /* CrashReporter */; };
 		02D4C82A255208E60000E299 /* PDFSearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D4C829255208E60000E299 /* PDFSearchResultsView.swift */; };
 		02DC7C9024CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DC7C8F24CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift */; };
 		232F7CAF2097260400EE22E4 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232F7CAE2097260400EE22E4 /* SettingsViewController.swift */; };
@@ -1782,7 +1781,6 @@
 			files = (
 				DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */,
 				DC1251EC2C74718B0040FBC6 /* libzip.framework in Frameworks */,
-				02AE32E424D2FA8B00A19476 /* CrashReporter in Frameworks */,
 				DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */,
 				DC973BBE24A28ED0001DEEC4 /* CoreServices.framework in Frameworks */,
 			);
