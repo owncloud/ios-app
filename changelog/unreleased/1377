@@ -1,4 +1,4 @@
-Bugfix: Remove (re)sharing from roles for newly created user/group shares for ocis
+Bugfix: Remove (re)sharing from roles for newly created user/group shares
 
 Removes (re)sharing from roles for newly created user/group shares for ocis.
 
