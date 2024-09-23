@@ -1,2 +1,6 @@
-• Security Fix
-Detect attempts to bypass a lock timeout by changing the clock
+• iOS 18
+The app is now compatible with iOS 18.
+
+• General Improvements
+General app improvements and internal fixes to enhance performance, synchronization, and stability.
+
