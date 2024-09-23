@@ -10,15 +10,19 @@ jobs:
     runs-on: ubuntu-22.04
     name: Generate Calens Changelog
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
+          ref: "master"
       - name: Run Calens Docker
         uses: addnab/docker-run-action@v1
         with:
           options: -v ${{github.workspace}}:/workspace -w /workspace
           image: toolhippie/calens:latest
           run: calens >| CHANGELOG.md
-      - name: Commit files
-        uses: stefanzweifel/git-auto-commit-action@v4
+      - uses: GuillaumeFalourd/git-commit-push@v1.3
         with:
-          commit_message: Calens changelog updated
-          file_pattern: CHANGELOG.md
+          email: devops@owncloud.com
+          name: ownClouders
+          commit_message: "Calens changelog updated"
+          files: CHANGELOG.md
