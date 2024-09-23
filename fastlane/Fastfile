@@ -627,8 +627,30 @@ end
     set_info_plist_value(path: "ownCloud Action Extension/Info.plist", key: "CFBundleDisplayName", value: "Save to " + appName)
     set_info_plist_value(path: "ownCloud Action Extension/Info.plist", key: "CFBundleName", value: appName)
     
-    sh("sed -i '' '/\"CFBundleDisplayName\" =/s/ownCloud/#{appName}/' '../ownCloud Action Extension/en.lproj/InfoPlist.strings'")
-    sh("sed -i '' '/\"CFBundleDisplayName\" =/s/ownCloud/#{appName}/' '../ownCloud Action Extension/de.lproj/InfoPlist.strings'")
+    # Read InfoPlist.xcstrings JSON content from the file
+    json_file_path = "../ownCloud Action Extension/InfoPlist.xcstrings"
+    json_content = File.read(json_file_path)
+    json_data = JSON.parse(json_content)
+    
+    # Update the CFBundleDisplayName value for all localizations
+    if json_data["strings"] && json_data["strings"]["CFBundleDisplayName"]
+        UI.message("CFBundleDisplayName key found, updating values...")
+        
+        json_data["strings"]["CFBundleDisplayName"]["localizations"].each do |locale, localization_data|
+          old_value = localization_data["stringUnit"]["value"]
+          
+          # Replace "ownCloud" with appName
+          new_value = old_value.gsub("ownCloud", appName)
+          localization_data["stringUnit"]["value"] = new_value
+        end
+      else
+        UI.error("CFBundleDisplayName key not found in the JSON data!")
+      end
+    
+    # Write the updated JSON back to the file
+    File.open(json_file_path, "w") do |f|
+      f.write(JSON.pretty_generate(json_data))
+    end
 
     update_app_identifier(
       xcodeproj: "ownCloud.xcodeproj",
