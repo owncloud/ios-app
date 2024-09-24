@@ -1,5 +1,6 @@
 # Table of Contents
 
+* [Changelog for 12.3.0](#changelog-for-owncloud-ios-client-1230-2024-09-23)
 * [Changelog for 12.2.1](#changelog-for-owncloud-ios-client-1221-2024-04-30)
 * [Changelog for 12.2.0](#changelog-for-owncloud-ios-client-1220-2024-04-23)
 * [Changelog for 12.1.0](#changelog-for-owncloud-ios-client-1210-2024-01-29)
@@ -24,6 +25,72 @@
 * [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
 * [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
 * [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
+# Changelog for ownCloud iOS Client [12.3.0] (2024-09-23)
+The following sections list the changes in ownCloud iOS Client 12.3.0 relevant to
+ownCloud admins and users.
+
+[12.3.0]: https://github.com/owncloud/ios-app/compare/milestone/12.2.1...milestone/12.3.0
+
+## Summary
+
+* Bugfix - Fix cleanup of Available Offline policies targeting unavailable spaces: [#1344](https://github.com/owncloud/ios-app/pull/1344)
+* Bugfix - Remove (re)sharing from roles for newly created user/group shares: [#1376](https://github.com/owncloud/ios-app/pull/1376)
+* Enhancement - Improved sidebar with account-wide search: [#1320](https://github.com/owncloud/ios-app/pull/1320)
+* Enhancement - Sync Engine fixes and improvements: [#1376](https://github.com/owncloud/ios-app/pull/1376)
+* Enhancement - Reduce memory footprint: [#1376](https://github.com/owncloud/ios-app/pull/1376)
+
+## Details
+
+* Bugfix - Fix cleanup of Available Offline policies targeting unavailable spaces: [#1344](https://github.com/owncloud/ios-app/pull/1344)
+
+   Fix an issue arising from Available Offline policies targeting
+   unavailable/detached drives and removes the respective policies.
+
+   https://github.com/owncloud/ios-app/pull/1344
+
+* Bugfix - Remove (re)sharing from roles for newly created user/group shares: [#1376](https://github.com/owncloud/ios-app/pull/1376)
+
+   Removes (re)sharing from roles for newly created user/group shares for ocis.
+
+   https://github.com/owncloud/ios-app/pull/1376
+
+* Enhancement - Improved sidebar with account-wide search: [#1320](https://github.com/owncloud/ios-app/pull/1320)
+
+   This PR: - removes `Quick Access` from the sidebar, redistributing its prior
+   contents as follows: - `Recents`: promoted to a top-level sidebar item -
+   `Favorites`: promoted to a top-level sidebar item - `Available Offline`:
+   promoted to a top-level sidebar item - other Quick Access items: moved as
+   suggestions to new top-level sidebar `Search` item, with a dedicated `Add to
+   sidebar` button that allows re-adding the previous Quick Access items as saved
+   search - Saved searches now appear as top-level items in the sidebar - adds
+   custom user sidebar items - can be added via `Add to sidebar` - support drag and
+   drop (also cross-account) - managed via context menu, swipe and `Remove from
+   sidebar` actions - in the share extension automatically connects to the first
+   account if only one account is in the account (superseding
+   [#1296](https://github.com/owncloud/ios-app/pull/1296)) - incorporates the
+   latest SDK with important fixes
+
+   https://github.com/owncloud/ios-app/pull/1320
+
+* Enhancement - Sync Engine fixes and improvements: [#1376](https://github.com/owncloud/ios-app/pull/1376)
+
+   - Detects disconnected/spurious TUS uploads running in the HTTP backend and stop
+   them if the Sync Action that started the upload is no longer around. - Find
+   hanging Sync Actions in the Sync Journal and automatically restart them. - Add
+   progress reporting for TUS uploads, fix HTTP layer issue
+
+   https://github.com/owncloud/ios-app/pull/1376
+
+* Enhancement - Reduce memory footprint: [#1376](https://github.com/owncloud/ios-app/pull/1376)
+
+   - reduced memory consumption of the File Provider - avoid use of FileProvider
+   via XPC due to stability issues - add code handling iOS/iPadOS 18 requests to
+   the File Provider to download folder items - fix spurious "invalid parameter"
+   error on import in File Provider - properly clean up status of
+   ProgressSummarizer after disconnect
+
+   https://github.com/owncloud/ios-app/pull/1376
+
 # Changelog for ownCloud iOS Client [12.2.1] (2024-04-30)
 The following sections list the changes in ownCloud iOS Client 12.2.1 relevant to
 ownCloud admins and users.
