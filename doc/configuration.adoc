@@ -17,6 +17,12 @@ tag::actions[]
 !===
 ! Value
 ! Description
+! `com.owncloud.action.addToSidebar`
+! Add to sidebar
+
+! `com.owncloud.action.availableOffline`
+! Make available offline
+
 ! `com.owncloud.action.collaborate`
 ! Sharing
 
@@ -28,6 +34,9 @@ tag::actions[]
 
 ! `com.owncloud.action.createFolder`
 ! Create folder
+
+! `com.owncloud.action.createShortcutFile`
+! Create shortcut
 
 ! `com.owncloud.action.cutpasteboard`
 ! Cut
@@ -44,17 +53,14 @@ tag::actions[]
 ! `com.owncloud.action.importpasteboard`
 ! Paste
 
-! `com.owncloud.action.makeAvailableOffline`
-! Make available offline
-
-! `com.owncloud.action.makeUnavailableOffline`
-! Available Offline
-
 ! `com.owncloud.action.markup`
 ! Markup
 
 ! `com.owncloud.action.move`
 ! Move
+
+! `com.owncloud.action.openShortcutFile`
+! Open shortcut
 
 ! `com.owncloud.action.openin`
 ! Open in
@@ -64,6 +70,9 @@ tag::actions[]
 
 ! `com.owncloud.action.presentationmode`
 ! Presentation Mode
+
+! `com.owncloud.action.removeFromSidebar`
+! Remove from sidebar
 
 ! `com.owncloud.action.rename`
 ! Rename
@@ -121,6 +130,12 @@ action.create-document-mode
 !===
 ! Value
 ! Description
+! `com.owncloud.action.addToSidebar`
+! Add to sidebar
+
+! `com.owncloud.action.availableOffline`
+! Make available offline
+
 ! `com.owncloud.action.collaborate`
 ! Sharing
 
@@ -132,6 +147,9 @@ action.create-document-mode
 
 ! `com.owncloud.action.createFolder`
 ! Create folder
+
+! `com.owncloud.action.createShortcutFile`
+! Create shortcut
 
 ! `com.owncloud.action.cutpasteboard`
 ! Cut
@@ -148,17 +166,14 @@ action.create-document-mode
 ! `com.owncloud.action.importpasteboard`
 ! Paste
 
-! `com.owncloud.action.makeAvailableOffline`
-! Make available offline
-
-! `com.owncloud.action.makeUnavailableOffline`
-! Available Offline
-
 ! `com.owncloud.action.markup`
 ! Markup
 
 ! `com.owncloud.action.move`
 ! Move
+
+! `com.owncloud.action.openShortcutFile`
+! Open shortcut
 
 ! `com.owncloud.action.openin`
 ! Open in
@@ -168,6 +183,9 @@ action.create-document-mode
 
 ! `com.owncloud.action.presentationmode`
 ! Presentation Mode
+
+! `com.owncloud.action.removeFromSidebar`
+! Remove from sidebar
 
 ! `com.owncloud.action.rename`
 ! Rename
@@ -234,6 +252,58 @@ action.create-document-mode
 
 ! `com.apple.UIKit.activity.SaveToCameraRoll`
 ! Save to camera roll
+
+!===
+
+|advanced `candidate`
+
+|**Open In WebApp mode** +
+ +
+action.open-in-web-app-mode
+|string
+|`auto`
+|Determines how to open a document in a web app.
+[cols="1,1"]
+!===
+! Value
+! Description
+! `auto`
+! Open using `in-app-with-default-browser-option`, unless the respective endpoint is not available - in which case `default-browser` is used instead. If no endpoint to open the document is available, an error message is shown.
+
+! `default-browser`
+! Open in default browser app. May require user to sign in.
+
+! `in-app`
+! Open inline in an in-app browser.
+
+! `in-app-with-default-browser-option`
+! Open inline in an in-app browser, but provide a button to open the document in the default browser (may require the user to sign in).
+
+!===
+
+|advanced `candidate`
+
+|**Open Shortcut mode** +
+ +
+action.open-shortcut-mode
+|string
+|`all`
+|Determines how the app opens shortcut files (ending in `.url`) app.
+[cols="1,1"]
+!===
+! Value
+! Description
+! `all`
+! Open all shortcut files, targeting both links (web and other) and items.
+
+! `items-only`
+! Open only shortcut files that target items.
+
+! `links-only`
+! Open only shortcut files that target links (web and other).
+
+! `none`
+! Do not open shortcut files.
 
 !===
 
@@ -350,24 +420,6 @@ tag::bookmarks[]
 |Status
 
 
-|account-settings.default-name
-|string
-|
-|The default name for the creation of new bookmarks.
-|supported `candidate`
-
-|account-settings.default-url
-|string
-|
-|The default URL for the creation of new bookmarks.
-|supported `candidate`
-
-|account-settings.url-editable
-|bool
-|
-|Controls whether the server URL in the text field during the creation of new bookmarks can be changed.
-|supported `candidate`
-
 |bookmark.prepopulation
 |string
 |
@@ -462,7 +514,7 @@ branding.can-edit-account
  +
 branding.profile-allow-url-configuration
 |bool
-|
+|`true`
 |Indicates if the user can change the server URL for the account.
 |advanced `candidate`
 
@@ -518,7 +570,7 @@ branding.profile-url
  +
 branding.send-feedback-address
 |string
-|`ios-app@owncloud.com`
+|
 |Email address to send feedback to. Set to `null` to disable this feature.
 |advanced `candidate`
 
@@ -526,7 +578,7 @@ branding.send-feedback-address
  +
 branding.send-feedback-url
 |string
-|
+|`https://owncloud.com/ios-app-feedback`
 |URL to open when selecting the "Send feedback" option. Allows the use of all placeholders provided in `http.user-agent`.
 |advanced `candidate`
 
@@ -546,16 +598,47 @@ branding.sidebar-links-title
 |Title for the sidebar links section.
 |advanced `candidate`
 
+|**Theme Colors** +
+ +
+branding.theme-colors
+|dictionary
+|
+|Values to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.
+[cols="1,1"]
+!===
+! Key
+! Value
+! `tint-color`
+! Color to use as tint/accent color for controls (in hex notation).
+
+! `branding-background-color`
+! Color to use as background color for brand views (in hex notation).
+
+! `setup-status-bar-style`
+! The status bar style in the setup wizard, affecting the status bar text color. Can be either `default`, `black` or `white`.
+
+! `file-icon-color`
+! Color to fill file icons with (in hex notation).
+
+! `folder-icon-color`
+! Color to fill folder icons with (in hex notation).
+
+!===
+
+|advanced `candidate`
+
+|**Theme CSS Records** +
+ +
+branding.theme-css-records
+|stringArray
+|
+|CSS records to add to the CSS space of system-color-based themes for branded clients. Mutually exclusive with theme-definitions.
+|advanced `candidate`
+
 |branding.theme-definitions
 |dictionaryArray
 |
 |Array of dictionaries, each specifying a theme.
-|advanced `candidate`
-
-|branding.theme-generic-colors
-|dictionary
-|
-|Dictionary defining generic colors that can be used in the definitions.
 |advanced `candidate`
 
 |**Documentation URL** +
@@ -674,6 +757,12 @@ tag::build[]
 |Set a custom app group identifier via Branding.plist parameter. This value will be set by fastlane. Changes OCAppGroupIdentifier, OCKeychainAccessGroupIdentifier only. Fastlane does not need the provisioning profile and certificate with the given app group identifer. Needs resigning with the correct provisioning profile and certificate. This is needed, if a customer is using an own resigning script which does not handle setting the app group identifier.
 |supported `candidate`
 
+|build.version-number
+|string
+|
+|Sets a custom version number for the app.
+|supported `candidate`
+
 |===
 end::build[]
 
@@ -698,6 +787,24 @@ tag::connection[]
 |bool
 |`true`
 |Enable or disable per-process, in-memory cookie storage.
+|supported `candidate`
+
+|http.traffic-log-format
+|string
+|`json`
+|If request and response logging is enabled, the format to use.
+[cols="1,1"]
+!===
+! Value
+! Description
+! `json`
+! JSON
+
+! `plain`
+! Plain text
+
+!===
+
 |supported `candidate`
 
 |http.user-agent
@@ -1008,6 +1115,12 @@ tag::extensions[]
 ! `auth-race-condition`
 ! Extension with the identifier auth-race-condition.
 
+! `com.owncloud.action.addToSidebar`
+! Extension with the identifier com.owncloud.action.addToSidebar.
+
+! `com.owncloud.action.availableOffline`
+! Extension with the identifier com.owncloud.action.availableOffline.
+
 ! `com.owncloud.action.background_update`
 ! Extension with the identifier com.owncloud.action.background_update.
 
@@ -1022,6 +1135,9 @@ tag::extensions[]
 
 ! `com.owncloud.action.createFolder`
 ! Extension with the identifier com.owncloud.action.createFolder.
+
+! `com.owncloud.action.createShortcutFile`
+! Extension with the identifier com.owncloud.action.createShortcutFile.
 
 ! `com.owncloud.action.cutpasteboard`
 ! Extension with the identifier com.owncloud.action.cutpasteboard.
@@ -1041,17 +1157,14 @@ tag::extensions[]
 ! `com.owncloud.action.instant_media_upload`
 ! Extension with the identifier com.owncloud.action.instant_media_upload.
 
-! `com.owncloud.action.makeAvailableOffline`
-! Extension with the identifier com.owncloud.action.makeAvailableOffline.
-
-! `com.owncloud.action.makeUnavailableOffline`
-! Extension with the identifier com.owncloud.action.makeUnavailableOffline.
-
 ! `com.owncloud.action.markup`
 ! Extension with the identifier com.owncloud.action.markup.
 
 ! `com.owncloud.action.move`
 ! Extension with the identifier com.owncloud.action.move.
+
+! `com.owncloud.action.openShortcutFile`
+! Extension with the identifier com.owncloud.action.openShortcutFile.
 
 ! `com.owncloud.action.openin`
 ! Extension with the identifier com.owncloud.action.openin.
@@ -1064,6 +1177,9 @@ tag::extensions[]
 
 ! `com.owncloud.action.presentationmode`
 ! Extension with the identifier com.owncloud.action.presentationmode.
+
+! `com.owncloud.action.removeFromSidebar`
+! Extension with the identifier com.owncloud.action.removeFromSidebar.
 
 ! `com.owncloud.action.rename`
 ! Extension with the identifier com.owncloud.action.rename.
@@ -1133,6 +1249,9 @@ tag::extensions[]
 
 ! `org.owncloud.ql_preview`
 ! Extension with the identifier org.owncloud.ql_preview.
+
+! `org.owncloud.url-shortcut`
+! Extension with the identifier org.owncloud.url-shortcut.
 
 ! `org.owncloud.webview`
 ! Extension with the identifier org.owncloud.webview.
@@ -1426,6 +1545,12 @@ tag::oauth2[]
 |OAuth2 token endpoint.
 |advanced `candidate`
 
+|authentication-oauth2.omit-authorization-parameters
+|stringArray
+|
+|Omit Authorization Request Parameters - parameter names provided here are omitted from OAuth2 authorization requests.
+|advanced `candidate`
+
 |authentication-oauth2.oa2-expiration-override-seconds
 |int
 |
@@ -1500,6 +1625,12 @@ tag::passcode[]
 |bool
 |`false`
 |Controls wether the user MUST establish a passcode upon app installation.
+|advanced `candidate`
+
+|passcode.enforced-by-device
+|bool
+|`false`
+|Controls wether the user MUST establish a passcode upon app installation, if NO device passcode protection is set.
 |advanced `candidate`
 
 |passcode.lockDelay

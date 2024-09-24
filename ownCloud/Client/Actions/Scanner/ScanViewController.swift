@@ -287,6 +287,11 @@ class ScanViewController: StaticTableViewController {
 		didSet {
 			if let fileName = fileNameRow?.value as? NSString {
 				fileNameRow?.value = fileName.deletingPathExtension + "." + (exportFormat?.suffix ?? "")
+				fileNameRow?.requiredFileExtension = exportFormat?.suffix
+
+				if let textField = fileNameRow?.textField, textField.isFirstResponder {
+					textField.selectedTextRange = textField.textRange(from: textField.beginningOfDocument, to: textField.beginningOfDocument)
+				}
 			}
 
 			guard let oneFilePerPageRow = oneFilePerPageRow else { return }
@@ -305,17 +310,19 @@ class ScanViewController: StaticTableViewController {
 
 	init(withImages images: [UIImage]? = nil, with scannedPages: [ScanPage]? = nil, core: OCCore?, fileName: String? = nil, targetFolder item: OCItem ) {
 		// Sections
-		pagesSection = StaticTableViewSection(headerTitle: "Scans".localized, identifier: "pages")
-		saveSection = StaticTableViewSection(headerTitle: "Save as".localized, identifier: "save")
-		optionsSection = StaticTableViewSection(headerTitle: "Options".localized, identifier: "options")
+		pagesSection = StaticTableViewSection(headerTitle: OCLocalizedString("Scans", nil), identifier: "pages")
+		saveSection = StaticTableViewSection(headerTitle: OCLocalizedString("Save as", nil), identifier: "save")
+		optionsSection = StaticTableViewSection(headerTitle: OCLocalizedString("Options", nil), identifier: "options")
 
 		// Init
 		super.init(style: .grouped)
 
 		self.isModalInPresentation = true
-		self.navigationItem.title = "Scan".localized
+		self.navigationItem.title = OCLocalizedString("Scan", nil)
 		self.navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(ScanViewController.cancel))
-		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(ScanViewController.save))
+
+		let saveBarButtonItem = UIBarButtonItem(barButtonSystemItem: .save, target: self, action: #selector(ScanViewController.save))
+		self.navigationItem.rightBarButtonItem = saveBarButtonItem
 
 		self.core = core
 		self.targetFolderItem = item
@@ -347,13 +354,13 @@ class ScanViewController: StaticTableViewController {
 					self.pagesCollectionViewController?.pages = pages!
 				}
 			}
-		}, title: "Scan additional".localized))
+		}, title: OCLocalizedString("Scan additional", nil)))
 		self.addSection(pagesSection)
 
 		// Save section
 
 		// - Name
-		fileNameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (row, textField, type) in
+		fileNameRow = StaticTableViewRow(textFieldWithAction: { [weak self, weak saveBarButtonItem] (row, textField, type) in
 			self?.navigationItem.rightBarButtonItem?.isEnabled = ((row.value as? String)?.count ?? 0) > 0
 
 			if type == .didBegin, let nameTextField = textField as? UITextField {
@@ -369,7 +376,11 @@ class ScanViewController: StaticTableViewController {
 					nameTextField.selectedTextRange = nameTextField.textRange(from: nameTextField.beginningOfDocument, to: nameTextField.endOfDocument)
 				}
 			}
-		}, placeholder: "Name".localized, value: fileName ?? "", keyboardType: .default, autocorrectionType: .no, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "name", accessibilityLabel: "Name".localized)
+
+			if let fileName = (textField as? UITextField)?.text, let requiredFileExtension = row.requiredFileExtension {
+				saveBarButtonItem?.isEnabled = (fileName.count > (requiredFileExtension.count + 1))
+			}
+		}, placeholder: OCLocalizedString("Name", nil), value: fileName ?? "", keyboardType: .default, autocorrectionType: .no, enablesReturnKeyAutomatically: true, returnKeyType: .default, identifier: "name", accessibilityLabel: OCLocalizedString("Name", nil))
 		saveSection.add(row: fileNameRow!)
 		self.addSection(saveSection)
 
@@ -379,10 +390,10 @@ class ScanViewController: StaticTableViewController {
 		formatSegmentedControl?.selectedSegmentIndex = 0
 		formatSegmentedControl?.isUserInteractionEnabled = true
 		formatSegmentedControl?.addTarget(self, action: #selector(updateExportFormat), for: .valueChanged)
-		optionsSection.add(row: StaticTableViewRow(label: "File format".localized, accessoryView: formatSegmentedControl, identifier: "format"))
+		optionsSection.add(row: StaticTableViewRow(label: OCLocalizedString("File format", nil), accessoryView: formatSegmentedControl, identifier: "format"))
 
 		// - One file per page
-		oneFilePerPageRow = StaticTableViewRow(switchWithAction: nil, title: "Create one file per page".localized, value: false, identifier: "one-file-per-page")
+		oneFilePerPageRow = StaticTableViewRow(switchWithAction: nil, title: OCLocalizedString("Create one file per page", nil), value: false, identifier: "one-file-per-page")
 		optionsSection.add(row: oneFilePerPageRow!)
 		self.addSection(optionsSection)
 
@@ -405,7 +416,7 @@ class ScanViewController: StaticTableViewController {
 
 	@objc func save() {
 		if let fileName = fileNameRow?.value as? String, let pages = pagesCollectionViewController?.pages, let exporter = self.exportFormat?.exporter, let core = core {
-			let progressHUDViewController = ProgressHUDViewController(on: self, label: "Saving".localized)
+			let progressHUDViewController = ProgressHUDViewController(on: self, label: OCLocalizedString("Saving", nil))
 
 			DispatchQueue.global(qos: .userInitiated).async {
 				let tmpURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(UUID().uuidString)

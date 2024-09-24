@@ -143,7 +143,7 @@ extension URL {
 		}
 
 		let hud : ProgressHUDViewController? = ProgressHUDViewController(on: nil)
-		hud?.present(on: window.rootViewController?.topMostViewController, label: "Resolving link…".localized)
+		hud?.present(on: window.rootViewController?.topMostViewController, label: OCLocalizedString("Resolving link…", nil))
 
 		self.retrieveLinkedItem(with: { (item, bookmark, _, internetReachable) in
 			let completion = {
@@ -153,14 +153,14 @@ extension URL {
 					var message = ""
 
 					if !accountFound {
-						message = "Link points to an account bookmark which is not configured in the app.".localized
+						message = OCLocalizedString("Link points to an account bookmark which is not configured in the app.", nil)
 					} else if isOffline {
-						message = "Couldn't resolve a private link since you are offline and corresponding item is not cached locally.".localized
+						message = OCLocalizedString("Couldn't resolve a private link since you are offline and corresponding item is not cached locally.", nil)
 					} else {
-						message = "Couldn't resolve a private link since the item is not known to the server.".localized
+						message = OCLocalizedString("Couldn't resolve a private link since the item is not known to the server.", nil)
 					}
 
-					let alertController = ThemedAlertController(title: "Link resolution failed".localized, message: message, preferredStyle: .alert)
+					let alertController = ThemedAlertController(title: OCLocalizedString("Link resolution failed", nil), message: message, preferredStyle: .alert)
 					alertController.addAction(UIAlertAction(title: "OK", style: .default))
 
 					window.rootViewController?.topMostViewController.present(alertController, animated: true)

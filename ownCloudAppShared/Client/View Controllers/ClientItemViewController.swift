@@ -84,6 +84,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		let vcUUID = UUID()
 		viewControllerUUID = vcUUID
 
+		sortDescriptor = inContext?.sortDescriptor ?? .defaultSortDescriptor
+
 		let itemControllerContext = ClientContext(with: inContext, modifier: { context in
 			// Add permission handler limiting interactions for specific items and scenarios
 			context.add(permissionHandler: { (context, record, interaction, viewController) in
@@ -124,7 +126,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 			// Set .drive based on location.driveID
 			if let driveID = location?.driveID, let core = context.core {
-				context.drive = core.drive(withIdentifier: driveID)
+				context.drive = core.drive(withIdentifier: driveID, attachedOnly: false)
 			}
 
 			// Use inDataSource as queryDatasource if no query was provided
@@ -147,10 +149,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			}
 
 			context.query = (owner as? ClientItemViewController)?.query
-			if let sortMethod = (owner as? ClientItemViewController)?.sortMethod,
-			   let sortDirection = (owner as? ClientItemViewController)?.sortDirection {
-				// Set default sort descriptor
-				context.sortDescriptor = SortDescriptor(method: sortMethod, direction: sortDirection)
+			if let sortDescriptor = (owner as? ClientItemViewController)?.sortDescriptor {
+				context.sortDescriptor = sortDescriptor
 			}
 
 			context.originatingViewController = owner as? UIViewController
@@ -249,11 +249,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}, on: .main, trackDifferences: true, performInitialUpdate: true)
 
 		if let queryDatasource = query?.queryResultsDataSource ?? inDataSource {
-			let emptyFolderMessage = emptyItemListMessageLocalized ?? "This folder is empty.".localized // "This folder is empty. Fill it with content:".localized
+			let emptyFolderMessage = emptyItemListMessageLocalized ?? OCLocalizedString("This folder is empty.", nil) // OCLocalizedString("This folder is empty. Fill it with content:", nil)
 
 			emptyItemListItem = ComposedMessageView(elements: [
 				.image(emptyItemListIcon ?? OCSymbol.icon(forSymbolName: "folder.fill")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.title(emptyItemListTitleLocalized ?? "No contents".localized, alignment: .centered),
+				.title(emptyItemListTitleLocalized ?? OCLocalizedString("No contents", nil), alignment: .centered),
 				.spacing(5),
 				.subtitle(emptyFolderMessage, alignment: .centered)
 			])
@@ -268,14 +268,14 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				.spacing(25),
 				.progressCircle(with: indeterminateProgress),
 				.spacing(25),
-				.title("Loading…".localized, alignment: .centered)
+				.title(OCLocalizedString("Loading…", nil), alignment: .centered)
 			])
 
 			folderRemovedListItem = ComposedMessageView(elements: [
 				.image(OCSymbol.icon(forSymbolName: "nosign")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.title("Folder removed".localized, alignment: .centered),
+				.title(OCLocalizedString("Folder removed", nil), alignment: .centered),
 				.spacing(5),
-				.subtitle("This folder no longer exists on the server.".localized, alignment: .centered)
+				.subtitle(OCLocalizedString("This folder no longer exists on the server.", nil), alignment: .centered)
 			])
 
 			footerItem = UIView()
@@ -283,7 +283,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 			footerFolderStatisticsLabel = ThemeCSSLabel(withSelectors: [.sectionFooter, .statistics])
 			footerFolderStatisticsLabel?.translatesAutoresizingMaskIntoConstraints = false
-			footerFolderStatisticsLabel?.font = UIFont.systemFont(ofSize: UIFont.smallSystemFontSize)
+			footerFolderStatisticsLabel?.font = UIFont.preferredFont(forTextStyle: .footnote)
 			footerFolderStatisticsLabel?.textAlignment = .center
 			footerFolderStatisticsLabel?.setContentHuggingPriority(.required, for: .vertical)
 			footerFolderStatisticsLabel?.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -294,6 +294,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			footerItem?.separatorLayoutGuideCustomizer = SeparatorLayoutGuideCustomizer(with: { viewCell, view in
 				return [ viewCell.separatorLayoutGuide.leadingAnchor.constraint(equalTo: viewCell.contentView.trailingAnchor) ]
 			})
+			footerItem?.accessibilityRespondsToUserInteraction = false
 			footerItem?.layoutIfNeeded()
 
 			emptyItemListDecisionSubscription = queryDatasource.subscribe(updateHandler: { [weak self] (subscription) in
@@ -302,7 +303,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 
 		// Initialize sort method
-		handleSortMethodChange()
+		applySortDescriptor()
 
 		// Update title
 		updateNavigationTitleFromContext()
@@ -337,10 +338,9 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		updateNavigationBarButtonItems()
 
 		// Setup sort bar
-		sortBar = SortBar(sortMethod: sortMethod)
+		sortBar = SortBar(sortDescriptor: sortDescriptor)
 		sortBar?.translatesAutoresizingMaskIntoConstraints = false
 		sortBar?.delegate = self
-		sortBar?.sortMethod = sortMethod
 		sortBar?.itemLayout = clientContext?.itemLayout ?? .list
 		sortBar?.showSelectButton = true
 
@@ -613,7 +613,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				if clientContext?.moreItemHandler != nil, clientContext?.hasPermission(for: .moreOptions) == true {
 					let folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots")?.withInset(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)), style: .plain, target: self, action: #selector(moreBarButtonPressed))
 					folderActionBarButton.accessibilityIdentifier = "client.folder-action"
-					folderActionBarButton.accessibilityLabel = "Actions".localized
+					folderActionBarButton.accessibilityLabel = OCLocalizedString("Actions", nil)
 
 					viewActionButtons.append(folderActionBarButton)
 				}
@@ -628,7 +628,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 								if let contextMenuElements = contextMenuProvider.composeContextMenuItems(in: self, location: .folderAction, with: clientContext) {
 									if contextMenuElements.count == 0 {
-										completion([UIAction(title: "No actions available".localized, image: nil, attributes: .disabled, handler: {_ in })])
+										completion([UIAction(title: OCLocalizedString("No actions available", nil), image: nil, attributes: .disabled, handler: {_ in })])
 									} else {
 										completion(contextMenuElements)
 									}
@@ -637,7 +637,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 						})
 					])
 					plusBarButton.accessibilityIdentifier = "client.file-add"
-					plusBarButton.accessibilityLabel = "Add item".localized
+					plusBarButton.accessibilityLabel = OCLocalizedString("Add item", nil)
 
 					viewActionButtons.append(plusBarButton)
 				}
@@ -646,7 +646,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				if clientContext?.hasPermission(for: .search) == true {
 					let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(startSearch))
 					searchButton.accessibilityIdentifier = "client.search"
-					searchButton.accessibilityLabel = "Search".localized
+					searchButton.accessibilityLabel = OCLocalizedString("Search", nil)
 					viewActionButtons.append(searchButton)
 				}
 			}
@@ -674,72 +674,81 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 
 		set {
+			navigationItem.navigationContent.remove(itemsWithIdentifier: "navigation-location")
 			navigationItem.titleLabelText = newValue
 			navigationItem.title = newValue
 		}
 	}
 
+	var useNavigationLocationBreadcrumbDropdown: Bool {
+		return UIDevice.current.userInterfaceIdiom == .pad
+	}
+
+	var navigationLocation: OCLocation? {
+		didSet {
+			if let clientContext, let navigationLocation, !navigationLocation.isRoot {
+				navigationItem.navigationContent.add(items: [NavigationContentItem(identifier: "navigation-location", area: .title, priority: .standard, position: .leading, titleView:
+					ClientLocationPopupButton(clientContext: clientContext, location: navigationLocation)
+				)])
+			} else {
+				navigationItem.navigationContent.remove(itemsWithIdentifier: "navigation-location")
+			}
+		}
+	}
+
 	func updateNavigationTitleFromContext() {
 		var navigationTitle: String?
+		var navigationLocation: OCLocation?
 
 		// Set navigation title from location (if provided)
 		if let location {
 			navigationTitle = location.displayName(in: clientContext)
+			navigationLocation = location
 		}
 
 		// Set navigation title from queryLocation
 		if navigationTitle == nil, let queryLocation = query?.queryLocation {
 			navigationTitle = queryLocation.displayName(in: clientContext)
+			navigationLocation = queryLocation
 		}
 
 		// Set navigation title from rootItem.name
-		if navigationTitle == nil {
-			navigationTitle = (self.clientContext?.rootItem as? OCItem)?.name
+		if navigationTitle == nil, let queryRootItem = self.clientContext?.rootItem as? OCItem {
+			navigationTitle = queryRootItem.name
+			navigationLocation = queryRootItem.location
 		}
 
-		if let navigationTitle {
-			self.navigationTitle = navigationTitle
-		} else {
-			self.navigationTitle = navigationItem.title
+		// Compose navigation title
+		if useNavigationLocationBreadcrumbDropdown {
+			self.navigationLocation = navigationLocation
+		}
+
+		if navigationLocation == nil || !useNavigationLocationBreadcrumbDropdown || navigationLocation?.isRoot == true {
+			if let navigationTitle {
+				self.navigationTitle = navigationTitle
+			} else {
+				self.navigationTitle = navigationItem.title
+			}
 		}
 	}
 
 	// MARK: - Sorting
 	open var sortBar: SortBar?
-	open var sortMethod: SortMethod {
-		set {
-			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-method")
-			handleSortMethodChange()
-		}
+	open var sortDescriptor: SortDescriptor
 
-		get {
-			let sort = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? SortMethod.alphabetically
-			return sort
-		}
+	public func sortBar(_ sortBar: SortBar, didChangeSortDescriptor newSortDescriptor: SortDescriptor) {
+		sortDescriptor = newSortDescriptor
+
+		clientContext?.sortDescriptor = newSortDescriptor
+		itemSection?.clientContext?.sortDescriptor = newSortDescriptor // Also needs to change the sortDescriptor for the itemSection's clientContext, since that is what will be used when creating ClientItemViewControllers for subfolders, etc.
+
+		SortDescriptor.defaultSortDescriptor = newSortDescriptor // Change default ONLY for user-initiated changes
+
+		applySortDescriptor()
 	}
-	open var sortDirection: SortDirection {
-		set {
-			UserDefaults.standard.setValue(newValue.rawValue, forKey: "sort-direction")
-		}
 
-		get {
-			let direction = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? SortDirection.ascendant
-			return direction
-		}
-	}
-	open func handleSortMethodChange() {
-		let sortDescriptor = SortDescriptor(method: sortMethod, direction: sortDirection)
-
-		clientContext?.sortDescriptor = sortDescriptor
+	open func applySortDescriptor() {
 		query?.sortComparator = sortDescriptor.comparator
-	}
-
-	public func sortBar(_ sortBar: SortBar, didUpdateSortMethod: SortMethod) {
- 		sortMethod = didUpdateSortMethod
-
- 		let comparator = sortMethod.comparator(direction: sortDirection)
-
- 		query?.sortComparator = comparator
 	}
 
 	public func sortBar(_ sortBar: SortBar, itemLayout: ItemLayout) {
@@ -777,6 +786,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		didSet {
 			if oldValue != isMultiSelecting {
 				collectionView.isEditing = isMultiSelecting
+				sortBar?.multiselectActive = isMultiSelecting
 
 				if isMultiSelecting {
 					// Setup new action context
@@ -786,7 +796,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 					}
 
 					// Setup select all / deselect all in navigation item
-					multiSelectionToggleSelectionBarButtonItem = UIBarButtonItem(title: "Select All".localized, primaryAction: UIAction(handler: { [weak self] action in
+					multiSelectionToggleSelectionBarButtonItem = UIBarButtonItem(title: OCLocalizedString("Select All", nil), primaryAction: UIAction(handler: { [weak self] action in
 						self?.selectDeselectAll()
 					}))
 
@@ -814,7 +824,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			if multiSelectionActionContext.items.count == 0 {
 				if noActionsTextItem == nil {
 					noActionsTextItem = OCDataItemPresentable(reference: "_emptyActionList" as NSString, originalDataItemType: nil, version: nil)
-					noActionsTextItem?.title = "Select one or more items.".localized
+					noActionsTextItem?.title = OCLocalizedString("Select one or more items.", nil)
 					noActionsTextItem?.childrenDataSourceProvider = nil
 				}
 
@@ -825,7 +835,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 					}
 				}
 
-				multiSelectionToggleSelectionBarButtonItem?.title = "Select All".localized
+				multiSelectionToggleSelectionBarButtonItem?.title = OCLocalizedString("Select All", nil)
 			} else {
 				let actions = Action.sortedApplicableActions(for: multiSelectionActionContext)
 				let actionCompletionHandler : ActionCompletionHandler = { [weak self] action, error in
@@ -839,7 +849,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 					actionItems.append(action.provideOCAction(singleVersion: true))
 				}
 
-				multiSelectionToggleSelectionBarButtonItem?.title = "Deselect All".localized
+				multiSelectionToggleSelectionBarButtonItem?.title = OCLocalizedString("Deselect All", nil)
 			}
 
 			multiSelectionActionsDatasource?.setVersionedItems(actionItems)
@@ -1008,29 +1018,42 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	// MARK: - Search
 	open var searchViewController: SearchViewController?
 
+	open func searchScopes(for clientContext: ClientContext, cellStyle: CollectionViewCellStyle) -> [SearchScope] {
+		var scopes : [SearchScope] = []
+
+		if clientContext.query?.queryLocation != nil {
+			// - Folder
+			// - Tree (folder + subfolders)
+			scopes.append(contentsOf: [
+				// - In this folder
+				.modifyingQuery(with: clientContext, localizedName: OCLocalizedString("Folder", nil)),
+
+				// - Folder and subfolders (tree / container)
+				.containerSearch(with: clientContext, cellStyle: cellStyle, localizedName: OCLocalizedString("Tree", nil))
+			])
+
+			// - Drive
+			if clientContext.core?.useDrives == true {
+				let driveName = OCLocalizedString("Space", nil)
+				scopes.append(.driveSearch(with: clientContext, cellStyle: cellStyle, localizedName: driveName))
+			}
+		}
+
+		// - Account
+		scopes.append(.accountSearch(with: clientContext, cellStyle: cellStyle, localizedName: OCLocalizedString("Account", nil)))
+
+		return scopes
+	}
+
 	@objc open func startSearch() {
 		if searchViewController == nil {
 			if let clientContext = clientContext, let cellStyle = itemSection?.cellStyle {
-				var scopes : [SearchScope] = [
-					// - In this folder
-					.modifyingQuery(with: clientContext, localizedName: "Folder".localized),
-
-					// - Folder and subfolders (tree / container)
-					.containerSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Tree".localized)
-				]
-
-				// - Drive
-				if clientContext.core?.useDrives == true {
-					let driveName = "Space".localized
-					scopes.append(.driveSearch(with: clientContext, cellStyle: cellStyle, localizedName: driveName))
-				}
-
-				// - Account
-				scopes.append(.accountSearch(with: clientContext, cellStyle: cellStyle, localizedName: "Account".localized))
+				// Scopes
+				let scopes = searchScopes(for: clientContext, cellStyle: cellStyle)
 
 				// No results
 				let noResultContent = SearchViewController.Content(type: .noResults, source: OCDataSourceArray(), style: emptySection!.cellStyle)
-				let noResultsView = ComposedMessageView.infoBox(image: OCSymbol.icon(forSymbolName: "magnifyingglass"), title: "No matches".localized, subtitle: "The search term you entered did not match any item in the selected scope.".localized)
+				let noResultsView = ComposedMessageView.infoBox(image: OCSymbol.icon(forSymbolName: "magnifyingglass"), title: OCLocalizedString("No matches", nil), subtitle: OCLocalizedString("The search term you entered did not match any item in the selected scope.", nil))
 
 				(noResultContent.source as? OCDataSourceArray)?.setVersionedItems([
 					noResultsView
@@ -1038,45 +1061,12 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 				// Suggestion view
 				let suggestionsSource = OCDataSourceArray()
+				suggestionsSource.trackItemVersions = true
+
 				let suggestionsContent = SearchViewController.Content(type: .suggestion, source: suggestionsSource, style: emptySection!.cellStyle)
 
-				if let vault = clientContext.core?.vault {
-					vault.addSavedSearchesObserver(suggestionsSource, withInitial: true) { suggestionsSource, savedSearches, isInitial in
-						guard let suggestionsSource = suggestionsSource as? OCDataSourceArray else {
-							return
-						}
-
-						var suggestionItems : [OCDataItem & OCDataItemVersioning] = []
-
-						// Offer saved search templates
-						if let savedTemplates = vault.savedSearches?.filter({ savedSearch in
-							return savedSearch.isTemplate
-						}), savedTemplates.count > 0 {
-							let savedSearchTemplatesHeaderView = ComposedMessageView.sectionHeader(titled: "Saved search templates".localized)
-							savedSearchTemplatesHeaderView.elementInsets = .zero
-
-							suggestionItems.append(savedSearchTemplatesHeaderView)
-							suggestionItems.append(contentsOf: savedTemplates)
-						}
-
-						// Offer saved searches
-						if let savedSearches = vault.savedSearches?.filter({ savedSearch in
-							return !savedSearch.isTemplate
-						}), savedSearches.count > 0 {
-							let savedSearchTemplatesHeaderView = ComposedMessageView.sectionHeader(titled: "Saved searches".localized)
-							savedSearchTemplatesHeaderView.elementInsets = .zero
-
-							suggestionItems.append(savedSearchTemplatesHeaderView)
-							suggestionItems.append(contentsOf: savedSearches)
-						}
-
-						// Provide "Enter a search term" placeholder if there is no other content available
-						if suggestionItems.count == 0 {
-							suggestionItems.append( ComposedMessageView.infoBox(image: nil, subtitle: "Enter a search term".localized) )
-						}
-
-						suggestionsSource.setVersionedItems(suggestionItems)
-					}
+				if clientContext.core?.vault != nil {
+					startProvidingSearchSuggestions(to: suggestionsSource, in: clientContext)
 				}
 
 				// Create and install SearchViewController
@@ -1087,6 +1077,62 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				}
 			}
 		}
+	}
+
+	func startProvidingSearchSuggestions(to suggestionsSource: OCDataSourceArray, in clientContext: ClientContext) {
+		if let vault = clientContext.core?.vault {
+			// Observe saved searches for changes and trigger updates accordingly
+			// This observer will automatically be removed once suggestionsSource is deallocated
+			vault.addSavedSearchesObserver(suggestionsSource, withInitial: true) { [weak clientContext, weak self] suggestionsSource, savedSearches, isInitial in
+				guard let suggestionsSource = suggestionsSource as? OCDataSourceArray, let self, let clientContext else {
+					return
+				}
+
+				var suggestionItems : [OCDataItem & OCDataItemVersioning] = []
+
+				suggestionItems = self.composeSuggestionContents(from: vault.savedSearches, clientContext: clientContext, includingFallbacks: true)
+
+				// Provide "Enter a search term" placeholder if there is no other content available
+				if suggestionItems.count == 0 {
+					suggestionItems.append( ComposedMessageView.infoBox(image: nil, subtitle: OCLocalizedString("Enter a search term", nil)) )
+				}
+
+				suggestionsSource.setVersionedItems(suggestionItems)
+			}
+		}
+	}
+
+	open func composeSuggestionContents(from savedSearches: [OCSavedSearch]?, clientContext: ClientContext, includingFallbacks: Bool) -> [OCDataItem & OCDataItemVersioning] {
+		var suggestionItems : [OCDataItem & OCDataItemVersioning] = []
+
+		// Offer saved search templates
+		if let savedTemplates = savedSearches?.filter({ savedSearch in
+			return savedSearch.isTemplate
+		}), savedTemplates.count > 0 {
+			let savedSearchTemplatesHeaderView = ComposedMessageView.sectionHeader(titled: OCLocalizedString("Search templates", nil))
+			savedSearchTemplatesHeaderView.elementInsets = .zero
+
+			suggestionItems.append(savedSearchTemplatesHeaderView)
+			suggestionItems.append(contentsOf: savedTemplates)
+		}
+
+		// Offer saved searches
+		if let savedSearches = savedSearches?.filter({ savedSearch in
+			return !savedSearch.isTemplate
+		}), savedSearches.count > 0 {
+			let savedSearchTemplatesHeaderView = ComposedMessageView.sectionHeader(titled: OCLocalizedString("Saved searches", nil))
+			savedSearchTemplatesHeaderView.elementInsets = .zero
+
+			suggestionItems.append(savedSearchTemplatesHeaderView)
+			suggestionItems.append(contentsOf: savedSearches)
+		}
+
+		// Provide "Enter a search term" placeholder if there is no other content available
+		if suggestionItems.count == 0, includingFallbacks {
+			suggestionItems.append( ComposedMessageView.infoBox(image: nil, subtitle: OCLocalizedString("Enter a search term", nil)) )
+		}
+
+		return suggestionItems
 	}
 
 	func endSearch() {
@@ -1213,7 +1259,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		var quotaInfoText: String = ""
 
 		if let folderStatistics = folderStatistics {
-			folderStatisticsText = "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)".localized([
+			folderStatisticsText = OCLocalizedFormat("{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)", [
 				"itemCount" : NumberFormatter.localizedString(from: NSNumber(value: folderStatistics.itemCount?.intValue ?? 0), number: .decimal),
 				"fileCount" : NumberFormatter.localizedString(from: NSNumber(value: folderStatistics.fileCount?.intValue ?? 0), number: .decimal),
 				"folderCount" : NumberFormatter.localizedString(from: NSNumber(value: folderStatistics.folderCount?.intValue ?? 0), number: .decimal),
@@ -1222,7 +1268,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 
 		if let driveQuota = driveQuota, let remainingBytes = driveQuota.remaining {
-			quotaInfoText = "{{remaining}} available".localized([
+			quotaInfoText = OCLocalizedFormat("{{remaining}} available", [
 				"remaining" : ByteCountFormatter.string(fromByteCount: remainingBytes.int64Value, countStyle: .file)
 			])
 
@@ -1270,11 +1316,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				refreshControl?.endRefreshing()
 			}
 		}
-	}
-
-	// MARK: - Themeing
-	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 	}
 }
 

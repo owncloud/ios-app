@@ -1,0 +1,5 @@
+Bugfix: Remove (re)sharing from roles for newly created user/group shares
+
+Removes (re)sharing from roles for newly created user/group shares for ocis.
+
+https://github.com/owncloud/ios-app/pull/1376

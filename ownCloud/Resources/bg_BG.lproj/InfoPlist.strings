@@ -1,0 +1,26 @@
+/* 
+  InfoPlist.strings
+  ownCloud
+
+  Created by Javier Gonzalez on 06/06/2018.
+  Copyright © 2018 ownCloud GmbH. All rights reserved.
+*/
+
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
+"NSFaceIDUsageDescription" = "Отключване на приложението без въвеждане на парола.";
+"NSAppleMusicUsageDescription" = "Тези права са необходими, за да качвате мултимедийни файлове на вашия сървър.";
+"NSPhotoLibraryAddUsageDescription" = "Тези права са необходими, за да качвате снимки и видеоклипове от вашата библиотека със снимки.";
+"NSPhotoLibraryUsageDescription" = "Тези права са необходими, за да качвате снимки и видеоклипове от вашата библиотека със снимки.";
+"NSLocationAlwaysAndWhenInUseUsageDescription" = "Това разрешение е необходимо, за да се активира автоматичното качване на снимки и видеоклипове във фонов режим.";
+"NSLocationAlwaysUsageDescription" = "Това разрешение е необходимо, за да се активира автоматичното качване на снимки и видеоклипове във фонов режим";
+"NSLocationWhenInUseUsageDescription" = "Това разрешение е необходимо, за да се активира автоматичното качване на снимки и видеоклипове във фонов режим";
+"NSMicrophoneUsageDescription" = "Това разрешение е необходимо за запис на видеоклипове";

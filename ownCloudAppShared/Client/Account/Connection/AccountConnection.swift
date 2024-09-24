@@ -221,7 +221,7 @@ open class AccountConnection: NSObject {
 					// Add shareJailQueryCustomizer
 					core?.shareJailQueryCustomizer = { (query) in
 						DisplaySettings.shared.updateQuery(withDisplaySettings: query)
-						query.sortComparator = SortMethod.alphabetically.comparator(direction: .ascendant)
+						query.sortComparator = SortMethod.alphabetically.comparator(direction: .ascending)
 					}
 
 					// Remove skip available offline when user opens the bookmark
@@ -295,10 +295,12 @@ open class AccountConnection: NSObject {
 			connection.fpServiceStandby?.stop()
 
 			// Return core
-			OCCoreManager.shared.returnCore(for: self.bookmark, completionHandler: {
+			OCCoreManager.shared.returnCore(for: self.bookmark, completionHandler: { [weak self] in
 				connection.richStatus = nil
 				connection.core = nil
 				connection.status = .noCore
+
+				self?.progressSummarizer.resetPrioritySummaries()
 
 				OnMainThread {
 					completion?(nil)
@@ -408,7 +410,7 @@ open class AccountConnection: NSObject {
 		var actionExtensions : [OCExtension] = []
 
 		if let core = core {
-			if let apps = core.appProvider?.apps {
+			if let appProvider = core.appProvider, appProvider.supportsOpen, let apps = appProvider.apps {
 				for app in apps {
 					// Pre-load app icon
 					if let appIconRequest = app.iconResourceRequest {
@@ -514,10 +516,10 @@ open class AccountConnection: NSObject {
 
 				case .connecting:
 					_authFailureStatus = nil
-					summary?.message = "Connecting…".localized
+					summary?.message = OCLocalizedString("Connecting…", nil)
 
 				case .offline, .unavailable:
-					summary?.message = String(format: "%@%@", connectionShortDescription!, "Contents from cache.".localized)
+					summary?.message = String(format: "%@%@", connectionShortDescription!, OCLocalizedString("Contents from cache.", nil))
 					status = _authFailureStatus ?? .coreAvailable
 			}
 

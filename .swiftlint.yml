@@ -36,8 +36,10 @@ disabled_rules:
     - function_parameter_count
     - comment_spacing
     - unused_closure_parameter
+    - control_statement
     - nesting
     - comma
+    - large_tuple
 custom_rules:
   empty_line_after_guard_statement:
     included: ".*\\.swift"

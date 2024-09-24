@@ -50,11 +50,11 @@ class MessageQueueExample: NSObject, OCMessageResponseHandler {
 					title: title,
 					description: "Hello world",
 					choices: withResponseHandling ? [
-						OCMessageChoice(of: .default, identifier: .OK, label: "OK".localized, metaData: nil),
-						OCMessageChoice(of: .regular, identifier: .retry, label: "Retry".localized, metaData: nil),
-						OCMessageChoice(of: .destructive, identifier: .cancel, label: "Cancel".localized, metaData: nil)
+						OCMessageChoice(of: .default, identifier: .OK, label: OCLocalizedString("OK", nil), metaData: nil),
+						OCMessageChoice(of: .regular, identifier: .retry, label: OCLocalizedString("Retry", nil), metaData: nil),
+						OCMessageChoice(of: .destructive, identifier: .cancel, label: OCLocalizedString("Cancel", nil), metaData: nil)
 					] : [
-						OCMessageChoice(of: .regular, identifier: .OK, label: "OK".localized, metaData: nil)
+						OCMessageChoice(of: .regular, identifier: .OK, label: OCLocalizedString("OK", nil), metaData: nil)
 					])
 
 		// message.categoryIdentifier = // specify a category identifier if you want to allow user notifications and grouping of this message. Make sure you first register a OCMessageTemplate via OCMessageTemplate.registerTemplates() so that the choices are also available in notifications. Otherwise, behaviour is undefined

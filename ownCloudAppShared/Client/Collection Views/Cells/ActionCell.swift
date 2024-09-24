@@ -44,6 +44,7 @@ class ActionCell: ThemeableCollectionViewCell {
 	var title : String? {
 		didSet {
 			titleLabel.text = title
+			accessibilityLabel = title
 		}
 	}
 	var icon : UIImage? {
@@ -85,7 +86,6 @@ class ActionCell: ThemeableCollectionViewCell {
 		iconView.contentMode = .scaleAspectFit
 
 		titleLabel.setContentHuggingPriority(.required, for: .vertical)
-//		titleLabel.setContentHuggingPriority(.required, for: .horizontal)
 
 		titleLabel.setContentCompressionResistancePriority(.required, for: .horizontal)
 		titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
@@ -96,6 +96,10 @@ class ActionCell: ThemeableCollectionViewCell {
 
 		let backgroundConfig = UIBackgroundConfiguration.clear()
 		backgroundConfiguration = backgroundConfig
+
+		titleLabel.isAccessibilityElement = false
+		isAccessibilityElement = true
+		accessibilityTraits = .button
 	}
 
 	func configureLayout() {
@@ -106,7 +110,7 @@ class ActionCell: ThemeableCollectionViewCell {
 
 				titleLabel.textAlignment = .center
 
-				titleLabel.font = UIFont.systemFont(ofSize: 10)
+				titleLabel.font = UIFont.preferredFont(forTextStyle: .caption2)
 
 				self.configuredConstraints = [
 					iconView.leadingAnchor.constraint(greaterThanOrEqualTo: contentView.leadingAnchor, constant: iconInsets.left),
@@ -203,6 +207,7 @@ extension ActionCell {
 				var accessories: [UICellAccessory] = []
 				var content = cell.defaultContentConfiguration()
 				var backgroundConfiguration: UIBackgroundConfiguration?
+				var hasButton = false
 
 				if let action = item as? OCAction {
 					content.text = action.title
@@ -236,7 +241,12 @@ extension ActionCell {
 							action?.run(options: options)
 						}), for: .primaryActionTriggered)
 
+						button.focusGroupIdentifier = "com.owncloud.accessory-action-button.\(UUID().uuidString)"
+						hasButton = true
+
 						accessories.append(.customView(configuration: UICellAccessory.CustomViewConfiguration(customView: button, placement: .trailing())))
+					} else {
+						cell.accessibilityTraits = .button
 					}
 				}
 
@@ -247,8 +257,12 @@ extension ActionCell {
 					if sidebarAction.childrenDataSource != nil {
 						let headerDisclosureOption = UICellAccessory.OutlineDisclosureOptions(style: .cell)
 						accessories.append(.outlineDisclosure(options: headerDisclosureOption))
+					} else {
+						cell.accessibilityTraits = .button
 					}
 				}
+
+				cell.accessibilityRespondsToUserInteraction = !hasButton
 
 				cell.accessories = accessories
 				cell.contentConfiguration = content

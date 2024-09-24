@@ -109,32 +109,32 @@ open class IssuesCardViewController: StaticTableViewController {
 
 		super.init(style: .plain)
 
-		headerTitle = "Review Connection".localized
+		headerTitle = OCLocalizedString("Review Connection", nil)
 
 		switch issues.displayLevel {
 			case .informal:
 				options = [
-					AlertOption(label: "OK".localized, type: .default, accessibilityIdentifier: "ok-button", handler: { [weak self] (_, _) in
+					AlertOption(label: OCLocalizedString("OK", nil), type: .default, accessibilityIdentifier: "ok-button", handler: { [weak self] (_, _) in
 						self?.complete(with: .approve)
 					})
 				]
 
 			case .warning:
 				options = [
-					AlertOption(label: "Cancel".localized, type: .cancel, accessibilityIdentifier: "cancel-button", handler: { [weak self] (_, _) in
+					AlertOption(label: OCLocalizedString("Cancel", nil), type: .cancel, accessibilityIdentifier: "cancel-button", handler: { [weak self] (_, _) in
 						self?.complete(with: .cancel)
 					}),
 
-					AlertOption(label: "Approve".localized, type: .regular, accessibilityIdentifier: "approve-button", handler: { [weak self] (_, _) in
+					AlertOption(label: OCLocalizedString("Approve", nil), type: .regular, accessibilityIdentifier: "approve-button", handler: { [weak self] (_, _) in
 						self?.complete(with: .approve)
 					})
 				]
 
 			case .error:
-				headerTitle = "Issues".localized
+				headerTitle = OCLocalizedString("Issues", nil)
 
 				options = [
-					AlertOption(label: "OK".localized, type: .cancel, accessibilityIdentifier: "ok-button", handler: { [weak self] (_, _) in
+					AlertOption(label: OCLocalizedString("OK", nil), type: .cancel, accessibilityIdentifier: "ok-button", handler: { [weak self] (_, _) in
 						self?.complete(with: .dismiss)
 					})
 				]

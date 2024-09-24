@@ -18,6 +18,8 @@
 
 #import <ownCloudSDK/ownCloudSDK.h>
 
+#if OC_FEATURE_AVAILABLE_FILEPROVIDER
+
 @interface OCItem (FileProviderItem) <NSFileProviderItem>
 
 - (void)setLocalFavoriteRank:(NSNumber *)localFavoriteRank;
@@ -26,3 +28,5 @@
 - (void)setUploadingError:(NSError *)uploadingError;
 
 @end
+
+#endif /* OC_FEATURE_AVAILABLE_FILEPROVIDER */

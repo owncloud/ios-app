@@ -106,13 +106,13 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 
 		prepareNavigationController()
 
-		showCancelLabel(with: "Connecting…".localized)
+		showMessage(with: OCLocalizedString("Connecting…", nil))
 
 		var actionTypeLabel = ""
 		var actionExtensionType : ActionExtensionType = .undefined
 		if actionIdentifier == "com.owncloud.FileProviderUI.Share" {
 			actionExtensionType = .sharing
-			actionTypeLabel = "Share".localized
+			actionTypeLabel = OCLocalizedString("Share", nil)
 		}
 
 		OCCoreManager.shared.requestCoreForBookmarkWithItem(withLocalID: identifier.rawValue, setup: nil) { [weak self] (error, core, databaseItem) in
@@ -139,7 +139,7 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 
 					OnMainThread {
 						if actionExtensionType == .sharing, core.connection.capabilities?.sharingAPIEnabled == false || item.isShareable == false {
-							self.showCancelLabel(with: String(format: "%@ is not available for this item.".localized, actionTypeLabel))
+							self.showMessage(with: String(format: OCLocalizedString("%@ is not available for this item.", nil), actionTypeLabel))
 						} else if core.connectionStatus == .online {
 							self.coreConnectionStatusObservation?.invalidate()
 							self.coreConnectionStatusObservation = nil
@@ -157,18 +157,18 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 							}
 						} else if core.connectionStatus == .connecting {
 							triedConnecting = true
-							self.showCancelLabel(with: "Connecting…".localized)
+							self.showMessage(with: OCLocalizedString("Connecting…", nil))
 						} else if core.connectionStatus == .offline || core.connectionStatus == .unavailable {
 							// Display error if `.connecting` isn't reached within 2 seconds
 							OnMainThread(after: 2) {
 								if !triedConnecting {
-									self.showCancelLabel(with: String(format: "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.".localized, actionTypeLabel))
+									self.showMessage(with: String(format: OCLocalizedString("%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.", nil), actionTypeLabel))
 								}
 							}
 
 							// Display error if `.connecting` has already been reached
 							if triedConnecting {
-								self.showCancelLabel(with: String(format: "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.".localized, actionTypeLabel))
+								self.showMessage(with: String(format: OCLocalizedString("%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action.", nil), actionTypeLabel))
 							}
 						}
 					}
@@ -180,13 +180,24 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 	override func prepare(forError error: Error) {
 		if !OCFileProviderSettings.browseable {
 			prepareNavigationController()
-			showCancelLabel(with: "File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.".localized)
+			showMessage(with: OCLocalizedString("File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files.", nil))
+			return
+		}
+
+		if OCBookmarkManager.shared.bookmarks.count == 0 {
+			prepareNavigationController()
+			showMessage(with: OCLocalizedString("No account has been set up in the {{app.name}} app yet.", nil), buttonLabel: OCLocalizedString("Open app", nil), action: { [weak self] in
+				if let appURLScheme = OCAppIdentity.shared.appURLSchemes?.first {
+					self?.extensionContext.open(URL(string: "\(appURLScheme)://fp-no-account")!)
+				}
+				self?.complete()
+			})
 			return
 		}
 
 		if AppLockManager.supportedOnDevice {
 			AppLockManager.shared.passwordViewHostViewController = self
-			AppLockManager.shared.biometricCancelLabel = "Cancel".localized
+			AppLockManager.shared.biometricCancelLabel = OCLocalizedString("Cancel", nil)
 			AppLockManager.shared.cancelAction = { [weak self] in
 				self?.complete(cancelWith: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
 			}
@@ -197,20 +208,29 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 			AppLockManager.shared.showLockscreenIfNeeded()
 		} else {
 			prepareNavigationController()
-			showCancelLabel(with: "Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.".localized)
+			showMessage(with: OCLocalizedString("Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings.", nil))
 		}
 	}
 
-	func showCancelLabel(with message: String) {
+	func showMessage(with message: String, buttonLabel: String? = nil, action: CancelLabelViewController.CancelAction? = nil) {
 		OnMainThread {
+			var messageController: CancelLabelViewController?
+
 			if let currentController = self.themeNavigationController?.viewControllers.first as? CancelLabelViewController {
-				currentController.updateCancelLabels(with: message)
+				messageController = currentController
 			} else if let cancelLabelViewController = UIStoryboard.init(name: "MainInterface", bundle: nil).instantiateViewController(withIdentifier: "CancelLabelViewController") as? CancelLabelViewController {
-				cancelLabelViewController.updateCancelLabels(with: message)
-				cancelLabelViewController.cancelAction = { [weak self] in
+				messageController = cancelLabelViewController
+			}
+
+			if let messageController {
+				messageController.updateCancelLabels(with: message, buttonLabel: buttonLabel)
+				messageController.cancelAction = action ?? { [weak self] in
 					self?.complete(cancelWith: NSError(domain: FPUIErrorDomain, code: Int(FPUIExtensionErrorCode.userCancelled.rawValue), userInfo: nil))
 				}
-				self.themeNavigationController?.viewControllers = [ cancelLabelViewController ]
+
+				if self.themeNavigationController?.viewControllers.first != messageController {
+					self.themeNavigationController?.viewControllers = [ messageController ]
+				}
 			}
 		}
 	}

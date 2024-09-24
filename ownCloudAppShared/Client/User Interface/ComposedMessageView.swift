@@ -447,6 +447,7 @@ public class ComposedMessageView: UIView, Themeable {
 		super.init(frame: CGRect(x: 0, y: 0, width: 100, height: 100))
 		self.translatesAutoresizingMaskIntoConstraints = false
 		self.cssSelectors = [.message]
+		self.accessibilityRespondsToUserInteraction = false
 
 		self.elements = elements
 	}
@@ -600,7 +601,7 @@ public extension ComposedMessageView {
 	}
 }
 
-extension ThemeCSSSelector {
+public extension ThemeCSSSelector {
 	static let infoBox = ThemeCSSSelector(rawValue: "infoBox")
 	static let message = ThemeCSSSelector(rawValue: "message")
 }

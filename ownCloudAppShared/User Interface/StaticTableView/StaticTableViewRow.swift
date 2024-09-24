@@ -528,6 +528,21 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 		return true
 	}
 
+	public func textFieldShouldClear(_ textField: UITextField) -> Bool {
+		if let requiredFileExtension {
+			textField.text = "." + requiredFileExtension
+			textField.selectedTextRange = textField.textRange(from: textField.beginningOfDocument, to: textField.beginningOfDocument)
+			return false
+		}
+		return true
+	}
+
+	open var requiredFileExtension: String? {
+		didSet {
+			(textField as? ThemeCSSTextField)?.requiredFileExtension = requiredFileExtension
+		}
+	}
+
 	// MARK: - Labels
 	convenience public init(label: String, accessoryView: UIView? = nil, identifier: String? = nil) {
 		self.init()

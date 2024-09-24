@@ -30,7 +30,7 @@ class MediaUploadActivity : OCActivity {
 	init(identifier: String, assetCount:Int) {
 		super.init(identifier: OCActivityIdentifier(rawValue: identifier))
 		self.isCancellable = true
-		self.localizedDescription = "Media import".localized
+		self.localizedDescription = OCLocalizedString("Media import", nil)
 
 		if assetCount <= 0 {
 			self.progress = Progress.indeterminate()
@@ -54,7 +54,7 @@ class MediaUploadActivity : OCActivity {
 		if let progress = self.progress, progress.isIndeterminate == false {
 			let total = progress.totalUnitCount
 			let current = progress.completedUnitCount
-			self.localizedStatusMessage = String(format: "%@ of %@".localized, "\(current)", "\(total)")
+			self.localizedStatusMessage = String(format: OCLocalizedString("%@ of %@", nil), "\(current)", "\(total)")
 		}
 	}
 }

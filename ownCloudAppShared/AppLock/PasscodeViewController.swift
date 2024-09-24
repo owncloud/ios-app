@@ -170,7 +170,7 @@ public class PasscodeViewController: UIViewController, Themeable {
 		super.viewDidLoad()
 
 		self.title = VendorServices.shared.appName
-		self.cancelButton?.setTitle("Cancel".localized, for: .normal)
+		self.cancelButton?.setTitle(OCLocalizedString("Cancel", nil), for: .normal)
 		self.cancelButton?.cssSelector =  .cancel
 
 		self.messageLabel?.cssSelector = .title

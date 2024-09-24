@@ -23,15 +23,15 @@ import CoreMedia
 
 extension ServerListTableViewController {
 	override var keyCommands: [UIKeyCommand]? {
-		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
-		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
-		let addAccountCommand = UIKeyCommand.ported(input: "+", modifierFlags: [.command], action: #selector(addBookmark), discoverabilityTitle: "Add account".localized.localized)
-		let openSettingsCommand = UIKeyCommand.ported(input: ",", modifierFlags: [.command], action: #selector(settings), discoverabilityTitle: "Settings".localized.localized)
+		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: OCLocalizedString("Select Next", nil))
+		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: OCLocalizedString("Select Previous", nil))
+		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: OCLocalizedString("Open Selected", nil))
+		let addAccountCommand = UIKeyCommand.ported(input: "+", modifierFlags: [.command], action: #selector(addBookmark), discoverabilityTitle: OCLocalizedString("Add account", nil).localized)
+		let openSettingsCommand = UIKeyCommand.ported(input: ",", modifierFlags: [.command], action: #selector(settings), discoverabilityTitle: OCLocalizedString("Settings", nil).localized)
 
-		let editSettingsCommand = UIKeyCommand.ported(input: ",", modifierFlags: [.command, .shift], action: #selector(editBookmark), discoverabilityTitle: "Edit".localized)
-		let manageSettingsCommand = UIKeyCommand.ported(input: "M", modifierFlags: [.command, .shift], action: #selector(manageBookmark), discoverabilityTitle: "Manage".localized)
-		let deleteSettingsCommand = UIKeyCommand.ported(input: "\u{08}", modifierFlags: [.command, .shift], action: #selector(deleteBookmarkCommand), discoverabilityTitle: "Delete".localized)
+		let editSettingsCommand = UIKeyCommand.ported(input: ",", modifierFlags: [.command, .shift], action: #selector(editBookmark), discoverabilityTitle: OCLocalizedString("Edit", nil))
+		let manageSettingsCommand = UIKeyCommand.ported(input: "M", modifierFlags: [.command, .shift], action: #selector(manageBookmark), discoverabilityTitle: OCLocalizedString("Manage", nil))
+		let deleteSettingsCommand = UIKeyCommand.ported(input: "\u{08}", modifierFlags: [.command, .shift], action: #selector(deleteBookmarkCommand), discoverabilityTitle: OCLocalizedString("Delete", nil))
 
 		var shortcuts = [UIKeyCommand]()
 		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
@@ -39,7 +39,7 @@ extension ServerListTableViewController {
 			shortcuts.append(manageSettingsCommand)
 			shortcuts.append(deleteSettingsCommand)
 			if UIDevice.current.isIpad {
-				let openWindowCommand = UIKeyCommand.ported(input: "W", modifierFlags: [.command, .shift], action: #selector(openSelectedBookmarkInWindow), discoverabilityTitle: "Open in new Window".localized)
+				let openWindowCommand = UIKeyCommand.ported(input: "W", modifierFlags: [.command, .shift], action: #selector(openSelectedBookmarkInWindow), discoverabilityTitle: OCLocalizedString("Open in new Window", nil))
 				shortcuts.append(openWindowCommand)
 			}
 
@@ -115,9 +115,9 @@ extension ServerListTableViewController {
 extension StaticLoginSingleAccountServerListViewController {
 
 	override var keyCommands: [UIKeyCommand]? {
-		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
-		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
+		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: OCLocalizedString("Select Next", nil))
+		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: OCLocalizedString("Select Previous", nil))
+		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: OCLocalizedString("Open Selected", nil))
 
 		var shortcuts = [UIKeyCommand]()
 		if let selectedIndexPath = self.tableView.indexPathForSelectedRow {
@@ -144,10 +144,10 @@ extension BookmarkViewController {
 		if let superKeyCommands = super.keyCommands {
 			shortcuts.append(contentsOf: superKeyCommands)
 		}
-		let cancelCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
+		let cancelCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: OCLocalizedString("Cancel", nil))
 		shortcuts.append(cancelCommand)
 
-		let continueCommand = UIKeyCommand.ported(input: "C", modifierFlags: [.command], action: #selector(handleContinue), discoverabilityTitle: "Continue".localized)
+		let continueCommand = UIKeyCommand.ported(input: "C", modifierFlags: [.command], action: #selector(handleContinue), discoverabilityTitle: OCLocalizedString("Continue", nil))
 		shortcuts.append(continueCommand)
 
 		return shortcuts
@@ -201,7 +201,7 @@ extension BookmarkInfoViewController {
 			shortcuts.append(contentsOf: superKeyCommands)
 		}
 
-		let doneCommand = UIKeyCommand.ported(input: "D", modifierFlags: [.command], action: #selector(userActionDone), discoverabilityTitle: "Done".localized)
+		let doneCommand = UIKeyCommand.ported(input: "D", modifierFlags: [.command], action: #selector(userActionDone), discoverabilityTitle: OCLocalizedString("Done", nil))
 		shortcuts.append(doneCommand)
 
 		return shortcuts
@@ -218,7 +218,7 @@ extension ThemeNavigationController {
 		var shortcuts = [UIKeyCommand]()
 
 		if self.viewControllers.count > 1, !(self.visibleViewController?.isKind(of: UIAlertController.self) ?? true) {
-			let backCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [.command], action: #selector(popViewControllerAnimated), discoverabilityTitle: "Back".localized)
+			let backCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [.command], action: #selector(popViewControllerAnimated), discoverabilityTitle: OCLocalizedString("Back", nil))
 			shortcuts.append(backCommand)
 		}
 
@@ -239,11 +239,11 @@ extension NamingViewController {
 
 		var shortcuts = [UIKeyCommand]()
 		if let leftItem = self.navigationItem.leftBarButtonItem, let action = leftItem.action {
-			let dismissCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: action, discoverabilityTitle: "Cancel".localized)
+			let dismissCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: action, discoverabilityTitle: OCLocalizedString("Cancel", nil))
 			shortcuts.append(dismissCommand)
 		}
 		if let rightItem = self.navigationItem.rightBarButtonItem, let action = rightItem.action {
-			let doneCommand = UIKeyCommand.ported(input: "D", modifierFlags: [.command], action: action, discoverabilityTitle: "Done".localized)
+			let doneCommand = UIKeyCommand.ported(input: "D", modifierFlags: [.command], action: action, discoverabilityTitle: OCLocalizedString("Done", nil))
 			shortcuts.append(doneCommand)
 		}
 
@@ -260,10 +260,10 @@ extension PDFSearchViewController {
 	override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 
-		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
-		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
-		let cancelCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
+		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: OCLocalizedString("Select Next", nil))
+		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: OCLocalizedString("Select Previous", nil))
+		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: OCLocalizedString("Open Selected", nil))
+		let cancelCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: OCLocalizedString("Cancel", nil))
 
 		if self.tableView.numberOfRows(inSection: 0) > 0 {
 			shortcuts.append(nextObjectCommand)
@@ -299,7 +299,7 @@ extension ClientRootViewController {
 		}
 
 		if let navigationController = self.selectedViewController as? ThemeNavigationController, navigationController.visibleViewController?.navigationItem.searchController?.isActive ?? false {
-			let cancelCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissSearch), discoverabilityTitle: "Cancel".localized)
+			let cancelCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissSearch), discoverabilityTitle: OCLocalizedString("Cancel", nil))
 			shortcuts.append(cancelCommand)
 
 			if let visibleViewController = navigationController.visibleViewController, let keyCommands = visibleViewController.keyCommands {
@@ -318,7 +318,7 @@ extension ClientRootViewController {
 		if let navigationController = self.selectedViewController as? ThemeNavigationController, !((navigationController.visibleViewController as? UIAlertController) != nil) {
 			let keyCommands = self.tabBar.items?.enumerated().map { (index, item) -> UIKeyCommand in
 				let tabIndex = String(index + 1)
-				return UIKeyCommand.ported(input: tabIndex, modifierFlags: .command, action:#selector(selectTab), discoverabilityTitle: item.title ?? String(format: "Tab %@".localized, tabIndex))
+				return UIKeyCommand.ported(input: tabIndex, modifierFlags: .command, action:#selector(selectTab), discoverabilityTitle: item.title ?? String(format: OCLocalizedString("Tab %@", nil), tabIndex))
 			}
 			if let keyCommands = keyCommands, self.presentedViewController == nil {
 				shortcuts.append(contentsOf: keyCommands)
@@ -326,7 +326,7 @@ extension ClientRootViewController {
 		}
 
 		if let availableStyles = ThemeStyle.availableStyles, availableStyles.count > 1 {
-			let switchThemeCommand = UIKeyCommand.ported(input: "T", modifierFlags: [.alternate], action: #selector(switchTheme), discoverabilityTitle: "Switch Theme Style".localized)
+			let switchThemeCommand = UIKeyCommand.ported(input: "T", modifierFlags: [.alternate], action: #selector(switchTheme), discoverabilityTitle: OCLocalizedString("Switch Theme Style", nil))
 			shortcuts.append(switchThemeCommand)
 		}
 
@@ -456,9 +456,9 @@ extension UITableViewController {
 extension StaticTableViewController {
 
 	open override var keyCommands: [UIKeyCommand]? {
-		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
-		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
+		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: OCLocalizedString("Select Next", nil))
+		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: OCLocalizedString("Select Previous", nil))
+		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: OCLocalizedString("Open Selected", nil))
 
 		var shortcuts = [UIKeyCommand]()
 
@@ -488,8 +488,8 @@ extension StaticTableViewController {
 				if let slider = sliders?.first as? UISlider {
 					slider.thumbTintColor = Theme.shared.activeCollection.tableRowHighlightColors.backgroundColor
 				}
-				let sliderDownCommand = UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(sliderDown), discoverabilityTitle: "Decrease Slider Value".localized)
-				let sliderUpCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(sliderUp), discoverabilityTitle: "Increase Slider Value".localized)
+				let sliderDownCommand = UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(sliderDown), discoverabilityTitle: OCLocalizedString("Decrease Slider Value", nil))
+				let sliderUpCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(sliderUp), discoverabilityTitle: OCLocalizedString("Increase Slider Value", nil))
 				shortcuts.append(sliderDownCommand)
 				shortcuts.append(sliderUpCommand)
 			} else {
@@ -647,7 +647,7 @@ extension ClientQueryViewController {
 	open override var keyCommands: [UIKeyCommand]? {
 		var shortcuts = [UIKeyCommand]()
 
-		let scopeCommand = UIKeyCommand.ported(input: "F", modifierFlags: [.command], action: #selector(changeSearchScope(_:)), discoverabilityTitle: "Toggle Search Scope".localized)
+		let scopeCommand = UIKeyCommand.ported(input: "F", modifierFlags: [.command], action: #selector(changeSearchScope(_:)), discoverabilityTitle: OCLocalizedString("Toggle Search Scope", nil))
 		if let searchController = searchController, searchController.isActive {
 			shortcuts.append(scopeCommand)
 		}
@@ -657,13 +657,13 @@ extension ClientQueryViewController {
 		}
 
 		if searchController?.isActive ?? false, searchScope == .global, hasSearchResults, self.tableView?.indexPathForSelectedRow != nil {
-			let revealObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [.command], action: #selector(revealItem), discoverabilityTitle: "Reveal in folder".localized)
+			let revealObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [.command], action: #selector(revealItem), discoverabilityTitle: OCLocalizedString("Reveal in folder", nil))
 			shortcuts.append(revealObjectCommand)
 		}
 
-		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
-		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
+		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: OCLocalizedString("Select Next", nil))
+		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: OCLocalizedString("Select Previous", nil))
+		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: OCLocalizedString("Open Selected", nil))
 
 		if let selectedIndexPath = self.tableView?.indexPathForSelectedRow {
 			if selectedIndexPath.row < self.items.count - 1 {
@@ -746,9 +746,9 @@ extension LibrarySharesTableViewController {
 
 		var shortcuts = [UIKeyCommand]()
 
-		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
-		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
+		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: OCLocalizedString("Select Next", nil))
+		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: OCLocalizedString("Select Previous", nil))
+		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: OCLocalizedString("Open Selected", nil))
 
 		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
 			if selectedRow < self.shares.count - 1 {
@@ -776,14 +776,14 @@ extension QueryFileListTableViewController {
 
 		var shortcuts = [UIKeyCommand]()
 
-		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let selectLastPageObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [.command], action: #selector(selectLastPageObject), discoverabilityTitle: "Select Last Item on Page".localized)
-		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
-		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
-		let scrollTopCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [.command, .shift], action: #selector(scrollToFirstRow), discoverabilityTitle: "Scroll to Top".localized)
-		let scrollBottomCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [.command, .shift], action: #selector(scrollToLastRow), discoverabilityTitle: "Scroll to Bottom".localized)
-		let toggleSortCommand = UIKeyCommand.ported(input: "S", modifierFlags: [.alternate], action: #selector(toggleSortOrder), discoverabilityTitle: "Change Sort Order".localized)
-		let searchCommand = UIKeyCommand.ported(input: "F", modifierFlags: [.command], action: #selector(enableSearch), discoverabilityTitle: "Search".localized)
+		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: OCLocalizedString("Select Next", nil))
+		let selectLastPageObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [.command], action: #selector(selectLastPageObject), discoverabilityTitle: OCLocalizedString("Select Last Item on Page", nil))
+		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: OCLocalizedString("Select Previous", nil))
+		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: OCLocalizedString("Open Selected", nil))
+		let scrollTopCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [.command, .shift], action: #selector(scrollToFirstRow), discoverabilityTitle: OCLocalizedString("Scroll to Top", nil))
+		let scrollBottomCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [.command, .shift], action: #selector(scrollToLastRow), discoverabilityTitle: OCLocalizedString("Scroll to Bottom", nil))
+		let toggleSortCommand = UIKeyCommand.ported(input: "S", modifierFlags: [.alternate], action: #selector(toggleSortOrder), discoverabilityTitle: OCLocalizedString("Change Sort Order", nil))
+		let searchCommand = UIKeyCommand.ported(input: "F", modifierFlags: [.command], action: #selector(enableSearch), discoverabilityTitle: OCLocalizedString("Search", nil))
 		// Add key commands for file name letters
 		if sortMethod == .alphabetically, let searchController = searchController, !searchController.isActive {
 			let indexTitles = Array( Set( self.items.map { String(( $0.name?.first!.uppercased())!) })).sorted()
@@ -816,7 +816,7 @@ extension QueryFileListTableViewController {
 		shortcuts.append(toggleSortCommand)
 
 		for (index, method) in SortMethod.all.enumerated() {
-			let sortTitle = String(format: "Sort by %@".localized, method.localizedName)
+			let sortTitle = String(format: OCLocalizedString("Sort by %@", nil), method.localizedName)
 			let sortCommand = UIKeyCommand.ported(input: String(index + 1), modifierFlags: [.alternate], action: #selector(changeSortMethod), discoverabilityTitle: sortTitle)
 			shortcuts.append(sortCommand)
 		}
@@ -884,7 +884,7 @@ extension QueryFileListTableViewController {
 
 	@objc func changeSortMethod(_ command : UIKeyCommand) {
 		for method in SortMethod.all {
-			let sortTitle = String(format: "Sort by %@".localized, method.localizedName)
+			let sortTitle = String(format: OCLocalizedString("Sort by %@", nil), method.localizedName)
 			if command.discoverabilityTitle == sortTitle {
 				self.sortBar?.sortMethod = method
 				break
@@ -927,9 +927,9 @@ extension ClientDirectoryPickerViewController {
 			shortcuts.append(doCommand)
 		}
 
-		let createFolder = UIKeyCommand.ported(input: "N", modifierFlags: [.command], action: #selector(createFolderButtonPressed), discoverabilityTitle: "Create Folder".localized)
+		let createFolder = UIKeyCommand.ported(input: "N", modifierFlags: [.command], action: #selector(createFolderButtonPressed), discoverabilityTitle: OCLocalizedString("Create Folder", nil))
 		shortcuts.append(createFolder)
-		let dismissCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
+		let dismissCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: OCLocalizedString("Cancel", nil))
 		shortcuts.append(dismissCommand)
 
 		return shortcuts
@@ -947,9 +947,9 @@ extension PhotoAlbumTableViewController {
 			shortcuts.append(contentsOf: superKeyCommands)
 		}
 
-		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
-		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Open Selected".localized)
+		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputDownArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: OCLocalizedString("Select Next", nil))
+		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputUpArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: OCLocalizedString("Select Previous", nil))
+		let selectObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: OCLocalizedString("Open Selected", nil))
 
 		if let selectedRow = self.tableView?.indexPathForSelectedRow?.row {
 			if selectedRow < self.albums.count - 1 {
@@ -963,7 +963,7 @@ extension PhotoAlbumTableViewController {
 			shortcuts.append(nextObjectCommand)
 		}
 
-		let dismissCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
+		let dismissCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: OCLocalizedString("Cancel", nil))
 		shortcuts.append(dismissCommand)
 
 		return shortcuts
@@ -982,13 +982,13 @@ extension PhotoSelectionViewController {
 			shortcuts.append(contentsOf: superKeyCommands)
 		}
 
-		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Select Next".localized)
-		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Select Previous".localized)
-		let selectObjectCommand = UIKeyCommand.ported(input: " ", modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: "Select".localized)
-		let selectAllCommand = UIKeyCommand.ported(input: "A", modifierFlags: [.command], action: #selector(selectAllItems), discoverabilityTitle: "Select All".localized)
-		let deselectAllCommand = UIKeyCommand.ported(input: "D", modifierFlags: [.command], action: #selector(deselectAllItems), discoverabilityTitle: "Deselect All".localized)
-		let uploadCommand = UIKeyCommand.ported(input: "U", modifierFlags: [.command], action: #selector(upload), discoverabilityTitle: "Upload".localized)
-		let dismissCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: "Cancel".localized)
+		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: OCLocalizedString("Select Next", nil))
+		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: OCLocalizedString("Select Previous", nil))
+		let selectObjectCommand = UIKeyCommand.ported(input: " ", modifierFlags: [], action: #selector(selectCurrent), discoverabilityTitle: OCLocalizedString("Select", nil))
+		let selectAllCommand = UIKeyCommand.ported(input: "A", modifierFlags: [.command], action: #selector(selectAllItems), discoverabilityTitle: OCLocalizedString("Select All", nil))
+		let deselectAllCommand = UIKeyCommand.ported(input: "D", modifierFlags: [.command], action: #selector(deselectAllItems), discoverabilityTitle: OCLocalizedString("Deselect All", nil))
+		let uploadCommand = UIKeyCommand.ported(input: "U", modifierFlags: [.command], action: #selector(upload), discoverabilityTitle: OCLocalizedString("Upload", nil))
+		let dismissCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismiss), discoverabilityTitle: OCLocalizedString("Cancel", nil))
 
 		shortcuts.append(nextObjectCommand)
 		shortcuts.append(previousObjectCommand)
@@ -1067,41 +1067,41 @@ extension DisplayHostViewController {
 			shortcuts.append(contentsOf: superKeyCommands)
 		}
 
-		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: "Next".localized)
-		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: "Previous".localized)
+		let nextObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [], action: #selector(selectNext), discoverabilityTitle: OCLocalizedString("Next", nil))
+		let previousObjectCommand = UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: [], action: #selector(selectPrevious), discoverabilityTitle: OCLocalizedString("Previous", nil))
 
 		var showCommands = false
 		if let pdfViewController = self.viewControllers?.first as? PDFViewerViewController {
 			showCommands = true
 
-			let searchCommand = UIKeyCommand.ported(input: "S", modifierFlags: [.command], action: #selector(search), discoverabilityTitle: "Search".localized)
-			let gotoCommand = UIKeyCommand.ported(input: "G", modifierFlags: [.control], action: #selector(goToPage), discoverabilityTitle: "Go to Page".localized)
+			let searchCommand = UIKeyCommand.ported(input: "S", modifierFlags: [.command], action: #selector(search), discoverabilityTitle: OCLocalizedString("Search", nil))
+			let gotoCommand = UIKeyCommand.ported(input: "G", modifierFlags: [.control], action: #selector(goToPage), discoverabilityTitle: OCLocalizedString("Go to Page", nil))
 
 			if !pdfViewController.searchResultsView.isHidden, pdfViewController.searchResultsView.matches?.count ?? 0 > 0 {
 
 				if pdfViewController.searchResultsView.forwardButton.isEnabled {
-					let findNextCommand = UIKeyCommand.ported(input: "G", modifierFlags: [.command], action: #selector(findNext), discoverabilityTitle: "Find Next".localized)
+					let findNextCommand = UIKeyCommand.ported(input: "G", modifierFlags: [.command], action: #selector(findNext), discoverabilityTitle: OCLocalizedString("Find Next", nil))
 				shortcuts.append(findNextCommand)
 				}
 
 				if pdfViewController.searchResultsView.backButton.isEnabled {
-					let findPreviousCommand = UIKeyCommand.ported(input: "G", modifierFlags: [.command, .shift], action: #selector(findPrevious), discoverabilityTitle: "Find Previous".localized)
+					let findPreviousCommand = UIKeyCommand.ported(input: "G", modifierFlags: [.command, .shift], action: #selector(findPrevious), discoverabilityTitle: OCLocalizedString("Find Previous", nil))
 				shortcuts.append(findPreviousCommand)
 				}
 
-				let closeFindCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(closeFind), discoverabilityTitle: "Close Search".localized)
+				let closeFindCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(closeFind), discoverabilityTitle: OCLocalizedString("Close Search", nil))
 				shortcuts.append(closeFindCommand)
 			}
 
 			shortcuts.append(searchCommand)
 			shortcuts.append(gotoCommand)
 		} else if let viewController = (self.viewControllers?.first as? MediaDisplayViewController) {
-			let fullscreenCommand = UIKeyCommand.ported(input: "F", modifierFlags: [], action: #selector(enterFullScreen), discoverabilityTitle: "Full Screen".localized)
-			let playbackCommand = UIKeyCommand.ported(input: " ", modifierFlags: [], action: #selector(tooglePlayback), discoverabilityTitle: "Play/Pause".localized)
-			let seekBackwardCommand = UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: "Skip Back".localized)
-			let seekForwardCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: "Skip Ahead".localized)
-			let replayCommand = UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.command], action: #selector(replay), discoverabilityTitle: "Go to Beginning".localized)
-			let muteCommand = UIKeyCommand.ported(input: "M", modifierFlags: [], action: #selector(toggleMute), discoverabilityTitle: "Mute/Unmute".localized)
+			let fullscreenCommand = UIKeyCommand.ported(input: "F", modifierFlags: [], action: #selector(enterFullScreen), discoverabilityTitle: OCLocalizedString("Full Screen", nil))
+			let playbackCommand = UIKeyCommand.ported(input: " ", modifierFlags: [], action: #selector(tooglePlayback), discoverabilityTitle: OCLocalizedString("Play/Pause", nil))
+			let seekBackwardCommand = UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: OCLocalizedString("Skip Back", nil))
+			let seekForwardCommand = UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: [.control], action: #selector(seek), discoverabilityTitle: OCLocalizedString("Skip Ahead", nil))
+			let replayCommand = UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: [.command], action: #selector(replay), discoverabilityTitle: OCLocalizedString("Go to Beginning", nil))
+			let muteCommand = UIKeyCommand.ported(input: "M", modifierFlags: [], action: #selector(toggleMute), discoverabilityTitle: OCLocalizedString("Mute/Unmute", nil))
 
 			if viewController.canEnterFullScreen() {
 				shortcuts.append(fullscreenCommand)
@@ -1113,7 +1113,7 @@ extension DisplayHostViewController {
 			shortcuts.append(muteCommand)
 		}
 		if let viewController = (self.viewControllers?.first as? DisplayViewController), (viewController.navigationController?.isNavigationBarHidden ?? false) {
-			let closeCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(closePresentationMode), discoverabilityTitle: "Exit Full Screen".localized)
+			let closeCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(closePresentationMode), discoverabilityTitle: OCLocalizedString("Exit Full Screen", nil))
 			shortcuts.append(closeCommand)
 		}
 
@@ -1358,7 +1358,7 @@ extension FrameViewController {
 				}
 			}
 		} else {
-			let cancelCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissCard), discoverabilityTitle: "Close".localized)
+			let cancelCommand = UIKeyCommand.ported(input: UIKeyCommand.inputEscape, modifierFlags: [], action: #selector(dismissCard), discoverabilityTitle: OCLocalizedString("Close", nil))
 			shortcuts.append(cancelCommand)
 		}
 

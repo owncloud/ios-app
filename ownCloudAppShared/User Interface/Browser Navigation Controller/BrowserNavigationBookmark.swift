@@ -33,11 +33,12 @@ open class BrowserNavigationBookmark: NSObject, NSSecureCoding {
 
 	open var specialItem: AccountController.SpecialItem?
 	open var savedSearch: OCSavedSearch?
+	open var sidebarItem: OCSidebarItem?
 
 	open var restoreFromClass: String?
 	open var restoreAction: BookmarkRestoreAction?
 
-	public init(type: BookmarkType, bookmarkUUID: UUID? = nil, location: OCLocation? = nil, itemLocalID: String? = nil, specialItem: AccountController.SpecialItem? = nil, savedSearchUUID: String? = nil, savedSearch: OCSavedSearch? = nil, restoreFromClass: String? = nil, action: BookmarkRestoreAction? = nil) {
+	public init(type: BookmarkType, bookmarkUUID: UUID? = nil, location: OCLocation? = nil, itemLocalID: String? = nil, specialItem: AccountController.SpecialItem? = nil, savedSearchUUID: String? = nil, savedSearch: OCSavedSearch? = nil, sidebarItem: OCSidebarItem? = nil, restoreFromClass: String? = nil, action: BookmarkRestoreAction? = nil) {
 		self.type = type
 
 		self.bookmarkUUID = bookmarkUUID
@@ -52,6 +53,7 @@ open class BrowserNavigationBookmark: NSObject, NSSecureCoding {
 		self.specialItem = specialItem
 
 		self.savedSearch = savedSearch
+		self.sidebarItem = sidebarItem
 
 		self.restoreFromClass = restoreFromClass
 		self.restoreAction = action
@@ -115,6 +117,7 @@ open class BrowserNavigationBookmark: NSObject, NSSecureCoding {
 
 		coder.encode(specialItem?.rawValue, forKey: "specialItem")
 		coder.encode(savedSearch, forKey: "savedSearch")
+		coder.encode(sidebarItem, forKey: "sidebarItem")
 
 		coder.encode(restoreFromClass, forKey: "restoreFromClass")
 		coder.encode(restoreAction, forKey: "restoreAction")
@@ -132,6 +135,7 @@ open class BrowserNavigationBookmark: NSObject, NSSecureCoding {
 			specialItem = AccountController.SpecialItem(rawValue: specialItemString)
 		}
 		savedSearch = coder.decodeObject(of: OCSavedSearch.self, forKey: "savedSearch")
+		sidebarItem = coder.decodeObject(of: OCSidebarItem.self, forKey: "sidebarItem")
 
 		restoreFromClass = coder.decodeObject(of: NSString.self, forKey: "restoreFromClass") as? String
 		restoreAction = coder.decodeObject(of: NSString.self, forKey: "restoreAction") as? String

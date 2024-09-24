@@ -22,8 +22,8 @@ import ownCloudAppShared
 class UnshareAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.unshare") }
 	override class var category : ActionCategory? { return .destructive }
-	override class var name : String? { return "Unshare".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .tableRow, .moreFolder, .multiSelection] }
+	override class var name : String? { return OCLocalizedString("Unshare", nil) }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .tableRow, .moreFolder, .multiSelection, .accessibilityCustomAction] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
@@ -56,14 +56,14 @@ class UnshareAction : Action {
 
 		let message: String
 		if items.count > 1 {
-			message = "Are you sure you want to unshare these items?".localized
+			message = OCLocalizedString("Are you sure you want to unshare these items?", nil)
 		} else {
-			message = "Are you sure you want to unshare this item?".localized
+			message = OCLocalizedString("Are you sure you want to unshare this item?", nil)
 		}
 
 		let itemDescripton: String?
 		if items.count > 1 {
-			itemDescripton = "Multiple items".localized
+			itemDescripton = OCLocalizedString("Multiple items", nil)
 		} else {
 			itemDescripton = items.first?.name
 		}
@@ -120,7 +120,7 @@ class UnshareAction : Action {
 		let alertController = ThemedAlertController(
 			with: name,
 			message: message,
-			destructiveLabel: "Unshare".localized,
+			destructiveLabel: OCLocalizedString("Unshare", nil),
 			preferredStyle: UIDevice.current.isIpad ? UIAlertController.Style.alert : UIAlertController.Style.actionSheet,
 			destructiveAction: {
 				unshareItemAndPublishProgress(items)

@@ -84,4 +84,15 @@ extension OCCore {
 
 		return parentItems.reversed()
 	}
+
+	public func updateLastUsed(for inItem: OCItem) {
+		schedule(inCoreQueue: { [weak self] in
+			if let self, let location = inItem.location, let item = try? self.cachedItem(at: location) {
+				item.lastUsed = .now
+				item.updateSeed()
+
+				self.performUpdates(forAddedItems: nil, removedItems: nil, updatedItems: [item], refreshLocations: nil, newSyncAnchor: nil, beforeQueryUpdates: nil, afterQueryUpdates: nil, queryPostProcessor: nil, skipDatabase: false)
+			}
+		})
+	}
 }

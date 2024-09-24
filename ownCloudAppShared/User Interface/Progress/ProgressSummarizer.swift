@@ -330,6 +330,15 @@ public class ProgressSummarizer: NSObject {
 		}
 	}
 
+	public func resetPrioritySummaries() {
+		OCSynchronized(self) {
+			Log.debug("Reset priority summaries")
+
+			prioritySummaries.removeAll()
+			self.prioritySummary = nil
+		}
+	}
+
 	// MARK: - Change notifications
 	private var observers : [ProgressSummaryNotificationObserver] = []
 	public func addObserver(_ observer: AnyObject, notificationBlock: @escaping ProgressSummarizerNotificationBlock) {
@@ -394,25 +403,25 @@ public class ProgressSummarizer: NSObject {
 								if sameTypeCount > 1 {
 									switch progress.eventType {
 										case .createFolder:
-											multiMessage = NSString(format:"Creating %ld folders…".localized as NSString, sameTypeCount) as String
+											multiMessage = NSString(format:OCLocalizedString("Creating %ld folders…", nil) as NSString, sameTypeCount) as String
 
 										case .move:
-											multiMessage = NSString(format:"Moving %ld items…".localized as NSString, sameTypeCount) as String
+											multiMessage = NSString(format:OCLocalizedString("Moving %ld items…", nil) as NSString, sameTypeCount) as String
 
 										case .copy:
-											multiMessage = NSString(format:"Copying %ld items…".localized as NSString, sameTypeCount) as String
+											multiMessage = NSString(format:OCLocalizedString("Copying %ld items…", nil) as NSString, sameTypeCount) as String
 
 										case .delete:
-											multiMessage = NSString(format:"Deleting %ld items…".localized as NSString, sameTypeCount) as String
+											multiMessage = NSString(format:OCLocalizedString("Deleting %ld items…", nil) as NSString, sameTypeCount) as String
 
 										case .upload:
-											multiMessage = NSString(format:"Uploading %ld files…".localized as NSString, sameTypeCount) as String
+											multiMessage = NSString(format:OCLocalizedString("Uploading %ld files…", nil) as NSString, sameTypeCount) as String
 
 										case .download:
-											multiMessage = NSString(format:"Downloading %ld files…".localized as NSString, sameTypeCount) as String
+											multiMessage = NSString(format:OCLocalizedString("Downloading %ld files…", nil) as NSString, sameTypeCount) as String
 
 										case .update:
-											multiMessage = NSString(format:"Updating %ld items…".localized as NSString, sameTypeCount) as String
+											multiMessage = NSString(format:OCLocalizedString("Updating %ld items…", nil) as NSString, sameTypeCount) as String
 
 										case .createShare, .updateShare, .deleteShare, .decideOnShare: break
 										case .none, .retrieveThumbnail, .retrieveItemList, .retrieveShares, .issueResponse, .filterFiles, .wakeupSyncRecord: break

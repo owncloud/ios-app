@@ -84,6 +84,8 @@ public class ClientLocationPicker : NSObject {
 	public var allowedLocationFilter: LocationFilter? // Determines which locations can be picked by the user
 	public var navigationLocationFilter: LocationFilter? // Determines which locations can be selected by the user during navigation
 
+	public var allowFileSelection: Bool = false
+
 	public var headerView: UIView?
 	var headerViewTitleElement: ComposedMessageElement?
 	var headerViewSubtitleElement: ComposedMessageElement?
@@ -107,7 +109,7 @@ public class ClientLocationPicker : NSObject {
 	public init(location: OCLocation, maximumLevel: LocationLevel = .folder, showFavorites: Bool = true, showRecents: Bool = true, selectButtonTitle: String?, selectPrompt: String? = nil, headerTitle: String? = nil, headerSubTitle: String? = nil, headerView: UIView? = nil, requiredPermissions: OCItemPermissions? = [.createFile], avoidConflictsWith conflictItems: [OCItem]?, choiceHandler: @escaping ChoiceHandler) {
 		self.startLocation = location
 		self.showFavorites = showFavorites
-		self.selectButtonTitle = selectButtonTitle ?? "Select folder".localized
+		self.selectButtonTitle = selectButtonTitle ?? OCLocalizedString("Select folder", nil)
 		self.selectPrompt = selectPrompt
 		self.headerTitle = headerTitle
 		self.headerSubTitle = headerSubTitle
@@ -195,6 +197,12 @@ public class ClientLocationPicker : NSObject {
 			case .selection:
 				if let item = dataItemRecord?.item as? OCItem {
 					if item.type == .file {
+						if allowFileSelection,
+						   let locationPickerViewController = viewController?.parent?.parent as? ClientLocationPickerViewController {
+						   	// Permission check for selection is only called upon selection, so we
+						   	// can use this as a hook to pick the file if file selection is allowed
+							locationPickerViewController.choose(item: item, location: item.location, cancelled: false)
+						}
 						return false
 					}
 
@@ -262,11 +270,11 @@ public class ClientLocationPicker : NSObject {
 
 			switch location.clientLocationLevel {
 				case .accounts:
-					title = "Accounts".localized
+					title = OCLocalizedString("Accounts", nil)
 					viewController.cssSelector = .accountList
 
 				case .account:
-					title = "Account".localized
+					title = OCLocalizedString("Account", nil)
 					viewController.cssSelector = .accountList
 					if let bookmarkUUID = location.bookmarkUUID {
 						title = OCBookmarkManager.shared.bookmark(for: bookmarkUUID)?.displayName
@@ -275,7 +283,7 @@ public class ClientLocationPicker : NSObject {
 
 				case .drive:
 					if let driveID = location.driveID {
-						title = context.core?.drive(withIdentifier: driveID)?.name
+						title = context.core?.drive(withIdentifier: driveID, attachedOnly: false)?.name
 					}
 
 				case .folder: break
@@ -309,7 +317,7 @@ public class ClientLocationPicker : NSObject {
 			context.permissions = [ .selection ]
 			context.itemStyler = { [weak self] (context, _, item) in
 				if let item = item as? OCItem {
-					if item.type == .file {
+					if self?.allowFileSelection == false, item.type == .file {
 						return .disabled
 					}
 

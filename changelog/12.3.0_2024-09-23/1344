@@ -1,0 +1,5 @@
+Bugfix: Fix cleanup of Available Offline policies targeting unavailable spaces
+
+Fix an issue arising from Available Offline policies targeting unavailable/detached drives and removes the respective policies.
+
+https://github.com/owncloud/ios-app/pull/1344

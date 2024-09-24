@@ -1,45 +1,6 @@
 [
   {
     "autoExpansion" : "none",
-    "category" : "Bookmarks",
-    "categoryTag" : "bookmarks",
-    "classIdentifier" : "account-settings",
-    "className" : "ownCloud.AccountSettingsProvider",
-    "description" : "The default name for the creation of new bookmarks.",
-    "flatIdentifier" : "account-settings.default-name",
-    "key" : "default-name",
-    "label" : "account-settings.default-name",
-    "status" : "supported",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Bookmarks",
-    "categoryTag" : "bookmarks",
-    "classIdentifier" : "account-settings",
-    "className" : "ownCloud.AccountSettingsProvider",
-    "description" : "The default URL for the creation of new bookmarks.",
-    "flatIdentifier" : "account-settings.default-url",
-    "key" : "default-url",
-    "label" : "account-settings.default-url",
-    "status" : "supported",
-    "type" : "string"
-  },
-  {
-    "autoExpansion" : "none",
-    "category" : "Bookmarks",
-    "categoryTag" : "bookmarks",
-    "classIdentifier" : "account-settings",
-    "className" : "ownCloud.AccountSettingsProvider",
-    "description" : "Controls whether the server URL in the text field during the creation of new bookmarks can be changed.",
-    "flatIdentifier" : "account-settings.url-editable",
-    "key" : "url-editable",
-    "label" : "account-settings.url-editable",
-    "status" : "supported",
-    "type" : "bool"
-  },
-  {
-    "autoExpansion" : "none",
     "category" : "Actions",
     "categoryTag" : "actions",
     "classIdentifier" : "action",
@@ -52,6 +13,14 @@
     "key" : "allowed",
     "label" : "action.allowed",
     "possibleValues" : [
+      {
+        "description" : "Add to sidebar",
+        "value" : "com.owncloud.action.addToSidebar"
+      },
+      {
+        "description" : "Make available offline",
+        "value" : "com.owncloud.action.availableOffline"
+      },
       {
         "description" : "Sharing",
         "value" : "com.owncloud.action.collaborate"
@@ -67,6 +36,10 @@
       {
         "description" : "Create folder",
         "value" : "com.owncloud.action.createFolder"
+      },
+      {
+        "description" : "Create shortcut",
+        "value" : "com.owncloud.action.createShortcutFile"
       },
       {
         "description" : "Cut",
@@ -89,20 +62,16 @@
         "value" : "com.owncloud.action.importpasteboard"
       },
       {
-        "description" : "Make available offline",
-        "value" : "com.owncloud.action.makeAvailableOffline"
-      },
-      {
-        "description" : "Available Offline",
-        "value" : "com.owncloud.action.makeUnavailableOffline"
-      },
-      {
         "description" : "Markup",
         "value" : "com.owncloud.action.markup"
       },
       {
         "description" : "Move",
         "value" : "com.owncloud.action.move"
+      },
+      {
+        "description" : "Open shortcut",
+        "value" : "com.owncloud.action.openShortcutFile"
       },
       {
         "description" : "Open in",
@@ -115,6 +84,10 @@
       {
         "description" : "Presentation Mode",
         "value" : "com.owncloud.action.presentationmode"
+      },
+      {
+        "description" : "Remove from sidebar",
+        "value" : "com.owncloud.action.removeFromSidebar"
       },
       {
         "description" : "Rename",
@@ -191,6 +164,14 @@
     "label" : "action.disallowed",
     "possibleValues" : [
       {
+        "description" : "Add to sidebar",
+        "value" : "com.owncloud.action.addToSidebar"
+      },
+      {
+        "description" : "Make available offline",
+        "value" : "com.owncloud.action.availableOffline"
+      },
+      {
         "description" : "Sharing",
         "value" : "com.owncloud.action.collaborate"
       },
@@ -205,6 +186,10 @@
       {
         "description" : "Create folder",
         "value" : "com.owncloud.action.createFolder"
+      },
+      {
+        "description" : "Create shortcut",
+        "value" : "com.owncloud.action.createShortcutFile"
       },
       {
         "description" : "Cut",
@@ -227,20 +212,16 @@
         "value" : "com.owncloud.action.importpasteboard"
       },
       {
-        "description" : "Make available offline",
-        "value" : "com.owncloud.action.makeAvailableOffline"
-      },
-      {
-        "description" : "Available Offline",
-        "value" : "com.owncloud.action.makeUnavailableOffline"
-      },
-      {
         "description" : "Markup",
         "value" : "com.owncloud.action.markup"
       },
       {
         "description" : "Move",
         "value" : "com.owncloud.action.move"
+      },
+      {
+        "description" : "Open shortcut",
+        "value" : "com.owncloud.action.openShortcutFile"
       },
       {
         "description" : "Open in",
@@ -253,6 +234,10 @@
       {
         "description" : "Presentation Mode",
         "value" : "com.owncloud.action.presentationmode"
+      },
+      {
+        "description" : "Remove from sidebar",
+        "value" : "com.owncloud.action.removeFromSidebar"
       },
       {
         "description" : "Rename",
@@ -344,6 +329,70 @@
     ],
     "status" : "advanced",
     "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Actions",
+    "categoryTag" : "actions",
+    "classIdentifier" : "action",
+    "className" : "ownCloudAppShared.Action",
+    "defaultValue" : "auto",
+    "description" : "Determines how to open a document in a web app.",
+    "flatIdentifier" : "action.open-in-web-app-mode",
+    "key" : "open-in-web-app-mode",
+    "label" : "Open In WebApp mode",
+    "possibleValues" : [
+      {
+        "description" : "Open using `in-app-with-default-browser-option`, unless the respective endpoint is not available - in which case `default-browser` is used instead. If no endpoint to open the document is available, an error message is shown.",
+        "value" : "auto"
+      },
+      {
+        "description" : "Open in default browser app. May require user to sign in.",
+        "value" : "default-browser"
+      },
+      {
+        "description" : "Open inline in an in-app browser.",
+        "value" : "in-app"
+      },
+      {
+        "description" : "Open inline in an in-app browser, but provide a button to open the document in the default browser (may require the user to sign in).",
+        "value" : "in-app-with-default-browser-option"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Actions",
+    "categoryTag" : "actions",
+    "classIdentifier" : "action",
+    "className" : "ownCloudAppShared.Action",
+    "defaultValue" : "all",
+    "description" : "Determines how the app opens shortcut files (ending in `.url`) app.",
+    "flatIdentifier" : "action.open-shortcut-mode",
+    "key" : "open-shortcut-mode",
+    "label" : "Open Shortcut mode",
+    "possibleValues" : [
+      {
+        "description" : "Open all shortcut files, targeting both links (web and other) and items.",
+        "value" : "all"
+      },
+      {
+        "description" : "Open only shortcut files that target items.",
+        "value" : "items-only"
+      },
+      {
+        "description" : "Open only shortcut files that target links (web and other).",
+        "value" : "links-only"
+      },
+      {
+        "description" : "Do not open shortcut files.",
+        "value" : "none"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "string"
   },
   {
     "autoExpansion" : "none",
@@ -598,6 +647,19 @@
   },
   {
     "autoExpansion" : "none",
+    "category" : "OAuth2",
+    "categoryTag" : "oauth2",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "description" : "Omit Authorization Request Parameters - parameter names provided here are omitted from OAuth2 authorization requests.",
+    "flatIdentifier" : "authentication-oauth2.omit-authorization-parameters",
+    "key" : "omit-authorization-parameters",
+    "label" : "authentication-oauth2.omit-authorization-parameters",
+    "status" : "advanced",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Authentication",
     "categoryTag" : "authentication",
     "classIdentifier" : "authentication",
@@ -774,6 +836,7 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
+    "defaultValue" : true,
     "description" : "Indicates if the user can change the server URL for the account.",
     "flatIdentifier" : "branding.profile-allow-url-configuration",
     "key" : "profile-allow-url-configuration",
@@ -865,7 +928,6 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "defaultValue" : "ios-app@owncloud.com",
     "description" : "Email address to send feedback to. Set to `null` to disable this feature.",
     "flatIdentifier" : "branding.send-feedback-address",
     "key" : "send-feedback-address",
@@ -879,6 +941,7 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
+    "defaultValue" : "https://owncloud.com/ios-app-feedback",
     "description" : "URL to open when selecting the \"Send feedback\" option. Allows the use of all placeholders provided in `http.user-agent`.",
     "flatIdentifier" : "branding.send-feedback-url",
     "key" : "send-feedback-url",
@@ -918,12 +981,34 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "description" : "Array of dictionaries, each specifying a theme.",
-    "flatIdentifier" : "branding.theme-definitions",
-    "key" : "theme-definitions",
-    "label" : "branding.theme-definitions",
+    "description" : "Values to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
+    "flatIdentifier" : "branding.theme-colors",
+    "key" : "theme-colors",
+    "label" : "Theme Colors",
+    "possibleKeys" : [
+      {
+        "description" : "Color to use as tint/accent color for controls (in hex notation).",
+        "value" : "tint-color"
+      },
+      {
+        "description" : "Color to use as background color for brand views (in hex notation).",
+        "value" : "branding-background-color"
+      },
+      {
+        "description" : "The status bar style in the setup wizard, affecting the status bar text color. Can be either `default`, `black` or `white`.",
+        "value" : "setup-status-bar-style"
+      },
+      {
+        "description" : "Color to fill file icons with (in hex notation).",
+        "value" : "file-icon-color"
+      },
+      {
+        "description" : "Color to fill folder icons with (in hex notation).",
+        "value" : "folder-icon-color"
+      }
+    ],
     "status" : "advanced",
-    "type" : "dictionaryArray"
+    "type" : "dictionary"
   },
   {
     "autoExpansion" : "none",
@@ -931,12 +1016,25 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "description" : "Dictionary defining generic colors that can be used in the definitions.",
-    "flatIdentifier" : "branding.theme-generic-colors",
-    "key" : "theme-generic-colors",
-    "label" : "branding.theme-generic-colors",
+    "description" : "CSS records to add to the CSS space of system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
+    "flatIdentifier" : "branding.theme-css-records",
+    "key" : "theme-css-records",
+    "label" : "Theme CSS Records",
     "status" : "advanced",
-    "type" : "dictionary"
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Branding",
+    "categoryTag" : "branding",
+    "classIdentifier" : "branding",
+    "className" : "Branding",
+    "description" : "Array of dictionaries, each specifying a theme.",
+    "flatIdentifier" : "branding.theme-definitions",
+    "key" : "theme-definitions",
+    "label" : "branding.theme-definitions",
+    "status" : "advanced",
+    "type" : "dictionaryArray"
   },
   {
     "autoExpansion" : "none",
@@ -1110,6 +1208,19 @@
     "flatIdentifier" : "build.oc-app-group-identifier",
     "key" : "oc-app-group-identifier",
     "label" : "build.oc-app-group-identifier",
+    "status" : "supported",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Build",
+    "categoryTag" : "build",
+    "classIdentifier" : "build",
+    "className" : "BuildOptions",
+    "description" : "Sets a custom version number for the app.",
+    "flatIdentifier" : "build.version-number",
+    "key" : "version-number",
+    "label" : "build.version-number",
     "status" : "supported",
     "type" : "string"
   },
@@ -1668,6 +1779,14 @@
         "value" : "auth-race-condition"
       },
       {
+        "description" : "Extension with the identifier com.owncloud.action.addToSidebar.",
+        "value" : "com.owncloud.action.addToSidebar"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.availableOffline.",
+        "value" : "com.owncloud.action.availableOffline"
+      },
+      {
         "description" : "Extension with the identifier com.owncloud.action.background_update.",
         "value" : "com.owncloud.action.background_update"
       },
@@ -1686,6 +1805,10 @@
       {
         "description" : "Extension with the identifier com.owncloud.action.createFolder.",
         "value" : "com.owncloud.action.createFolder"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.createShortcutFile.",
+        "value" : "com.owncloud.action.createShortcutFile"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.cutpasteboard.",
@@ -1712,20 +1835,16 @@
         "value" : "com.owncloud.action.instant_media_upload"
       },
       {
-        "description" : "Extension with the identifier com.owncloud.action.makeAvailableOffline.",
-        "value" : "com.owncloud.action.makeAvailableOffline"
-      },
-      {
-        "description" : "Extension with the identifier com.owncloud.action.makeUnavailableOffline.",
-        "value" : "com.owncloud.action.makeUnavailableOffline"
-      },
-      {
         "description" : "Extension with the identifier com.owncloud.action.markup.",
         "value" : "com.owncloud.action.markup"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.move.",
         "value" : "com.owncloud.action.move"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.openShortcutFile.",
+        "value" : "com.owncloud.action.openShortcutFile"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.openin.",
@@ -1742,6 +1861,10 @@
       {
         "description" : "Extension with the identifier com.owncloud.action.presentationmode.",
         "value" : "com.owncloud.action.presentationmode"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.removeFromSidebar.",
+        "value" : "com.owncloud.action.removeFromSidebar"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.rename.",
@@ -1836,6 +1959,10 @@
         "value" : "org.owncloud.ql_preview"
       },
       {
+        "description" : "Extension with the identifier org.owncloud.url-shortcut.",
+        "value" : "org.owncloud.url-shortcut"
+      },
+      {
         "description" : "Extension with the identifier org.owncloud.webview.",
         "value" : "org.owncloud.webview"
       },
@@ -1922,6 +2049,30 @@
     ],
     "status" : "debugOnly",
     "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Connection",
+    "categoryTag" : "connection",
+    "classIdentifier" : "http",
+    "className" : "OCHTTPPipeline",
+    "defaultValue" : "json",
+    "description" : "If request and response logging is enabled, the format to use.",
+    "flatIdentifier" : "http.traffic-log-format",
+    "key" : "traffic-log-format",
+    "label" : "http.traffic-log-format",
+    "possibleValues" : [
+      {
+        "description" : "JSON",
+        "value" : "json"
+      },
+      {
+        "description" : "Plain text",
+        "value" : "plain"
+      }
+    ],
+    "status" : "supported",
+    "type" : "string"
   },
   {
     "autoExpansion" : "none",
@@ -2316,6 +2467,20 @@
     "flatIdentifier" : "passcode.enforced",
     "key" : "enforced",
     "label" : "passcode.enforced",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Passcode",
+    "categoryTag" : "passcode",
+    "classIdentifier" : "passcode",
+    "className" : "AppLockSettings",
+    "defaultValue" : false,
+    "description" : "Controls wether the user MUST establish a passcode upon app installation, if NO device passcode protection is set.",
+    "flatIdentifier" : "passcode.enforced-by-device",
+    "key" : "enforced-by-device",
+    "label" : "passcode.enforced-by-device",
     "status" : "advanced",
     "type" : "bool"
   },

@@ -65,13 +65,17 @@ public class SegmentViewItemView: ThemeView, ThemeCSSAutoSelector {
 		if let icon = item.icon {
 			iconView = UIImageView()
 			iconView?.cssSelector = .icon
-			iconView?.image = icon.withRenderingMode(.alwaysTemplate)
+			iconView?.image = icon.withRenderingMode(item.iconRenderingMode ?? .alwaysTemplate)
 			iconView?.contentMode = .scaleAspectFit
 			iconView?.translatesAutoresizingMaskIntoConstraints = false
 			iconView?.setContentHuggingPriority(.required, for: .horizontal)
 			iconView?.setContentHuggingPriority(.required, for: .vertical)
 			iconView?.setContentCompressionResistancePriority(.required, for: .horizontal)
 			iconView?.setContentCompressionResistancePriority(.required, for: .vertical)
+			if let accessibilityLabel = item.accessibilityLabel {
+				iconView?.isAccessibilityElement = true
+				iconView?.accessibilityLabel = accessibilityLabel
+			}
 			views.append(iconView!)
 		}
 

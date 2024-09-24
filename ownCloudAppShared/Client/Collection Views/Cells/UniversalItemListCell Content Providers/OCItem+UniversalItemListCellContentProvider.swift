@@ -109,9 +109,10 @@ class OCItemUniversalItemListCellHelper {
 }
 
 extension OCItem: UniversalItemListCellContentProvider {
-	func cloudStatus(in core: OCCore?) -> (icon: UIImage?, iconAlpha: CGFloat) {
+	func cloudStatus(in core: OCCore?) -> (icon: UIImage?, iconAlpha: CGFloat, accessibilityLabel: String?) {
 		var cloudStatusIcon : UIImage?
 		var cloudStatusIconAlpha : CGFloat = 1.0
+		var accessibilityLabel: String?
 		let availableOfflineCoverage : OCCoreAvailableOfflineCoverage = core?.availableOfflinePolicyCoverage(of: self) ?? .none
 
 		switch availableOfflineCoverage {
@@ -124,23 +125,28 @@ extension OCItem: UniversalItemListCellContentProvider {
 				case .cloudOnly:
 					cloudStatusIcon = OCItem.cloudOnlyStatusIcon
 					cloudStatusIconAlpha = 1.0
+					accessibilityLabel = OCLocalizedString("In the cloud", nil)
 
 				case .localCopy:
 					cloudStatusIcon = (downloadTriggerIdentifier == OCItemDownloadTriggerID.availableOffline) ? OCItem.cloudAvailableOfflineStatusIcon : nil
+					accessibilityLabel = OCLocalizedString("Local copy", nil)
 
 				case .locallyModified, .localOnly:
 					cloudStatusIcon = OCItem.cloudLocalOnlyStatusIcon
 					cloudStatusIconAlpha = 1.0
+					accessibilityLabel = OCLocalizedString("Local version", nil)
 			}
 		} else {
 			if availableOfflineCoverage == .none {
 				cloudStatusIcon = nil
+				accessibilityLabel = nil
 			} else {
 				cloudStatusIcon = OCItem.cloudAvailableOfflineStatusIcon
+				accessibilityLabel = OCLocalizedString("Available offline", nil)
 			}
 		}
 
-		return (cloudStatusIcon, cloudStatusIconAlpha)
+		return (cloudStatusIcon, cloudStatusIconAlpha, accessibilityLabel)
 	}
 
 	func content(for cell: UniversalItemListCell?, thumbnailSize: CGSize, context: ClientContext?, configuration: CollectionViewCellConfiguration?) -> (content: UniversalItemListCell.Content, hasMessageForItem: Bool) {
@@ -172,10 +178,10 @@ extension OCItem: UniversalItemListCellContentProvider {
 		var detailItems: [SegmentViewItem] = []
 
 		// - Cloud status
-		let (cloudStatusIcon, cloudStatusIconAlpha) = cloudStatus(in: context?.core)
+		let (cloudStatusIcon, cloudStatusIconAlpha, accessibilityLabel) = cloudStatus(in: context?.core)
 
 		if let cloudStatusIcon {
-			let segmentItem = SegmentViewItem(with: cloudStatusIcon.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
+			let segmentItem = SegmentViewItem(with: cloudStatusIcon.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary], accessibilityLabel: accessibilityLabel)
 			segmentItem.insets = .zero
 			segmentItem.alpha = cloudStatusIconAlpha
 			detailItems.append(segmentItem)
@@ -183,13 +189,13 @@ extension OCItem: UniversalItemListCellContentProvider {
 
 		// - Sharing
 		if isSharedWithUser || sharedByUserOrGroup {
-			let segmentItem = SegmentViewItem(with: OCItem.groupIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
+			let segmentItem = SegmentViewItem(with: OCItem.groupIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary], accessibilityLabel: OCLocalizedString("Shared", nil))
 			segmentItem.insets = .zero
 			detailItems.append(segmentItem)
 		}
 
 		if sharedByPublicLink {
-			let segmentItem = SegmentViewItem(with: OCItem.linkIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary])
+			let segmentItem = SegmentViewItem(with: OCItem.linkIcon?.scaledImageFitting(in: CGSize(width: 32, height: 16)), style: .plain, lines: [.singleLine, .primary], accessibilityLabel: OCLocalizedString("Shared by link", nil))
 			segmentItem.insets = .zero
 			detailItems.append(segmentItem)
 		}
@@ -198,23 +204,26 @@ extension OCItem: UniversalItemListCellContentProvider {
 		var detailString: String = sizeLocalized
 
 		if size < 0 {
-			detailString = "Pending".localized
+			detailString = OCLocalizedString("Pending", nil)
 		}
 		if state == .serverSideProcessing {
-			detailString = "Processing on server".localized
+			detailString = OCLocalizedString("Processing on server", nil)
 		}
 
 		let primaryLineSizeSegment = SegmentViewItem(with: nil, title: detailString, style: .plain, titleTextStyle: .footnote, lines: [.primary])
 		primaryLineSizeSegment.insets = .zero
 		detailItems.append(primaryLineSizeSegment)
 
-		let secondaryLineDateSegment = SegmentViewItem(with: nil, title: lastModifiedLocalizedCompact, style: .plain, titleTextStyle: .footnote, lines: [.secondary])
+		let secondaryLineDateSegment = SegmentViewItem(with: nil, title: lastModifiedLocalizedCompact, style: .plain, titleTextStyle: .footnote, lines: [.secondary], accessibilityLabel: lastModifiedLocalizedAccessible)
 		secondaryLineDateSegment.insets = .zero
 		detailItems.append(secondaryLineDateSegment)
 
-		detailString += " - " + lastModifiedLocalized
+		var detailStringAccessible = detailString
 
-		let detailSegment = SegmentViewItem(with: nil, title: detailString, style: .plain, titleTextStyle: .footnote, lines: [.singleLine])
+		detailString += " - " + lastModifiedLocalized
+		detailStringAccessible += " " + lastModifiedLocalizedAccessible
+
+		let detailSegment = SegmentViewItem(with: nil, title: detailString, style: .plain, titleTextStyle: .footnote, lines: [.singleLine], accessibilityLabel: detailStringAccessible)
 		detailSegment.insets = .zero
 
 		detailItems.append(detailSegment)
@@ -228,14 +237,37 @@ extension OCItem: UniversalItemListCellContentProvider {
 		// Progress
 		var progress : Progress?
 
-		if (syncActivity.rawValue & (OCItemSyncActivity.downloading.rawValue | OCItemSyncActivity.uploading.rawValue) != 0), !hasMessageForItem {
-			progress = context?.core?.progress(for: self, matching: .none)?.first
+		if syncActivity.rawValue & (OCItemSyncActivity.downloading.rawValue | OCItemSyncActivity.uploading.rawValue) != 0, !hasMessageForItem {
+			progress = context?.core?.progressForItem(withLocalID: self.localID, matching: .none)?.first
 
 			if progress == nil {
 				progress = Progress.indeterminate()
 			}
 
 			content.progress = progress
+		}
+
+		// Accessibility custom actions
+		if #available(iOS 17, *) {
+			if let context, let clientViewController = context.originatingViewController as? ClientItemViewController {
+				content.accessibilityCustomActionsBlock = { [weak self] in
+					var accessibilityActions : [UIAccessibilityCustomAction] = []
+
+					if let core = context.core, let self {
+						let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .accessibilityCustomAction)
+						let actionContext = ActionContext(viewController: clientViewController, clientContext: context, core: core, items: [self], location: actionsLocation, sender: nil)
+						let actions = Action.sortedApplicableActions(for: actionContext)
+						for action in actions {
+							action.progressHandler = context.actionProgressHandlerProvider?.makeActionProgressHandler()
+
+							let customAction = action.provideAccessibilityCustomAction()
+							accessibilityActions.append(customAction)
+						}
+					}
+
+					return accessibilityActions
+				}
+			}
 		}
 
 		// Accessories
@@ -262,7 +294,7 @@ extension OCItem: UniversalItemListCellContentProvider {
 			}
 		}
 
-		content.accessories = accessories // [ cell.moreButtonAccessory, cell.progressAccessory, cell.messageButtonAccessory, cell.revealButtonAccessory ]
+		content.accessories = accessories
 
 		return (content, hasMessageForItem)
 	}

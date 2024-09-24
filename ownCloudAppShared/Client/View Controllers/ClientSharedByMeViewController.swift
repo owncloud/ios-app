@@ -36,7 +36,7 @@ class ClientSharedByMeViewController: CollectionViewController {
 		})
 		super.init(context: context, sections: nil, useStackViewRoot: true)
 		revoke(in: inContext, when: [ .connectionClosed ])
-		navigationItem.titleLabelText = (byMe && !byLink) ? "Shared by me".localized : ((!byMe && byLink) ? "Shared by link".localized : "Shared".localized)
+		navigationItem.titleLabelText = (byMe && !byLink) ? OCLocalizedString("Shared by me", nil) : ((!byMe && byLink) ? OCLocalizedString("Shared by link", nil) : OCLocalizedString("Shared", nil))
 	}
 
 	required public init?(coder: NSCoder) {
@@ -48,6 +48,11 @@ class ClientSharedByMeViewController: CollectionViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		// Disable dragging of items, so keyboard control does
+		// not include "Drag Item" in the accessibility actions
+		// invoked with Tab + Z
+		dragInteractionEnabled = false
 
 		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, contentDataSource: OCDataSource) -> CollectionViewSection {
 			let section = CollectionViewSection(identifier: identifier, dataSource: contentDataSource, cellStyle: .init(with: .tableCell), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 20, trailing: 0)), clientContext: clientContext)
@@ -75,17 +80,17 @@ class ClientSharedByMeViewController: CollectionViewController {
 		var sectionsToAdd: [CollectionViewSection] = []
 
 		if hasByMeSection, let byMeDataSource = clientContext?.core?.sharedByMeGroupedDataSource {
-			sharedByMeSection = buildSection(identifier: "byMe", titled: "Shared by me".localized, contentDataSource: byMeDataSource)
+			sharedByMeSection = buildSection(identifier: "byMe", titled: OCLocalizedString("Shared by me", nil), contentDataSource: byMeDataSource)
 			sectionsToAdd.append(sharedByMeSection!)
 
-			addNoItemsCondition(imageName: "arrowshape.turn.up.right", title: "No items shared by you".localized, datasource: byMeDataSource)
+			addNoItemsCondition(imageName: "arrowshape.turn.up.right", title: OCLocalizedString("No items shared by you", nil), datasource: byMeDataSource)
 		}
 
 		if hasByLinkSection, let byLinkDataSource = clientContext?.core?.sharedByLinkDataSource {
-			sharedByLinkSection = buildSection(identifier: "byLink", titled: "Shared by link".localized, contentDataSource: byLinkDataSource)
+			sharedByLinkSection = buildSection(identifier: "byLink", titled: OCLocalizedString("Shared by link", nil), contentDataSource: byLinkDataSource)
 			sectionsToAdd.append(sharedByLinkSection!)
 
-			addNoItemsCondition(imageName: "link", title: "No items shared by link".localized, datasource: byLinkDataSource)
+			addNoItemsCondition(imageName: "link", title: OCLocalizedString("No items shared by link", nil), datasource: byLinkDataSource)
 		}
 
 		add(sections: sectionsToAdd)
@@ -103,7 +108,7 @@ class ClientSharedByMeViewController: CollectionViewController {
 		if clientContext?.core?.connectionStatus != .online {
 			let offlineMessage = ComposedMessageView(elements: [
 				.image(OCSymbol.icon(forSymbolName: "network")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.title("Sharing requires an active connection.".localized, alignment: .centered)
+				.title(OCLocalizedString("Sharing requires an active connection.", nil), alignment: .centered)
 			])
 
 			coverView = offlineMessage

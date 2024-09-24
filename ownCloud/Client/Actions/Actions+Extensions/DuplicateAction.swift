@@ -24,8 +24,8 @@ import ownCloudAppShared
 class DuplicateAction : Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.duplicate") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String? { return "Duplicate".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem] }
+	override class var name : String? { return OCLocalizedString("Duplicate", nil) }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .moreFolder, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem, .accessibilityCustomAction] }
 	override class var keyCommand : String? { return "D" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 

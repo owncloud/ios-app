@@ -21,6 +21,7 @@
 OCClassSettingsIdentifier OCClassSettingsIdentifierBuildOptions = @"build";
 
 OCClassSettingsKey	  OCClassSettingsKeyBuildFlags = @"flags";
+OCClassSettingsKey	  OCClassSettingsKeyVersionNumber = @"version-number";
 OCClassSettingsKey	  OCClassSettingsKeyCustomAppScheme = @"custom-app-scheme";
 OCClassSettingsKey	  OCClassSettingsKeyCustomAuthScheme = @"custom-auth-scheme";
 OCClassSettingsKey	  OCClassSettingsKeyAppGroupIdentifier = @"app-group-identifier";
@@ -54,6 +55,14 @@ OCClassSettingsKey	  OCClassSettingsKeyOCAppGroupIdentifier = @"oc-app-group-ide
 		OCClassSettingsKeyBuildFlags : @{
 			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeString,
 			OCClassSettingsMetadataKeyDescription 	: @"A set of space separated flags to customize the build. Must be provided in Branding.plist at build time. For documentation, please see https://github.com/owncloud/ios-app/blob/master/doc/BUILD_CUSTOMIZATION.md.",
+			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
+			OCClassSettingsMetadataKeyCategory	: @"Build",
+		},
+
+		// build.version-number
+		OCClassSettingsKeyVersionNumber : @{
+			OCClassSettingsMetadataKeyType 		: OCClassSettingsMetadataTypeString,
+			OCClassSettingsMetadataKeyDescription 	: @"Sets a custom version number for the app.",
 			OCClassSettingsMetadataKeyStatus	: OCClassSettingsKeyStatusSupported,
 			OCClassSettingsMetadataKeyCategory	: @"Build",
 		},

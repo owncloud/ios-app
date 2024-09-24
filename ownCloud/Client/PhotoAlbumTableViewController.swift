@@ -19,6 +19,7 @@
 import UIKit
 import Photos
 import ownCloudAppShared
+import ownCloudSDK
 
 extension PHAssetCollection {
 	var assetCount: Int {
@@ -79,7 +80,7 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 		super.viewDidLoad()
 		Theme.shared.register(client: self)
 
-		self.title = "Albums".localized
+		self.title = OCLocalizedString("Albums", nil)
 		self.tableView.rowHeight = PhotoAlbumTableViewCell.cellHeight
 		self.tableView.register(PhotoAlbumTableViewCell.self, forCellReuseIdentifier: PhotoAlbumTableViewCell.identifier)
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
@@ -91,10 +92,6 @@ class PhotoAlbumTableViewController : UITableViewController, Themeable {
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
 		fetchAlbums()
-	}
-
-	override func viewWillDisappear(_ animated: Bool) {
-		super.viewWillDisappear(animated)
 	}
 
 	// MARK: - Theme support

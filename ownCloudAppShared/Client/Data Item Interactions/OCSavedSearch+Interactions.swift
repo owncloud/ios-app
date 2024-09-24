@@ -23,6 +23,8 @@ import ownCloudApp
 extension OCSavedSearchUserInfoKey {
 	static let customIconName = OCSavedSearchUserInfoKey(rawValue: "customIconName")
 	static let useNameAsTitle = OCSavedSearchUserInfoKey(rawValue: "useNameAsTitle")
+	static let useSortDescriptor = OCSavedSearchUserInfoKey(rawValue: "useSortDescriptor")
+	static let isQuickAccess = OCSavedSearchUserInfoKey(rawValue: "isQuickAccess")
 }
 
 extension OCSavedSearch {
@@ -36,12 +38,41 @@ extension OCSavedSearch {
 		})
 	}
 
+	func canRename(in context: ClientContext?) -> Bool {
+		return canDelete(in: context) && (isQuickAccess != true)
+	}
+
 	func delete(in context: ClientContext?) {
 		guard let context = context, let core = context.core else {
 			return
 		}
 
 		core.vault.delete(self)
+	}
+
+	func rename(in context: ClientContext?) {
+		guard let context = context, context.core != nil else {
+			return
+		}
+
+		let namePrompt = UIAlertController(title: OCLocalizedString("Name of saved search", nil), message: nil, preferredStyle: .alert)
+
+		namePrompt.addTextField(configurationHandler: { textField in
+			textField.placeholder = OCLocalizedString("Saved search", nil)
+			textField.text = self.isNameUserDefined ? self.name : ""
+		})
+
+		namePrompt.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel))
+		namePrompt.addAction(UIAlertAction(title: OCLocalizedString("Save", nil), style: .default, handler: { [weak self, weak namePrompt] action in
+			guard let self else {
+				return
+			}
+			self.name = namePrompt?.textFields?.first?.text ?? ""
+
+			context.core?.vault.update(self)
+		}))
+
+		context.present(namePrompt, animated: true)
 	}
 
 	func condition() -> OCQueryCondition? {
@@ -108,6 +139,34 @@ extension OCSavedSearch {
 		}
 	}
 
+	var useSortDescriptor: SortDescriptor? {
+		set {
+			if userInfo == nil, let newValue {
+				userInfo = [.useSortDescriptor : newValue]
+			} else {
+				userInfo?[.useSortDescriptor] = newValue
+			}
+		}
+
+		get {
+			return userInfo?[.useSortDescriptor] as? SortDescriptor
+		}
+	}
+
+	var isQuickAccess: Bool? {
+		set {
+			if userInfo == nil, let newValue {
+				userInfo = [.isQuickAccess : newValue]
+			} else {
+				userInfo?[.isQuickAccess] = newValue
+			}
+		}
+
+		get {
+			return userInfo?[.isQuickAccess] as? Bool
+		}
+	}
+
 	func withCustomIcon(name: String) -> OCSavedSearch {
 		customIconName = name
 		return self
@@ -117,23 +176,37 @@ extension OCSavedSearch {
 		useNameAsTitle = useIt
 		return self
 	}
+
+	func useSortDescriptor(_ sortDescriptor: SortDescriptor) -> OCSavedSearch {
+		useSortDescriptor = sortDescriptor
+		return self
+	}
+
+	func isQuickAccess(_ isQuickAccess: Bool) -> OCSavedSearch {
+		self.isQuickAccess = isQuickAccess
+		return self
+	}
 }
 
 extension OCSavedSearch: DataItemSelectionInteraction {
 	func buildViewController(with context: ClientContext) -> ClientItemViewController? {
 		if let condition = condition() {
 			let query = OCQuery(condition: condition, inputFilter: nil)
+			let useSortDescriptor = useSortDescriptor
 			DisplaySettings.shared.updateQuery(withDisplaySettings: query)
 
 			let resultsContext = ClientContext(with: context, modifier: { context in
 				context.query = query
+				if let useSortDescriptor {
+					context.sortDescriptor = useSortDescriptor
+				}
 			})
 
-			let viewController = ClientItemViewController(context: resultsContext, query: query, showRevealButtonForItems: true, emptyItemListIcon: OCSymbol.icon(forSymbolName: "magnifyingglass"), emptyItemListTitleLocalized: "No matches".localized, emptyItemListMessageLocalized: "No items found matching the search criteria.".localized)
+			let viewController = ClientItemViewController(context: resultsContext, query: query, showRevealButtonForItems: true, emptyItemListIcon: OCSymbol.icon(forSymbolName: "magnifyingglass"), emptyItemListTitleLocalized: OCLocalizedString("No matches", nil), emptyItemListMessageLocalized: OCLocalizedString("No items found matching the search criteria.", nil))
 			if self.useNameAsTitle == true {
 				viewController.navigationTitle = sideBarDisplayName
 			} else {
-				viewController.navigationTitle = sideBarDisplayName + " (" + (isTemplate ? "Search template".localized : "Saved search".localized) + ")"
+				viewController.navigationTitle = sideBarDisplayName + " (" + (isTemplate ? OCLocalizedString("Search template", nil) : OCLocalizedString("Saved search", nil)) + ")"
 			}
 			viewController.revoke(in: context, when: .connectionClosed)
 			viewController.navigationBookmark = BrowserNavigationBookmark.from(dataItem: self, clientContext: context, restoreAction: .handleSelection)
@@ -174,7 +247,7 @@ extension OCSavedSearch: DataItemSwipeInteraction {
 			return nil
 		}
 
-		let deleteAction = UIContextualAction(style: .destructive, title: "Delete".localized, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
+		let deleteAction = UIContextualAction(style: .destructive, title: OCLocalizedString("Delete", nil), handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
 			uiCompletionHandler(false)
 			self?.delete(in: context)
 		})
@@ -186,18 +259,35 @@ extension OCSavedSearch: DataItemSwipeInteraction {
 
 extension OCSavedSearch: DataItemContextMenuInteraction {
 	public func composeContextMenuItems(in viewController: UIViewController?, location: OCExtensionLocationIdentifier, with context: ClientContext?) -> [UIMenuElement]? {
-		guard canDelete(in: context) else {
+		let canDelete = canDelete(in: context), canRename = canRename(in: context)
+		var actions: [UIMenuElement] = []
+
+		guard canDelete || canRename else {
 			return nil
 		}
 
-		let deleteAction = UIAction(handler: { [weak self] action in
-			self?.delete(in: context)
-		})
-		deleteAction.title = "Delete".localized
-		deleteAction.image = OCSymbol.icon(forSymbolName: "trash")
-		deleteAction.attributes = .destructive
+		if canRename {
+			let renameAction = UIAction(handler: { [weak self] action in
+				self?.rename(in: context)
+			})
+			renameAction.title = OCLocalizedString("Rename", nil)
+			renameAction.image = OCSymbol.icon(forSymbolName: "pencil")
 
-		return [ deleteAction ]
+			actions.append(renameAction)
+		}
+
+		if canDelete {
+			let deleteAction = UIAction(handler: { [weak self] action in
+				self?.delete(in: context)
+			})
+			deleteAction.title = OCLocalizedString("Delete", nil)
+			deleteAction.image = OCSymbol.icon(forSymbolName: "trash")
+			deleteAction.attributes = .destructive
+
+			actions.append(deleteAction)
+		}
+
+		return actions
 	}
 }
 

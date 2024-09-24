@@ -33,7 +33,7 @@ class SettingsViewController: StaticTableViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		self.navigationItem.title = "Settings".localized
+		self.navigationItem.title = OCLocalizedString("Settings", nil)
 
 		if self.navigationController?.isBeingPresented ?? false {
 			let doneBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(dismissAnimated))

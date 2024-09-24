@@ -1,0 +1,1028 @@
+/*
+  Localizable.strings
+  ownCloud
+
+  Created by Pablo Carrascal on 13/03/2018.
+  Copyright © 2018 ownCloud GmbH. All rights reserved.
+*/
+
+/*
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
+
+/* Add / Edit Bookmark */
+"Edit account" = "Изменить учётную запись";
+"Add account" = "Добавить учетную запись";
+"Server URL" = "URL сервера";
+"https://example.com" = "https://example.com";
+"Continue" = "Продолжить";
+"Name" = "Имя";
+"Example Server" = "Сервер для примера";
+"Show Certificate Details" = "Детали сертификата";
+"Connect" = "Подключить";
+"Delete Authentication Data" = "Удалить данные аутентификации";
+"Authentication" = "Авторизация";
+"Username" = "Пользователь";
+"Password" = "Пароль";
+"Certificate Details" = "Детали сертификата";
+"Cancel" = "Отмена";
+"Approve" = "Подтвердить";
+"Error" = "Ошибка";
+"Issues" = "Проблемы";
+"Review Connection" = "Обзор соединения";
+"Authenticated via" = "Аутентифицрован через";
+"Authenticated as %@ via %@" = "Аутентификация как %@ через %@";
+"Edit" = "Редактировать";
+"Credentials" = "Учётные данные";
+"Rejected" = "Отклонено";
+"Passed" = "Прошло";
+"Accepted" = "Принято";
+"Validation Error" = "Ошибка проверки";
+"Certificate was rejected by user." = "Сертификат был отклонён пользователем.";
+"Certificate has issues.\nOpen 'Certificate Details' for more informations." = "Есть проблемы с сертификатом. Для получения подробностей откройте ‘Детали сертификата'.";
+"No issues found. Certificate passed validation." = "Не выявлено проблем. Сертификат прошёл проверку.";
+"Certificate may have issues, but was accepted by user.\nOpen 'Certificate Details' for more informations." = "С сертификатом возможно есть проблемы, но он был принят пользователем\nДля получения подробностей откройте 'Детали сертификата'.";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." = "Если вы нажмёте 'Продолжить', то у вас попросят разрешить приложению  войти через OAuth2, и при входе вам понадобится ввести свои учётные данные.";
+
+"Error opening %@" = "Ошибка при открытии %@";
+
+"Contacting server…" = "Соединение с сервером…";
+"Authenticating…" = "Авторизация…";
+
+"Fetching user information…" = "Получение информации о пользователе…";
+"Updating connection…" = "Соединение обновляется…";
+
+"Preparing account" = "Создать учётную запись";
+"Please wait…" = "Пожалуйста, ждите…";
+"Skip" = "Пропустить";
+
+"Missing hostname" = "Отсутствует имя сервера";
+"The entered URL does not include a hostname." = "Введённый адрес URL не содержит в себе имя сервера.";
+"Add account" = "Добавить учетную запись";
+"Server name" = "Имя сервера";
+"Server Password" = "Пароль сервера";
+"Server Username" = "Имя пользователя на сервере";
+"Show accounts" = "Показать учётные записи";
+"Setup complete" = "Настройка завершена";
+"Edit Login" = "Править логин";
+"Manage Storage" = "Управлять хранилищем";
+"Access Files" = "Доступ к файлам";
+"Log out" = "Выйти";
+"Retry" = "Повторить";
+
+/* Bookmark Info */
+"Bookmark Metadata" = "Описание закладки";
+
+/* Client */
+"Browse" = "Просмотр";
+"Files" = "Файлы";
+"Disconnect" = "Отключить";
+"Connecting…" = "Соединение…";
+"Connected." = "Соединено.";
+"Select" = "Выбрать";
+"Done" = "Выполнено";
+
+"Folder" = "Папка";
+
+"Stopped" = "Остановлено";
+"Started…" = "Запущено…";
+"Contents from cache." = "Содержимое из кэша.";
+"Waiting for server response…" = "Жду ответа сервера…";
+"This folder no longer exists." = "Эта папка больше не существует.";
+"Everything up-to-date." = "Всё обновлено.";
+"Please wait…" = "Пожалуйста, ждите…";
+"Sort by %@" = "Сортировка по %@";
+"Sort by" = "Упорядочить по";
+
+"name" = "имя";
+"kind" = "добрый";
+"size" = "размеру";
+"date" = "дате";
+"last used" = "последний используемый";
+
+"Tree" = "дерево";
+"Search folder" = "Поиск в папке";
+"Search tree" = "Дерево поиска";
+"Search from {{folder.name}}" = "Поиск по {{folder.name}}";
+"Search space" = "Область поиска";
+"Search {{space.name}}" = "Поиск {{space.name}}";
+"Search account" = "Поиск в учётной записи";
+"Enter a search term" = "Введите слово для поиска";
+"Search for users or groups" = "Поиск пользователей или групп";
+"Enter the user or group you want to invite." = "Введите пользователя или группу, которую вы хотите пригласить.";
+
+"Pending" = "Ожидание";
+"Show parent paths" = "Показать вышестоящие пути";
+"Reveal in folder" = "Показать в папке";
+
+"%@ of %@ used" = "Использовано %@ из %@";
+"Total: %@" = "Всего: %@";
+"%@ item | " = "%@ элемент | ";
+"%@ items | " = "%@ элементов | ";
+
+"{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" = "{{itemCount}} элементов с {{totalSize}} общим размером ({{fileCount}} файлов, {{folderCount}} папок)";
+"{{remaining}} available" = "{{remaining}} доступно";
+
+"Loading…" = "загрузка...";
+
+"Show more results" = "Показать больше результатов";
+
+"An error occurred" = "Произошла ошибка";
+
+/* Item Layouts */
+"List" = "Список";
+"Grid" = "Сетка";
+"Item grid" = "Сетка предметов";
+"Image grid" = "Сетка изображений";
+
+/* Saved searches */
+"Saved searches" = "Сохраненные поиски";
+"Saved search templates" = "Сохраненные шаблоны поиска";
+"Save search" = "Сохранить поиск";
+"Save as search template" = "Сохранить как шаблон поиска";
+
+"Name of saved search" = "Название сохраненного поиска";
+"Saved search" = "Сохраненный поиск";
+"Saved searches" = "Сохраненные поиски";
+"Name of template" = "Название шаблона";
+"Search template" = "Шаблон поиска";
+"Search templates" = "Шаблоны поиска";
+
+/* Search scope */
+"Search scope" = "Область поиска";
+"Toggle Search Scope" = "Переключить область поиска";
+
+/* Static Login Setup */
+"Server error" = "Ошибка сервера";
+"The server doesn't support any allowed authentication method." = "Сервер не поддерживает ни один из допустимых методов аутентификации.";
+"The server doesn't support any known and allowed authentication method found." = "Сервер не поддерживает ни один из известных и разрешённых методов аутентификации.";
+"Retry detection" = "Обнаружение повторных попыток";
+"Enter your username and password" = "Введите ваше имя пользователя и пароль";
+"Please log in to authorize the app." = "Пожалуйста, войдите, чтобы авторизовать приложение.";
+"Welcome to %@" = "Добро пожаловать в %@";
+"Please enter a server URL" = "Пожалуйста введите адресную строку сервера";
+"Please pick a profile to begin setup" = "Пожалуйста, выберите профиль, чтобы начать установку";
+"The following steps will guide you through the setup process." = "Следующие шаги помогут вам в процессе настройки.";
+"Start setup" = "Начать настройку";
+"Open login page" = "Откройте страницу входа в систему";
+"If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the login page where you can enter your credentials." = "Если вы \"Продолжите\", вам будет предложено разрешить приложению \"{{app.name }}\" открыть страницу входа в систему, где вы сможете ввести свои учетные данные.";
+"Account setup complete" = "Настройка учетной записи завершена";
+"If you'd like to give the account a custom name, please enter it below:" = "Если вы хотите присвоить учетной записи собственное имя, пожалуйста, введите его ниже:";
+
+/* Single Account */
+"You are connected as\n%@" = "Вы подключены, как\n%@";
+"Login" = "Вход";
+"Wrong URL" = "Неверная ссылка";
+"Please enter a valid URL" = "Пожалуйста, введите правильную ссылку";
+"Missing Profile URL" = "Не хватает ссылки профиля";
+"The Profile '%@' does not have a URL configured.\nPlease provide a URL via configuration or MDM." = "Для профиля '%@' не настроена ссылка.\nПожалуйста, задайте URL через конфигурацию или MDM.";
+
+/* Client Messages */
+"No contents" = "нет содержимого";
+"This folder contains no files or folders." = "В этой папке нет ни файлов, ни подпапок.";
+"This folder is empty." = "Папка пуста.";
+"This folder is empty. Fill it with content:" = "Эта папка пуста. Заполните ее содержимым:";
+
+"Folder removed" = "Папка удалена";
+"This folder no longer exists on the server." = "Эта папка больше не существует на сервере.";
+"Are you sure you want to delete this item from the server?" = "Вы уверены, что хотите удалить этот элемент с сервера?";
+"Are you sure you want to delete these items from the server?" = "Вы уверены, что хотите удалить эти элементы с сервера?";
+"Multiple items" = "Несколько элементов";
+"Deleting '%@'" = "Удаление '%@'";
+"Renaming to %@" = "Переименование в %@";
+"Upload from your photo library" = "Загрзука из вашей фото-библиотеки";
+"Missing permissions" = "Не хватает разрешений";
+"This permission is needed to upload photos and videos from your photo library." = "Это разрешение необходимо для загрузки фото и видео из вашей библиотеки.";
+"Not now" = "Не сейчас";
+"Upload file" = "Загрузить файл";
+"Upload files" = "Закачать файлы";
+
+"No matches" = "Нет соответствий";
+"The search term you entered did not match any item in the selected scope." = "Введенный вами термин поиска не соответствует ни одному элементу в выбранной области видимости.";
+"There are no results for this search term" = "По данному запросу ничего не найдено";
+"No items found matching the search criteria." = "Не найдено ни одного товара, соответствующего критериям поиска.";
+
+"Status" = "Статус";
+
+"Authorization failed" = "Авторизация не прошла";
+"The account has been disabled." = "Учётная запись была отключена.";
+"The server declined access with the credentials stored for this connection." = "Сервер отказал в доступе с учётными данными, сохранёнными для данного соединения.";
+"Access denied" = "Доступ запрещен";
+"The connection's access token has expired or become invalid. Sign in again to re-gain access." = "Токен доступа данного соединения устарел или стал недействительным. Перевойдите, чтобы восстановить доступ.";
+"No authentication data has been found for this connection." = "Для данного соединения не найдены данные аутентификации.";
+"Authentication with %@ is no longer allowed. Re-authentication needed." = "Аутентификация через %@ больше не допустима. Нужно перевойти.";
+"Sign in" = "Войти";
+"Continue offline" = "Продолжить без сети";
+"Media upload in the previous session was incomplete since the application was terminated" = "Загрузка данных в прошлом сеансе не была завершена, так как приложение было завершено";
+
+"Waiting for response from login session in external browser…" = "Жду ответа от сеанса, вошедшего во внешнем браузере…";
+
+"All done" = "Всё выполнено";
+"No pending messages or ongoing actions." = "Нет ожидаемых сообщений или продолжающихся действий.";
+
+"Show all" = "Показать всё";
+"+ %ld more" = "+ %ld ещё";
+"Apply choice to all similar issues" = "Применить выбор ко всем похожим случаям";
+"Apply to all" = "Применить ко всем";
+
+/* Server List*/
+"Cancel" = "Отмена";
+"OK" = "OK";
+
+"'%@' is currently locked" = "'%@' сейчас заблокирована";
+"An operation is currently performed that prevents connecting to '%@'. Please try again later." = "Сейчас выполняется операция, препятствующая обращению к '%@'. Пожалуйста, попробуйте снова позже.";
+"Do you really want to disconnect from your '%@' account?" = "Вы действительно хотите отключиться от вашей учётной записи '%@'?";
+"This will remove all locally stored file copies from your device." = "Это удалит все локально сохранённые копии файлов с вашего устройства.";
+"Really delete '%@'?" = "Действительно удалить '%@'?";
+"Do you want to log out from '%@'?" = "Вы хотите выйти из%@'?";
+"This will also delete all locally stored file copies." = "Это так же удалит все локально сохранённые копии файла.";
+"Delete" = "Удалить";
+"Remove" = "Удалить";
+"Removing of '%@' failed" = "Не удалось удалить '%@'";
+"Accounts" = "Аккаунты";
+
+"Help" = "Помощь";
+"Feedback" = "Обратная связь";
+"Welcome" = "Добро пожаловать";
+"Thanks for choosing %@! \n Start by adding your account." = "Спасибо, что выбрали %@! \n Начните с добавления своей учётной записи.";
+
+/* Settings Messages */
+
+"Security" = "Безопасность";
+"Passcode Lock" = "Блокировка кодом доступа";
+"Face ID" = "Идентификатор лица";
+"Touch ID" = "Touch ID";
+"Unlock using %@?" = "Разблокировать с помощью %@?";
+"Videos" = "Видео";
+"Photos" = "Фото";
+"Wifi only" = "Только через WiFi";
+"Settings" = "Конфигурация";
+"Lock application" = "Блокировка приложения";
+"Upload videos via WiFi only" = "Загрузка видео только через WiFi";
+"Upload pictures via WiFi only" = "Загрузать изображения только посредством WiFi ";
+"More" = "Подробнее";
+"Documentation" = "Документация";
+"Send feedback" = "Отправить свой отзыв";
+"Recommend to a friend" = "Рекомендовать другу";
+"Privacy Policy" = "Политика конфиденциальности";
+"Terms Of Use" = "Условия использования";
+"Acknowledgements" = "Благодарности";
+"license" = "лицензия";
+"Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged." = "Части этого приложения могут использовать нижеперечисленный материал, защищённый авторским правом, и здесь подтверждается его использование.";
+"Video upload path" = "Путь загрузки видео";
+"Photo upload path" = "Путь загрузки фото";
+"Immediately" = "Немедленно";
+"After 1 minute" = "Через 1 минуту";
+"After 5 minutes" = "Через 5 минут";
+"After 30 minutes" = "Через 30 минут";
+"After %ld seconds" = "Через %ld секунд";
+"If you choose \"Immediately\" the App will be locked, when it is no longer in foreground." = "Если вы выберете «немедленно», то приложение будет заблокировано, как только перестанет быть на переднем плане.";
+"Please configure an email account" = "Пожалуйста, настройте учётную запись почты";
+"You need to configure an email account first to be able to send emails." = "Чтобы иметь возможность отправлять сообщения, вам нужно сначала настроить учётную запись почты.";
+"Do you want to open the following URL?" = "Вы хотите открыть следующую ссылку?";
+"Passcode option" = " опцию пароля";
+"Please choose how many digits you want to use for the passcode lock?" = "Пожалуйста, выберите, сколько цифр вы хотите использовать для блокировки пароля?";
+"%ld digit code" = "%ld значным кодом";
+"Enter a new code with %ld digits" = "Введите новый код с цифрами %ld";
+"To use the app, you need to create a passcode." = "Для использования приложения необходимо создать пароль.";
+"Passcode setup" = "Настройка пароля";
+
+"%@%@ %@ version %@ build %@\n(app: %@, sdk: %@)" = "%@%@ %@ версия %@ сборка %@\n(приложение: %@, sdk: %@)";
+"beta" = "бета";
+"release" = "выпуск";
+"App Version" = "Версия приложения";
+"Version information were copied to the clipboard" = "Информация о версии скопирована в буфер обмена";
+
+
+/* User Interface Settings */
+"Theme" = "Тема";
+"User Interface" = "Интерфейс пользователя";
+"Dark" = "Тёмная";
+"Dark Blue" = "Темно-синий";
+"Dark Web" = "Темный веб";
+"Light" = "Светлая";
+"Classic" = "Классическая";
+"System" = "Система";
+"System Appeareance" = "Внешний вид системы";
+
+/* Log settings */
+"Log Files" = "файлы журнала";
+"Browse log files" = "Просмотр лог файлов";
+"Share" = "Сделать общим";
+"Delete all log files?" = "Удалить все лог-файлы?";
+"Delete all" = "Удалить все";
+
+"Log Level" = "Уровень журнала";
+"Log Destinations" = "Направления журнала";
+"Privacy" = "Конфиденциальность";
+
+"Logging" = "Журналирование";
+"Enable logging" = "Включить журналирование";
+"Options" = "Опции";
+
+"Off" = "Выключено";
+"Info" = "Инфо";
+"Default" = "По умолчанию";
+"Warning" = "Предупреждение";
+"Error" = "Ошибка";
+
+"Share log file" = "Поделиться файлом журнала";
+"Reset log file" = "Сброс файла журнала";
+
+"When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility." = "Если включить, то журналы могут ухудшить производительность и включать критичную информацию. Однако журналы не отправляются автоматически на сервера %@. Предоставление доступа к журналу другим — это целиком ответственность пользователя.";
+
+"The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information." = "В памяти устройства архивируются последние 10 лог-файлов. Каждый из них может содержать до 24 часов информации о использовании приложения. При обмене лог-файлами, помните, что они могут содержать конфиденциальную информацию, такую как URL серверов или данные о пользователе.";
+
+"Mask private data" = "Замаскировать конфиденциальные данные";
+"Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." = "Включение этой настройки приведёт к попытке замаскировать конфиденциальные данные, чтобы они не попали ни в один журнал. Однако поскольку журналирование — это средство для разработки и отладки, мы не можем гарантировать, что  включение этой настройки исключит любое появление конфиденциальной информации в файле журнала. Таким образом, если вы сомневаетесь, то прежде чем делиться файлом с кем-либо, просмотрите его и убедитесь, что в нём нет данных, которые вам не хотелось бы распространять.";
+
+"No log file found" = "Файл журнала не найден";
+"The log file can't be shared because no log file could be found or the log file is empty." = "Невозможно поделиться файлом журнала, так как не найдено ни одного файла журнала или файл пуст.";
+"Enable log file" = "Включить файл журнала";
+
+"Really reset log file?" = "Действительно сбросить файл журнала?";
+"This action can't be undone." = "Это действие невозможно отменить.";
+
+/* Data usage settings */
+"Data usage" = "Использование данных";
+"Delete unused local copies" = "Удалить неиспользуемые локальные копии";
+"Time measured since uploading, editing, downloading or viewing the respective file through this device. Does not apply to files downloaded via the Available Offline feature. Local copies may be deleted before the given period of time has passed, f.ex. because there's a newer version of a file on the server - or through the manual deletion of offline copies. Also, local copies may not be deleted after the given period of time has passed, f.ex. if an action is performed on it, the file is still in use - or the account holding the file hasn't been used in the app." = "Время, измеренное с момента закачки, правки, скачивания или просмотра соответствующего файла с помощью этого устройства. Не применяется к файлам, скачанным через возможность доступа без сети. Локальные копии могут удаляться до наступления заданного периода времени, например из-за более свежей версии файла на сервере, или через ручное удаление локальных копий. С другой стороны, локальные копии могут быть не удалены по истечении заданного времени, например из-за выполняемых над ними действий удерживающих файл, или учётная запись, в которой числится файл, не используется в приложении.";
+"never" = "никогда";
+"after %@" = "после %@";
+"Decrease Slider Value" = "Увеличить значение слайдера";
+"Increase Slider Value" = "Уменьшить значение слайдера";
+
+"Cellular Data Usage" = "Использование сотовых данных";
+"Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app." = "Будет использовано некоторое количество сотового трафика. Чтобы полностью избежать его использования, пожалуйста отключите доступ к сотовой сети для всего приложения в приложении Настроек.";
+"Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information." = "Использование сотовых данных было отключено с помощью конфигурации MDM. Обратитесь к администратору для получения дополнительной информации.";
+"General" = "Общие";
+"By feature" = "По возможностям";
+
+"off" = "выкл";
+"enabled" = "включен";
+
+/* Display settings */
+"Advanced settings" = "Расширенные настройки";
+"Show hidden files and folders" = "Показывать скрытые файлы и папки";
+"Show folders on top" = "Показывать папки в начале";
+"Disable gestures" = "Отключить жесты";
+"Prevent dragging of files and folders and multiselection using system defined gestures" = "Предотвратить перетаскивание файлов и папок, а так же множественный выбор, с помощью заданных в системе жестов";
+
+/* Advanced settings */
+"Enable diagnostics" = "Включить диагностику";
+
+/* Passcode Messages */
+
+"Enter code" = "Введите код";
+"Repeat code" = "Повторите код";
+"Delete code" = "Удалить код";
+"The entered codes are different" = "Введённые коды отличаются";
+"Incorrect code" = "Неверный код";
+"Please try again in %@" = "Пожалуйста, попробуйте ещё раз через %@";
+"Unlock %@" = "Разблокировать %@";
+"Biometric authentication failed" = "Биометрическая аутентификация не удалась";
+"You are required to set the passcode" = "Вам следует ввести код доступа";
+
+/* Certificate management */
+
+"Certificates" = "Сертификаты";
+"User-approved certificates" = "Сертификаты, подтверждённые пользователем";
+
+"Approved" = "Подтвержденное";
+"Auto-approved" = "Подтверждено автоматически";
+"Revoke approval" =  "Отменить подтверждение";
+
+/* Actions */
+
+"Forbidden Characters" = "Запрещённые символы";
+"File name cannot contain / or \\" = "Имя файла не может содержать / или \\";
+"Item with same name already exists" = "Элемент с тем же именем уже существует";
+"An item with the same name already exists in this location." = "В этом месте уже существует элемент с тем же именем.";
+"New Folder" = "новую папку";
+"Folder name" = "Имя папки";
+"Rename" ="Переименовать";
+"Create folder" ="Создать папку";
+"Duplicate" = "Дублирование";
+"Move" = "Переместить";
+"Move {{itemCount}} items" = "Переместить {{itemCount}} элементов";
+"Move \"{{itemName}}\"" = "Переместить «{{itemName}}»";
+"Move here" = "Поместить сюда";
+"Select target." = "Выберите цель.";
+"Open in" = "Открыть в";
+"Copy" = "Копировать";
+"Copy {{itemCount}} items" = "Копирование {{itemCount}} элементов";
+"Copy \"{{itemName}}\"" = "Копировать «{{itemName}}»";
+"Copy here" = "Копировать сюда";
+
+"Cannot connect to " = "Не удалось подключиться к ";
+" couldn't download file(s)" = "не удалось скачать файл(ы)";
+"Actions" = "Действия";
+"copy" = "копия";
+"Close Window" = "Закрыть окно";
+"Open in a new Window" = "Открыть в новом окне";
+"Open in Window" = "Открыть в окне";
+"Take photo or video" = "Снять фото или видео";
+"%ld Item was copied to the clipboard" = "%ld был скопирован в буфер обмена";
+"%ld Items were copied to the clipboard" = "%ld Элементы были скопированы в буфер обмена";
+"Please note: Folders can only be pasted into the %@ app and the same account." = "Обратите внимание: папки можно вставить только в приложение %@ и ту же учетную запись.";
+
+"Processing on server" = "предварительной обработки на сервере";
+
+"Preparing…" = "Подготовка";
+
+"No actions available" = "Нет доступных действий";
+"No actions are available for this folder, possibly because of missing permissions." = "Для этой папки нет доступных действий, возможно из-за отсутствия разрешений.";
+
+"Close actions menu" = "Закрыть меню действий";
+"Favorited" = "Избранное";
+"Favorite item" = "Добавить элемент в избранное";
+"Unfavorite item" = "Убрать элемент из избранного";
+"Presentation Mode" = "Режим презентации";
+"Enabling presentation mode will prevent the display from sleep mode until the view is closed." = "Включение режима презентации не даст экрану уйти в спящий режим, пока просмотр не будет закрыт.";
+"Enable" = "Включить";
+"Exit Full Screen" = "Выйти из полноэкранного режима";
+
+"Select one or more items." = "Выберите один или несколько элементов.";
+
+"Add item" = "Добавить элемент";
+
+/* App Provider */
+"New document" = "Новый документ";
+"Pick a name" = "выбрать имя";
+"Pick a document type to create:" = "Выберите тип документа для создания:";
+"Error creating {{itemName}}" = "Ошибка при создании {{itemName}}";
+
+"Opening…" = "Открытие ...";
+
+"Open in {{appName}} (web)" = "Открыто в {{appName}} (web)";
+"Error opening {{itemName}} in {{appName}}" = "Ошибка открытия {{itemName}} в {{appName}}";
+"Opening documents is not supported by the app provider on this instance." = "Открытие документов не поддерживается поставщиком приложений на данном экземпляре.";
+
+/* Preview */
+"Open file" = "Открыть файл";
+"Network unavailable" = "Сеть недоступна";
+"Error" = "Ошибка";
+"Could not get the picture" = "Не удалось получить изображение";
+"Downloading" = "Загрузка";
+"File couldn't be opened" = "Не удалось открыть файл";
+"Connecting..." = "Соединение…";
+
+"File" = "Файл";
+"%@ was updated" = "%@ обновлено";
+"Would you like to view the updated version?" = "Хотите посмотреть обновлённую версию?";
+"Show new version" = "Показать новую версию";
+"Refresh without asking" = "Обновлять не спрашивая";
+"Ignore updates" = "Игнорировать обновления";
+
+/* PDF Viewer */
+"Resume" = "Возобновить";
+"Go to page" = "Переход к странице";
+"Page" = "Страница";
+"This document has %@ pages" = "В этом документе %@ страниц";
+"%@ of %@" = "%@ из %@";
+"Invalid Page" = "Неверная страница";
+"The entered page number doesn't exist" = "Введённый номер страницы не существует";
+"Search PDF" = "Поиск PDF";
+"Outline" = "Оглавление";
+"Find Next" = "Найти следующее";
+"Find Previous" = "Найти предыдущее";
+"Close Search" = "Закрыть поиск";
+
+/* Photo Upload */
+"Upload" = "Загрузка";
+"Select All" = "Выбрать всё";
+"Deselect All" = "Снять весь выбор";
+"All Photos" = "Все фотографии";
+"Albums" = "Альбомы";
+"Importing from photo library" = "Импорт из фото-библиотеки";
+"Media import" = "Импорт фото и видео";
+"%@ of %@" = "%@ из %@";
+"Selected folder lacks file creation permission" = "У выбранной папки нет разрешения на создание файлов.";
+"%d Item" = "%d элемент";
+"%d Items" = "%d элементов";
+"Select Items" = "Выбор элементов";
+
+/* Scan */
+"Scan" = "Cканировать";
+"Scans" = "Сканы";
+"Scan document" = "Сканировать документ";
+"Saving" = "Сохраняется";
+"File format" = "Формат файла";
+"Name" = "Имя";
+"Save as" = "Сохранить как";
+"Options" = "Опции";
+"Scan additional" = "Сканировать дополнительно";
+"Create one file per page" = "Создавать по файлу на каждую страницу";
+
+/* Sharing */
+"Sharing requires an active connection." = "Для совместного использования требуется активное соединение.";
+"No items shared with you" = "С вами не поделились ни одним объектом";
+"No items shared by you" = "Нет элементов, которыми вы поделились";
+"No items shared by link" = "Нет элементов, которыми поделились по ссылке";
+
+"Searching Shares…" = "Поиск по общим ресурсам";
+"Recipient" = "Получатель";
+"Recipients" = "Получатели";
+"Public Link" = "Общедоступная ссылка";
+"Public Links" = "Общедоступные ссылки";
+"Shared by {{owner}}" = "Поделился {{owner}}";
+"Shared with {{recipient}}" = "Поделитесь с {{получателем}}";
+"Shared with {{recipients}}" = "Поделитесь с {{получателем}}";
+"Expires {{expirationDate}}" = "Дата истечения {{expirationDate}}";
+"Share {{itemName}}" = "Поделиться {{itemName}}";
+"Create link" = "Создать ссылку";
+"Invite" = "Пригласить";
+"Invite Recipient" = "Пригласить получателя";
+"Recipients" = "Получатели";
+"Add email or name" = "Добавить e-mail или имя";
+"Users" = "Пользователи";
+"Groups" = "Группы";
+"Start typing to search users, groups and remote users." = "Начните ввод для начала поиска пользователей, групп и удаленных пользователей";
+"(Group)" = "(Группа)";
+"Adding User to Share failed" = "Ошибка добавления пользователя к ресурсу";
+"Permissions" = "Права доступа";
+"Invited: %@" = "Приглашены: %@";
+"Created: %@" = "Созданы: %@";
+"Allows the users you share with to re-share" = "Разрешить пользователям в совместном доступе, открывать доступ другим пользователям";
+"Allows the users you share with to edit your shared files, and to collaborate" = "Разрешить пользователям в совместном доступе редактировать опубликованные файлы и совместно над ними работать";
+"Allows the users you share with to create new files and add them to the share" = "Разрешить пользователям в совместном доступе создавать новые файлы и Добавить их к общему ресурсу";
+"Allows uploading a new version of a shared file and replacing it" = "Разрешить обновление и замещение новой версии файла, находящегося в совместном доступе";
+"Allows the users you share with to delete shared files" = "Разрешить пользователям в совместном доступе удалять находящиеся в нем файлы";
+"Setting permission failed" = "Ошибка установки прав доступа";
+"Shared with" = "Доступен для";
+"Remove Recipient failed" = "Ошибка удаления получателя";
+"Remove Recipient" = "Удалить получателя";
+"Create" = "Создать";
+"Change" = "Изменения";
+"Recipients can view or download contents." = "Получатели могут просматривать или скачивать содержимое.";
+"Recipients can view, download, edit, delete and upload contents." = "Получатели могут просматривать, скачивать, править, удалять и закачивать содержимое.";
+"Receive files from multiple recipients without revealing the contents of the folder." = "Получение файлов от многих получателей без раскрытия содержимого каталога.";
+"Download / View" = "Скачивание / Просмотр";
+"Download / View / Upload" = "Скачивание / Просмотр / Закачка";
+"Upload only (File Drop)" = "Только закачка (закинуть файл)";
+"Creating public link failed" = "Ошибка создание общедоступной ссылки";
+"Create Public Link" = "Создать общедоступную ссылку";
+"Links" = "Ссылки";
+"Link" = "Ссылка";
+"Setting expiration date failed" = "Ошибка установки срока действия";
+"Expiration date" = "Дата истечения срока действия";
+"Copy Public Link" = "Скопировать общедоступную ссылку";
+"Delete Public Link" = "Удалить общедоступную ссылку";
+"Deleting Public Link failed" = "Ошибка удаления общедоступной ссылки";
+"Deleting password failed" = "Ошибка удаления пароля";
+"Setting password failed" = "Ошибка установки пароля";
+"Type to update password" = "Начните ввод для обновления пароля";
+"Cannot change permission" = "Невозможно изменить права";
+"Before you can set the permission\n%@,\n you must enter a password." = "Чтобы изменить права доступа\n%@,\nвведите пароль";
+"Password Protected" = "Защищено Паролем";
+"Pending Federated Invites" = "Неподтвержденные федеративные приглашения";
+"Pending Invites" = "Неподтвержденные приглашения";
+"Shared with you" = "Поделились с вами";
+"Shared with others" = "Доступные для других";
+"Shares" = "События обмена файлами";
+"Copy Private Link" = "Копировать приватную ссылку";
+"Only people who have access to the file/folder can use it. Use it as a permanent link for yourself or to point others to files within shares." = "Личная ссылка: её могут использовать только те, у кого есть доступ к файлу или каталогу. Используйте её в качестве постоянной ссылки для себя или чтобы указать другим на файлы в общем доступе";
+"Accept Share failed" = "Ошибка подтверждения совместного доступа";
+"Decline Share failed" = "Ошибка отклонения совместного доступа";
+"Accept" = "Принять";
+"Decline" = "Отклонить";
+"Declined" = "Отклонено";
+"Decline Share" = "Отклонить совместный доступ";
+"Unshare" = "Отключить общий доступ";
+"Unshare failed" = "Ошибка отмены совместного доступа";
+"Are you sure you want to unshare these items?" = "Вы уверены, что больше не хотите предоставлять доступ к данным элементам?";
+"Are you sure you want to unshare this item?" = "Вы уверены, что больше не хотите предоставлять доступ к этому элементу?";
+"Share" = "Сделать общим";
+"Read" = "Читать";
+"Can Share" = "Может делиться";
+"Can Edit" = "Может редактировать";
+"Can Edit and Change" = "Может изменять и редактировать";
+"Can Create" = "Может создавать";
+"Can Change" = "Может изменять";
+"Can Delete" = "Может удалять";
+"Accept Invite %@" = "Принять приглашение %@";
+"Decline Invite %@" = "Отклонить приглашение %@";
+"Decline cannot be undone." = "Отклонение не может быть отменено.";
+"Sharing" = "Совместное использование";
+"You" = "Вы";
+"Share this file" = "Поделиться файлом";
+"Share this folder" = "Поделиться папкой";
+"shared" = "поделился";
+"Owner" = "Владелец";
+"Private Link" = "Личная ссылка";
+"Created Public Link" = "Созданная публичная ссылка";
+"URL was copied to the clipboard" = "URL была скопирована в буфер обмена";
+"%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action." = "%@ не доступно, когда учётная запись отключена. Пожалуйста, откройте приложение и войдите под вашей учётной записью, чтобы выполнить это действие.";
+"%@ is not available for this item." = "%@ не доступно для этого элемента.";
+"Share with user/group" = "Поделиться с пользователем или группой";
+"Share link" = "Поделиться ссылкой";
+
+"Shared with me" = "Поделился со мной";
+"Shared by me" = "Разделено мной";
+"Shared by link" = "Доступные по ссылке";
+
+"Share with" = "Сделать общим с";
+"Add" = "Добавить";
+"Save changes" = "Сохранить изменения";
+
+"Enter password" = "Введите пароль";
+
+/* Quick Access view */
+"Quick Access" = "Быстрый доступ";
+"Collection" = "Коллекция";
+"Recents" = "Недавно";
+"Favorites"= "Избранное";
+"Images" = "Изображения";
+"PDF Documents" = "Документы PDF";
+"Text" = "Текст";
+"Documents" = "Документы";
+"Audio" = "Аудио";
+
+/* Favorites view */
+"No favorites found" = "Избранное не найдено";
+"If you make an item a favorite, it will turn up here." = "Если вы добавили элемент в избранное, он появится здесь.";
+
+/* Media files settings */
+"Media Files" = "Мультимедийные файлы";
+"Download instead of streaming" = "Скачать вместо просмотра";
+
+/* Photo upload settings */
+"Media Upload" = "Загрузка фото и видео";
+"Media Export" = "Экспорт мультимедиа";
+"Auto Upload" = "Автоматическая закачка";
+"Convert HEIC to JPEG" = "Преобразовать HEIC в JPEG";
+"Convert videos to MP4" = "Преобразовать видео в MP4";
+"Preserve original media file names" = "Сохранить исходные имена файлов мультимедиа";
+"Auto Upload Photos" = "Автоматически закачать изображения";
+"Auto Upload Videos" = "Автоматически закачать видеоролики";
+"Account" = "Аккаунт";
+"Accounts" = "Аккаунты";
+"Select account" = "Выберите учётную запись";
+"Photo upload path" = "Путь загрузки фото";
+"Video upload path" = "Путь загрузки видео";
+"Select Upload Path" = "Выберите путь для загрузки";
+"Auto upload of media was disabled since configured account / folder was not found" = "Автоматическая закачка фото и видео отключена, так как настроенная учётная запись или папка не были найдены";
+"Importing %@ media files for upload" = "Импортируются мультимедийные файлы %@ для закачки";
+"Photo upload" = "Закачка фото";
+"Video upload" = "Закачка видео";
+
+/* Background media uploads */
+"Background uploads (Lab Version)" = "Фоновые загрузки (лабораторная версия)";
+"Background uploads" = "Фоновые загрузки";
+"Use background refresh" = "Использовать фоновое обновление";
+"Allow this app to refresh the content when on Wi-Fi or mobile network in background." = "Разрешите этому приложению обновлять содержимое в фоновом режиме, когда оно находится в сети Wi-Fi или мобильной сети.";
+"Enable background uploads" = "Разрешить фоновые закачки";
+"Use background location updates" = "Использовать фоновое обновление местоположения";
+"Background upload notifications" = "Уведомления о фоновых закачках";
+"If you would like background media uploads to be more reliable, you should enable background location updates." = "Если вы хотите, чтобы фоновая загрузка медиафайлов была более надежной, вам следует включить фоновое обновление местоположения.";
+"Background media uploads rely on location updates and will stop working if location acquisition permissions are revoked." = "Фоновые закачки мультимедиа полагаются на обновления местоположения и перестанут работать, если отобрать разрешение на получение местоположения.";
+"Otherwise background media uploads using background refresh technology would depend on how frequently you use the app." = "Иначе фоновые закачки мультимедиа, использующие технологию обновления, будут зависеть от того, насколько часто вы используете приложение.";
+"Location permission denied" = "Отказано в разрешении определить местоположение.";
+"Please re-enable location acquisition in system settings" = "Пожалуйста, включите обратно разрешение на получение местоположения в настройках системы";
+"Scheduled upload of %ld media assets" = "Запланирована закачка %ld элементов мультимедиа";
+
+/* Progress summarizer */
+"Creating %ld folders…" = "Создание %ld папок…";
+"Moving %ld items…" = "Перемещение %ld элементов…";
+"Copying %ld items…" = "Копирование %ld элементов…";
+"Deleting %ld items…" = "Удаление %ld элементов…";
+"Uploading %ld files…" = "Загрузка %ld файлов…";
+"Downloading %ld files…" = "Скачивание %ld файлов…";
+"Updating %ld items…" = "Обновление %ld элементов…";
+
+/* Offline storage management */
+"Free on %@" = "Свободно на %@";
+"unknown" = "неизвестно";
+"Offline files use" = "Использование автономных файлов";
+"Compacting of '%@' failed" = "Сжатие '%@' не удалось";
+"Include available offline files" = "Включить доступные автономные файлы";
+"Delete all Offline Files" = "Удалить все оффлайн-файлы";
+"Manage" = "Управление";
+"Storage" = "Хранилище";
+"Compacting" = "Сжатие";
+
+"Really include available offline files?" = "Действительно включить доступные автономные файлы?";
+"Files and folders marked as Available Offline will become unavailable. They will be re-downloaded next time you log into your account (connectivity required)." = "Файлы и папки, помеченные как доступные без сети, станут недоступными. При следующем входе в учётную запись они будут скачаны повторно (нужна связь).";
+"Removes downloaded files and local copies of items marked as Available Offline. The latter will be re-downloaded next time you log into your account (connectivity required)." = "Удаляет скачанные файлы и локальные копии элементов, помеченных как Доступные офлайн. Последние будут снова скачаны при следующем входе в вашу учетную запись (требуется подключение).";
+
+/* Diagnostic */
+"Diagnostic Overview" = "Диагностический обзор";
+"Diagnostics" = "Диагностика";
+"Share Diagnostics" = "Диагностика общего доступа";
+"Action executed" = "Действие выполнено";
+
+"Update Status" = "Статус обновления";
+"Completed update scans" = "Выполнено сканов обновлений";
+"Total update scans" = "Всего сканов обновлений";
+
+/* Available offline */
+"Root folder" = "Корневая папка";
+"at" = "на";
+"(no match)" = "(нет соответствия)";
+
+"Make available offline" = "Сделать доступными без сети автономно";
+"Make unavailable offline" = "Сделать недоступными без сети";
+
+"Available Offline" = "Доступно без сети";
+
+"No files available offline" = "Нет файлов доступных офлайн";
+"Files selected and downloaded for offline availability will show up here." = "Файлы, выбранные и скачанные для офлайн-доступа, будут отображаться здесь.";
+
+"Locations" = "Места";
+"Downloaded Files" = "Скачанные файлы";
+
+/* Single Account */
+"You are connected as\n%@" = "Вы подключены, как\n%@";
+
+/* Release Notes */
+"Proceed" = "Продолжить";
+"New in %@" = "Новое в %@";
+"Thank you for using %@.\nIf you like our App, please leave an AppStore review.\n❤️" = "Спасибо, что используете %@.\nЕсли вам нравится наше приложение, оставьте отзыв в AppStore.\n❤️";
+"Thank you for using %@.\n" = "Спасибо за использование %@.\n";
+
+/* Key Commands */
+"Select Next" = "Выбрать следующее";
+"Select Previous" = "Выбрать предыдущее";
+"Open Selected" = "Открыть выбранное";
+"Change Sort Order" = "Изменить порядок сортировки";
+"Search" = "Поиск";
+"Back" = "Назад";
+"Save" = "Сохранить";
+"Sort by %@" = "Сортировка по %@";
+"Tab %@" = "Вкладка %@";
+"Select Last Item on Page" = "Выбрать последний элемент на странице";
+"Scroll to Top" = "Прокрутить в начало";
+"Scroll to Bottom" = "Прокрутить в конец";
+"Copy to Clipboard" = "Скопировать в буфер обмена";
+"Import from Clipboard" = "Импортировать из буфера обмена";
+"Choose destination directory…" = "Выберите целевую директорию...";
+"Next" = "Следующее";
+"Previous" = "Предыдущее";
+"Favorite" = "Избранный";
+"Cut" = "Вырезать";
+"Paste" = "Вставить";
+"Play/Pause" = "Проигрывание/Пауза";
+"Skip Back" = "Пропустить назад";
+"Skip Ahead" = "Пропустить вперёд";
+"Go to Beginning" = "Перейти в начало";
+"Mute/Unmute" = "Выключить/включить звук";
+"Full Screen" = "Полный экран";
+"Switch Theme Style" = "Переключить стиль темы";
+
+/* Markup */
+"How should this file be saved?" = "Как следует сохранять этот файл?";
+"Overwrite original" = "Переписать оригинал";
+"Save as copy" = "Сохранить как копию";
+"Discard changes" = "Выбросить изменения";
+"Markup" = "Разметка";
+"Crop or Rotate" = "Обрезка или поворот";
+"Saving edited file failed" = "Не удалось сохранить редактируемый файл";
+"File no longer exists" = "Файл больше не существует";
+
+/* Licensing */
+"Unlocked" = "Разблокировано";
+"Unlock" = "Разблокировать";
+
+"Subscribe Now" = "Подпишитесь сейчас";
+"Free" = "Свободно";
+
+"%@ / %@" = "1%@/1%@";
+"after free %@ trial" = "после бесплатного 1%@ период";
+
+/* Example usage: "Try [14 days] for free." */
+"Try %@ for free." = "Попробуйте %@ бесплатно.";
+
+/* Example usage: "Then [1,99 €] / [year]." */
+"Then %@ / %@." = "Затем %@ / %@.";
+
+/* Example usage: "[1,99 €] / [year] - starting immediately." */
+"%@ / %@ – starting immediately" = "%@ / %@ – запуск немедленно";
+
+/* Licensing: Pro Features */
+"Pro Features" = "Профессиональные возможности";
+
+/* Licensing: App Store */
+"Restore purchases" = "Восстановить покупки";
+"Restoring purchases…" = "Восстановление покупок…";
+"Error restoring purchases" = "Ошибка восстановления покупок";
+"Error loading product info from App Store"= "Ошибка загрузки информации о продукте из App Store";
+"Purchase failed" = "Покупка не удалась";
+"More information" = "Больше информации";
+
+/* Licensing: Enterprise */
+"Enterprise" = "Предприятие";
+
+/* Licensing: Settings */
+"In-App Purchases" = "Покупки в приложении";
+"Purchases & Subscriptions" = "Покупки и подписки";
+"Error fetching transactions" = "Ошибка считывания транзакций";
+"Document Scanner" = "Сканер документов";
+"Scan documents and photos with your camera." = "Сканировать документы и фотографии с помощью вашей камеры.";
+"Shortcuts Actions" = "Сокращения для действий";
+"Use ownCloud actions in Shortcuts." = "Использовать действия ownCloud в сокращениях.";
+"Markup Documents" = "Разметка документов";
+"Markup photos and PDF files." = "Разметка фотографий и файлов PDF.";
+"Unlock all Pro Features." = "Разблокировать все профессиональные возможности.";
+
+"Purchased App Version" = "Приобретённая версия приложения";
+"Receipt Date" = "Дата подтверждения";
+"Manage subscription" = "Управление подпиской";
+"Purchases are not allowed on this device." = "На этом устройстве покупки не разрешены.";
+"Type" = "Тип";
+"Quantity" = "Количество";
+"Product" = "Продукт";
+"Date" = "Дата";
+"Cancelled" = "Отменено";
+"Ends" = "Концы";
+"none" = "пусто";
+"trial" = "пробный период";
+"purchase" = "покупка";
+"subscription" = "подписка";
+"Photo Pro Features" = "Возможности Photo Pro";
+"Image metadata, extended upload options" = "Метаданные изображения. расширенные возможности загрузки";
+"Purchase" = "Приобретение";
+"Subscribe" = "Подписаться";
+
+"No accounts found" = "Учётные записи не найдены";
+"In order to accurately determine your current licensing status, please add one or more accounts first." = "Чтобы точно определить состояние ваших лицензий, пожалуйста Добавить сначала одну или несколько учётных записей.";
+
+/* Share Sheet */
+"Save File" = "Сохранить файл";
+"Choose an account and folder to import into." = "Выберите учётную запись и папку, куда импортировать.";
+"No account configured.\nSetup an new account in the app to save to." = "Учётная запись не настроена.\nНастройте учётную запись в приложении, чтобы сохраняться.";
+"Importing item %ld of %ld" = "Импортирую элемент %ld из %ld";
+"Error importing %@" = "Ошибка при импорте %@";
+"Error loading item" = "Ошибка при загрузке элемента";
+"Preparing…" = "Подготовка";
+"Import \"{{itemName}}\"" = "Импортировать \"{{itemName}}\"";
+"Import {{itemCount}} files" = "Импортировать {{itemCount}} файлов";
+"Save here" = "Сохранить здесь";
+
+/* FileProvider */
+/* - Disabled */
+"File Provider access has been disabled by the administrator.\n\nPlease use the app to access your files." = "Доступ к файловому провайдеру был отключен администратором.\n\nПожалуйста, используйте приложение для доступа к своим файлам.";
+"File Provider access has been disabled by the administrator. Please use the app to create new folders." = "Доступ к File Provider был отключен администратором. Пожалуйста, используйте приложение для создания новых папок.";
+"File Provider access has been disabled by the administrator. Please use the share extension to import files." = "Доступ к File Provider был отключен администратором. Пожалуйста, используйте расширение ресурса для импорта файлов.";
+
+/* - No account */
+"No account has been set up in the {{app.name}} app yet." = "В приложении {{app.name}} еще не создана учетная запись.";
+"Open app" = "Открыть приложение";
+
+/* Disallowed Import Methods */
+/* - Share Extension */
+"Share Extension disabled" = "Отключение расширения общего доступа";
+"Importing files through the Share Extension is not allowed on this device." = "Импортирование файлов через Share Extension не разрешено на этом устройстве.";
+
+/* - Open with */
+"Opening not allowed" = "Открытие не разрешено";
+"Importing files through opening is not allowed on this device." = "Импортирование файлов через открытие на этом устройстве не разрешено.";
+
+/* - Files.app */
+"Import not allowed" = "импорт не разрешен";
+"Importing files through the File Provider is not allowed on this device." = "Импортирование файлов через File Provider не разрешено на этом устройстве.";
+
+/* Misc. accessibility */
+"Enter multiple selection" = "Введите множественный выбор";
+
+/* Universal Links */
+"Resolving link…" = "Раскрытие ссылки…";
+"Link resolution failed" = "Раскрытие ссылки не удалось";
+"Couldn't resolve a private link since you are offline and corresponding item is not cached locally." = "Не удалось раскрыть личную ссылку, так как вы без сети и соответствующий элемент не закэширован локально.";
+"Couldn't resolve a private link since the item is not known to the server." = "Не удалось раскрыть личную ссылку, так как элемент не известен серверу.";
+"Link points to an account bookmark which is not configured in the app." = "Ссылка указывает на закладку учётной записи, которые не настроена в приложении.";
+
+/* Photo meta-data */
+"Image metadata" = "Метаданные изображения";
+"Image details" = "Подробности изображения";
+"Profile" = "Профиль";
+"Size" = "Размер";
+"Density" = "Плотность";
+"Color model" = "Цветовая модель";
+"%@ (%d bits/channel)" = "%@ (%d бит на канал)";
+"Histogram" = "Гистограмма";
+
+"Camera details" = "Подробности камеры";
+"Capture settings" = "Настройки съёмки";
+"Time" = "Время";
+"EXIF aux info" = "Дополнительная информация EXIF";
+"Authoring" =  "Авторство";
+"TIFF" = "TIFF";
+
+"Lens make" = "Производитель объектива";
+"Lens model" = "Модель объектива";
+"Lens info" = "Информация об объективе";
+"Focal length" = "Фокусное расстояние";
+"Focal length @ 35 mm" = "Фокусное расстояние в пересчёте на 35 мм";
+
+"Shutter speed" = "Выдержка";
+"Aperture" = "Диафрагма";
+"ISO" = "Чувствительность";
+
+/* EXIF: exposure program */
+"Program" = "Программа";
+"Not defined" = "Не задано";
+"Manual" = "Вручную";
+"Normal" = "Нормальный";
+"Aperture priority" = "Приоритет диафрагмы";
+"Shutter priority" = "Приоритет выдержки";
+"Creative" = "Творческий";
+"Action" = "Действие";
+"Portrait" = "Портрет";
+"Landscape" = "Пейзаж";
+
+/* EXIF: exposure metering mode */
+"Metering" = "Измерение";
+"unknown" = "неизвестно";
+"Average" = "Среднее";
+"CenterWeightedAverage" = "Центрально-взвешенное среднее";
+"Spot" = "Пятно";
+"MultiSpot" = "Несколько пятен";
+"Pattern" = "Шаблон";
+"Partial" = "Частично";
+
+/* EXIF: flash mode */
+"Flash" = "Вспышка";
+"Fired" = "Сработала";
+"Didn't fire" = "Не сработала";
+"No strobe return detection" = "Встречный строб не определяется";
+"Strobe return light not detected" = "Встречный строб-свет не обнаружен";
+"Strobe return light detected" = "Встречный строб-свет обнаружен";
+"Compulsory flash firing" = "Принудительная вспышка сработала";
+"Compulsory flash supression" = "Принудительная вспышка подавлена";
+"Auto mode" = "Автоматический режим";
+"Red eye detection supported" = "Подавление красных глаз поддерживается";
+"not present" = "не присутствует";
+
+/* EXIF: white balance */
+"White balance" = "Баланс белого";
+"Auto" = "Авто";
+"Manual" = "Вручную";
+
+"Exposure bias" = "Сдвиг экспозиции";
+"Uncalibrated" = "Неоткалибровано";
+"Original date" = "Исходная дата";
+"Digitized date" = "Дата оцифровки";
+
+"Color space" = "Цветовое пространство";
+
+/* EXIF: aux info */
+"Lens ID" = "Идентификатор объектива";
+"Lens serial" = "Серийный номер объектива";
+"Serial number" = "Серийный номер";
+"Flash compensation" = "компенсация вспышки";
+"Owner" = "Владелец";
+"Firmware" = "Прошивка";
+"Keywords" = "Ключевые слова";
+"Copyright" = "Авторские права защищены";
+
+/* IPTC meta data */
+"Contact info" = "Контактная информация";
+"Usage terms" = "Условия использования";
+"Scene" = "Сцена";
+"Description" = "Описание";
+
+/* IPTC photometric interpretation */
+"Photometric interpretation" = "Фотометрическая интерпретация";
+"none" = "пусто";
+"RGB" = "RGB";
+"YCbCr" = "YCbCr";
+
+/* EXIF: gps position data */
+"GPS Location" = "Местоположение GPS";
+"Coordinates" = "Координаты";
+"Altitude" = "Высота";
+"Place" = "Место";
+"E" = "в.д.";
+"W" = "з.д.";
+"N" = "с.ш.";
+"S" = "ю.ш.";
+
+/* Pro photo upload settings */
+"Extended upload settings" = "Расширенные настройки закачки";
+"Prefer unedited photos" = "Предпочитать неотредактированные фото";
+"Prefer RAW photos" = "Предпочитать формат RAW";
+"Prefer original videos" = "Предпочитать исходные видео";
+
+/* Limited photo library access */
+"Limited Photo Access" = "Ограниченный доступ к фото";
+"Access for the media selected for upload is limited" = "Доступ к материалам, выбранным для закачки, ограничен";
+"No Access to the media selected for upload" = "Нет доступа к материалам, выбранным для закачки";
+
+/* macOS support */
+"Passcode protection is not supported on this device.\nPlease disable passcode lock in the app settings." = "Блокировка кодом доступа не поддерживается на этом устройстве.\nПожалуйста, отключите блокировку кодом доступа в настройках приложения.";
+
+/* MDM settings push */
+"New settings received from MDM" = "Через MDM получены новые настройки";
+"Tap to quit the app." = "Нажмите, чтобы выйти из приложения.";
+"Tap to launch the app." = "Нажмите, чтобы запустить приложение.";
+
+/* Beta warning */
+"Beta Warning" = "Бета-предупреждение";
+"\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings." = "Это бета-версия, которая может содержать ошибки.\n\nВЫ НЕ ДОЛЖНЫ ИСПОЛЬЗОВАТЬ ЭТУ БЕТА-ВЕРСИЮ С ПРОИЗВОДСТВЕННЫМИ СИСТЕМАМИ, ПРОИЗВОДСТВЕННЫМИ ДАННЫМИ ИЛИ ДАННЫМИ, ПРЕДСТАВЛЯЮЩИМИ ЦЕННОСТЬ. ВЫ ИСПОЛЬЗУЕТЕ ЭТУ БЕТА-ВЕРСИЮ НА СВОЙ СТРАХ И РИСК.\n";
+"Agree" = "Согласитесь";

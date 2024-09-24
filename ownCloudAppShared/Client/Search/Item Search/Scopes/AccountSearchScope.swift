@@ -31,7 +31,7 @@ open class CustomQuerySearchScope : ItemSearchScope {
 		didSet {
 			if isSelected {
 				resultActionSource.setItems([
-					OCAction(title: "Show more results".localized, icon: nil, action: { [weak self] action, options, completion in
+					OCAction(title: OCLocalizedString("Show more results", nil), icon: nil, action: { [weak self] action, options, completion in
 						self?.showMoreResults()
 						completion(nil)
 					})
@@ -121,7 +121,7 @@ open class CustomQuerySearchScope : ItemSearchScope {
  		if let condition = condition {
 			if let sortDescriptor = clientContext.sortDescriptor {
 				condition.sortBy = sortDescriptor.method.sortPropertyName
-				condition.sortAscending = sortDescriptor.direction == .ascendant
+				condition.sortAscending = sortDescriptor.direction == .ascending
 			}
 
 			condition.maxResultCount = NSNumber(value: maxResultCount)

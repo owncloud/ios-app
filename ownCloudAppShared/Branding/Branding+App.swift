@@ -51,21 +51,32 @@ extension OCClassSettingsKey {
 	public static let profileDefinitions : OCClassSettingsKey = OCClassSettingsKey("profile-definitions")
 
 	// Themes
-	public static let themeGenericColors : OCClassSettingsKey = OCClassSettingsKey("theme-generic-colors")
-	public static let themeDefinitions : OCClassSettingsKey = OCClassSettingsKey("theme-definitions")
+	public static let themeDefinitions: OCClassSettingsKey = OCClassSettingsKey("theme-definitions")
+
+	public static let themeColors: OCClassSettingsKey = OCClassSettingsKey("theme-colors")
+	public static let themeCSSRecords: OCClassSettingsKey = OCClassSettingsKey("theme-css-records")
 }
 
-extension Branding : BrandingInitialization {
+enum BrandingColorAlias: String, CaseIterable {
+	case tintColor = "tint-color"
+	case brandingBackgroundColor = "branding-background-color"
+	case setupStatusBarStyle = "setup-status-bar-style"
+	case folderIconColor = "folder-icon-color"
+	case fileIconColor = "file-icon-color"
+}
+
+extension Branding : ownCloudApp.BrandingInitialization {
 	public static func initializeBranding() {
 		self.registerOCClassSettingsDefaults([
 			.documentationURL : "https://doc.owncloud.com/ios-app/latest/",
 			.helpURL 	  : "https://owncloud.com/docs-guides/",
 			.privacyURL 	  : "https://owncloud.org/privacy-policy/",
 			.termsOfUseURL 	  : "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
-			.sendFeedbackAddress : "ios-app@owncloud.com",
+			.sendFeedbackURL  : "https://owncloud.com/ios-app-feedback",
 			.canAddAccount : true,
 			.canEditAccount : true,
-			.enableReviewPrompt : false
+			.enableReviewPrompt : false,
+			.profileAllowUrlConfiguration : true
 		], metadata: [
 			.documentationURL : [
 				.type 		: OCClassSettingsMetadataType.urlString,
@@ -154,13 +165,6 @@ extension Branding : BrandingInitialization {
 				.status		: OCClassSettingsKeyStatus.advanced
 			],
 
-			.themeGenericColors : [
-				.type 		: OCClassSettingsMetadataType.dictionary,
-				.description	: "Dictionary defining generic colors that can be used in the definitions.",
-				.category	: "Branding",
-				.status		: OCClassSettingsKeyStatus.advanced
-			],
-
 			.themeDefinitions : [
 				.type 		: OCClassSettingsMetadataType.dictionaryArray,
 				.description	: "Array of dictionaries, each specifying a theme.",
@@ -168,68 +172,106 @@ extension Branding : BrandingInitialization {
 				.status		: OCClassSettingsKeyStatus.advanced
 			],
 
+			.themeCSSRecords: [
+				.type		: OCClassSettingsMetadataType.stringArray,
+				.label		: "Theme CSS Records",
+				.description	: "CSS records to add to the CSS space of system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
+				.category	: "Branding",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.themeColors : [
+				.type		: OCClassSettingsMetadataType.dictionary,
+				.label		: "Theme Colors",
+				.description	: "Values to use in system-color-based themes for branded clients. Mutually exclusive with theme-definitions.",
+				.category	: "Branding",
+				.possibleKeys	: [
+					[
+						OCClassSettingsMetadataKey.value 	: BrandingColorAlias.tintColor.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Color to use as tint/accent color for controls (in hex notation)."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: BrandingColorAlias.brandingBackgroundColor.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Color to use as background color for brand views (in hex notation)."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: BrandingColorAlias.setupStatusBarStyle.rawValue,
+						OCClassSettingsMetadataKey.description 	: "The status bar style in the setup wizard, affecting the status bar text color. Can be either `default`, `black` or `white`."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: BrandingColorAlias.fileIconColor.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Color to fill file icons with (in hex notation)."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: BrandingColorAlias.folderIconColor.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Color to fill folder icons with (in hex notation)."
+					]
+				],
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
 			.profileBookmarkName : [
-				.type         : OCClassSettingsMetadataType.string,
-				.label        : "Bookmark Name",
-				.description    : "The name that should be used for the bookmark that's generated from this profile and appears in the account list.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type        	: OCClassSettingsMetadataType.string,
+				.label       	: "Bookmark Name",
+				.description	: "The name that should be used for the bookmark that's generated from this profile and appears in the account list.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.profileURL : [
-				.type         : OCClassSettingsMetadataType.urlString,
-				.label        : "URL",
-				.description     : "The URL of the server targeted by this profile.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.urlString,
+				.label		: "URL",
+				.description	: "The URL of the server targeted by this profile.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.profileHelpURL : [
-				.type         : OCClassSettingsMetadataType.urlString,
-				.label         : "Onboarding URL",
-				.description    : "Optional URL to onboarding resources.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.urlString,
+				.label		: "Onboarding URL",
+				.description	: "Optional URL to onboarding resources.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.profileOpenHelpMessage: [
-				.type         : OCClassSettingsMetadataType.string,
-				.label        : "Open onboarding URL message",
-				.description     : "Message shown in an alert before opening the onboarding URL.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.string,
+				.label		: "Open onboarding URL message",
+				.description	: "Message shown in an alert before opening the onboarding URL.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.profileHelpButtonLabel : [
-				.type         : OCClassSettingsMetadataType.string,
-				.label        : "Onboarding button title",
-				.description     : "Text used for the onboarding button title",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.string,
+				.label		: "Onboarding button title",
+				.description	: "Text used for the onboarding button title",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.profileAllowUrlConfiguration : [
-				.type         : OCClassSettingsMetadataType.boolean,
-				.label         : "Allow URL configuration",
-				.description    : "Indicates if the user can change the server URL for the account.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.boolean,
+				.label		: "Allow URL configuration",
+				.description	: "Indicates if the user can change the server URL for the account.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.sidebarLinks : [
-				.type         : OCClassSettingsMetadataType.array,
-				.label         : "Sidebar Link Items",
-				.description    : "Array of Dictionary, which should appear in the sidebar. Keys url and title are mandatory and an optional image can be added as either an SF-Symbol name (key: symbol) or the name of an image bundled with the app (key: image)",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.array,
+				.label		: "Sidebar Link Items",
+				.description	: "Array of Dictionary, which should appear in the sidebar. Keys url and title are mandatory and an optional image can be added as either an SF-Symbol name (key: symbol) or the name of an image bundled with the app (key: image)",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			],
 
 			.sidebarLinksTitle : [
-				.type         : OCClassSettingsMetadataType.string,
-				.label         : "Sidebar Links Title",
-				.description    : "Title for the sidebar links section.",
-				.status        : OCClassSettingsKeyStatus.advanced,
-				.category    : "Branding"
+				.type		: OCClassSettingsMetadataType.string,
+				.label		: "Sidebar Links Title",
+				.description	: "Title for the sidebar links section.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Branding"
 			]
 		])
 	}
@@ -249,20 +291,25 @@ extension Branding : BrandingInitialization {
 
 		registerLegacyKeyPath("Profiles",		forClassSettingsKey: .profileDefinitions)
 
-		registerLegacyKeyPath("Generic",		forClassSettingsKey: .themeGenericColors)
 		registerLegacyKeyPath("Themes",			forClassSettingsKey: .themeDefinitions)
 		// swiftlint:enable comma
 	}
 }
 
 extension BrandingImageName {
-	public static let loginLogo : BrandingImageName = BrandingImageName("branding-login-logo")
-	public static let loginBackground : BrandingImageName = BrandingImageName("branding-login-background")
+	public static let brandLogo : BrandingImageName = BrandingImageName("branding-logo")
+	public static let brandBackground : BrandingImageName = BrandingImageName("branding-background")
 
-	public static let splashscreenLogo : BrandingImageName = BrandingImageName("branding-splashscreen")
+	public static let legacyBrandLogo : BrandingImageName = BrandingImageName("branding-login-logo") // can be removed as of version 12.2
+	public static let legacyBrandBackground : BrandingImageName = BrandingImageName("branding-login-background") // can be removed as of version 12.2
+
+	public static let splashscreenLogo : BrandingImageName = BrandingImageName("branding-splashscreen-logo")
 	public static let splashscreenBackground : BrandingImageName = BrandingImageName("branding-splashscreen-background")
+}
 
-	public static let bookmarkIcon : BrandingImageName = BrandingImageName("branding-bookmark-icon")
+extension BrandingAssetSuffix {
+	public static let setup: BrandingAssetSuffix = BrandingAssetSuffix("setup")
+	public static let sidebar: BrandingAssetSuffix = BrandingAssetSuffix("sidebar")
 }
 
 extension Branding {
@@ -399,7 +446,7 @@ public struct SidebarLink {
 }
 
 extension Branding {
-	func generateThemeStyle(from theme: [String : Any], generic: [String : Any]) -> ThemeStyle? {
+	func generateThemeStyle(from theme: [String : Any]) -> ThemeStyle? {
 		let style = theme["ThemeStyle"] as? String ?? ThemeCollectionStyle.light.rawValue
 		let identifier = theme["Identifier"] as? String ?? "com.owncloud.branding"
 		let name = theme["Name"] as? String ?? "ownCloud-branding-theme"
@@ -408,29 +455,78 @@ extension Branding {
 		if let themeStyle = ThemeCollectionStyle(rawValue: style),
 		   let darkBrandColor = theme["darkBrandColor"] as? String,
 		   let lightBrandColor = theme["lightBrandColor"] as? String {
-			let colors = theme["Colors"] as? NSDictionary
 			let styles = theme["Styles"] as? NSDictionary
-			return ThemeStyle(styleIdentifier: identifier, localizedName: name.localized, lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, customColors: colors, genericColors: generic as NSDictionary?, interfaceStyles: styles, cssRecordStrings: cssRecordStrings)
+			return ThemeStyle(styleIdentifier: identifier, localizedName: OCLocalizedString(name, nil) , lightColor: lightBrandColor.colorFromHex ?? UIColor.red, darkColor: darkBrandColor.colorFromHex ?? UIColor.blue, themeStyle: themeStyle, interfaceStyles: styles, cssRecordStrings: cssRecordStrings)
 		}
 
 		return nil
 	}
 
 	public func setupThemeStyles() -> Bool {
-		var extractedThemeStyles : [ThemeStyle] = []
+		var brandingThemeStyles : [ThemeStyle] = []
+
+		allowThemeSelection = true
 
 		if let themeStyleDefinitions = self.computedValue(forClassSettingsKey: .themeDefinitions) as? [[String : Any]] {
-			let generic = self.computedValue(forClassSettingsKey: .themeGenericColors) as? [String : Any] ?? [:]
 			for themeStyleDefinition in themeStyleDefinitions {
-				if let themeStyle = self.generateThemeStyle(from: themeStyleDefinition, generic: generic) {
-					extractedThemeStyles.append(themeStyle)
+				if let themeStyle = self.generateThemeStyle(from: themeStyleDefinition) {
+					brandingThemeStyles.append(themeStyle)
 				}
 			}
+		} else if isBranded {
+			var tintColor: UIColor?
+			var mappedCSSRecordStrings : [String]?
+
+			if let colors = self.computedValue(forClassSettingsKey: .themeColors) as? [String:String] {
+				func addCSSRecord(_ selectors: [ThemeCSSSelector], property: ThemeCSSProperty, value: String) {
+					if mappedCSSRecordStrings == nil {
+						mappedCSSRecordStrings = []
+					}
+
+					mappedCSSRecordStrings?.append("\(selectors.address(with: property)): \(value)")
+				}
+
+				for (aliasString, value) in colors {
+					if let alias = BrandingColorAlias(rawValue: aliasString) {
+						switch alias {
+							case .tintColor:
+								// Use as tint color
+								tintColor = value.colorFromHex
+
+							case .brandingBackgroundColor:
+								addCSSRecord([.brand, .background], property: .fill, value: value)
+
+							case .setupStatusBarStyle:
+								addCSSRecord([.accountSetup], property: .statusBarStyle, value: value)
+
+							case .folderIconColor:
+								addCSSRecord([.vectorImage, .folderColor], property: .fill, value: value)
+
+							case .fileIconColor:
+								addCSSRecord([.vectorImage, .fileColor], property: .fill, value: value)
+								addCSSRecord([.vectorImage, .documentFileColor], property: .fill, value: value)
+								addCSSRecord([.vectorImage, .presentationFileColor], property: .fill, value: value)
+								addCSSRecord([.vectorImage, .spreadsheetFileColor], property: .fill, value: value)
+								addCSSRecord([.vectorImage, .pdfFileColor], property: .fill, value: value)
+						}
+					}
+				}
+			}
+
+			var effectiveCSSRecordStrings: [String] = mappedCSSRecordStrings ?? []
+
+			if let themeCSSRecordStrings = self.computedValue(forClassSettingsKey: .themeCSSRecords) as? [String] {
+				effectiveCSSRecordStrings.append(contentsOf: themeCSSRecordStrings)
+			}
+
+			brandingThemeStyles.append(ThemeStyle.systemLight(with: tintColor, cssRecordStrings: effectiveCSSRecordStrings))
+			brandingThemeStyles.append(ThemeStyle.systemDark(with: tintColor, cssRecordStrings: effectiveCSSRecordStrings))
+			allowThemeSelection = true
 		}
 
 		var isDefault = true
 
-		for themeStyle in extractedThemeStyles {
+		for themeStyle in brandingThemeStyles {
 			let themeStyleExtension = themeStyle.themeStyleExtension(isDefault: isDefault)
 			OCExtensionManager.shared.addExtension(themeStyleExtension)
 			isDefault = false
@@ -442,4 +538,9 @@ extension Branding {
 
 public extension ThemeCSSSelector {
 	static let welcome = ThemeCSSSelector(rawValue: "welcome")
+	static let accountSetup = ThemeCSSSelector(rawValue: "accountSetup")
+	static let step = ThemeCSSSelector(rawValue: "step")
+	static let help = ThemeCSSSelector(rawValue: "help")
+	static let certificateSummary = ThemeCSSSelector(rawValue: "certificateSummary")
+	static let brand = ThemeCSSSelector(rawValue: "brand")
 }

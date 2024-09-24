@@ -44,10 +44,7 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		iconView.cssSelectors = [.icon]
 		disconnectButton.cssSelectors = [.disconnect]
 
-		logoFallbackView.contentMode = .scaleAspectFit
-		logoFallbackView.image = Branding.shared.brandedImageNamed(.bookmarkIcon)
-
-		iconView.fallbackView = logoFallbackView
+		iconView.fallbackView = BrandView(showBackground: true, showLogo: true, logoMaxSize: CGSize(width: 36, height: 36), roundedCorners: true)
 
 		titleLabel.font = UIFont.preferredFont(forTextStyle: .title3, with: .bold)
 		titleLabel.adjustsFontForContentSizeCategory = true
@@ -79,6 +76,12 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		contentView.addSubview(infoView)
 
 		infoView.addSubview(disconnectButton)
+
+		titleLabel.isAccessibilityElement = false
+		detailLabel.isAccessibilityElement = false
+		statusIconView.isAccessibilityElement = false
+		isAccessibilityElement = true
+		accessibilityTraits = .button
 	}
 
 	func configureLayout() {
@@ -110,13 +113,15 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 			disconnectButton.trailingAnchor.constraint(lessThanOrEqualTo: infoView.trailingAnchor),
 			disconnectButton.centerYAnchor.constraint(equalTo: infoView.centerYAnchor),
 
-			contentView.heightAnchor.constraint(equalToConstant: AccountControllerCell.avatarSideLength + 20)
+			contentView.heightAnchor.constraint(equalToConstant: AccountControllerCell.avatarSideLength + 20).with(priority: .defaultHigh)
 		])
 
 		infoView.setContentHuggingPriority(.required, for: .horizontal)
 		logoFallbackView.setContentHuggingPriority(.required, for: .vertical)
 		titleLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
 		detailLabel.setContentCompressionResistancePriority(.defaultHigh, for: .vertical)
+
+		disconnectButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 	}
 
 	override init(frame: CGRect) {
@@ -138,11 +143,13 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 	var title: String? {
 		didSet {
 			titleLabel.text = title
+			updateAccessibilityLabel()
 		}
 	}
 	var detail: String? {
 		didSet {
 			detailLabel.text = detail
+			updateAccessibilityLabel()
 		}
 	}
 
@@ -184,6 +191,12 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 					OnMainThread { [weak self] in
 						if accountController == self?.accountController {
 							self?.disconnectButton.isHidden = !showDisconnectButton
+							self?.accessibilityCustomActions = showDisconnectButton ? [
+								UIAccessibilityCustomAction(name: OCLocalizedString("Disconnect", nil), image: OCSymbol.icon(forSymbolName: "eject.circle.fill"), actionHandler: { [weak self] _ in
+									self?.accountController?.disconnect(completion: nil)
+									return true
+								})
+							] : nil
 						}
 					}
 				})
@@ -217,11 +230,14 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 			}
 
 			self.updateStatus(iconFor: accountController?.connection?.status)
+
+			updateAccessibilityLabel()
 		}
 	}
 
 	func updateStatus(iconFor status: AccountConnection.Status?) {
 		var color: UIColor?
+		var statusDescription: String?
 
 		if let status = status {
 			switch status {
@@ -229,18 +245,23 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 
 				case .offline:
 					color = .systemGray
+					statusDescription = OCLocalizedString("Offline", nil)
 
 				case .connecting, .coreAvailable:
 					color = .systemYellow
+					statusDescription = OCLocalizedString("Connecting", nil)
 
 				case .online:
 					color = .systemGreen
+					statusDescription = OCLocalizedString("Online", nil)
 
 				case .busy:
 					color = .systemBlue
+					statusDescription = OCLocalizedString("Busy", nil)
 
 				case .authenticationError:
 					color = .systemRed
+					statusDescription = OCLocalizedString("Authentication error", nil)
 			}
 		}
 
@@ -254,6 +275,10 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		} else {
 			statusIconView.image = nil
 		}
+
+		statusIconView.accessibilityLabel = statusDescription
+
+		updateAccessibilityLabel()
 	}
 
 	func updateStatus(from richStatus: AccountConnectionRichStatus?) {
@@ -270,6 +295,10 @@ class AccountControllerCell: ThemeableCollectionViewListCell {
 		} else {
 			detailLabel.text = detail
 		}
+	}
+
+	func updateAccessibilityLabel() {
+		accessibilityLabel = "\(OCLocalizedString("Account", nil)) \(title ?? "") \(detail ?? "") \(statusIconView.accessibilityLabel != nil ? OCLocalizedString("Status", nil) + " " + statusIconView.accessibilityLabel! : "")"
 	}
 
 	// MARK: - Message Badge

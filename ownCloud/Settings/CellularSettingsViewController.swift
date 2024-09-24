@@ -24,7 +24,7 @@ class CellularSettingsViewController: StaticTableViewController {
 	var changeHandler : (() -> Void)?
 
 	private func updateCellularDataFooter() {
-		var footerTitle = "Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app.".localized
+		var footerTitle = OCLocalizedString("Some cellular data may still be used. To completely avoid the usage of cellular data, please turn off access to cellular for the entire app in the Settings app.", nil)
 
 		if let mainSwitchAllowed = OCCellularManager.shared.switch(withIdentifier: .main)?.allowed, mainSwitchAllowed {
 			footerTitle = ""
@@ -62,10 +62,10 @@ class CellularSettingsViewController: StaticTableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		navigationItem.title = "Cellular Data Usage".localized
+		navigationItem.title = OCLocalizedString("Cellular Data Usage", nil)
 
 		if OCConnection.allowCellular {
-			let mainSection = StaticTableViewSection(headerTitle: "General".localized, footerTitle: "".localized, identifier: "main-section", rows: [
+			let mainSection = StaticTableViewSection(headerTitle: OCLocalizedString("General", nil), footerTitle: "", identifier: "main-section", rows: [
 				buildRow(for: .main)!
 			])
 
@@ -73,7 +73,7 @@ class CellularSettingsViewController: StaticTableViewController {
 
 			updateCellularDataFooter()
 
-			switchesSection = StaticTableViewSection(headerTitle: "By feature".localized, identifier: "options-section")
+			switchesSection = StaticTableViewSection(headerTitle: OCLocalizedString("By feature", nil), identifier: "options-section")
 
 			for cellularSwitch in OCCellularManager.shared.switches {
 				if cellularSwitch.identifier != .main, cellularSwitch.localizedName != nil, let switchRow = buildRow(for: cellularSwitch.identifier) {
@@ -83,8 +83,8 @@ class CellularSettingsViewController: StaticTableViewController {
 
 			updateSwitchesVisibility(animated: false)
 		} else {
-			let cellularDisabledSection = StaticTableViewSection(headerTitle: "General".localized, identifier: "cellular-disabled-section", rows: [
-				StaticTableViewRow(label: "Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information.".localized)
+			let cellularDisabledSection = StaticTableViewSection(headerTitle: OCLocalizedString("General", nil), identifier: "cellular-disabled-section", rows: [
+				StaticTableViewRow(label: OCLocalizedString("Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information.", nil))
 			])
 
 			addSection(cellularDisabledSection)

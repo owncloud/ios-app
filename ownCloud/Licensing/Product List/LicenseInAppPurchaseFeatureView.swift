@@ -44,11 +44,11 @@ class LicenseInAppPurchaseFeatureView: UIView, Themeable {
 
 			switch status {
 				case .unknown, .denied, .expired:
-					button.setTitle("Unlock".localized, for: .normal)
+					button.setTitle(OCLocalizedString("Unlock", nil), for: .normal)
 					button.isEnabled = true
 
 				case .granted:
-					button.setTitle("Unlocked".localized, for: .normal)
+					button.setTitle(OCLocalizedString("Unlocked", nil), for: .normal)
 					button.isEnabled = false
 			}
 

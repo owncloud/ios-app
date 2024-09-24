@@ -22,8 +22,8 @@ import ownCloudAppShared
 class OpenInAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openin") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String { return "Open in".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem, .unviewableFileType] }
+	override class var name : String { return OCLocalizedString("Open in", nil) }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreItem, .moreDetailItem, .multiSelection, .dropAction, .keyboardShortcut, .contextMenuItem, .unviewableFileType, .accessibilityCustomAction] }
 	override class var keyCommand : String? { return "O" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
@@ -52,7 +52,7 @@ class OpenInAction: Action {
 				}
 
 				let appName = VendorServices.shared.appName
-				let alertController = ThemedAlertController(with: "Cannot connect to ".localized + appName, message: appName + " couldn't download file(s)".localized, okLabel: "OK".localized, action: nil)
+				let alertController = ThemedAlertController(with: OCLocalizedString("Cannot connect to ", nil) + appName, message: appName + OCLocalizedString(" couldn't download file(s)", nil), okLabel: OCLocalizedString("OK", nil), action: nil)
 
 				hostViewController?.present(alertController, animated: true)
 			} else {

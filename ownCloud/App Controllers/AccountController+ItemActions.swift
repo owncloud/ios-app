@@ -22,7 +22,7 @@ import ownCloudAppShared
 
 extension AccountController {
 	public var localizedDeleteTitle: String {
-		return VendorServices.shared.isBranded ? "Log out".localized : "Delete".localized
+		return VendorServices.shared.isBranded ? OCLocalizedString("Log out", nil) : OCLocalizedString("Delete", nil)
 	}
 
 	public func editBookmark(on hostViewController: UIViewController, completion completionHandler: (() -> Void)? = nil) {
@@ -59,7 +59,7 @@ extension AccountController {
 	}
 }
 
-extension AccountController: DataItemSwipeInteraction {
+extension AccountController: ownCloudAppShared.DataItemSwipeInteraction {
 	public func provideTrailingSwipeActions(with context: ClientContext?) -> UISwipeActionsConfiguration? {
 		if let hostViewController = context?.originatingViewController ?? context?.rootViewController {
 			let deleteRowAction = UIContextualAction(style: .destructive, title: localizedDeleteTitle, handler: { [weak self, weak hostViewController] (_, _, completionHandler) in
@@ -96,14 +96,14 @@ extension AccountController {
 	}
 }
 
-extension AccountController: DataItemContextMenuInteraction {
+extension AccountController: ownCloudAppShared.DataItemContextMenuInteraction {
 	public func composeContextMenuItems(in viewController: UIViewController?, location: OCExtensionLocationIdentifier, with context: ClientContext?) -> [UIMenuElement]? {
 		if let hostViewController = context?.originatingViewController ?? context?.rootViewController {
 			var menuItems: [UIMenuElement] = []
 
 			// Open in a new window
 			if UIDevice.current.isIpad {
-				let openWindow = UIAction(title: "Open in a new Window".localized, image: UIImage(systemName: "uiwindow.split.2x1")) { [weak self] _ in
+				let openWindow = UIAction(title: OCLocalizedString("Open in a new Window", nil), image: UIImage(systemName: "uiwindow.split.2x1")) { [weak self] _ in
 					if let clientContext = self?.clientContext, let userActivity = self?.openInNewWindowUserActivity(with: clientContext) {
 						UIApplication.shared.requestSceneSessionActivation(nil, userActivity: userActivity, options: nil)
 					}
@@ -119,7 +119,7 @@ extension AccountController: DataItemContextMenuInteraction {
 
 					self?.editBookmark(on: hostViewController)
 				})
-				editAction.title = "Edit".localized
+				editAction.title = OCLocalizedString("Edit", nil)
 				editAction.image = OCSymbol.icon(forSymbolName: "pencil")
 
 				menuItems.append(editAction)
@@ -131,10 +131,21 @@ extension AccountController: DataItemContextMenuInteraction {
 
 				self?.manageBookmark(on: hostViewController)
 			})
-			manageAction.title = "Manage".localized
+			manageAction.title = OCLocalizedString("Manage", nil)
 			manageAction.image = OCSymbol.icon(forSymbolName: "gearshape")
 
 			menuItems.append(manageAction)
+
+			// Disconnect
+			if showDisconnectButton {
+				let disconnectAction = UIAction(handler: { [weak self] _ in
+					self?.disconnect(completion: nil)
+				})
+				disconnectAction.title = OCLocalizedString("Disconnect", nil)
+				disconnectAction.image = OCSymbol.icon(forSymbolName: "eject.circle.fill")
+
+				menuItems.append(disconnectAction)
+			}
 
 			// Delete
 			let deleteAction = UIAction(handler: { [weak self, weak hostViewController] action in
@@ -155,7 +166,7 @@ extension AccountController: DataItemContextMenuInteraction {
 	}
 }
 
-extension AccountController: DataItemDragInteraction {
+extension AccountController: ownCloudAppShared.DataItemDragInteraction {
 	public func provideDragItems(with context: ClientContext?) -> [UIDragItem]? {
 		if let bookmark, let userActivity = openInNewWindowUserActivity(with: clientContext) {
 			let itemProvider = NSItemProvider(item: bookmark, typeIdentifier: "com.owncloud.ios-app.ocbookmark")
@@ -168,5 +179,19 @@ extension AccountController: DataItemDragInteraction {
 		}
 
 		return nil
+	}
+}
+
+extension AccountController: ownCloudAppShared.DataItemDropInteraction {
+	public func allowDropOperation(for session: UIDropSession, with context: ClientContext?) -> UICollectionViewDropProposal? {
+		if session.localDragSession == nil {
+			return nil
+		}
+
+		return UICollectionViewDropProposal(operation: .move, intent: .insertAtDestinationIndexPath)
+	}
+
+	public func performDropOperation(of items: [UIDragItem], with context: ClientContext?, handlingCompletion: @escaping (Bool) -> Void) {
+		handlingCompletion(false)
 	}
 }

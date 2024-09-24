@@ -51,7 +51,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 			window = ThemeWindow(windowScene: windowScene)
 
 			window?.rootViewController = appRootViewController
-			window?.addSubview(appRootViewController.view)
+			if #unavailable(iOS 16) {
+				// Only needed prior to iOS 16
+				// From the console: "Manually adding the rootViewController's view to the view hierarchy is no longer supported. Please allow UIWindow to add the rootViewController's view to the view hierarchy itself."
+				window?.addSubview(appRootViewController.view)
+			}
 			window?.makeKeyAndVisible()
 		}
 
@@ -163,7 +167,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 	}
 }
 
-extension ClientContext: ClientContextProvider {
+extension ClientContext: ownCloudAppShared.ClientContextProvider {
 	public func provideClientContext(for bookmarkUUID: UUID, completion: (Error?, ownCloudAppShared.ClientContext?) -> Void) {
 		if let sceneDelegate = scene?.delegate as? SceneDelegate,
 		   let sections = sceneDelegate.appRootViewController.sidebarViewController?.allSections {

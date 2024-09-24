@@ -1,0 +1,5 @@
+Bugfix: Connection name
+
+Connection name doesn't change immediately 
+
+https://github.com/owncloud/ios-app/issues/1254

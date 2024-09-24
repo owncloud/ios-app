@@ -23,14 +23,18 @@ import ownCloudAppShared
 class CollaborateAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.collaborate") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String { return "Sharing".localized }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut, .contextMenuSharingItem, .moreItem, .moreDetailItem] }
+	override class var name : String { return OCLocalizedString("Sharing", nil) }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut, .contextMenuSharingItem, .moreItem, .moreDetailItem, .accessibilityCustomAction] }
 	override class var keyCommand : String? { return "S" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.count == 1, let core = forContext.core, core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1, let item = forContext.items.first, item.isShareable {
+			if let driveID = item.driveID, driveID == OCDriveIDSharesJail {
+				// Disable re-sharing by not allowing to share items located in the Shares Jail (https://github.com/owncloud/ios-app/issues/1353)
+				return .none
+			}
 			return .first
 		}
 

@@ -19,6 +19,7 @@
 import UIKit
 import PDFKit
 import ownCloudAppShared
+import ownCloudSDK
 
 class PDFOutlineViewController: UIViewController {
 
@@ -57,7 +58,7 @@ class PDFOutlineViewController: UIViewController {
         self.navigationItem.titleView = modeSegmentedControl
 
         if UIDevice.current.userInterfaceIdiom != .pad {
-            let resumeItem = UIBarButtonItem(title: "Resume".localized, style: .plain, target: self, action: #selector(resume))
+            let resumeItem = UIBarButtonItem(title: OCLocalizedString("Resume", nil), style: .plain, target: self, action: #selector(resume))
             self.navigationItem.rightBarButtonItem = resumeItem
         }
 		self.extendedLayoutIncludesOpaqueBars = true

@@ -64,10 +64,10 @@ class DownloadItemsHUDViewController: CardViewController {
 
 		super.loadView()
 
-		cancelButton.setTitle("Cancel".localized, for: .normal)
+		cancelButton.setTitle(OCLocalizedString("Cancel", nil), for: .normal)
 		cancelButton.addTarget(self, action: #selector(self.cancel), for: .touchUpInside)
 
-		messageLabel.text = "Preparing…".localized // Needed so the messageLabel doesn't have a zero height after initial layout
+		messageLabel.text = OCLocalizedString("Preparing…", nil) // Needed so the messageLabel doesn't have a zero height after initial layout
 		messageLabel.sizeToFit()
 
 		messageLabel.setContentHuggingPriority(.required, for: .vertical)
@@ -137,7 +137,7 @@ class DownloadItemsHUDViewController: CardViewController {
 			if items.count > 0 {
 				progressSummarizer.addObserver(self, notificationBlock: { [weak self] (_, summary) in
 					if let progressView = self?.progressView {
-						self?.messageLabel.text = summary.message ?? "Preparing…".localized
+						self?.messageLabel.text = summary.message ?? OCLocalizedString("Preparing…", nil)
 						summary.update(progressView: progressView)
 					}
 				})

@@ -26,6 +26,8 @@ NS_ASSUME_NONNULL_BEGIN
 {
 	NSMutableArray <FileProviderEnumeratorObserver *> *_enumerationObservers;
 	NSMutableArray <FileProviderEnumeratorObserver *> *_changeObservers;
+
+	NSHashTable<OCQuery *> *_didReturnAnyContentQueries;
 }
 
 @property(nonatomic,readonly,class) OCAsyncSequentialQueue *queue;

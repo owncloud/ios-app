@@ -77,11 +77,11 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 				} else if item == nil {
 
 					OnMainThread {
-						let alertController = ThemedAlertController(title: "File no longer exists".localized,
+						let alertController = ThemedAlertController(title: OCLocalizedString("File no longer exists", nil),
 																	message: nil,
 																	preferredStyle: .alert)
 
-						alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { (_) in
+						alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: { (_) in
 							self?.dismiss(animated: true, completion: nil)
 						}))
 
@@ -90,7 +90,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 				} else if let error = error {
 					OnMainThread {
-						self?.present(error: error, title: "Saving edited file failed".localized)
+						self?.present(error: error, title: OCLocalizedString("Saving edited file failed", nil))
 					}
 				}
 			})
@@ -155,8 +155,22 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		}
 	}
 
+	func disableEditingMode() {
+		if #available(iOS 17.0, *) {
+			if let rightBarButtonItems = self.navigationItem.rightBarButtonItems, rightBarButtonItems.count > 0 {
+				for markupButton in rightBarButtonItems {
+					if (markupButton.debugDescription as NSString).contains("pencil.tip.crop.circle") {
+						_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+					}
+				}
+			}
+		} else {
+			self.setEditing(false, animated: false)
+		}
+	}
+
 	@objc func dismissAnimated() {
-		self.setEditing(false, animated: false)
+		disableEditingMode()
 
 		if savingMode == nil {
 			requestsavingMode { (savingMode) in
@@ -184,26 +198,26 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 	}
 
 	func requestsavingMode(completion: ((QLPreviewItemEditingMode) -> Void)? = nil) {
-		let alertController = ThemedAlertController(title: "Save File".localized,
+		let alertController = ThemedAlertController(title: OCLocalizedString("Save File", nil),
 													message: nil,
 													preferredStyle: .alert)
 
 		if item.permissions.contains(.writable) {
-			alertController.addAction(UIAlertAction(title: "Overwrite original".localized, style: .default, handler: { (_) in
+			alertController.addAction(UIAlertAction(title: OCLocalizedString("Overwrite original", nil), style: .default, handler: { (_) in
 				self.savingMode = .updateContents
 
 				completion?(.updateContents)
 			}))
 		}
 		if let core = core, item.parentItem(from: core)?.permissions.contains(.createFile) == true {
-			alertController.addAction(UIAlertAction(title: "Save as copy".localized, style: .default, handler: { (_) in
+			alertController.addAction(UIAlertAction(title: OCLocalizedString("Save as copy", nil), style: .default, handler: { (_) in
 				self.savingMode = .createCopy
 
 				completion?(.createCopy)
 			}))
 		}
 
-		alertController.addAction(UIAlertAction(title: "Discard changes".localized, style: .destructive, handler: { (_) in
+		alertController.addAction(UIAlertAction(title: OCLocalizedString("Discard changes", nil), style: .destructive, handler: { (_) in
 			self.savingMode = .disabled
 
 			completion?(.disabled)
@@ -218,7 +232,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 			if let core = core, let parentItem = item.parentItem(from: core) {
 				self.core?.importFileNamed(item.name, at: parentItem, from: url, isSecurityScoped: true, options: [ .automaticConflictResolutionNameStyle : OCCoreDuplicateNameStyle.bracketed.rawValue, OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, _) in
 					if let error = error {
-						self.present(error: error, title: "Saving edited file failed".localized)
+						self.present(error: error, title: OCLocalizedString("Saving edited file failed", nil))
 					}
 				}, resultHandler: nil)
 			}
@@ -228,7 +242,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 
 				core.reportLocalModification(of: item, parentItem: parentItem, withContentsOfFileAt: url, isSecurityScoped: true, options: [OCCoreOption.importByCopying : true], placeholderCompletionHandler: { (error, _) in
 					if let error = error {
-						self.present(error: error, title: "Saving edited file failed".localized)
+						self.present(error: error, title: OCLocalizedString("Saving edited file failed", nil))
 					}
 				}, resultHandler: nil)
 			}
@@ -247,7 +261,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 													message: error.localizedDescription,
 													preferredStyle: presentationStyle)
 
-		alertController.addAction(UIAlertAction(title: "OK".localized, style: .cancel, handler: nil))
+		alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .cancel, handler: nil))
 
 		self.present(alertController, animated: true, completion: nil)
 	}

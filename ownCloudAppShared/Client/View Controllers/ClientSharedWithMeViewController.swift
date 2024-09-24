@@ -35,7 +35,7 @@ class ClientSharedWithMeViewController: CollectionViewController {
 	init(context inContext: ClientContext?) {
 		super.init(context: inContext, sections: nil, useStackViewRoot: true)
 		revoke(in: inContext, when: [ .connectionClosed ])
-		navigationItem.titleLabelText = "Shared with me".localized
+		navigationItem.titleLabelText = OCLocalizedString("Shared with me", nil)
 	}
 
 	required public init?(coder: NSCoder) {
@@ -44,6 +44,11 @@ class ClientSharedWithMeViewController: CollectionViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+
+		// Disable dragging of items, so keyboard control does
+		// not include "Drag Item" in the accessibility actions
+		// invoked with Tab + Z
+		dragInteractionEnabled = false
 
 		func buildSection(identifier: CollectionViewSection.SectionIdentifier, titled title: String, compositionDataSource: OCDataSourceComposition, contentDataSource: OCDataSource, queryDataSource: OCDataSource? = nil) -> CollectionViewSection {
 			var sectionContext = clientContext
@@ -69,9 +74,9 @@ class ClientSharedWithMeViewController: CollectionViewController {
 		if let pendingDataSource = clientContext?.core?.sharedWithMePendingDataSource,
 		   let acceptedDataSource = clientContext?.core?.sharedWithMeAcceptedDataSource,
 		   let declinedDataSource = clientContext?.core?.sharedWithMeDeclinedDataSource {
-			pendingSection = buildSection(identifier: "pending", titled: "Pending".localized, compositionDataSource: pendingSectionDataSource, contentDataSource: pendingDataSource)
-			acceptedSection = buildSection(identifier: "accepted", titled: "Accepted".localized, compositionDataSource: acceptedSectionDataSource, contentDataSource: acceptedDataSource, queryDataSource: clientContext?.core?.useDrives == true ? acceptedDataSource : nil)
-			declinedSection = buildSection(identifier: "declined", titled: "Declined".localized, compositionDataSource: declinedSectionDataSource, contentDataSource: declinedDataSource)
+			pendingSection = buildSection(identifier: "pending", titled: OCLocalizedString("Pending", nil), compositionDataSource: pendingSectionDataSource, contentDataSource: pendingDataSource)
+			acceptedSection = buildSection(identifier: "accepted", titled: OCLocalizedString("Accepted", nil), compositionDataSource: acceptedSectionDataSource, contentDataSource: acceptedDataSource, queryDataSource: clientContext?.core?.useDrives == true ? acceptedDataSource : nil)
+			declinedSection = buildSection(identifier: "declined", titled: OCLocalizedString("Declined", nil), compositionDataSource: declinedSectionDataSource, contentDataSource: declinedDataSource)
 
 			add(sections: [
 				pendingSection!,
@@ -101,7 +106,7 @@ class ClientSharedWithMeViewController: CollectionViewController {
 		if clientContext?.core?.connectionStatus != .online {
 			let offlineMessage = ComposedMessageView(elements: [
 				.image(OCSymbol.icon(forSymbolName: "network")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.title("Sharing requires an active connection.".localized, alignment: .centered)
+				.title(OCLocalizedString("Sharing requires an active connection.", nil), alignment: .centered)
 			])
 
 			coverView = offlineMessage
@@ -110,7 +115,7 @@ class ClientSharedWithMeViewController: CollectionViewController {
 		if coverView == nil, noItemsCondition?.fulfilled == true {
 			let noShareMessage = ComposedMessageView(elements: [
 				.image(OCSymbol.icon(forSymbolName: "arrowshape.turn.up.left")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.title("No items shared with you".localized, alignment: .centered)
+				.title(OCLocalizedString("No items shared with you", nil), alignment: .centered)
 			])
 
 			coverView = noShareMessage

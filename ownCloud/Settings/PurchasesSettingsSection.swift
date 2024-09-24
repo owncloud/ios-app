@@ -30,7 +30,7 @@ class PurchasesSettingsSection: SettingsSection {
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
 
-		self.headerTitle = "In-App Purchases".localized
+		self.headerTitle = OCLocalizedString("In-App Purchases", nil)
 		self.identifier = "settings-purchases-section"
 
 		createRows()
@@ -41,11 +41,11 @@ class PurchasesSettingsSection: SettingsSection {
 	private func createRows() {
 		purchasesRow = StaticTableViewRow(rowWithAction: { (row, _) in
 			row.viewController?.navigationController?.pushViewController(LicenseInAppProductListViewController(), animated: true)
-		}, title: "Pro Features".localized, accessoryType: .disclosureIndicator, identifier: "pro-features")
+		}, title: OCLocalizedString("Pro Features", nil), accessoryType: .disclosureIndicator, identifier: "pro-features")
 
 		transactionsRow = StaticTableViewRow(rowWithAction: { (row, _) in
 			row.viewController?.navigationController?.pushViewController(LicenseTransactionsViewController(), animated: true)
-		}, title: "Purchases & Subscriptions".localized, accessoryType: .disclosureIndicator, identifier: "purchases")
+		}, title: OCLocalizedString("Purchases & Subscriptions", nil), accessoryType: .disclosureIndicator, identifier: "purchases")
 	}
 
 	// MARK: - Update UI

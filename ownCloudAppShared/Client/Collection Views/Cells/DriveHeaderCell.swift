@@ -19,7 +19,7 @@
 import UIKit
 
 class DriveHeaderCell: DriveListCell {
-	let darkBackgroundView = UIView()
+	let darkBackgroundView = ThemeCSSView()
 
 	var coverObservation : NSKeyValueObservation?
 	var isRequestingCoverImage : Bool = true {
@@ -42,7 +42,7 @@ class DriveHeaderCell: DriveListCell {
 		cssSelectors = [.header, .drive]
 
 		darkBackgroundView.translatesAutoresizingMaskIntoConstraints = false
-		darkBackgroundView.backgroundColor = UIColor(red: 0, green: 0, blue: 0, alpha: 0.4)
+		darkBackgroundView.cssSelector = .semicover
 
 		contentView.clipsToBounds = true
 
@@ -137,4 +137,5 @@ class DriveHeaderCell: DriveListCell {
 extension ThemeCSSSelector {
 	static let drive = ThemeCSSSelector(rawValue: "drive")
 	static let cover = ThemeCSSSelector(rawValue: "cover")
+	static let semicover = ThemeCSSSelector(rawValue: "semicover")
 }

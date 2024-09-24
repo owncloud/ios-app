@@ -25,14 +25,12 @@ import UniformTypeIdentifiers
 class UploadFileAction: UploadBaseAction {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.uploadfile") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String { return "Upload file".localized }
+	override class var name : String { return OCLocalizedString("Upload file", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut, .emptyFolder] }
 	override class var keyCommand : String? { return "+" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
-	private struct AssociatedKeys {
-		static var actionKey = "action"
-	}
+	private static let associatedKeyAction = malloc(1)!
 
 	// MARK: - Action implementation
 	override func run() {
@@ -47,7 +45,7 @@ class UploadFileAction: UploadBaseAction {
 		documentPickerViewController.allowsMultipleSelection = true
 
 		// The action is only held weakly as delegate. This makes sure the Action object sticks around as long as UIDocumentPickerViewController, so that UIDocumentPickerViewController can call the UIDocumentPickerDelegate method.
-		objc_setAssociatedObject(documentPickerViewController, &AssociatedKeys.actionKey, self, .OBJC_ASSOCIATION_RETAIN)
+		objc_setAssociatedObject(documentPickerViewController, UploadFileAction.associatedKeyAction, self, .OBJC_ASSOCIATION_RETAIN)
 
 		viewController.present(documentPickerViewController, animated: true)
 	}

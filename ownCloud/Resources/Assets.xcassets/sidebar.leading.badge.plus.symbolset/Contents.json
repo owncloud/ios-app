@@ -1,0 +1,12 @@
+{
+  "info" : {
+    "author" : "xcode",
+    "version" : 1
+  },
+  "symbols" : [
+    {
+      "filename" : "custom.sidebar.leading.badge.plus.svg",
+      "idiom" : "universal"
+    }
+  ]
+}

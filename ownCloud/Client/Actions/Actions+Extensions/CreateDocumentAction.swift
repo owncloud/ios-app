@@ -30,40 +30,33 @@ public enum CreateDocumentActionMode: String {
 }
 
 class CreateDocumentAction: Action {
-	private static var _classSettingsRegistered: Bool = false
-	override public class var actionExtension: ActionExtension {
-		if !_classSettingsRegistered {
-			_classSettingsRegistered = true
-
-			self.registerOCClassSettingsDefaults([
-				.createDocumentMode : CreateDocumentActionMode.createAndOpen.rawValue
-			], metadata: [
-				.createDocumentMode : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Create Document Mode",
-					.description 	: "Determines behaviour when creating a document.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Actions",
-					.possibleValues : [
-						[
-							OCClassSettingsMetadataKey.value 	: CreateDocumentActionMode.create.rawValue,
-							OCClassSettingsMetadataKey.description 	: "Creates the document."
-						],
-						[
-							OCClassSettingsMetadataKey.value 	: CreateDocumentActionMode.createAndOpen.rawValue,
-							OCClassSettingsMetadataKey.description 	: "Creates the document and opens it in a web app for the document format."
-						]
+	public static func registerSettings() {
+		self.registerOCClassSettingsDefaults([
+			.createDocumentMode : CreateDocumentActionMode.createAndOpen.rawValue
+		], metadata: [
+			.createDocumentMode : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Create Document Mode",
+				.description 	: "Determines behaviour when creating a document.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Actions",
+				.possibleValues : [
+					[
+						OCClassSettingsMetadataKey.value 	: CreateDocumentActionMode.create.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Creates the document."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: CreateDocumentActionMode.createAndOpen.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Creates the document and opens it in a web app for the document format."
 					]
 				]
-			])
-		}
-
-		return super.actionExtension
+			]
+		])
 	}
 
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.createDocument") }
 	override open class var category : ActionCategory? { return .normal }
-	override open class var name : String? { return "New document".localized }
+	override open class var name : String? { return OCLocalizedString("New document", nil) }
 	override open class var locations : [OCExtensionLocationIdentifier]? { return [.folderAction, .keyboardShortcut, .emptyFolder] }
 	override open class var keyCommand : String? { return "N" }
 	override open class var keyModifierFlags: UIKeyModifierFlags? { return [.command, .shift] }
@@ -74,7 +67,7 @@ class CreateDocumentAction: Action {
 			return .none
 		}
 
-		if forContext.items.first?.type != OCItemType.collection {
+		if forContext.items.first?.type != .collection {
 			return .none
 		}
 
@@ -82,10 +75,12 @@ class CreateDocumentAction: Action {
 			return .none
 		}
 
-		if forContext.core?.appProvider?.types?.contains(where: { fileType in
-			return fileType.allowCreation
-		}) == true {
-			return .first
+		if let appProvider = forContext.core?.appProvider, appProvider.supportsCreateDocument {
+			if appProvider.types?.contains(where: { fileType in
+				return fileType.allowCreation
+			}) == true {
+				return .first
+			}
 		}
 
 		return .none
@@ -137,7 +132,7 @@ class CreateDocumentAction: Action {
 			navigationViewController.modalPresentationStyle = .formSheet
 			viewController.present(navigationViewController, animated: true)
 
-			documentPickerViewController.title = "New document".localized
+			documentPickerViewController.title = OCLocalizedString("New document", nil)
 			documentPickerViewController.navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .cancel, primaryAction: UIAction(handler: { [weak navigationViewController] action in
 				navigationViewController?.dismiss(animated: true)
 				self.completed()
@@ -149,7 +144,7 @@ class CreateDocumentAction: Action {
 					return
 				}
 
-				core.suggestUnusedNameBased(on: "New document".localized.appending((fileType.extension != nil) ? ".\(fileType.extension!)" : ""), at: itemLocation, isDirectory: false, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
+				core.suggestUnusedNameBased(on: OCLocalizedString("New document", nil).appending((fileType.extension != nil) ? ".\(fileType.extension!)" : ""), at: itemLocation, isDirectory: false, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
 					guard let suggestedName = suggestedName else { return }
 
 					let fallbackIcon = (fileType.mimeType != nil) ? ResourceItemIcon.iconFor(mimeType: fileType.mimeType!) : .file
@@ -157,12 +152,12 @@ class CreateDocumentAction: Action {
 					OnMainThread {
 						let documentNameViewController = NamingViewController( with: self.core, defaultName: suggestedName, stringValidator: { name in
 							if name.contains("/") || name.contains("\\") {
-								return (false, nil, "File name cannot contain / or \\".localized)
+								return (false, nil, OCLocalizedString("File name cannot contain / or \\", nil))
 							} else {
 								if let item = item {
 									if ((try? self.core?.cachedItem(inParent: item, withName: name, isDirectory: true)) != nil) ||
 									   ((try? self.core?.cachedItem(inParent: item, withName: name, isDirectory: false)) != nil) {
-										return (false, "Item with same name already exists".localized, "An item with the same name already exists in this location.".localized)
+										return (false, OCLocalizedString("Item with same name already exists", nil), OCLocalizedString("An item with the same name already exists in this location.", nil))
 									}
 								}
 
@@ -178,9 +173,9 @@ class CreateDocumentAction: Action {
 								if let error {
 									OnMainThread {
 										let alertController = ThemedAlertController(
-											with: "Error creating {{itemName}}".localized(["itemName" : newFileName]),
+											with: OCLocalizedFormat("Error creating {{itemName}}", ["itemName" : newFileName]),
 											message: error.localizedDescription,
-											okLabel: "OK".localized,
+											okLabel: OCLocalizedString("OK", nil),
 											action: nil)
 
 										viewController.present(alertController, animated: true)
@@ -209,7 +204,7 @@ class CreateDocumentAction: Action {
 											}
 
 											OnMainThread {
-												let progressHUDViewController = ProgressHUDViewController(on: viewController, label: "Opening…".localized)
+												let progressHUDViewController = ProgressHUDViewController(on: viewController, label: OCLocalizedString("Opening…", nil))
 
 												if let trackingToken = core.trackItem(with: .require(requirements), trackingHandler: { [weak self] error, item, isInitial in
 													if error != nil {
@@ -268,7 +263,8 @@ class CreateDocumentAction: Action {
 							}
 						})
 
-						documentNameViewController.navigationItem.title = "Pick a name".localized
+						documentNameViewController.requiredFileExtension = fileType.extension
+						documentNameViewController.navigationItem.title = OCLocalizedString("Pick a name", nil)
 
 						navigationViewController.pushViewController(documentNameViewController, animated: true)
 					}
@@ -279,7 +275,7 @@ class CreateDocumentAction: Action {
 			let iconSize = CGSize(width: 36, height: 36)
 
 			let headerItem = OCDataItemPresentable(reference: "_header" as NSString, originalDataItemType: nil, version: nil)
-			headerItem.title = "Pick a document type to create:".localized
+			headerItem.title = OCLocalizedString("Pick a document type to create:", nil)
 			headerItem.childrenDataSourceProvider = nil
 
 			var documentTypeActions : [OCDataItem & OCDataItemVersioning] = [ headerItem ]

@@ -16,6 +16,8 @@ This script allows you to resign the ownCloud App IPA file with a different Appl
 
    - `com.yourcompany.ios-app.ownCloud-Share-Extension`
 
+   - `com.yourcompany.ios-app.ownCloud-Action-Extension`
+
 2. Generate one App Group:
 
    - `group.com.yourcompany.ios-app`
@@ -51,6 +53,7 @@ Create a text file containing a list of line-break separated domain names (FQN) 
    - `FileProviderUI.mobileprovision`
    - `Intent.mobileprovision`
    - `ShareExtension.mobileprovision`
+   - `ActionExtension.mobileprovision`
 
 5. Execute the script
 

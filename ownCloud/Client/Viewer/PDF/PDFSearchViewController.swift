@@ -78,11 +78,6 @@ class PDFSearchViewController: UITableViewController, PDFDocumentDelegate, Theme
         NotificationCenter.default.removeObserver(self)
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
     @objc func dismissSearch() {
         typeDelayTimer?.invalidate()
         self.dismiss(animated: true) {

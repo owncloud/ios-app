@@ -119,17 +119,15 @@ public class CollectionViewCellConfiguration: NSObject {
 }
 
 public extension NSObject {
-	private struct AssociatedKeys {
-		static var cellConfiguration = "cellConfiguration"
-	}
+	private static let associatedKeyCellConfiguration = malloc(1)!
 
 	var ocCellConfiguration : CollectionViewCellConfiguration? {
 		set {
-			objc_setAssociatedObject(self, &AssociatedKeys.cellConfiguration, newValue, .OBJC_ASSOCIATION_RETAIN)
+			objc_setAssociatedObject(self, NSObject.associatedKeyCellConfiguration, newValue, .OBJC_ASSOCIATION_RETAIN)
 		}
 
 		get {
-			return objc_getAssociatedObject(self, &AssociatedKeys.cellConfiguration) as? CollectionViewCellConfiguration
+			return objc_getAssociatedObject(self, NSObject.associatedKeyCellConfiguration) as? CollectionViewCellConfiguration
 		}
 	}
 }

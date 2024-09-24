@@ -55,7 +55,7 @@ class LicenseOffersViewController: StaticTableViewController {
 		let titleView = UILabel()
 		let fontSize : CGFloat = 22
 
-		let headerText = NSMutableAttributedString(string: "Pro Features".localized, attributes: [
+		let headerText = NSMutableAttributedString(string: OCLocalizedString("Pro Features", nil), attributes: [
 			.font : UIFont.systemFont(ofSize: fontSize, weight: .light)
 		])
 
@@ -79,8 +79,8 @@ class LicenseOffersViewController: StaticTableViewController {
 	}
 
 	func composeSections() {
-		let iapSection = StaticTableViewSection(headerTitle: "Purchase".localized)
-		let subSection = StaticTableViewSection(headerTitle: "Subscribe".localized)
+		let iapSection = StaticTableViewSection(headerTitle: OCLocalizedString("Purchase", nil))
+		let subSection = StaticTableViewSection(headerTitle: OCLocalizedString("Subscribe", nil))
 
 		if let feature = OCLicenseManager.shared.feature(withIdentifier: featureIdentifier) {
 			if let offers = OCLicenseManager.shared.offers(for: feature) {
@@ -125,7 +125,7 @@ class LicenseOffersViewController: StaticTableViewController {
 			OCLicenseManager.shared.restorePurchases(on: self, with: { (_) in
 				self.composeSections()
 			})
-		}, title: "Restore purchases".localized, alignment: .center))
+		}, title: OCLocalizedString("Restore purchases", nil), alignment: .center))
 
 		sections.append(restoreSection)
 		#endif

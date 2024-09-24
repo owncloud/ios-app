@@ -120,7 +120,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		return nil
 	}
 
-	var item: OCItem? {
+	@objc dynamic var item: OCItem? {
 		didSet {
 			if itemClaimIdentifier == nil, // No claim registered by the DisplayViewController for the item yet
 			let item = item, let core = core,
@@ -244,13 +244,13 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		view.addSubview(progressView)
 
 		cancelButton.translatesAutoresizingMaskIntoConstraints = false
-		cancelButton.setTitle("Cancel".localized, for: .normal)
+		cancelButton.setTitle(OCLocalizedString("Cancel", nil), for: .normal)
 		cancelButton.addTarget(self, action: #selector(cancelDownload(sender:)), for: .primaryActionTriggered)
 
 		view.addSubview(cancelButton)
 
 		showPreviewButton.translatesAutoresizingMaskIntoConstraints = false
-		showPreviewButton.setTitle("Open file".localized, for: .normal)
+		showPreviewButton.setTitle(OCLocalizedString("Open file", nil), for: .normal)
 		showPreviewButton.addTarget(self, action: #selector(downloadItem), for: .primaryActionTriggered)
 		view.addSubview(showPreviewButton)
 
@@ -303,6 +303,10 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			connectionActivityView.centerXAnchor.constraint(equalTo: iconImageView.centerXAnchor),
 			connectionActivityView.topAnchor.constraint(equalTo: infoLabel.bottomAnchor, constant: verticalSpacing)
 		])
+
+		view.isAccessibilityElement = true
+		view.focusGroupIdentifier = "com.owncloud.viewer"
+		view.focusEffect = UIFocusHaloEffect(rect: CGRect(x: 0, y: 0, width: 0, height: 0)) // Avoid "bluish" overlay over viewed content when using the accessibility option keyboard navigation
 	}
 
 	private var _themeRegistered = false
@@ -319,6 +323,15 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 		updateDisplayTitleAndButtons()
 		updateUI()
+	}
+
+	override func viewDidAppear(_ animated: Bool) {
+		super.viewDidAppear(animated)
+		becomeFirstResponder()
+	}
+
+	override var canBecomeFirstResponder: Bool {
+		return true
 	}
 
 	// MARK: - Actions which can be triggered by the user
@@ -421,17 +434,17 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 				switch updateStrategy {
 					case .ask:
 						OnMainThread {
-							let alert = ThemedAlertController(title: NSString(format: "%@ was updated".localized as NSString, item.name ?? "File".localized) as String, message: "Would you like to view the updated version?".localized, preferredStyle: .alert)
+							let alert = ThemedAlertController(title: NSString(format: OCLocalizedString("%@ was updated", nil) as NSString, item.name ?? OCLocalizedString("File", nil)) as String, message: OCLocalizedString("Would you like to view the updated version?", nil), preferredStyle: .alert)
 
-							alert.addAction(UIAlertAction(title: "Show new version".localized, style: .default, handler: { [weak self] (_) in
+							alert.addAction(UIAlertAction(title: OCLocalizedString("Show new version", nil), style: .default, handler: { [weak self] (_) in
 								self?.updateStrategy = .ask
 								shouldRender(true)
 							}))
-							alert.addAction(UIAlertAction(title: "Refresh without asking".localized, style: .default, handler: { [weak self] (_) in
+							alert.addAction(UIAlertAction(title: OCLocalizedString("Refresh without asking", nil), style: .default, handler: { [weak self] (_) in
 								self?.updateStrategy = .alwaysUpdate
 								shouldRender(true)
 							}))
-							alert.addAction(UIAlertAction(title: "Ignore updates".localized, style: .cancel, handler: { [weak self] (_) in
+							alert.addAction(UIAlertAction(title: OCLocalizedString("Ignore updates", nil), style: .cancel, handler: { [weak self] (_) in
 								self?.updateStrategy = .neverUpdate
 								shouldRender(false)
 							}))
@@ -477,8 +490,8 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	}
 
 	// MARK: - UI management
-	@objc var displayTitle : String?
-	@objc var displayBarButtonItems : [UIBarButtonItem]?
+	@objc dynamic var displayTitle : String?
+	@objc dynamic var displayBarButtonItems : [UIBarButtonItem]?
 
 	private func updateDisplayTitleAndButtons() {
 		if let itemName = item?.name {
@@ -491,10 +504,9 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	}
 
 	var actionBarButtonItem : UIBarButtonItem {
-		let itemName = item?.name ?? ""
 		let actionsBarButtonItem = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: self, action: #selector(actionsBarButtonPressed))
 		actionsBarButtonItem.tag = moreButtonTag
-		actionsBarButtonItem.accessibilityLabel = itemName + " " + "Actions".localized
+		actionsBarButtonItem.accessibilityLabel = OCLocalizedString("Actions", nil)
 
 		return actionsBarButtonItem
 	}
@@ -538,7 +550,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			if let item = self.item, !canPreviewCurrentItem {
 				if self.core?.localCopy(of:item) == nil {
 					showPreviewButton.isHidden = false
-					showPreviewButton.setTitle("Download".localized, for: .normal)
+					showPreviewButton.setTitle(OCLocalizedString("Download", nil), for: .normal)
 				} else {
 					primaryUnviewableActionButton.isHidden = !hasPrimaryUnviewableAction
 				}
@@ -546,7 +558,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 		case .connecting:
 			infoLabel.isHidden = false
-			infoLabel.text = "Connecting...".localized
+			infoLabel.text = OCLocalizedString("Connecting...", nil)
 			connectionActivityView.startAnimating()
 
 		case .offline:
@@ -556,7 +568,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 			showPreviewButton.isHidden = true
 			primaryUnviewableActionButton.isHidden = true
 			infoLabel.isHidden = false
-			infoLabel.text = "Network unavailable".localized
+			infoLabel.text = OCLocalizedString("Network unavailable", nil)
 
 		case .downloadFailed, .downloadCanceled:
 			if self.connectionStatus == .online {
@@ -588,7 +600,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 		case .previewFailed:
 			iconImageView.isHidden = false
-			infoLabel.text = "File couldn't be opened".localized
+			infoLabel.text = OCLocalizedString("File couldn't be opened", nil)
 			infoLabel.isHidden = false
 		}
 	}
@@ -699,6 +711,7 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 
 								// Use existing local copy
 								itemDirectURL = file.url
+								state = .downloadFinished
 								didUpdate = true
 
 								// Modify item's last used timestamp
@@ -749,11 +762,11 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	func queryHasChangesAvailable(_ query: OCQuery) {
 		query.requestChangeSet(withFlags: .onlyResults) { [weak self] (query, changeSet) in
 			OnMainThread {
-				Log.log("DisplayViewController.queryHasChangesAvailable: \(changeSet?.queryResult.description ?? "nil") - state: \(String(describing: query.state.rawValue))")
+				Log.log("DisplayViewController.queryHasChangesAvailable: \(changeSet?.queryResult?.description ?? "nil") - state: \(String(describing: query.state.rawValue))")
 
 				switch query.state {
 					case .idle, .contentsFromCache, .waitingForServerReply:
-						if let firstItem = changeSet?.queryResult.first {
+						if let firstItem = changeSet?.queryResult?.first {
 							self?.item = firstItem
 						} else {
 							// No item available

@@ -54,6 +54,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	public var share: OCShare?
 	public var item: OCItem?
 	public var location: OCLocation?
+	public var name: String?
 	public var type: ShareType
 	public var mode: Mode
 
@@ -64,7 +65,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 			if recipient != nil {
 				searchViewController?.endSearch()
 				recipientsSection?.boundarySupplementaryItems = [
-					.mediumTitle("Share with".localized)
+					.mediumTitle(OCLocalizedString("Share with", nil))
 				]
 			} else {
 				recipientsSection?.boundarySupplementaryItems = nil
@@ -99,6 +100,8 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	var linksSectionDatasource: OCDataSourceArray?
 	var linksSection: CollectionViewSection?
 
+	var nameTextField : UITextField?
+
 	var customPermissionsSectionOptionGroup: OptionGroup?
 	var customPermissionsDatasource: OCDataSourceArray?
 	var customPermissionsSection: CollectionViewSection?
@@ -123,6 +126,16 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		self.item = (item != nil) ? item! : ((location != nil) ? try? clientContext.core?.cachedItem(at: location!) : nil)
 		self.mode = mode
 		self.completionHandler = completion
+
+		// Item section
+		if let item = item {
+			let itemSectionContext = ClientContext(with: clientContext, modifier: { context in
+				context.permissions = []
+			})
+			let itemSectionDatasource = OCDataSourceArray(items: [item])
+			let itemSection = CollectionViewSection(identifier: "item", dataSource: itemSectionDatasource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemSectionContext)
+			sections.append(itemSection)
+		}
 
 		// Managament section cell style
 		let managementCellStyle: CollectionViewCellStyle = .init(with: .tableCell)
@@ -165,12 +178,37 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 			sections.append(linksSection)
 		}
 
+		// - Name
+		if self.type == .link {
+			let textField : UITextField = ThemeCSSTextField()
+			textField.translatesAutoresizingMaskIntoConstraints = false
+			textField.setContentHuggingPriority(.required, for: .vertical)
+			textField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+			textField.placeholder = share?.token ?? OCLocalizedString("Link", nil)
+			textField.text = share?.name
+			textField.accessibilityLabel = OCLocalizedString("Name", nil)
+
+			nameTextField = textField
+
+			let spacerView = UIView()
+			spacerView.translatesAutoresizingMaskIntoConstraints = false
+			spacerView.embed(toFillWith: textField, insets: NSDirectionalEdgeInsets(top: 10, leading: 18, bottom: 10, trailing: 18))
+
+			let nameSectionDatasource = OCDataSourceArray(items: [spacerView])
+			let nameSection = CollectionViewSection(identifier: "name", dataSource: nameSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: shareControllerContext)
+			nameSection.boundarySupplementaryItems = [
+				.mediumTitle(OCLocalizedString("Name", nil))
+			]
+
+			sections.append(nameSection)
+		}
+
 		// - Roles & permissions
 		rolesSectionDatasource = OCDataSourceArray()
 
 		rolesSection = CollectionViewSection(identifier: "roles", dataSource: rolesSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: shareControllerContext)
 		rolesSection?.boundarySupplementaryItems = [
-			.mediumTitle("Permissions".localized)
+			.mediumTitle(OCLocalizedString("Permissions", nil))
 		]
 		rolesSection?.hidden = true
 
@@ -191,7 +229,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		optionsSection = CollectionViewSection(identifier: "options", dataSource: optionsSectionDatasource, cellStyle: managementLineCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: shareControllerContext)
 		optionsSection?.hideIfEmptyDataSource = optionsSectionDatasource
 		optionsSection?.boundarySupplementaryItems = [
-			.mediumTitle("Options".localized)
+			.mediumTitle(OCLocalizedString("Options", nil))
 		]
 
 		if let optionsSection {
@@ -205,6 +243,14 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		linksSectionContext.originatingViewController = self
 
 		revoke(in: clientContext, when: [ .connectionClosed, .connectionOffline ])
+
+		// Add defaults for creation
+		if self.type == .link, self.mode == .create, share == nil, expirationDate == nil {
+			if clientContext.core?.connection.capabilities?.publicSharingExpireDateAddDefaultDate == true,
+			   let numberOfDays = clientContext.core?.connection.capabilities?.publicSharingDefaultExpireDateDays {
+				expirationDate = Date(timeIntervalSinceNow: numberOfDays.doubleValue * (24 * 60 * 60))
+			}
+		}
 	}
 
 	required public init?(coder: NSCoder) {
@@ -214,34 +260,38 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 
+		// Disable dragging of items, so keyboard control does
+		// not include "Drag Item" in the accessibility actions
+		// invoked with Tab + Z
+		dragInteractionEnabled = false
+
 		// Add extra content inset on top
 		var extraContentInset = collectionView.contentInset
 		extraContentInset.top += 10
 		collectionView.contentInset = extraContentInset
 
 		// Set navigation bar title
-		let itemDisplayName = location?.displayName(in: clientContext)
 		var navigationTitle: String?
 
-		if let itemDisplayName {
-			navigationTitle = "Share {{itemName}}".localized([ "itemName" : itemDisplayName ])
-		} else {
-			switch mode {
-				case .create:
-					navigationTitle = "Share".localized
+		switch mode {
+		case .create:
+			navigationTitle = (type == .link) ? OCLocalizedString("Create link", nil) : OCLocalizedString("Invite", nil)
 
-				case .edit:
-					navigationTitle = "Edit".localized
-			}
+		case .edit:
+			navigationTitle = OCLocalizedString("Edit", nil)
 		}
 		navigationItem.titleLabelText = navigationTitle
 
 		// Add bottom button bar
-		let title = (mode == .create) ? ((type == .link) ? "Create link".localized : "Invite".localized) : "Save changes".localized
+		let isLinkCreation = (mode == .create) && (type == .link)
+ 		let title = (mode == .create) ? ((type == .link) ? OCLocalizedString("Share", nil) : OCLocalizedString("Invite", nil)) : OCLocalizedString("Save changes", nil)
+		let altTitle = isLinkCreation ? OCLocalizedString("Create", nil) : nil
 
-		bottomButtonBar = BottomButtonBar(selectButtonTitle: title, cancelButtonTitle: "Cancel".localized, hasCancelButton: true, selectAction: UIAction(handler: { [weak self] _ in
+		bottomButtonBar = BottomButtonBar(selectButtonTitle: title, alternativeButtonTitle: altTitle, cancelButtonTitle: OCLocalizedString("Cancel", nil), hasAlternativeButton: isLinkCreation, hasCancelButton: true, selectAction: UIAction(handler: { [weak self] _ in
+			self?.save(andShare: isLinkCreation)
+		}), alternativeAction: isLinkCreation ? UIAction(handler: { [weak self] _ in
 			self?.save()
-		}), cancelAction: UIAction(handler: { [weak self] _ in
+		}) : nil, cancelAction: UIAction(handler: { [weak self] _ in
 			self?.complete()
 		}))
 		bottomButtonBar?.showActivityIndicatorWhileModalActionRunning = mode != .edit
@@ -250,29 +300,22 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		bottomButtonBarViewController.view = bottomButtonBar
 
 		// - Add delete button for existing shares
-		if mode == .edit, let bottomButtonBar {
-			var deleteButtonConfig = UIButton.Configuration.borderedProminent()
-			deleteButtonConfig.title = "Unshare".localized
-			deleteButtonConfig.cornerStyle = .large
-			deleteButtonConfig.baseBackgroundColor = .systemRed
-			deleteButtonConfig.baseForegroundColor = .white
+		if mode == .edit {
+			let unshare = UIBarButtonItem(title: OCLocalizedString("Unshare", nil), style: .plain, target: self, action: #selector(deleteShare))
+			unshare.tintColor = .red
 
-			let deleteButton = UIButton()
-			deleteButton.translatesAutoresizingMaskIntoConstraints = false
-			deleteButton.configuration = deleteButtonConfig
-			deleteButton.addAction(UIAction(handler: { [weak self] action in
-				self?.deleteShare()
-			}), for: .primaryActionTriggered)
-
-			bottomButtonBar.addSubview(deleteButton)
-
-			NSLayoutConstraint.activate([
-				deleteButton.leadingAnchor.constraint(equalTo: bottomButtonBar.leadingAnchor, constant: 20),
-				deleteButton.centerYAnchor.constraint(equalTo: bottomButtonBar.selectButton.centerYAnchor)
-			])
+			self.navigationItem.rightBarButtonItem = unshare
 		}
 
 		self.addStacked(child: bottomButtonBarViewController, position: .bottom)
+
+		// Wire up name textfield
+		self.name = share?.name
+		nameTextField?.addAction(UIAction(handler: { [weak self, weak nameTextField] _ in
+			if let nameTextField {
+				self?.name = nameTextField.text
+			}
+		}), for: .allEditingEvents)
 
 		// Set up view
 		if let share, let core = clientContext?.core {
@@ -374,14 +417,14 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 			}
 
 			if type == .link {
-				addPermissionOption(title: "Download / View".localized, iconName: "eye", permission: .read)
+				addPermissionOption(title: OCLocalizedString("Download / View", nil), iconName: "eye", permission: .read)
 			} else {
-				addPermissionOption(title: "Read".localized, iconName: "eye", permission: .read)
+				addPermissionOption(title: OCLocalizedString("Read", nil), iconName: "eye", permission: .read)
 			}
-			addPermissionOption(title: "Edit".localized, iconName: "character.cursor.ibeam", permission: .update)
-			addPermissionOption(title: "Upload".localized, iconName: "arrow.up.circle.fill", permission: .create)
-			addPermissionOption(title: "Delete".localized, iconName: "trash", permission: .delete)
-			addPermissionOption(title: "Share".localized, iconName: "person.badge.plus", permission: .share)
+			addPermissionOption(title: OCLocalizedString("Edit", nil), iconName: "character.cursor.ibeam", permission: .update)
+			addPermissionOption(title: OCLocalizedString("Upload", nil), iconName: "arrow.up.circle.fill", permission: .create)
+			addPermissionOption(title: OCLocalizedString("Delete", nil), iconName: "trash", permission: .delete)
+			addPermissionOption(title: OCLocalizedString("Share", nil), iconName: "person.badge.plus", permission: .share)
 
 			customPermissionsSectionOptionGroup = OptionGroup()
 			customPermissionsSectionOptionGroup?.items = permissionOptions
@@ -442,14 +485,14 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 				// No results
 				let noResultContent = SearchViewController.Content(type: .noResults, source: OCDataSourceArray(), style: placeholderCellStyle)
-				let noResultsView = ComposedMessageView.infoBox(image: OCSymbol.icon(forSymbolName: "magnifyingglass"), title: "No matches".localized, subtitle: "No user or group matches your search.".localized, withRoundedBackgroundView: false)
+				let noResultsView = ComposedMessageView.infoBox(image: OCSymbol.icon(forSymbolName: "magnifyingglass"), title: OCLocalizedString("No matches", nil), subtitle: OCLocalizedString("No user or group matches your search.", nil), withRoundedBackgroundView: false)
 
 				(noResultContent.source as? OCDataSourceArray)?.setVersionedItems([
 					noResultsView
 				])
 
 				// Suggestion view
-				let suggestionsSource = OCDataSourceArray(items: [ ComposedMessageView.infoBox(image: nil, subtitle: "Enter the user or group you want to invite.".localized, withRoundedBackgroundView: false) ])
+				let suggestionsSource = OCDataSourceArray(items: [ ComposedMessageView.infoBox(image: nil, subtitle: OCLocalizedString("Enter the user or group you want to invite.", nil), withRoundedBackgroundView: false) ])
 				let suggestionsContent = SearchViewController.Content(type: .suggestion, source: suggestionsSource, style: placeholderCellStyle)
 
 				// Create and install SearchViewController
@@ -507,67 +550,173 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 	// MARK: - State
 	func updateState() {
+		var createIsEnabled: Bool
+
 		switch type {
 			case .link:
-				bottomButtonBar?.selectButton.isEnabled = (location != nil) && (role != nil) && (permissions != nil)
+				createIsEnabled = (location != nil) && (role != nil) && (permissions != nil)
 
 			case .share:
-				bottomButtonBar?.selectButton.isEnabled = (location != nil) && (recipient != nil) && (role != nil) && (permissions != nil)
+				createIsEnabled = (location != nil) && (recipient != nil) && (role != nil) && (permissions != nil)
 		}
+
+		// Enforce password requirements
+		if hasPasswordOption && passwordRequired && !hasPassword {
+			createIsEnabled = false
+		}
+
+		// Enforce expiration date requirements
+		if hasExpirationOption && expirationDateRequired && (expirationDate == nil) {
+			createIsEnabled = false
+		}
+
+		bottomButtonBar?.selectButton.isEnabled = createIsEnabled
+		bottomButtonBar?.alternativeButton.isEnabled = createIsEnabled
 	}
 
 	// MARK: - Options
 	var passwordOption: OptionItem?
-	var password: String?
-	var removePassword: Bool = false
+	var password: String? {
+		didSet {
+			updateState()
+		}
+	}
+	var removePassword: Bool = false {
+		didSet {
+			updateState()
+		}
+	}
+	var passwordPolicy: OCPasswordPolicy {
+		return clientContext?.core?.connection.capabilities?.passwordPolicy ?? OCPasswordPolicy.default
+	}
 
 	var expiryOption: OptionItem?
 	var expirationDatePicker: UIDatePicker?
-	var expirationDate: Date?
+	var expirationDate: Date? {
+		didSet {
+			updateState()
+		}
+	}
+
+	var hasPasswordOption: Bool {
+		return type == .link
+	}
+	var passwordRequired: Bool {
+		if type == .link, let capabilities = clientContext?.core?.connection.capabilities {
+			if capabilities.publicSharingPasswordEnforced == true {
+				return true
+			}
+			if permissions?.contains(.read) == true &&
+			   permissions?.contains(.delete) == true && (
+				permissions?.contains(.create) == true ||
+				permissions?.contains(.update) == true) {
+				return capabilities.publicSharingPasswordEnforcedForReadWriteDelete == true
+			}
+			if permissions?.contains(.read) == true && (
+				permissions?.contains(.create) == true ||
+				permissions?.contains(.update) == true) {
+				return capabilities.publicSharingPasswordEnforcedForReadWrite == true
+			}
+			if permissions?.contains(.create) == true {
+				return capabilities.publicSharingPasswordEnforcedForUploadOnly == true
+			}
+			if permissions?.contains(.read) == true {
+				return capabilities.publicSharingPasswordEnforcedForReadOnly == true
+			}
+		}
+		return false
+	}
+	var hasExpirationOption: Bool {
+		return (type == .link)
+	}
+	var expirationDateRequired: Bool {
+		return type == .link ? (clientContext?.core?.connection.capabilities?.publicSharingExpireDateEnforceDateAndDaysDeterminesLastAllowedDate == true) : false
+	}
 
 	func updateOptions() {
-		let hasPasswordOption = type == .link
-		let hasExpirationOption = true
-
 		var options: [OCDataItem & OCDataItemVersioning] = []
 
 		// Password
 		if hasPasswordOption {
 			var accessories: [UICellAccessory] = []
 			var details: [SegmentViewItem] = []
+			var customActions: [UIAccessibilityCustomAction] = []
 
-			if ((share?.protectedByPassword == true) && !removePassword) || (password != nil) {
-				details.append(.detailText("******"))
-
-				accessories = [
-					.button(image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), accessibilityLabel: "Remove password".localized, action: UIAction(handler: { [weak self] action in
-						self?.password = nil
-						self?.removePassword = true
-						self?.updateOptions()
-					}))
-				]
-			} else {
+			let makeButton: (_ title: String, _ action: @escaping UIActionHandler) -> UIButton = { (title, action) in
 				var buttonConfig = UIButton.Configuration.plain()
-				buttonConfig.title = "Add".localized
+				buttonConfig.title = title
 				buttonConfig.contentInsets = .zero
+
+				let uiAction = UIAction(handler: action)
 
 				let button = ThemeCSSButton()
 				button.configuration = buttonConfig
-				button.addAction(UIAction(handler: { [weak self] action in
-					self?.requestPassword()
-				}), for: .primaryActionTriggered)
+				button.addAction(uiAction, for: .primaryActionTriggered)
 
-				details.append(SegmentViewItem(view: button))
+				customActions.append(UIAccessibilityCustomAction(name: title, actionHandler: { _ in
+					action(uiAction)
+					return true
+				}))
+
+				return button
 			}
 
-			let content = UniversalItemListCell.Content(with: .text("Password"), iconSymbolName: "key.fill", accessories: accessories)
+			if ((share?.protectedByPassword == true) && !removePassword) || (password != nil) {
+				if password != nil {
+					let copyButton = makeButton(OCLocalizedString("Copy", nil), { [weak self] action in
+						if let self, let password = self.password {
+							UIPasteboard.general.string = password
+							_ = NotificationHUDViewController(on: self, title: OCLocalizedString("Password", nil), subtitle: OCLocalizedString("The password was copied to the clipboard", nil), completion: nil)
+						}
+					})
+
+					details.append(contentsOf: [
+						SegmentViewItem(view: copyButton),
+						SegmentViewItem(title: "|", style: .label)
+					])
+				}
+
+				details.append(.detailText("******"))
+
+				let removePassword = { [weak self] in
+					self?.password = nil
+					self?.removePassword = true
+					self?.updateOptions()
+				}
+
+				accessories = [
+					.button(image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), accessibilityLabel: OCLocalizedString("Remove password", nil), action: UIAction(handler: { _ in
+						removePassword()
+					}))
+				]
+
+				customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Remove password", nil), actionHandler: { _ in
+					removePassword()
+					return true
+				}))
+			} else {
+				if passwordRequired {
+					details.append(.detailText("⚠️"))
+				}
+
+				let generateButton = makeButton(OCLocalizedString("Generate", nil), { [weak self] action in
+					self?.generatePassword()
+				})
+
+				let addButton = makeButton(OCLocalizedString("Set", nil), { [weak self] action in
+					self?.requestPassword()
+				})
+
+				details.append(contentsOf: [SegmentViewItem(view: generateButton), SegmentViewItem(title: "|", style: .label), SegmentViewItem(view: addButton)])
+			}
+
+			let content = UniversalItemListCell.Content(with: .text(OCLocalizedString("Password", nil)), iconSymbolName: "key.fill", accessories: accessories)
 			content.details = details
+			content.accessibilityCustomActions = customActions
 
 			if passwordOption == nil {
 				passwordOption = OptionItem(kind: .single, content: content, state: false, selectionAction: { [weak self] optionItem in
-					if self?.hasPassword == true {
-						self?.requestPassword()
-					}
+					self?.requestPassword()
 				})
 			} else {
 				passwordOption?.content = content
@@ -582,6 +731,12 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		if hasExpirationOption {
 			var accessories: [UICellAccessory] = []
 			var details: [SegmentViewItem] = []
+			var customActions: [UIAccessibilityCustomAction] = []
+
+			let addExpirationDate = { [weak self] in
+				self?.expirationDate = .now.addingTimeInterval(24 * 3600 * 7)
+				self?.updateOptions()
+			}
 
 			if let expirationDate {
 				if expirationDatePicker == nil {
@@ -589,6 +744,10 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					datePicker.preferredDatePickerStyle = .compact
 					datePicker.datePickerMode = .date
 					datePicker.minimumDate = .now
+					if clientContext?.core?.connection.capabilities?.publicSharingExpireDateEnforceDateAndDaysDeterminesLastAllowedDate == true,
+					   let numberOfDays = clientContext?.core?.connection.capabilities?.publicSharingDefaultExpireDateDays {
+						datePicker.maximumDate = Date(timeIntervalSinceNow: numberOfDays.doubleValue * (24 * 60 * 60))
+					}
 					datePicker.date = expirationDate
 					datePicker.addAction(UIAction(handler: { [weak self, weak datePicker] action in
 						self?.expirationDate = datePicker?.date
@@ -596,40 +755,87 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					}), for: .valueChanged)
 
 					expirationDatePicker = datePicker
+				} else {
+					expirationDatePicker?.date = expirationDate
 				}
 
 				if let expirationDatePicker {
 					details.append(SegmentViewItem(view: expirationDatePicker))
 				}
 
+				let removeExpirationDate = { [weak self] in
+					self?.expirationDate = nil
+					self?.updateOptions()
+				}
+
 				accessories = [
-					.button(image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), accessibilityLabel: "Remove expiration date".localized, action: UIAction(handler: { [weak self] action in
-						self?.expirationDate = nil
-						self?.updateOptions()
+					.button(image: OCSymbol.icon(forSymbolName: "xmark.circle.fill"), accessibilityLabel: OCLocalizedString("Remove expiration date", nil), action: UIAction(handler: { _ in
+						removeExpirationDate()
 					}))
 				]
+
+				customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Extend by one week", nil), actionHandler: { [weak self] _ in
+					if let expirationDate = self?.expirationDate {
+						self?.expirationDate = expirationDate.addingTimeInterval(7 * 24 * 60 * 60)
+						self?.updateOptions()
+					}
+					return true
+				}))
+
+				if expirationDate.timeIntervalSinceNow > (7 * 24 * 60 * 60) {
+					customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Shorten by one week", nil), actionHandler: { [weak self] _ in
+						if let expirationDate = self?.expirationDate {
+							self?.expirationDate = expirationDate.addingTimeInterval(-7 * 24 * 60 * 60)
+							self?.updateOptions()
+						}
+						return true
+					}))
+				}
+
+				customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Remove expiration date", nil), actionHandler: { _ in
+					removeExpirationDate()
+					return true
+				}))
 			} else {
 				var buttonConfig = UIButton.Configuration.plain()
-				buttonConfig.title = "Add".localized
+				buttonConfig.title = OCLocalizedString("Add", nil)
 				buttonConfig.contentInsets = .zero
 
 				let button = ThemeCSSButton()
 				button.configuration = buttonConfig
-				button.addAction(UIAction(handler: { [weak self] action in
-					self?.expirationDate = .now.addingTimeInterval(24 * 3600 * 7)
-					self?.updateOptions()
+				button.addAction(UIAction(handler: { _ in
+					addExpirationDate()
 				}), for: .primaryActionTriggered)
 
+				if expirationDateRequired {
+					details.append(.detailText("⚠️"))
+				}
+
 				details.append(SegmentViewItem(view: button))
+
+				customActions.append(UIAccessibilityCustomAction(name: OCLocalizedString("Add", nil), actionHandler: { _ in
+					addExpirationDate()
+					return true
+				}))
 			}
 
-			let content = UniversalItemListCell.Content(with: .text("Expiration date".localized), iconSymbolName: "calendar", accessories: accessories)
+			let content = UniversalItemListCell.Content(with: .text(OCLocalizedString("Expiration date", nil)), iconSymbolName: "calendar", accessories: accessories)
 			content.details = details
+			content.accessibilityCustomActions = customActions
+			content.accessibilityLabel = OCLocalizedString("Expiration date", nil) + " " + ((expirationDate != nil) ? OCItem.accessibilityDateFormatter.string(for: expirationDate!) ?? "" : "")
 
 			if expiryOption == nil {
 				expiryOption = OptionItem(kind: .single, content: content, state: false)
 			} else {
 				expiryOption?.content = content
+			}
+
+			expiryOption?.selectAction = {  [weak self] optionItem in
+				if self?.expirationDate == nil {
+					addExpirationDate()
+				} else if let picker = self?.expirationDatePicker {
+					picker.sendActions(for: .primaryActionTriggered)
+				}
 			}
 
 			if let expiryOption {
@@ -644,24 +850,37 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		return ((share?.protectedByPassword == true) && !removePassword) || (password != nil)
 	}
 	func requestPassword() {
-		let passwordPrompt = UIAlertController(title: "Enter password".localized, message: nil, preferredStyle: .alert)
-
-		passwordPrompt.addTextField(configurationHandler: { textField in
-			textField.placeholder = "password".localized
-			textField.isSecureTextEntry = true
+		let passwordViewController = PasswordComposerViewController(password: password ?? "", policy: passwordPolicy, saveButtonTitle: OCLocalizedString("Set", nil), resultHandler: { [weak self] password, cancelled in
+			if !cancelled, let password {
+				self?.password = password
+				self?.updateOptions()
+			}
 		})
+		let navigationViewController = passwordViewController.viewControllerForPresentation()
 
-		passwordPrompt.addAction(UIAlertAction(title: "Cancel".localized, style: .cancel))
-		passwordPrompt.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: { [weak self, weak passwordPrompt] action in
-			self?.password = passwordPrompt?.textFields?.first?.text
-			self?.updateOptions()
-		}))
+		if mode == .edit, hasPassword {
+			passwordViewController.navigationItem.title = OCLocalizedString("Change password", nil)
+		}
 
-		self.clientContext?.present(passwordPrompt, animated: true)
+		self.clientContext?.present(navigationViewController, animated: true)
+	}
+	func generatePassword() {
+		var generatedPassword: String?
+		do {
+			try generatedPassword = passwordPolicy.generatePassword(withMinLength: nil, maxLength: nil)
+		} catch let error as NSError {
+			Log.error("Error generating password: \(error)")
+		}
+		if let generatedPassword {
+			self.password = generatedPassword
+			self.updateOptions()
+		}
 	}
 
 	// MARK: - Save (edit + create)
-	func save() {
+	func save(andShare: Bool = false) {
+		let presentingViewController = UIDevice.current.isIpad ? self : self.presentingViewController
+
 		switch mode {
 			case .create:
 				var newShare: OCShare?
@@ -674,7 +893,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 					case .link:
 						if let location, let permissions {
-							newShare = OCShare(publicLinkTo: location, linkName: nil, permissions: permissions, password: nil, expiration: nil)
+							newShare = OCShare(publicLinkTo: location, linkName: name, permissions: permissions, password: nil, expiration: nil)
 						}
 				}
 
@@ -706,6 +925,67 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 					if let error {
 						self.showError(error)
 					} else {
+						if let url = share?.url, andShare {
+							let existingCompletionHandler = UIDevice.current.isIpad ? { (share) in
+								// On iPad, first show Share Sheet, then close ShareViewController
+								self.complete(with: share)
+							} : self.completionHandler // On iPhone, first close ShareViewController, then show Share Sheet
+
+							let handleResultAndShowShareSheet: CompletionHandler = { (share) in
+								let absoluteURLString = url.absoluteString
+								var shareMessage: String?
+
+								if let password = self.password {
+									// Message consists of Link + Password
+									if let displayName = self.location?.displayName(in: nil) {
+										shareMessage = OCLocalizedFormat("{{itemName}} ({{link}}) | password: {{password}}", [
+											"itemName" : displayName,
+											"link" : absoluteURLString,
+											"password" : password
+										])
+									} else {
+										shareMessage = OCLocalizedFormat("{{link}} | password: {{password}}", [
+											"link" : absoluteURLString,
+											"password" : password
+										])
+									}
+								} else {
+									// Message consists of Link only
+									shareMessage = absoluteURLString
+								}
+
+								if let shareMessage, let presentingViewController {
+									// Show Share Sheet
+									OnMainThread {
+										let shareViewController = UIActivityViewController(activityItems: [shareMessage], applicationActivities:nil)
+
+										if UIDevice.current.isIpad {
+											shareViewController.popoverPresentationController?.sourceView = self.bottomButtonBar?.selectButton ?? self.view
+										}
+
+										shareViewController.completionWithItemsHandler = { (_, _, _, _) in
+											// Completed
+											existingCompletionHandler?(share)
+										}
+
+										presentingViewController.present(shareViewController, animated: true, completion: nil)
+									}
+								} else {
+									// Completed
+									existingCompletionHandler?(share)
+								}
+							}
+
+							if UIDevice.current.isIpad {
+								// On iPad, first show Share Sheet, then close ShareViewController
+								handleResultAndShowShareSheet(share)
+								return // Avoid calling self.complete(with:), called via existingCompletionHandler
+							} else {
+								// On iPhone, first close ShareViewController, then show Share Sheet
+								self.completionHandler = handleResultAndShowShareSheet
+							}
+						}
+
 						self.complete(with: share)
 					}
 				})
@@ -728,6 +1008,10 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 										share.protectedByPassword = true
 									}
 
+									if self?.type == .link {
+										share.name = self?.name
+									}
+
 									share.expirationDate = self?.expirationDate
 								}, completionHandler: { error, share in
 									OnMainThread {
@@ -748,7 +1032,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		}
 	}
 
-	func deleteShare() {
+	@objc func deleteShare() {
 		guard let core = clientContext?.core, let share else {
 			self.showError(NSError(ocError: .internal))
 			return
@@ -765,7 +1049,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 	func showError(_ error: Error) {
 		OnMainThread {
-			let alertController = ThemedAlertController(with: "An error occurred".localized, message: error.localizedDescription, okLabel: "OK".localized, action: nil)
+			let alertController = ThemedAlertController(with: OCLocalizedString("An error occurred", nil), message: error.localizedDescription, okLabel: OCLocalizedString("OK", nil), action: nil)
 			self.present(alertController, animated: true)
 		}
 	}

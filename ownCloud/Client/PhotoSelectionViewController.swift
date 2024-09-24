@@ -157,7 +157,7 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 			fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
 			fetchResult = PHAsset.fetchAssets(in: assetCollection!, options: fetchOptions)
 		} else {
-			self.title = "All Photos".localized
+			self.title = OCLocalizedString("All Photos", nil)
 		}
 
 		// If the fetchResult property was not pre-populdated, fetch all photos from the library
@@ -170,9 +170,9 @@ class PhotoSelectionViewController: UICollectionViewController, Themeable {
 		self.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
 
 		// Setup the toolbar buttons
-		let selectAllButtonItem = UIBarButtonItem(title: "Select All".localized, style: .done, target: self, action: #selector(selectAllItems))
-		let deselectAllButtonItem = UIBarButtonItem(title: "Deselect All".localized, style: .done, target: self, action: #selector(deselectAllItems))
-		uploadButtonItem = UIBarButtonItem(title: "Upload".localized, style: .done, target: self, action: #selector(upload))
+		let selectAllButtonItem = UIBarButtonItem(title: OCLocalizedString("Select All", nil), style: .done, target: self, action: #selector(selectAllItems))
+		let deselectAllButtonItem = UIBarButtonItem(title: OCLocalizedString("Deselect All", nil), style: .done, target: self, action: #selector(deselectAllItems))
+		uploadButtonItem = UIBarButtonItem(title: OCLocalizedString("Upload", nil), style: .done, target: self, action: #selector(upload))
 		let flexibleSpaceButtonItem = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: nil, action: nil)
 		self.toolbarItems = [selectAllButtonItem, flexibleSpaceButtonItem, uploadButtonItem!, flexibleSpaceButtonItem, deselectAllButtonItem]
 

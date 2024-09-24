@@ -1,7 +1,6 @@
-Bug Fixes
+• iOS 18
+The app is now compatible with iOS 18.
 
-• Added missing Recents Group
-• Unable to authenticate using OpenID Connect
-• Attach files from third-party apps
-• Solves "Content unavailable" in Files.app
+• General Improvements
+General app improvements and internal fixes to enhance performance, synchronization, and stability.
 

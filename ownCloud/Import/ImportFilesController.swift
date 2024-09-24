@@ -54,8 +54,8 @@ class ImportFilesController: NSObject {
 		if !importAllowed, alertUserOtherwise {
 			// Open with disabled, alert user
 			OnMainThread {
-				let alertController = ThemedAlertController(title: "Opening not allowed".localized, message: "Importing files through opening is not allowed on this device.".localized, preferredStyle: .alert)
-				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+				let alertController = ThemedAlertController(title: OCLocalizedString("Opening not allowed", nil), message: OCLocalizedString("Importing files through opening is not allowed on this device.", nil), preferredStyle: .alert)
+				alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
 
 				UserInterfaceContext.shared.currentViewControllerForPresenting?.present(alertController, animated: true, completion: nil)
 			}
@@ -86,10 +86,9 @@ class ImportFilesController: NSObject {
 
 	func showAccountUI() {
 		let headerTitle = importFiles.count == 1 ?
-			"Import \"{{itemName}}\"".localized(["itemName" : "\(importFiles.first!.url.lastPathComponent)"]) :
-			"Import {{itemCount}} files".localized(["itemCount" : "\(importFiles.count)"])
-		let headerSubTitle = "Select target.".localized /* importFiles.count == 1 ?
-			"Select target.".localized :
+		OCLocalizedFormat("Import \"{{itemName}}\"", ["itemName" : "\(importFiles.first!.url.lastPathComponent)"]) :
+		OCLocalizedFormat("Import {{itemCount}} files", ["itemCount" : "\(importFiles.count)"])
+		let headerSubTitle = OCLocalizedString("Select target.", nil) /* importFiles.count == 1 ?
 			fileNames.joined(separator: ", ") */
 
 		if !isVisible {
@@ -97,7 +96,7 @@ class ImportFilesController: NSObject {
 			isVisible = true
 
 			OnMainThread {
-				self.locationPicker = ClientLocationPicker(location: .accounts, selectButtonTitle: "Save here".localized, headerTitle: headerTitle, headerSubTitle: headerSubTitle, avoidConflictsWith: nil, choiceHandler: { [weak self] (chosenItem, location, _, cancelled) in
+				self.locationPicker = ClientLocationPicker(location: .accounts, selectButtonTitle: OCLocalizedString("Save here", nil), headerTitle: headerTitle, headerSubTitle: headerSubTitle, avoidConflictsWith: nil, choiceHandler: { [weak self] (chosenItem, location, _, cancelled) in
 					self?.handlePickerDecision(parentItem: chosenItem, location: location, cancelled: cancelled)
 				})
 

@@ -60,6 +60,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		AppStatistics.shared.update()
 
 		// Display Extensions
+		OCExtensionManager.shared.addExtension(ShortcutFileDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(WebViewDisplayViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PDFViewerViewController.displayExtension)
 		OCExtensionManager.shared.addExtension(PreviewViewController.displayExtension)
@@ -78,8 +79,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(UploadMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UploadCameraMediaAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnshareAction.actionExtension)
-		OCExtensionManager.shared.addExtension(MakeAvailableOfflineAction.actionExtension)
-		OCExtensionManager.shared.addExtension(MakeUnavailableOfflineAction.actionExtension)
+		OCExtensionManager.shared.addExtension(AvailableOfflineAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CollaborateAction.actionExtension)
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
@@ -89,6 +89,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(ImportPasteboardAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CutAction.actionExtension)
 		OCExtensionManager.shared.addExtension(CreateDocumentAction.actionExtension)
+		OCExtensionManager.shared.addExtension(AddToSidebarAction.actionExtension)
+		OCExtensionManager.shared.addExtension(RemoveFromSidebarAction.actionExtension)
+		OCExtensionManager.shared.addExtension(CreateShortcutFileAction.actionExtension)
+		OCExtensionManager.shared.addExtension(OpenShortcutFileAction.actionExtension)
 
 		if UIDevice.current.isIpad {
 			// iPad only
@@ -98,6 +102,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
+
+		// Register class settings for extensions added on a per-connection basis
+		OnMainThread {
+			OpenInWebAppAction.registerSettings()
+			OpenShortcutFileAction.registerSettings()
+			CreateDocumentAction.registerSettings()
+		}
 
 		// Task extensions
 		OCExtensionManager.shared.addExtension(BackgroundFetchUpdateTaskAction.taskExtension)
@@ -235,21 +246,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 											if let intVal = Int(value) as? NSNumber {
 												let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(intVal, forFlatIdentifier: targetID)
 												if error == nil {
-													relaunchReason = "Changed \(targetID) to int(\(intVal)).".localized
+													relaunchReason = OCLocalizedFormat("Changed {{settingID}} to {{newValue}}.", [
+														"settingID" : targetID,
+														"newValue" : "int(\(intVal))"
+													])
 												}
 											}
 
 										case "string":
 											let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(value, forFlatIdentifier: targetID)
 											if error == nil {
-												relaunchReason = "Changed \(targetID) to string(\(value)).".localized
+												relaunchReason = OCLocalizedFormat("Changed {{settingID}} to {{newValue}}.", [
+													"settingID" : targetID,
+													"newValue" : "string(\(value))"
+												])
 											}
 
 										case "sarray":
 											let strings = (value as NSString).components(separatedBy: ".")
 											let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(strings, forFlatIdentifier: targetID)
 											if error == nil {
-												relaunchReason = "Changed \(targetID) to stringArray(\(strings.joined(separator: ", "))).".localized
+												relaunchReason = OCLocalizedFormat("Changed {{settingID}} to {{newValue}}.", [
+													"settingID" : targetID,
+													"newValue" : "stringArray(\(strings.joined(separator: ", ")))"
+												])
 											}
 
 										default: break
@@ -262,14 +282,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 						if targetID == "all" {
 							// Clear all post build settings
 							OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.clear()
-							relaunchReason = "Cleared all.".localized
+							relaunchReason = OCLocalizedString("Cleared all.", nil)
 							break
 						}
 
 						// Clear specific setting
 						let error = OCClassSettingsFlatSourcePostBuild.sharedPostBuildSettings.setValue(nil, forFlatIdentifier: targetID)
 						if error == nil {
-							relaunchReason = "Cleared \(targetID).".localized
+							relaunchReason = OCLocalizedFormat("Cleared {{settingID}}.", [ "settingID" : targetID ])
 						}
 
 					default: break
@@ -297,7 +317,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 	}
 }
 
-extension UserInterfaceContext : UserInterfaceContextProvider {
+extension UserInterfaceContext : ownCloudAppShared.UserInterfaceContextProvider {
 	public func provideRootView() -> UIView? {
 		return provideCurrentWindow()
 	}
@@ -333,7 +353,7 @@ extension AppDelegate : NotificationResponseHandler {
 	}
 
 	@objc func offerRelaunchAfterMDMPush() {
-		offerRelaunchForReason("New settings received from MDM".localized)
+		offerRelaunchForReason(OCLocalizedString("New settings received from MDM", nil))
 	}
 
 	func offerRelaunchForReason(_ reason: String) {
@@ -342,7 +362,7 @@ extension AppDelegate : NotificationResponseHandler {
 				let content = UNMutableNotificationContent()
 
 				content.title = reason
-				content.body = "Tap to quit the app.".localized
+				content.body = OCLocalizedString("Tap to quit the app.", nil)
 
 				let request = UNNotificationRequest(identifier: NotificationManagerComposeIdentifier(AppDelegate.self, "terminate-app"), content: content, trigger: nil)
 
@@ -353,7 +373,7 @@ extension AppDelegate : NotificationResponseHandler {
 
 	static func handle(_ center: UNUserNotificationCenter, response: UNNotificationResponse, identifier: String, completionHandler: @escaping () -> Void) {
 		if identifier == "terminate-app", response.actionIdentifier == UNNotificationDefaultActionIdentifier {
-			UNUserNotificationCenter.postLocalNotification(with: "mdm-relaunch", title: "Tap to launch the app.".localized, body: nil, after: 0.1) { (error) in
+			UNUserNotificationCenter.postLocalNotification(with: "mdm-relaunch", title: OCLocalizedString("Tap to launch the app.", nil), body: nil, after: 0.1) { (error) in
 				if error == nil {
 					exit(0)
 				}

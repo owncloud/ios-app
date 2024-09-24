@@ -78,10 +78,6 @@ open class MoreStaticTableViewController: StaticTableViewController {
 	open override func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
 		return nil
 	}
-
-	open override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
-		super.applyThemeCollection(theme: theme, collection: collection, event: event)
-	}
 }
 
 open class MoreStaticTableViewSection : StaticTableViewSection {

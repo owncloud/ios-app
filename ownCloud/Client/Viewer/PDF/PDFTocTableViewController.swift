@@ -77,10 +77,6 @@ class PDFTocTableViewController: UITableViewController, Themeable {
         Theme.shared.unregister(client: self)
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-    }
-
 	override func viewDidLayoutSubviews() {
 		super.viewDidLayoutSubviews()
 		// These lines mitigates the issue with incorrect layout of child view controller

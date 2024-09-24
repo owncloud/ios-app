@@ -104,6 +104,7 @@ public struct ThemeCSSSelector: RawRepresentable, Equatable {
 	public static let selected = ThemeCSSSelector(rawValue: "selected")
 	public static let disabled = ThemeCSSSelector(rawValue: "disabled")
 	public static let filled = ThemeCSSSelector(rawValue: "filled")
+	public static let focused = ThemeCSSSelector(rawValue: "focused")
 
 	// Configurations
 	public static let grouped = ThemeCSSSelector(rawValue: "grouped")
@@ -208,6 +209,8 @@ open class ThemeCSS: NSObject {
 		return get(property, for: selectors)
 	}
 
+	private var cssResolveRecursionTrack: [String] = []
+
 	open func getColor(_ property: ThemeCSSProperty, selectors: [ThemeCSSSelector]? = nil, state stateSelectors: [ThemeCSSSelector]? = nil, for object: AnyObject?) -> UIColor? {
 		let value = get(property, selectors: selectors, state: stateSelectors, for: object)?.value
 
@@ -221,6 +224,25 @@ open class ThemeCSS: NSObject {
 			}
 			if let hexColor = string.colorFromHex {
 				return hexColor
+			} else if string.hasPrefix("$") {
+				// Allow use of $cssSelectors.cssProperty to use the color resolved
+				var cssSelectors = string.replacingOccurrences(of: "$", with: "").components(separatedBy: ".")
+
+				if cssResolveRecursionTrack.contains(string) {
+					Log.error("CSS themeing recursion detected: \(cssResolveRecursionTrack)")
+					return nil
+				}
+
+				if cssSelectors.count >= 2 {
+					let property = ThemeCSSProperty(rawValue: cssSelectors.removeLast()) // use last string component as property
+					let themeCSSSelectors = cssSelectors.compactMap { cssSelector in return ThemeCSSSelector(rawValue: cssSelector) } // use the rest for CSS selectors
+
+					cssResolveRecursionTrack.append(string)
+					let color = getColor(property, selectors: themeCSSSelectors, for: nil)
+					cssResolveRecursionTrack.removeAll(where: { (str) in str == string })
+
+					return color
+				}
 			}
 		}
 
@@ -296,6 +318,8 @@ open class ThemeCSS: NSObject {
 				case "default":		return .default
 				case "lightContent":	return .lightContent
 				case "darkContent":	return .darkContent
+				case "white":		return .lightContent
+				case "black":		return .darkContent
 				default: break
 			}
 		}

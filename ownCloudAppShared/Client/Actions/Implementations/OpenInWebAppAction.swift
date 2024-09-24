@@ -24,45 +24,43 @@ public extension OCClassSettingsKey {
 }
 
 public enum OpenInWebAppActionMode: String {
+	case auto = "auto"
 	case defaultBrowser = "default-browser"
 	case inApp = "in-app"
 	case inAppWithDefaultBrowserOption = "in-app-with-default-browser-option"
 }
 
 public class OpenInWebAppAction: Action {
-	private static var _classSettingsRegistered: Bool = false
-	override public class var actionExtension: ActionExtension {
-		if !_classSettingsRegistered {
-			_classSettingsRegistered = true
-
-			self.registerOCClassSettingsDefaults([
-				.openInWebAppMode : OpenInWebAppActionMode.inApp.rawValue
-			], metadata: [
-				.openInWebAppMode : [
-					.type 		: OCClassSettingsMetadataType.string,
-					.label		: "Open In WebApp mode",
-					.description 	: "Determines how to open a document in a web app.",
-					.status		: OCClassSettingsKeyStatus.advanced,
-					.category	: "Actions",
-					.possibleValues : [
-						[
-							OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.defaultBrowser.rawValue,
-							OCClassSettingsMetadataKey.description 	: "Open in default browser app. May require user to sign in."
-						],
-						[
-							OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.inApp.rawValue,
-							OCClassSettingsMetadataKey.description 	: "Open inline in an in-app browser."
-						],
-						[
-							OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.inAppWithDefaultBrowserOption.rawValue,
-							OCClassSettingsMetadataKey.description 	: "Open inline in an in-app browser, but provide a button to open the document in the default browser (may require the user to sign in)."
-						]
+	public static func registerSettings() {
+		self.registerOCClassSettingsDefaults([
+			.openInWebAppMode : OpenInWebAppActionMode.auto.rawValue
+		], metadata: [
+			.openInWebAppMode : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "Open In WebApp mode",
+				.description 	: "Determines how to open a document in a web app.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Actions",
+				.possibleValues : [
+					[
+						OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.auto.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Open using `\(OpenInWebAppActionMode.inAppWithDefaultBrowserOption.rawValue)`, unless the respective endpoint is not available - in which case `\(OpenInWebAppActionMode.defaultBrowser.rawValue)` is used instead. If no endpoint to open the document is available, an error message is shown."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.defaultBrowser.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Open in default browser app. May require user to sign in."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.inApp.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Open inline in an in-app browser."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.inAppWithDefaultBrowserOption.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Open inline in an in-app browser, but provide a button to open the document in the default browser (may require the user to sign in)."
 					]
 				]
-			])
-		}
-
-		return super.actionExtension
+			]
+		])
 	}
 
 	override public class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.openinwebapp") }
@@ -111,7 +109,7 @@ public class OpenInWebAppAction: Action {
 			return standardPriority
 		}
 
-		return ActionExtension(name: "Open in {{appName}} (web)".localized(["appName" : appName]), category: category!, identifier: extensionIdentifier, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher, keyCommand: nil, keyModifierFlags: nil)
+		return ActionExtension(name: OCLocalizedFormat("Open in {{appName}} (web)", ["appName" : appName]), category: category!, identifier: extensionIdentifier, locations: locations, features: features, objectProvider: objectProvider, customMatcher: customMatcher, keyCommand: nil, keyModifierFlags: nil)
 	}
 
 	class open func applicablePosition(forContext: ActionContext, app: OCAppProviderApp) -> ActionPosition {
@@ -137,10 +135,26 @@ public class OpenInWebAppAction: Action {
 
 	// MARK: - Action implementation
 	override public func run() {
-		var openMode : OpenInWebAppActionMode = .inApp
+		var openMode : OpenInWebAppActionMode = .auto
 
 		if let openInWebAppMode = classSetting(forOCClassSettingsKey: .openInWebAppMode) as? String, let configuredOpenMode = OpenInWebAppActionMode(rawValue: openInWebAppMode) {
 			openMode = configuredOpenMode
+		}
+
+		if let appProvider = context.core?.appProvider, openMode == .auto {
+			if appProvider.supportsOpenDirect {
+				if appProvider.supportsOpenInWeb {
+					openMode = .inAppWithDefaultBrowserOption
+				} else {
+					openMode = .inApp
+				}
+			} else if appProvider.supportsOpenInWeb {
+				openMode = .defaultBrowser
+			}
+		}
+
+		if context.items.count == 1, let item = context.items.first, let core = context.core {
+			core.updateLastUsed(for: item)
 		}
 
 		switch openMode {
@@ -152,6 +166,21 @@ public class OpenInWebAppAction: Action {
 
 			case .inAppWithDefaultBrowserOption:
 				openInInAppBrowser(withDefaultBrowserOption: true)
+
+			case .auto:
+				// No open mode available, return error
+				if let viewController = context.viewController, let item = context.items.first {
+					let appName = self.app?.name ?? "app"
+					let itemName = item.name ?? "item"
+
+					let alertController = ThemedAlertController(
+						with: OCLocalizedFormat("Error opening {{itemName}} in {{appName}}", ["itemName" : itemName, "appName" : appName]),
+						message: OCLocalizedString("Opening documents is not supported by the app provider on this instance.", nil),
+						okLabel: OCLocalizedString("OK", nil),
+						action: nil)
+
+					viewController.present(alertController, animated: true)
+				}
 		}
 	}
 
@@ -169,15 +198,15 @@ public class OpenInWebAppAction: Action {
 
 		// Open in in-app browser
 		core.connection.open(inApp: item, with: app, viewMode: nil, completionHandler: { (error, url, method, headers, parameters, urlRequest) in
-			if let error = error {
+			if let error {
 				OnMainThread {
 					let appName = self.app?.name ?? "app"
 					let itemName = item.name ?? "item"
 
 					let alertController = ThemedAlertController(
-						with: "Error opening {{itemName}} in {{appName}}".localized(["itemName" : itemName, "appName" : appName]),
+						with: OCLocalizedFormat("Error opening {{itemName}} in {{appName}}", ["itemName" : itemName, "appName" : appName]),
 						message: error.localizedDescription,
-						okLabel: "OK".localized,
+						okLabel: OCLocalizedString("OK", nil),
 						action: nil)
 
 					viewController.present(alertController, animated: true)
@@ -243,7 +272,8 @@ public class OpenInWebAppAction: Action {
 
 	override public var icon: UIImage? {
 		if let remoteIcon = (app?.iconResourceRequest?.resource as? OCResourceImage)?.image?.image {
-			return remoteIcon
+			let iconSize = CGSize(width: 32, height: 32)
+			return remoteIcon.scaledImageFitting(in: iconSize).paddedTo(width: iconSize.width, height: iconSize.height)
 		}
 
 		return super.icon

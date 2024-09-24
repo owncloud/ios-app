@@ -57,8 +57,8 @@ public extension OCExtensionType {
 
 public extension OCExtensionLocationIdentifier {
 	static let tableRow: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("tableRow") //!< Present as table row action
-	static let moreItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreDetailItem") //!< Present in "more" card view for a single item in detail view
-	static let moreDetailItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreItem") //!< Present in "more" card view for a single item
+	static let moreItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreItem") //!< Present in "more" card view for a single item
+	static let moreDetailItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreDetailItem") //!< Present in "more" card view for a single item in detail view
 	static let moreFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("moreFolder") //!< Present in "more" options for a whole folder
 	static let emptyFolder: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("emptyFolder") //!< Present in "more" options for a whole folder
 	static let multiSelection: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("multiSelection") //!< Present as action when selecting multiple items
@@ -69,6 +69,8 @@ public extension OCExtensionLocationIdentifier {
 	static let contextMenuSharingItem: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("contextMenuSharingItem") //!< Used in UIMenu
 	static let unviewableFileType: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("unviewableFileType") //!< Used in PreviewController for unviewable file types
 	static let locationPickerBar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("locationPickerBar") //!< Used in ClientLocationPicker
+	static let directOpen: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("directOpen") //!< Used in OCItem+Interactions to implement direct actions for opening files
+	static let accessibilityCustomAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("accessibilityCustomAction") //!< Accessibility custom action available in VoiceOver and in Keyboard Control when pressing Tab + Z
 }
 
 public class ActionExtension: OCExtension {
@@ -92,7 +94,7 @@ public class ActionExtension: OCExtension {
 
 public extension OCItem {
 	func isSharedWithUser(in context: ClientContext?) -> Bool {
-		if let context, let core = context.core, core.useDrives, let driveID, let drive = core.drive(withIdentifier: driveID) {
+		if let context, let core = context.core, core.useDrives, let driveID, let drive = core.drive(withIdentifier: driveID, attachedOnly: true) {
 			// On drive-based instances, all items shared with the user are located in the Shares Jail
 			if drive.specialType == .shares {
 				return true
@@ -522,6 +524,10 @@ open class Action : NSObject {
 		return UIBarButtonItem(title: actionExtension.name, image: icon, primaryAction: UIAction(handler: { (_) in
 			self.perform()
 		}))
+	}
+
+	open func provideAccessibilityCustomAction() -> UIAccessibilityCustomAction {
+		return provideOCAction().accessibilityCustomAction()
 	}
 
 	// MARK: - Action metadata

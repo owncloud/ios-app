@@ -1,0 +1,7 @@
+Enhancement: Sync Engine fixes and improvements
+
+- Detects disconnected/spurious TUS uploads running in the HTTP backend and stop them if the Sync Action that started the upload is no longer around.
+- Find hanging Sync Actions in the Sync Journal and automatically restart them.
+- Add progress reporting for TUS uploads, fix HTTP layer issue
+
+https://github.com/owncloud/ios-app/pull/1376

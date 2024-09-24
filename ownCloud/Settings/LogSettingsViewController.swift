@@ -22,7 +22,7 @@ import ownCloudAppShared
 
 class LogSettingsViewController: StaticTableViewController {
 
-	private let loggingSection = StaticTableViewSection(headerTitle: "Logging".localized)
+	private let loggingSection = StaticTableViewSection(headerTitle: OCLocalizedString("Logging", nil))
 	private var logLevelSection : StaticTableViewSection?
 	private var logOutputSection : StaticTableViewSection?
 	private var logBrowseSection : StaticTableViewSection?
@@ -45,7 +45,7 @@ class LogSettingsViewController: StaticTableViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
-		self.navigationItem.title = "Logging".localized
+		self.navigationItem.title = OCLocalizedString("Logging", nil)
 
 		// Logging
 		loggingSection.add(row: StaticTableViewRow(switchWithAction: { [weak self] (row, _) in
@@ -61,9 +61,9 @@ class LogSettingsViewController: StaticTableViewController {
 					}
 				}
 			}
-		}, title: "Enable logging".localized, value: LogSettingsViewController.loggingEnabled, identifier: "enable-logging"))
+		}, title: OCLocalizedString("Enable logging", nil), value: LogSettingsViewController.loggingEnabled, identifier: "enable-logging"))
 
-		let footerTitle = "When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility.".localized
+		let footerTitle = OCLocalizedString("When activated, logs may impact performance and include sensitive information. However the logs are not subject to automatic submission to %@ servers. Sharing logs with others is sole user responsibility.", nil)
 		loggingSection.footerTitle = footerTitle.replacingOccurrences(of: "%@", with: VendorServices.shared.appName)
 
 		// Update section visibility
@@ -78,15 +78,15 @@ class LogSettingsViewController: StaticTableViewController {
 
 		func createRequiredSections() {
 			if logBrowseSection == nil {
-				logBrowseSection = StaticTableViewSection(headerTitle: "Log Files".localized)
+				logBrowseSection = StaticTableViewSection(headerTitle: OCLocalizedString("Log Files", nil))
 
 				// Creation of the frequency row.
 				let logsRow = StaticTableViewRow(subtitleRowWithAction: { [weak self] (_, _) in
 					let logFilesViewController = LogFilesViewController(style: .plain)
 					self?.navigationController?.pushViewController(logFilesViewController, animated: true)
-				}, title: "Browse".localized, accessoryType: .disclosureIndicator, identifier: "viewLogs")
+				}, title: OCLocalizedString("Browse", nil), accessoryType: .disclosureIndicator, identifier: "viewLogs")
 				logBrowseSection?.add(row: logsRow)
-				logBrowseSection?.footerTitle = "The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.".localized
+				logBrowseSection?.footerTitle = OCLocalizedString("The last 10 archived logs are kept on the device - with each log covering up to 24 hours of usage. When sharing please bear in mind that logs may contain sensitive information such as server URLs and user-specific information.", nil)
 
 				addSections.append(logBrowseSection!)
 			}
@@ -95,14 +95,14 @@ class LogSettingsViewController: StaticTableViewController {
 			// Reactivate the below code when the code base is reviewed in terms of correct masking of private data
 			#if false
 			if logPrivacySection == nil {
-				logPrivacySection = StaticTableViewSection(headerTitle: "Privacy".localized)
+				logPrivacySection = StaticTableViewSection(headerTitle: OCLocalizedString("Privacy", nil))
 
 				logPrivacySection?.add(row: StaticTableViewRow(switchWithAction: { (row, _) in
 					if let maskPrivateData = row.value as? Bool {
 						OCLogger.maskPrivateData = maskPrivateData
 					}
-				}, title: "Mask private data".localized, value: OCLogger.maskPrivateData, identifier: "mask-private-data"))
-				logPrivacySection?.footerTitle = "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.".localized
+				}, title: OCLocalizedString("Mask private data", nil), value: OCLogger.maskPrivateData, identifier: "mask-private-data"))
+				logPrivacySection?.footerTitle = OCLocalizedString("Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody.", nil)
 
 				addSections.append(logPrivacySection!)
 			}
@@ -144,7 +144,7 @@ class LogSettingsViewController: StaticTableViewController {
 
 			// Log level
 			if logLevelSection == nil {
-				logLevelSection = StaticTableViewSection(headerTitle: "Log Level".localized)
+				logLevelSection = StaticTableViewSection(headerTitle: OCLocalizedString("Log Level", nil))
 
 				let logLevels : [[String:Any]] = [
 					[ OCLogLevel.verbose.label : OCLogLevel.verbose.rawValue ],
@@ -167,7 +167,7 @@ class LogSettingsViewController: StaticTableViewController {
 
 			// Log toggles
 			if logTogglesSection == nil {
-				logTogglesSection = StaticTableViewSection(headerTitle: "Options".localized)
+				logTogglesSection = StaticTableViewSection(headerTitle: OCLocalizedString("Options", nil))
 
 				for toggle in OCLogger.shared.toggles {
 					let row = StaticTableViewRow(switchWithAction: { (row, _) in
@@ -184,7 +184,7 @@ class LogSettingsViewController: StaticTableViewController {
 
 			// Log output
 			if logOutputSection == nil {
-				logOutputSection = StaticTableViewSection(headerTitle: "Log Destinations".localized)
+				logOutputSection = StaticTableViewSection(headerTitle: OCLocalizedString("Log Destinations", nil))
 
 				for writer in OCLogger.shared.writers {
 					let row = StaticTableViewRow(switchWithAction: { (row, _) in

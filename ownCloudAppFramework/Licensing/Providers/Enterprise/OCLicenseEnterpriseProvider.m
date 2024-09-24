@@ -48,7 +48,7 @@
 	if ((self = [super initWithIdentifier:OCLicenseProviderIdentifierEnterprise]) != nil)
 	{
 		_unlockedProductIdentifiers = unlockedProductIdentifiers;
-		self.localizedName = OCLocalized(@"Enterprise");
+		self.localizedName = OCLocalizedString(@"Enterprise", nil);
 	}
 
 	return (self);
@@ -144,7 +144,7 @@
 		{
 			NSString *subject = (feature.localizedName != nil) ? feature.localizedName : unlockedProduct.localizedName;
 
-			iapMessage = [NSString stringWithFormat:OCLocalized(@"%@ already unlocked for %@."), subject, [serverNames.allObjects componentsJoinedByString:@", "]];
+			iapMessage = [NSString stringWithFormat:OCLocalizedString(@"%@ already unlocked for %@.", nil), subject, [serverNames.allObjects componentsJoinedByString:@", "]];
 		}
 	}
 

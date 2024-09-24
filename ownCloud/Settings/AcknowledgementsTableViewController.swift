@@ -16,10 +16,10 @@ class AcknowledgementsTableViewController: StaticTableViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
-		navigationItem.title = "Acknowledgements".localized
+		navigationItem.title = OCLocalizedString("Acknowledgements", nil)
 
 		addSection(StaticTableViewSection(headerTitle: "", footerTitle: nil, identifier: nil, rows: [
-			StaticTableViewRow(message: "Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged.".localized, style: .text)
+			StaticTableViewRow(message: OCLocalizedString("Portions of this app may utilize the following copyrighted material, the use of which is hereby acknowledged.", nil), style: .text)
 		]))
 
 		let context = OCExtensionContext(location: OCExtensionLocation(ofType: .license, identifier: nil), requirements: nil, preferences: nil)
@@ -42,7 +42,7 @@ class AcknowledgementsTableViewController: StaticTableViewController {
 									.font : UIFont.systemFont(ofSize: UIFont.systemFontSize)
 								]
 
-								textViewController.title = "\(licenseTitle) \("license".localized)"
+								textViewController.title = "\(licenseTitle) \(OCLocalizedString("license", nil))"
 								textViewController.navigationItem.largeTitleDisplayMode = .never
 
 								// License text

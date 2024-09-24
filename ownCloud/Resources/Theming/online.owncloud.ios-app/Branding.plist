@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>branding.can-add-account</key>
+	<false/>
+	<key>branding.can-edit-account</key>
+	<true/>
+	<key>branding.enable-review-prompt</key>
+	<true/>
+	<key>branding.organization-name</key>
+	<string>ownCloud Online</string>
+	<key>branding.profile-definitions</key>
+	<array>
+		<dict>
+			<key>allowedHosts</key>
+			<array>
+				<string>owncloud.online</string>
+				<string>owncloud.com</string>
+				<string>owncloud.team</string>
+				<string>owncloud.works</string>
+				<string>owncloud.org</string>
+			</array>
+			<key>bookmarkName</key>
+			<string>ownCloud Online</string>
+			<key>canConfigureURL</key>
+			<true/>
+			<key>helpURL</key>
+			<string>https://owncloud.online/try/</string>
+			<key>helpURLButtonString</key>
+			<string>TRY IT FOR FREE</string>
+			<key>identifier</key>
+			<string>ownCloud-online</string>
+			<key>name</key>
+			<string>ownCloud Online</string>
+			<key>promptForHelpURL</key>
+			<string>If you do not have an ownCloud Online account yet, you can request a free test account.</string>
+			<key>promptForURL</key>
+			<string>Please enter your ownCloud Online URL</string>
+			<key>url</key>
+			<string></string>
+		</dict>
+	</array>
+	<key>branding.send-feedback-address</key>
+	<string></string>
+	<key>branding.theme-colors</key>
+	<dict>
+		<key>branding-background-color</key>
+		<string>#628a99</string>
+		<key>setup-status-bar-style</key>
+		<string>black</string>
+		<key>folder-icon-color</key>
+		<string>#52DDA9</string>
+		<key>file-icon-color</key>
+		<string>#52DDA9</string>
+	</dict>
+	<key>branding.url-help</key>
+	<string>https://owncloud.online/faq/</string>
+	<key>branding.url-privacy</key>
+	<string>https://owncloud.online/privacy-policy/</string>
+</dict>
+</plist>

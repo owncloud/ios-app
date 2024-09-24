@@ -24,7 +24,7 @@ import ownCloudAppShared
 class DiscardSceneAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.discardscene") }
 	override class var category : ActionCategory? { return .normal }
-	override class var name : String { return "Close Window".localized }
+	override class var name : String { return OCLocalizedString("Close Window", nil) }
 	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .keyboardShortcut] }
 	override class var keyCommand : String? { return "W" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }

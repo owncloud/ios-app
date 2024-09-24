@@ -26,7 +26,7 @@ extension OCShare {
 			let completionHandler: (Error?) -> Void = { error in
 				if let error {
 					OnMainThread {
-						let alertController = ThemedAlertController(with: (accept ? "Accept Share failed".localized : "Decline Share failed".localized), message: error.localizedDescription, okLabel: "OK".localized, action: nil)
+						let alertController = ThemedAlertController(with: (accept ? OCLocalizedString("Accept Share failed", nil) : OCLocalizedString("Decline Share failed", nil)), message: error.localizedDescription, okLabel: OCLocalizedString("OK", nil), action: nil)
 						context.present(alertController, animated: true)
 					}
 				}
@@ -48,12 +48,12 @@ extension OCShare {
 		makeDecision(accept: false, context: context)
 	}
 
-	private var offerAcceptAction: Bool {
+	var offerAcceptAction: Bool {
 		return ((self.effectiveState == .pending || self.effectiveState == .declined) && (self.category == .withMe))
 	}
 
-	private var offerDeclineAction: Bool {
-		return (self.effectiveState == .pending || self.effectiveState == .accepted  || self.category == .byMe)
+	var offerDeclineAction: Bool {
+		return (((self.effectiveState == .pending || self.effectiveState == .accepted) && (self.category == .withMe)) || self.category == .byMe)
 	}
 }
 
@@ -67,7 +67,7 @@ extension OCShare: DataItemSwipeInteraction {
 
 		if offerDeclineAction {
 			// Decline / Unshare
-			let title = (self.category == .byMe) ? "Unshare".localized : "Decline".localized
+			let title = (self.category == .byMe) ? OCLocalizedString("Unshare", nil) : OCLocalizedString("Decline", nil)
 			let action = UIContextualAction(style: .destructive, title: title, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
 				uiCompletionHandler(false)
 				self?.decline(in: context)
@@ -79,7 +79,7 @@ extension OCShare: DataItemSwipeInteraction {
 
 		if offerAcceptAction {
 			// Accept
-			let action = UIContextualAction(style: .normal, title: "Accept".localized, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
+			let action = UIContextualAction(style: .normal, title: OCLocalizedString("Accept", nil), handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
 				uiCompletionHandler(false)
 				self?.accept(in: context)
 			})
@@ -105,7 +105,7 @@ extension OCShare: DataItemContextMenuInteraction {
 			let action = UIAction(handler: { [weak self] action in
 				self?.accept(in: context)
 			})
-			action.title = "Accept".localized
+			action.title = OCLocalizedString("Accept", nil)
 			action.image = OCSymbol.icon(forSymbolName: "checkmark.circle")
 
 			elements.append(action)
@@ -116,7 +116,7 @@ extension OCShare: DataItemContextMenuInteraction {
 			let action = UIAction(handler: { [weak self] action in
 				self?.decline(in: context)
 			})
-			let title = (self.category == .byMe) ? "Unshare".localized : "Decline".localized
+			let title = (self.category == .byMe) ? OCLocalizedString("Unshare", nil) : OCLocalizedString("Decline", nil)
 			action.title = title
 			action.image = OCSymbol.icon(forSymbolName: "minus.circle")
 			action.attributes = .destructive

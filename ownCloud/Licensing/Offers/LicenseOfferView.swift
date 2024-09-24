@@ -136,21 +136,21 @@ class LicenseOfferView: UIView, Themeable {
 			pricingLabel?.translatesAutoresizingMaskIntoConstraints = false
 			guard let pricingLabel = pricingLabel else { return }
 
-			purchaseButton = LicenseOfferButton(subscribeButtonWithTitle: "Subscribe Now".localized, target: self, action: #selector(takeOffer))
+			purchaseButton = LicenseOfferButton(subscribeButtonWithTitle: OCLocalizedString("Subscribe Now", nil), target: self, action: #selector(takeOffer))
 			guard let purchaseButton = purchaseButton else { return }
 
 			var pricingLabelText : String = ""
 			var boldTextLength : Int = 0
 
 			if let trialDuration = offer.trialDuration, offer.state(in: environment) != .expired {
-				pricingLabelText = NSString(format: "%@ / %@".localized as NSString, offer.localizedPriceTag, offer.subscriptionTermDuration.localizedDescription) as String
+				pricingLabelText = NSString(format: OCLocalizedString("%@ / %@", nil) as NSString, offer.localizedPriceTag, offer.subscriptionTermDuration.localizedDescription) as String
 				pricingLabelText = "\(pricingLabelText)\n"
 				boldTextLength = pricingLabelText.count
 
-				pricingLabelText = pricingLabelText.appendingFormat("after free %@ trial".localized as NSString, trialDuration.localizedDescriptionSingular) as String
+				pricingLabelText = pricingLabelText.appendingFormat(OCLocalizedString("after free %@ trial", nil) as NSString, trialDuration.localizedDescriptionSingular) as String
 			} else {
 				// No trial available (either in general, or because user already has subscribed once)
-				pricingLabelText = pricingLabelText.appendingFormat("%@ / %@ – starting immediately".localized, offer.localizedPriceTag, offer.subscriptionTermDuration.localizedDescription)
+				pricingLabelText = pricingLabelText.appendingFormat(OCLocalizedString("%@ / %@ – starting immediately", nil), offer.localizedPriceTag, offer.subscriptionTermDuration.localizedDescription)
 			}
 
 			let paragraphStyle = NSMutableParagraphStyle()
@@ -204,7 +204,7 @@ class LicenseOfferView: UIView, Themeable {
 
 		if let purchaseButton = purchaseButton {
 			let progress = Progress.indeterminate()
-			progress?.isCancellable = false
+			progress.isCancellable = false
 
 			purchaseBusyView = ProgressView()
 			purchaseBusyView?.translatesAutoresizingMaskIntoConstraints = false
@@ -237,16 +237,16 @@ class LicenseOfferView: UIView, Themeable {
 			OnMainThread {
 				guard let self = self else { return }
 
-				let alertController = ThemedAlertController(title: "Purchase failed".localized, message: error.localizedDescription, preferredStyle: .alert)
+				let alertController = ThemedAlertController(title: OCLocalizedString("Purchase failed", nil), message: error.localizedDescription, preferredStyle: .alert)
 
 				let nsError = error as NSError
 				if nsError.domain == OCLicenseAppStoreProviderErrorDomain, nsError.code == OCLicenseAppStoreProviderError.purchasesNotAllowedForVPPCopies.rawValue {
-					alertController.addAction(UIAlertAction(title: "More information".localized, style: .default, handler: { (_) in
+					alertController.addAction(UIAlertAction(title: OCLocalizedString("More information", nil), style: .default, handler: { (_) in
 						UIApplication.shared.open(URL(string: "https://owncloud.com/mobile-apps/#ios-emm")!, options: [ : ], completionHandler: nil)
 					}))
 				}
 
-				alertController.addAction(UIAlertAction(title: "OK".localized, style: .default, handler: nil))
+				alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
 
 				self.baseViewController?.present(alertController, animated: true, completion: nil)
 			}
@@ -269,7 +269,7 @@ class LicenseOfferView: UIView, Themeable {
 
 			case .redundant:
 				buttonEnabled = false
-				buttonTitle = "Unlocked".localized
+				buttonTitle = OCLocalizedString("Unlocked", nil)
 
 			case .inProgress:
 				purchaseButton?.isHidden = true
@@ -277,7 +277,7 @@ class LicenseOfferView: UIView, Themeable {
 
 			case .committed:
 				buttonEnabled = false
-				buttonTitle = "Unlocked".localized
+				buttonTitle = OCLocalizedString("Unlocked", nil)
 		}
 
 		purchaseButton?.isEnabled = buttonEnabled

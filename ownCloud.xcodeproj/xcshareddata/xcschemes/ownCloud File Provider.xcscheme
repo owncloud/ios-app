@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1420"
+   LastUpgradeVersion = "1600"
    wasCreatedForAppExtension = "YES"
    version = "2.0">
    <BuildAction
@@ -105,11 +105,12 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES"
-      launchAutomaticallySubstyle = "2">
+      launchAutomaticallySubstyle = "2"
+      queueDebuggingEnabled = "No">
       <RemoteRunnable
-         runnableDebuggingMode = "1"
+         runnableDebuggingMode = "0"
          BundleIdentifier = "com.apple.DocumentsApp"
-         RemotePath = "/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS.simruntime/Contents/Resources/RuntimeRoot/Applications/Files.app">
+         RemotePath = "/var/containers/Bundle/Application/28D363B8-FA41-4A9B-97F8-5007F7EB81CC/Files.app">
       </RemoteRunnable>
       <MacroExpansion>
          <BuildableReference
@@ -127,12 +128,12 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-synchronous"
+            key = "oc:log.synchronous"
             value = "true"
             isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-colored"
+            key = "oc:log.colored"
             value = "true"
             isEnabled = "YES">
          </EnvironmentVariable>
@@ -142,7 +143,7 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:log.log-single-lined"
+            key = "oc:log.single-lined"
             value = "false"
             isEnabled = "YES">
          </EnvironmentVariable>
@@ -150,6 +151,16 @@
             key = "oc:branding.disabled-import-methods"
             value = "[share-extension,open-with,file-provider]"
             isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.omit-tags"
+            value = "[IPNC,Manager]"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:log.replace-newline"
+            value = "false"
+            isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
    </LaunchAction>
@@ -161,16 +172,11 @@
       debugDocumentVersioning = "YES"
       askForAppToLaunch = "Yes"
       launchAutomaticallySubstyle = "2">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "233BDE9B204FEFE500C06732"
-            BuildableName = "ownCloud.app"
-            BlueprintName = "ownCloud"
-            ReferencedContainer = "container:ownCloud.xcodeproj">
-         </BuildableReference>
-      </BuildableProductRunnable>
+      <RemoteRunnable
+         runnableDebuggingMode = "1"
+         BundleIdentifier = "com.apple.DocumentsApp"
+         RemotePath = "/Library/Developer/CoreSimulator/Volumes/iOS_22A3351/Library/Developer/CoreSimulator/Profiles/Runtimes/iOS 18.0.simruntime/Contents/Resources/RuntimeRoot/Applications/Files.app">
+      </RemoteRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">

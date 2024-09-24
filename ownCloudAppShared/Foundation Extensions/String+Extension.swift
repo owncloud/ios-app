@@ -30,14 +30,6 @@ public extension Bundle {
 
 extension String {
 
-	public var localized: String {
-		return OCLocale.localize(self)
-	}
-
-	public func localized(_ replacements: [ String : String ]) -> String {
-		return OCLocale.localize(self, options: [OCLocaleOptionKeyVariables : replacements])
-	}
-
 	public var isNumeric: Bool {
 		let nonDigitsCharacterSet = CharacterSet.decimalDigits.inverted
 		return !self.isEmpty && rangeOfCharacter(from: nonDigitsCharacterSet) == nil

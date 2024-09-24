@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1420"
+   LastUpgradeVersion = "1600"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -52,6 +52,11 @@
          <EnvironmentVariable
             key = "OC_SETTINGS_DOC_JSON"
             value = "${PROJECT_DIR}/doc/CONFIGURATION.json"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "OC_LOCALIZATION_ROOT"
+            value = "${PROJECT_DIR}/ownCloud/Resources"
             isEnabled = "YES">
          </EnvironmentVariable>
       </EnvironmentVariables>
@@ -124,7 +129,6 @@
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      language = "en"
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
@@ -141,6 +145,16 @@
             ReferencedContainer = "container:ownCloud.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-UIFocusLoggingEnabled YES"
+            isEnabled = "NO">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "-UIFocusLoopDebuggerEnabled YES"
+            isEnabled = "NO">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "MTC_MAX_HIT_COUNT"
@@ -210,7 +224,7 @@
          <EnvironmentVariable
             key = "oc:log.enabled-components"
             value = "[writer.stderr,writer.file,option.log-requests-and-responses]"
-            isEnabled = "NO">
+            isEnabled = "YES">
          </EnvironmentVariable>
          <EnvironmentVariable
             key = "oc:log.colored"
@@ -333,11 +347,6 @@
             isEnabled = "NO">
          </EnvironmentVariable>
          <EnvironmentVariable
-            key = "oc:server-locator.use"
-            value = "string:web-finger"
-            isEnabled = "NO">
-         </EnvironmentVariable>
-         <EnvironmentVariable
             key = "oc:connection.allowed-authentication-methods"
             value = "[openid-connect,oauth2]"
             isEnabled = "NO">
@@ -440,6 +449,56 @@
          <EnvironmentVariable
             key = "oc:branding.url-theme-json"
             value = "string:auto"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:server-locator.use"
+            value = "string:web-finger"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.profile-url"
+            value = "string:https://lookup.example.com/"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.profile-allow-url-configuration"
+            value = "false"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.profile-bookmark-name"
+            value = "string:MyBrandName"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.profile-help-button-label"
+            value = "string:Help page"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.profile-open-help-message"
+            value = "string:Click the button above to open the help page."
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:branding.profile-help-url"
+            value = "string:https://www.owncloud.com/"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:action.allow-image-interactions"
+            value = "false"
+            isEnabled = "NO">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:http.traffic-log-format"
+            value = "string:plain"
+            isEnabled = "YES">
+         </EnvironmentVariable>
+         <EnvironmentVariable
+            key = "oc:authentication-oauth2.omit-authorization-parameters"
+            value = "[user,login_hint]"
             isEnabled = "NO">
          </EnvironmentVariable>
       </EnvironmentVariables>

@@ -23,8 +23,8 @@ import ownCloudApp
 public typealias OCSort = Comparator
 
 public enum SortDirection: Int {
-	case ascendant = 0
-	case descendant = 1
+	case ascending = 0
+	case descending = 1
 }
 
 public enum SortMethod: Int {
@@ -33,23 +33,26 @@ public enum SortMethod: Int {
 	case size = 2
 	case date = 3
 	case shared = 4
+	case lastUsed = 5
 
-	public static var all: [SortMethod] = [alphabetically, kind, size, date, shared]
+	public static var all: [SortMethod] = [alphabetically, kind, size, date, lastUsed, shared]
 
 	public var localizedName : String {
 		var name = ""
 
 		switch self {
 			case .alphabetically:
-				name = "name".localized
+				name = OCLocalizedString("name", nil)
 			case .kind:
-				name = "kind".localized
+				name = OCLocalizedString("kind", nil)
 			case .size:
-				name = "size".localized
+				name = OCLocalizedString("size", nil)
 			case .date:
-				name = "date".localized
+				name = OCLocalizedString("date", nil)
 			case .shared:
-				name = "shared".localized
+				name = OCLocalizedString("shared", nil)
+			case .lastUsed:
+				name = OCLocalizedString("last used", nil)
 		}
 
 		return name
@@ -68,6 +71,8 @@ public enum SortMethod: Int {
 			case .date:
 				propertyName = .lastModified
 			case .shared: break
+			case .lastUsed:
+				propertyName = .lastUsed
 		}
 
 		return propertyName
@@ -82,7 +87,7 @@ public enum SortMethod: Int {
 			guard let leftName  = (left as? OCItem)?.name, let rightName = (right as? OCItem)?.name else {
 				return .orderedSame
 			}
-			if direction == .descendant {
+			if direction == .descending {
 				return localizedSortComparator(rightName, leftName)
 			}
 
@@ -107,85 +112,102 @@ public enum SortMethod: Int {
 		}
 
 		switch self {
-		case .size:
-			comparator = { (left, right) in
-				let leftItem = left as? OCItem
-				let rightItem = right as? OCItem
+			case .size:
+				comparator = { (left, right) in
+					let leftItem = left as? OCItem
+					let rightItem = right as? OCItem
 
-				let leftSize = leftItem!.size as NSNumber
-				let rightSize = rightItem!.size as NSNumber
-				if direction == .descendant {
-					return leftSize.compare(rightSize)
+					let leftSize = leftItem!.size as NSNumber
+					let rightSize = rightItem!.size as NSNumber
+					if direction == .descending {
+						return leftSize.compare(rightSize)
+					}
+
+					return rightSize.compare(leftSize)
 				}
 
-				return rightSize.compare(leftSize)
-			}
-		case .alphabetically:
-			comparator = alphabeticComparator
-		case .kind:
-			comparator = { (left, right) in
-				let leftItem = left as? OCItem
-				let rightItem = right as? OCItem
+			case .alphabetically:
+				comparator = alphabeticComparator
 
-				let leftKind = leftItem?.fileExtension ?? leftItem?.mimeType ?? "_various"
-				let rightKind = rightItem?.fileExtension ?? rightItem?.mimeType ?? "_various"
+			case .kind:
+				comparator = { (left, right) in
+					let leftItem = left as? OCItem
+					let rightItem = right as? OCItem
 
-				var result : ComparisonResult = leftKind.compare(rightKind)
+					let leftKind = leftItem?.fileExtension ?? leftItem?.mimeType ?? "_various"
+					let rightKind = rightItem?.fileExtension ?? rightItem?.mimeType ?? "_various"
 
-				let typeResult = itemTypeComparator(left, right)
+					var result : ComparisonResult = leftKind.compare(rightKind)
 
-				if typeResult != .orderedSame {
-					result = typeResult
+					let typeResult = itemTypeComparator(left, right)
+
+					if typeResult != .orderedSame {
+						result = typeResult
+					}
+
+					if direction == .descending {
+						if result == .orderedDescending {
+							result = .orderedAscending
+						} else if result == .orderedAscending {
+							result = .orderedDescending
+						}
+					}
+
+					return result
 				}
 
-				if direction == .descendant {
-					if result == .orderedDescending {
-						result = .orderedAscending
-					} else if result == .orderedAscending {
-						result = .orderedDescending
+			case .shared:
+				comparator = { (left, right) in
+					guard let leftItem = left as? OCItem else { return .orderedSame }
+					guard let rightItem = right as? OCItem else { return .orderedSame }
+
+					let leftShared = leftItem.isSharedWithUser || leftItem.isShared
+					let rightShared = rightItem.isSharedWithUser || rightItem.isShared
+
+					if leftShared == rightShared {
+						return .orderedSame
+					}
+
+					if direction == .descending {
+						 if rightShared {
+							return .orderedAscending
+						}
+
+						return .orderedDescending
+					} else {
+						if leftShared {
+							return .orderedAscending
+						}
+
+						return .orderedDescending
 					}
 				}
 
-				return result
-			}
-		case .shared:
-			comparator = { (left, right) in
-				guard let leftItem = left as? OCItem else { return .orderedSame }
-				guard let rightItem = right as? OCItem else { return .orderedSame }
+			case .date:
+				comparator = { (left, right) in
 
-				let leftShared = leftItem.isSharedWithUser || leftItem.isShared
-				let rightShared = rightItem.isSharedWithUser || rightItem.isShared
-
-				if leftShared == rightShared {
-					return .orderedSame
-				}
-
-				if direction == .descendant {
-					 if rightShared {
-						return .orderedAscending
+					guard let leftLastModified  = (left as? OCItem)?.lastModified, let rightLastModified = (right as? OCItem)?.lastModified else {
+						return .orderedSame
+					}
+					if direction == .descending {
+						return leftLastModified.compare(rightLastModified)
 					}
 
-					return .orderedDescending
-				} else {
-					if leftShared {
-						return .orderedAscending
+					return rightLastModified.compare(leftLastModified)
+				}
+
+			case .lastUsed:
+				comparator = { (left, right) in
+
+					guard let leftLastUsed  = (left as? OCItem)?.lastUsed ?? (left as? OCItem)?.lastModified, let rightLastUsed = (right as? OCItem)?.lastUsed ?? (right as? OCItem)?.lastModified else {
+						return .orderedSame
+					}
+					if direction == .descending {
+						return leftLastUsed.compare(rightLastUsed)
 					}
 
-					return .orderedDescending
+					return rightLastUsed.compare(leftLastUsed)
 				}
-			}
-		case .date:
-			comparator = { (left, right) in
-
-				guard let leftLastModified  = (left as? OCItem)?.lastModified, let rightLastModified = (right as? OCItem)?.lastModified else {
-					return .orderedSame
-				}
-				if direction == .descendant {
-					return leftLastModified.compare(rightLastModified)
-				}
-
-				return rightLastModified.compare(leftLastModified)
-			}
 		}
 
 		if combinedComparator == nil {
@@ -225,5 +247,19 @@ public class SortDescriptor: NSObject {
 
 	public var comparator: OCSort {
 		return method.comparator(direction: direction)
+	}
+
+	public static var defaultSortDescriptor: SortDescriptor {
+		get {
+			let defaultSortMethod: SortMethod = SortMethod(rawValue: UserDefaults.standard.integer(forKey: "sort-method")) ?? .alphabetically
+			let defaultSortDirection: SortDirection = SortDirection(rawValue: UserDefaults.standard.integer(forKey: "sort-direction")) ?? .ascending
+
+			return SortDescriptor(method: defaultSortMethod, direction: defaultSortDirection)
+		}
+
+		set {
+			UserDefaults.standard.setValue(newValue.method.rawValue, forKey: "sort-method")
+			UserDefaults.standard.setValue(newValue.direction.rawValue, forKey: "sort-direction")
+		}
 	}
 }

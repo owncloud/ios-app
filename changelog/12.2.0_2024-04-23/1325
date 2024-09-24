@@ -1,0 +1,19 @@
+Enhancement: Password Policy support
+
+This PR implements password policy support throughout the iOS client app, including:
+- an extensible password policy system based on rules, policies and validation reports with verbose error reporting for
+   - characters and [character sets](https://developer.apple.com/documentation/foundation/nscharacterset)
+   - lengths
+   - byte counts
+- the generation of password policies based on server capabilities
+- a default password policy for servers that do not provide a password policy
+- a password generator based on password policy rules using "[cryptographically secure random    bytes](https://developer.apple.com/documentation/security/1399291-secrandomcopybytes)"
+- a password composer for entering, editing and generating passwords with instant rule verification and feedback
+- one-tap password generation based on a server's password policy within Public Link creation
+- sharing of combined public link URL and password to the clipboard, Messages, Mail and more via the system share sheet directly after link generation, like f.ex.:
+```
+Photos (https://demo.owncloud.org/s/D3WkWZOW8BUjeKr) | Password: 46CPou|#Pw5.
+```
+
+https://github.com/owncloud/ios-app/pull/1325
+https://github.com/owncloud/ios-app/issues/973

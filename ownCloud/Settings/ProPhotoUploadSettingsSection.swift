@@ -19,6 +19,7 @@
 import UIKit
 import ownCloudAppShared
 import AVFoundation
+import ownCloudSDK
 
 extension AVCaptureDevice {
 	var supportsRaw : Bool {
@@ -99,13 +100,13 @@ class ProPhotoUploadSettingsSection: SettingsSection {
 
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
-		self.headerTitle = "Extended upload settings".localized
+		self.headerTitle = OCLocalizedString("Extended upload settings", nil)
 
 		let preferOriginalsRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 			if let enableSwitch = sender as? UISwitch {
 				userDefaults.preferOriginalPhotos = enableSwitch.isOn
 			}
-			}, title: "Prefer unedited photos".localized, value: self.userDefaults.preferOriginalPhotos, identifier: "prefer-originals")
+			}, title: OCLocalizedString("Prefer unedited photos", nil), value: self.userDefaults.preferOriginalPhotos, identifier: "prefer-originals")
 
 		self.add(row: preferOriginalsRow)
 
@@ -113,7 +114,7 @@ class ProPhotoUploadSettingsSection: SettingsSection {
             if let enableSwitch = sender as? UISwitch {
                 userDefaults.preferRawPhotos = enableSwitch.isOn
             }
-            }, title: "Prefer RAW photos".localized, value: self.userDefaults.preferRawPhotos, identifier: "prefer-raw")
+            }, title: OCLocalizedString("Prefer RAW photos", nil), value: self.userDefaults.preferRawPhotos, identifier: "prefer-raw")
 
         self.add(row: preferRawRow)
 
@@ -121,7 +122,7 @@ class ProPhotoUploadSettingsSection: SettingsSection {
 			if let enableSwitch = sender as? UISwitch {
 				userDefaults.preferOriginalVideos = enableSwitch.isOn
 			}
-			}, title: "Prefer original videos".localized, value: self.userDefaults.preferOriginalVideos, identifier: "prefer-original-videos")
+			}, title: OCLocalizedString("Prefer original videos", nil), value: self.userDefaults.preferOriginalVideos, identifier: "prefer-original-videos")
 
 		self.add(row: preferOriginalVideosRow)
 	}

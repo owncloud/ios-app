@@ -1,0 +1,7 @@
+Bugfix: File Provider fixes
+
+This branch addresses found issues in the File Provider: 
+- fixes unanswered thumbnail requests (leading to infinite thumbnail responses)
+- fixes incorrect error being returned in response to thumbnail requests
+
+https://github.com/owncloud/ios-app/pull/1294

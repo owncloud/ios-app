@@ -70,29 +70,29 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 
 	override init(userDefaults: UserDefaults) {
 		super.init(userDefaults: userDefaults)
-		self.headerTitle = "Background uploads (Lab Version)".localized
+		self.headerTitle = OCLocalizedString("Background uploads (Lab Version)", nil)
 
 		// Add option for iOS13 to use BackgroundTasks framework for background uploads
 		backgroundUploadsRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 			if let enableSwitch = sender as? UISwitch {
 				userDefaults.backgroundMediaUploadsEnabled = enableSwitch.isOn
 			}
-		}, title: "Use background refresh".localized, subtitle: "Allow this app to refresh the content when on Wi-Fi or mobile network in background.".localized, value: self.userDefaults.backgroundMediaUploadsEnabled, identifier: "background-refresh")
+		}, title: OCLocalizedString("Use background refresh", nil), subtitle: OCLocalizedString("Allow this app to refresh the content when on Wi-Fi or mobile network in background.", nil), value: self.userDefaults.backgroundMediaUploadsEnabled, identifier: "background-refresh")
 
 		self.add(row: backgroundUploadsRow!)
 
 		// Add option to enable background location updates which will trigger background media uploads
 		#if !DISABLE_BACKGROUND_LOCATION
 		var locationServicesRowTitle: String = ""
-		locationServicesRowTitle = "Use background location updates".localized
+		locationServicesRowTitle = OCLocalizedString("Use background location updates", nil)
 
 		// Add section footer with detailed explanations
 		var locationServicesRowSubtitle = ""
-		locationServicesRowSubtitle += "If you would like background media uploads to be more reliable, you should enable background location updates.".localized
+		locationServicesRowSubtitle += OCLocalizedString("If you would like background media uploads to be more reliable, you should enable background location updates.", nil)
 		locationServicesRowSubtitle += " "
-		locationServicesRowSubtitle += "Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.".localized
+		locationServicesRowSubtitle += OCLocalizedString("Otherwise background media uploads using background refresh technology would depend on how frequently you use the app.", nil)
 
-		let currentAuthStatus = CLLocationManager.authorizationStatus() == .authorizedAlways
+		let currentAuthStatus = CLLocationManager().authorizationStatus == .authorizedAlways
 		backgroundLocationRow = StaticTableViewRow(switchWithAction: { (_, sender) in
 			if let enableSwitch = sender as? UISwitch {
 				if enableSwitch.isOn {
@@ -133,7 +133,7 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 					userDefaults.backgroundMediaUploadsNotificationsEnabled = false
 				}
 			}
-			}, title: "Background upload notifications".localized, value: userDefaults.backgroundMediaUploadsNotificationsEnabled, identifier: "background-upload-notifications")
+			}, title: OCLocalizedString("Background upload notifications", nil), value: userDefaults.backgroundMediaUploadsNotificationsEnabled, identifier: "background-upload-notifications")
 
 		self.add(row: notificationsRow!)
 
@@ -155,8 +155,8 @@ class BackgroundUploadsSettingsSection: SettingsSection {
 	}
 
 	private func showLocationDisabledAlert() {
-		let alertController = ThemedAlertController(with: "Location permission denied".localized,
-												message: "Please re-enable location acquisition in system settings".localized)
+		let alertController = ThemedAlertController(with: OCLocalizedString("Location permission denied", nil),
+												message: OCLocalizedString("Please re-enable location acquisition in system settings", nil))
 		self.viewController?.present(alertController, animated: true, completion: nil)
 	}
 

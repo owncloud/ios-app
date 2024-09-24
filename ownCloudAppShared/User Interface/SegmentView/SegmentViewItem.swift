@@ -41,6 +41,7 @@ public class SegmentViewItem: NSObject {
 
 	open var style: Style
 	open var icon: UIImage?
+	open var iconRenderingMode:  UIImage.RenderingMode?
 	open var title: String? {
 		didSet {
 			_view = nil
@@ -73,21 +74,28 @@ public class SegmentViewItem: NSObject {
 			if let gestureRecognizers {
 				_view?.gestureRecognizers = gestureRecognizers
 			}
+
+			if isAccessibilityElement {
+				_view?.isAccessibilityElement = isAccessibilityElement
+				_view?.accessibilityTraits = accessibilityTraits
+			}
 		}
 		return _view
 	}
 
-	public init(with icon: UIImage? = nil, title: String? = nil, style: Style = .plain, titleTextStyle: UIFont.TextStyle? = nil, titleTextWeight: UIFont.Weight? = nil, linebreakMode: NSLineBreakMode? = nil, lines: [Line]? = nil, view: UIView? = nil, representedObject: AnyObject? = nil, weakRepresentedObject: AnyObject? = nil, gestureRecognizers: [UIGestureRecognizer]? = nil) {
+	public init(with icon: UIImage? = nil, iconRenderingMode: UIImage.RenderingMode? = nil, title: String? = nil, style: Style = .plain, titleTextStyle: UIFont.TextStyle? = nil, titleTextWeight: UIFont.Weight? = nil, linebreakMode: NSLineBreakMode? = nil, lines: [Line]? = nil, accessibilityLabel: String? = nil, view: UIView? = nil, representedObject: AnyObject? = nil, weakRepresentedObject: AnyObject? = nil, gestureRecognizers: [UIGestureRecognizer]? = nil) {
 		self.style = style
 
 		super.init()
 
 		self.icon = icon
+		self.iconRenderingMode = iconRenderingMode
 		self.title = title
 		self.titleTextStyle = titleTextStyle
 		self.titleTextWeight = titleTextWeight
 		self.titleLinebreakMode = linebreakMode
 		self.lines = lines
+		self.accessibilityLabel = accessibilityLabel
 		self.embedView = view
 		self.representedObject = representedObject
 		self.weakRepresentedObject = weakRepresentedObject
@@ -110,5 +118,38 @@ extension [SegmentViewItem] {
 
 			return includeUntagged
 		})
+	}
+
+	var accessibilityLabelSummary: String? {
+		var accessibilityLabelSummary: String = ""
+
+		for item in self {
+			if let accessibilityLabel = item.accessibilityLabel {
+				accessibilityLabelSummary += " \(accessibilityLabel)"
+			} else if let title = item.title {
+				accessibilityLabelSummary += " \(title)"
+			}
+		}
+
+		return accessibilityLabelSummary.count > 0 ? accessibilityLabelSummary : nil
+	}
+}
+
+extension SegmentViewItem {
+	public static func button(title: String, customizeButton: ((UIButton, UIButton.Configuration) -> UIButton.Configuration)? = nil, action: UIAction) -> SegmentViewItem {
+		var buttonConfig = UIButton.Configuration.plain()
+		buttonConfig.title = title
+		buttonConfig.contentInsets = .zero
+
+		let button = ThemeCSSButton()
+
+		if let customizeButton {
+			buttonConfig = customizeButton(button, buttonConfig)
+		}
+
+		button.configuration = buttonConfig
+		button.addAction(action, for: .primaryActionTriggered)
+
+		return SegmentViewItem(view: button)
 	}
 }

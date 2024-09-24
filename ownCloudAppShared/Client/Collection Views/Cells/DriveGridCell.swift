@@ -24,6 +24,11 @@ class DriveGridCell: DriveHeaderCell {
 	var moreAction: OCAction? {
 		didSet {
 			moreButton.isHidden = (moreAction == nil)
+			if let moreAction {
+				accessibilityCustomActions = [ moreAction.accessibilityCustomAction() ]
+			} else {
+				accessibilityCustomActions = nil
+			}
 		}
 	}
 
@@ -55,7 +60,18 @@ class DriveGridCell: DriveHeaderCell {
 		moreButton.isHidden = true
 		moreButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 
+		titleLabel.isAccessibilityElement = false
+		subtitleLabel.isAccessibilityElement = false
+		isAccessibilityElement = true
+		accessibilityTraits = .button
+
 		contentView.addSubview(moreButton)
+	}
+
+	override func updateConfiguration(using state: UICellConfigurationState) {
+		super.updateConfiguration(using: state)
+		self.cssSelectors = state.isFocused ? [.header, .drive, .focused] : [.header, .drive]
+		applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .update)
 	}
 
 	override func configureLayout() {
@@ -70,15 +86,23 @@ class DriveGridCell: DriveHeaderCell {
 		])
 	}
 
+	override var title: String? {
+		didSet {
+			accessibilityLabel = title
+		}
+	}
+
 	override var subtitle: String? {
 		didSet {
 			subtitleLabel.text = subtitle ?? " " // Ensure the grid cells' titles align by always showing a subtitle - if necessary, an empty one
+			accessibilityHint = subtitle
 		}
 	}
 
 	override func applyThemeCollectionToCellContents(theme: Theme, collection: ThemeCollection, state: ThemeItemState) {
 		super.applyThemeCollectionToCellContents(theme: theme, collection: collection, state: state)
 
+		darkBackgroundView.applyThemeCollection(theme: theme, collection: collection, event: .update)
 		moreButton.apply(css: collection.css, properties: [.stroke, .fill])
 	}
 }
