@@ -21,6 +21,15 @@ jobs:
           token: ${{ secrets.TX_TOKEN }}
           args: pull --force --skip --all
 
+      - name: l10n-format
+        run: |
+          jq . ownCloud/Resources/Localizable.xcstrings > ownCloud/Resources/Localizable.xcstrings
+          jq . ownCloud/Resources/InfoPlist.xcstrings > ownCloud/Resources/InfoPlist.xcstrings
+          jq . ownCloudAppFramework/Resources/Localizable.xcstrings > ownCloudAppFramework/Resources/Localizable.xcstrings
+          jq . "ownCloud File Provider/Localizable.xcstrings" > "ownCloud File Provider/Localizable.xcstrings"
+          jq . "ownCloud Share Extension/InfoPlist.xcstrings" > "ownCloud Share Extension/InfoPlist.xcstrings"
+          jq . "ownCloud Action Extension/InfoPlist.xcstrings" > "ownCloud Action Extension/InfoPlist.xcstrings"
+
       - uses: GuillaumeFalourd/git-commit-push@v1.3
         with:
           email: devops@owncloud.com
