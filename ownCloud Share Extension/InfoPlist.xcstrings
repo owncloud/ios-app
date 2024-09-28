@@ -131,25 +131,7 @@
             "value": "ownCloud Share Extension"
           }
         },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ownCloud Share Extension"
-          }
-        },
         "mk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ownCloud Share Extension"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ownCloud Share Extension"
-          }
-        },
-        "nn-NO": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Share Extension"
@@ -161,13 +143,19 @@
             "value": "ownCloud Share Extension"
           }
         },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ownCloud Share Extension"
+          }
+        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Share-Erweiterung"
           }
         },
-        "fr": {
+        "ko": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Share Extension"
@@ -179,19 +167,13 @@
             "value": "ownCloud Share Extension"
           }
         },
-        "es": {
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Share Extension"
           }
         },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ownCloud Share Extension"
-          }
-        },
-        "ko": {
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Share Extension"
@@ -203,13 +185,31 @@
             "value": "ownCloud Share Extension"
           }
         },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ownCloud Share Extension"
+          }
+        },
         "sq": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Share Extension"
           }
         },
-        "en-GB": {
+        "nn-NO": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ownCloud Share Extension"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ownCloud Share Extension"
+          }
+        },
+        "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Share Extension"
@@ -221,7 +221,7 @@
             "value": "ownCloud Share Extension"
           }
         },
-        "zh-Hans": {
+        "en-GB": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Share Extension"
@@ -244,25 +244,7 @@
             "value": "Share Extension unavailable"
           }
         },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Share Extension unavailable"
-          }
-        },
         "mk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Share Extension unavailable"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Share Extension unavailable"
-          }
-        },
-        "nn-NO": {
           "stringUnit": {
             "state": "translated",
             "value": "Share Extension unavailable"
@@ -274,10 +256,22 @@
             "value": "Share Extension unavailable"
           }
         },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share Extension unavailable"
+          }
+        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Erweiterung nicht verfügbar"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share Extension unavailable"
           }
         },
         "tr": {
@@ -286,19 +280,7 @@
             "value": "Share Extension unavailable"
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Share Extension unavailable"
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Share Extension unavailable"
-          }
-        },
-        "ko": {
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Share Extension unavailable"
@@ -310,13 +292,31 @@
             "value": "Share Extension unavailable"
           }
         },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share Extension unavailable"
+          }
+        },
         "sq": {
           "stringUnit": {
             "state": "translated",
             "value": "Zgjerimi për Ndarje jo i pranishëm"
           }
         },
-        "en-GB": {
+        "nn-NO": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share Extension unavailable"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share Extension unavailable"
+          }
+        },
+        "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "Share Extension unavailable"
@@ -328,7 +328,7 @@
             "value": "Share Extension unavailable"
           }
         },
-        "zh-Hans": {
+        "en-GB": {
           "stringUnit": {
             "state": "translated",
             "value": "Share Extension unavailable"
@@ -351,25 +351,7 @@
             "value": "The Share Extension is not available on this system."
           }
         },
-        "cs": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The Share Extension is not available on this system."
-          }
-        },
         "mk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The Share Extension is not available on this system."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The Share Extension is not available on this system."
-          }
-        },
-        "nn-NO": {
           "stringUnit": {
             "state": "translated",
             "value": "The Share Extension is not available on this system."
@@ -381,10 +363,22 @@
             "value": "The Share Extension is not available on this system."
           }
         },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Share Extension is not available on this system."
+          }
+        },
         "de": {
           "stringUnit": {
             "state": "translated",
             "value": "Die Erweiterung ist auf diesem System nicht verfügbar."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Share Extension is not available on this system."
           }
         },
         "tr": {
@@ -393,19 +387,7 @@
             "value": "The Share Extension is not available on this system."
           }
         },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The Share Extension is not available on this system."
-          }
-        },
-        "pt-BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The Share Extension is not available on this system."
-          }
-        },
-        "ko": {
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "The Share Extension is not available on this system."
@@ -417,13 +399,31 @@
             "value": "The Share Extension is not available on this system."
           }
         },
+        "pt-BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Share Extension is not available on this system."
+          }
+        },
         "sq": {
           "stringUnit": {
             "state": "translated",
             "value": "Zgjerimi për Ndarje s’është i pranishëm në këtë sistem."
           }
         },
-        "en-GB": {
+        "nn-NO": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Share Extension is not available on this system."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Share Extension is not available on this system."
+          }
+        },
+        "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "The Share Extension is not available on this system."
@@ -435,7 +435,7 @@
             "value": "The Share Extension is not available on this system."
           }
         },
-        "zh-Hans": {
+        "en-GB": {
           "stringUnit": {
             "state": "translated",
             "value": "The Share Extension is not available on this system."
