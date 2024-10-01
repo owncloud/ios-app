@@ -1,4 +1,4 @@
-name: "Push translation source and German translation to Transifex"
+name: "Push source language to Transifex"
 
 on:
   push:
