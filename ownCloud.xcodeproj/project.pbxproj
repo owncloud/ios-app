@@ -83,6 +83,7 @@
 		399EA72625E6565900B6FF11 /* OCCore+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA72525E6565900B6FF11 /* OCCore+Extension.swift */; };
 		399EA73A25E656A900B6FF11 /* UITableView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA73925E656A900B6FF11 /* UITableView+Extension.swift */; };
 		399EA74625E6575B00B6FF11 /* NotificationHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA74525E6575A00B6FF11 /* NotificationHUDViewController.swift */; };
+		399FBF8D2CABE3A600F1AACF /* CrashReporter in Frameworks */ = {isa = PBXBuildFile; productRef = 02AE32E324D2FA8B00A19476 /* CrashReporter */; };
 		39A7138722E79C6700089423 /* ownCloud Intents.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 39A7138022E79C6700089423 /* ownCloud Intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		39BC9C3023DB831F0097C52D /* DocumentEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CD755123D787E400193950 /* DocumentEditingAction.swift */; };
 		39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BE385C23435AFE0062A2FE /* String+Extension.swift */; };
@@ -1779,6 +1780,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				399FBF8D2CABE3A600F1AACF /* CrashReporter in Frameworks */,
 				DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */,
 				DC1251EC2C74718B0040FBC6 /* libzip.framework in Frameworks */,
 				DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */,
@@ -5340,7 +5342,7 @@
 				APP_BUILD_FLAGS = "$(inherited)";
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
-				APP_SHORT_VERSION = 12.3;
+				APP_SHORT_VERSION = 12.3.1;
 				APP_VERSION = 292;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -5411,7 +5413,7 @@
 				APP_BUILD_FLAGS = "$(inherited)";
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
-				APP_SHORT_VERSION = 12.3;
+				APP_SHORT_VERSION = 12.3.1;
 				APP_VERSION = 292;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
