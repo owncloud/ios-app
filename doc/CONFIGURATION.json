@@ -287,6 +287,10 @@
     "label" : "action.excludedSystemActivities",
     "possibleValues" : [
       {
+        "description" : "Save To Files",
+        "value" : "com.apple.DocumentManagerUICore.SaveToFiles"
+      },
+      {
         "description" : "Add to reading list",
         "value" : "com.apple.UIKit.activity.AddToReadingList"
       },
@@ -323,7 +327,7 @@
         "value" : "com.apple.UIKit.activity.Print"
       },
       {
-        "description" : "Save to camera roll",
+        "description" : "Save Image / Save Video / Save to camera roll",
         "value" : "com.apple.UIKit.activity.SaveToCameraRoll"
       }
     ],
