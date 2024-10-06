@@ -17,25 +17,31 @@
             "value": "Save to ownCloud"
           }
         },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save to ownCloud"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save to ownCloud"
+          }
+        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "Save to ownCloud"
           }
         },
-        "th_TH": {
+        "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Save to ownCloud"
+            "value": "Ruajeni në ownCloud"
           }
         },
-        "nn_NO": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save to ownCloud"
-          }
-        },
-        "es": {
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Save to ownCloud"
@@ -45,12 +51,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Save to ownCloud"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Сохранить в ownCloud"
           }
         },
         "ko": {
@@ -65,22 +65,16 @@
             "value": "Save to ownCloud"
           }
         },
-        "fr": {
+        "nn_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "Save to ownCloud"
           }
         },
-        "sq": {
+        "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Ruajeni në ownCloud"
-          }
-        },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Save to ownCloud"
+            "value": "Сохранить в ownCloud"
           }
         },
         "zh-Hans": {
@@ -89,19 +83,25 @@
             "value": "Save to ownCloud"
           }
         },
-        "tr": {
+        "th_TH": {
           "stringUnit": {
             "state": "translated",
             "value": "Save to ownCloud"
           }
         },
-        "cs": {
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "Save to ownCloud"
           }
         },
-        "pt_BR": {
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Save to ownCloud"
+          }
+        },
+        "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Save to ownCloud"
@@ -119,37 +119,31 @@
             "value": "ownCloud Action Extension"
           }
         },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ownCloud Action Extension"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ownCloud Action Extension"
+          }
+        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Action Extension"
           }
         },
-        "th_TH": {
+        "sq": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Action Extension"
           }
         },
-        "nn_NO": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ownCloud Action Extension"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ownCloud Action Extension"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ownCloud Action Extension"
-          }
-        },
-        "ru": {
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Action Extension"
@@ -173,19 +167,13 @@
             "value": "ownCloud Action Extension"
           }
         },
-        "fr": {
+        "nn_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Action Extension"
           }
         },
-        "sq": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "ownCloud Action Extension"
-          }
-        },
-        "pt_PT": {
+        "ru": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Action Extension"
@@ -197,19 +185,31 @@
             "value": "ownCloud Action Extension"
           }
         },
-        "tr": {
+        "th_TH": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Action Extension"
           }
         },
-        "cs": {
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Action Extension"
           }
         },
-        "pt_BR": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ownCloud Action Extension"
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ownCloud Action Extension"
+          }
+        },
+        "es": {
           "stringUnit": {
             "state": "translated",
             "value": "ownCloud Action Extension"
@@ -227,31 +227,31 @@
             "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
           }
         },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
+          }
+        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
           }
         },
-        "th_TH": {
+        "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
+            "value": "Të drejta kopjimi © 2023 ownCloud GmbH. Tërë të drejtat të rezervuara."
           }
         },
-        "nn_NO": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copyright © 2023 ownCloud GmbH. Alle Rechte vorbehalten."
-          }
-        },
-        "es": {
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
@@ -261,12 +261,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copyright © 2023 ownCloud GmbH. Все права защищены."
           }
         },
         "ko": {
@@ -281,22 +275,16 @@
             "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
           }
         },
-        "fr": {
+        "nn_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
           }
         },
-        "sq": {
+        "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Të drejta kopjimi © 2023 ownCloud GmbH. Tërë të drejtat të rezervuara."
-          }
-        },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
+            "value": "Copyright © 2023 ownCloud GmbH. Все права защищены."
           }
         },
         "zh-Hans": {
@@ -305,19 +293,31 @@
             "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
           }
         },
-        "tr": {
+        "th_TH": {
           "stringUnit": {
             "state": "translated",
             "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
           }
         },
-        "cs": {
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
           }
         },
-        "pt_BR": {
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copyright © 2023 ownCloud GmbH. Alle Rechte vorbehalten."
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
+          }
+        },
+        "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Copyright © 2023 ownCloud GmbH. All rights reserved."
@@ -340,25 +340,31 @@
             "value": "Share Extension unavailable"
           }
         },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share Extension unavailable"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share Extension unavailable"
+          }
+        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "Share Extension unavailable"
           }
         },
-        "th_TH": {
+        "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "Share Extension unavailable"
+            "value": "Zgjerimi për Ndarje jo i pranishëm"
           }
         },
-        "nn_NO": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Share Extension unavailable"
-          }
-        },
-        "es": {
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "Share Extension unavailable"
@@ -368,12 +374,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "Share Extension unavailable"
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Share Extension недоступно"
           }
         },
         "ko": {
@@ -388,22 +388,16 @@
             "value": "Share Extension unavailable"
           }
         },
-        "fr": {
+        "nn_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "Share Extension unavailable"
           }
         },
-        "sq": {
+        "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zgjerimi për Ndarje jo i pranishëm"
-          }
-        },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Share Extension unavailable"
+            "value": "Share Extension недоступно"
           }
         },
         "zh-Hans": {
@@ -412,19 +406,25 @@
             "value": "Share Extension unavailable"
           }
         },
-        "tr": {
+        "th_TH": {
           "stringUnit": {
             "state": "translated",
             "value": "Share Extension unavailable"
           }
         },
-        "cs": {
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "Share Extension unavailable"
           }
         },
-        "pt_BR": {
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Share Extension unavailable"
+          }
+        },
+        "es": {
           "stringUnit": {
             "state": "translated",
             "value": "Share Extension unavailable"
@@ -447,25 +447,31 @@
             "value": "The Share Extension is not available on this system."
           }
         },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Share Extension is not available on this system."
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Share Extension is not available on this system."
+          }
+        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "The Share Extension is not available on this system."
           }
         },
-        "th_TH": {
+        "sq": {
           "stringUnit": {
             "state": "translated",
-            "value": "The Share Extension is not available on this system."
+            "value": "Zgjerimi për Ndarje s’është i pranishëm në këtë sistem."
           }
         },
-        "nn_NO": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The Share Extension is not available on this system."
-          }
-        },
-        "es": {
+        "cs": {
           "stringUnit": {
             "state": "translated",
             "value": "The Share Extension is not available on this system."
@@ -475,12 +481,6 @@
           "stringUnit": {
             "state": "translated",
             "value": "The Share Extension is not available on this system."
-          }
-        },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The Share Extension недоступно на этой системе."
           }
         },
         "ko": {
@@ -495,22 +495,16 @@
             "value": "The Share Extension is not available on this system."
           }
         },
-        "fr": {
+        "nn_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "The Share Extension is not available on this system."
           }
         },
-        "sq": {
+        "ru": {
           "stringUnit": {
             "state": "translated",
-            "value": "Zgjerimi për Ndarje s’është i pranishëm në këtë sistem."
-          }
-        },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The Share Extension is not available on this system."
+            "value": "The Share Extension недоступно на этой системе."
           }
         },
         "zh-Hans": {
@@ -519,19 +513,25 @@
             "value": "The Share Extension is not available on this system."
           }
         },
-        "tr": {
+        "th_TH": {
           "stringUnit": {
             "state": "translated",
             "value": "The Share Extension is not available on this system."
           }
         },
-        "cs": {
+        "fr": {
           "stringUnit": {
             "state": "translated",
             "value": "The Share Extension is not available on this system."
           }
         },
-        "pt_BR": {
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The Share Extension is not available on this system."
+          }
+        },
+        "es": {
           "stringUnit": {
             "state": "translated",
             "value": "The Share Extension is not available on this system."
