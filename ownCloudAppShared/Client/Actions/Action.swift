@@ -622,7 +622,7 @@ extension Action : OCClassSettingsSupport {
 							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.print.rawValue
 						],
 						[
-							OCClassSettingsMetadataKey.description : "Save to camera roll",
+							OCClassSettingsMetadataKey.description : "Save Image / Save Video / Save to camera roll",
 							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.saveToCameraRoll.rawValue
 						],
 						[
@@ -648,6 +648,10 @@ extension Action : OCClassSettingsSupport {
 						[
 							OCClassSettingsMetadataKey.description : "Markup as PDF",
 							OCClassSettingsMetadataKey.value : UIActivity.ActivityType.markupAsPDF.rawValue
+						],
+						[
+							OCClassSettingsMetadataKey.description : "Save To Files",
+							OCClassSettingsMetadataKey.value : "com.apple.DocumentManagerUICore.SaveToFiles"
 						]
 					]
 				]
