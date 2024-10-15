@@ -112,31 +112,13 @@
             "value": "将媒体文件上传到您的服务器需要此权限。"
           }
         },
-        "nn_NO": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This permission is needed for uploading media files to your server."
-          }
-        },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Essa permissão é necessária para o envio de arquivos de mídia para o seu servidor."
-          }
-        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed for uploading media files to your server."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This permission is needed for uploading media files to your server."
-          }
-        },
-        "pt_PT": {
+        "nn_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed for uploading media files to your server."
@@ -148,10 +130,28 @@
             "value": "สิทธิ์นี้ต้องการอัปโหลดไฟล์สื่อไปยังเซิร์ฟเวอร์ของคุณ"
           }
         },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This permission is needed for uploading media files to your server."
+          }
+        },
         "en_GB": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed for uploading media files to your server."
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This permission is needed for uploading media files to your server."
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Essa permissão é necessária para o envio de arquivos de mídia para o seu servidor."
           }
         }
       }
@@ -267,34 +267,10 @@
             "value": "需要密码解锁。"
           }
         },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Desbloqueie o aplicativo sem inserir a senha."
-          }
-        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "Lås opp uten å oppgi adgangskode."
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unlock the app without entering the passcode."
-          }
-        },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Desbloqueie a app sem inserir o código."
-          }
-        },
-        "en_GB": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Unlock the app without entering the passcode."
           }
         },
         "nn_NO": {
@@ -307,6 +283,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "ปลดล็อกแอปฯโดยไม่ต้องป้อนรหัสผ่าน"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock the app without entering the passcode."
+          }
+        },
+        "en_GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Unlock the app without entering the passcode."
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desbloqueie a app sem inserir o código."
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desbloqueie o aplicativo sem inserir a senha."
           }
         }
       }
@@ -416,25 +416,13 @@
             "value": "需要此权限才能在后台启用照片和视频的自动上传。"
           }
         },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Essa permissão é necessária para habilitar o envio automático de fotos e vídeos em segundo plano."
-          }
-        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to enable auto-upload of photos and videos in the background."
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This permission is needed to enable auto-upload of photos and videos in the background."
-          }
-        },
-        "pt_PT": {
+        "nn_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to enable auto-upload of photos and videos in the background."
@@ -446,7 +434,7 @@
             "value": "จำเป็นต้องได้รับอนุญาตนี้เพื่อเปิดใช้งานการอัปโหลดรูปภาพและวิดีโอโดยอัตโนมัติในพื้นหลัง"
           }
         },
-        "nn_NO": {
+        "tr": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to enable auto-upload of photos and videos in the background."
@@ -456,6 +444,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to enable auto-upload of photos and videos in the background."
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This permission is needed to enable auto-upload of photos and videos in the background."
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Essa permissão é necessária para habilitar o envio automático de fotos e vídeos em segundo plano."
           }
         }
       }
@@ -565,31 +565,7 @@
             "value": "需要此权限才能在后台启用照片和视频的自动上传"
           }
         },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Essa permissão é necessária para habilitar o envio automático de fotos e vídeos em segundo plano."
-          }
-        },
         "nb_NO": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This permission is needed to enable auto-upload of photos and videos in background"
-          }
-        },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This permission is needed to enable auto-upload of photos and videos in background"
-          }
-        },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This permission is needed to enable auto-upload of photos and videos in background"
-          }
-        },
-        "en_GB": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to enable auto-upload of photos and videos in background"
@@ -605,6 +581,30 @@
           "stringUnit": {
             "state": "translated",
             "value": "จำเป็นต้องได้รับอนุญาตนี้เพื่อเปิดใช้งานการอัปโหลดรูปภาพและวิดีโอโดยอัตโนมัติในพื้นหลัง"
+          }
+        },
+        "tr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This permission is needed to enable auto-upload of photos and videos in background"
+          }
+        },
+        "en_GB": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This permission is needed to enable auto-upload of photos and videos in background"
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This permission is needed to enable auto-upload of photos and videos in background"
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Essa permissão é necessária para habilitar o envio automático de fotos e vídeos em segundo plano."
           }
         }
       }
@@ -714,25 +714,13 @@
             "value": "需要此权限才能在后台启用照片和视频的自动上传"
           }
         },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Essa permissão é necessária para habilitar o envio automático de fotos e vídeos em segundo plano."
-          }
-        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to enable auto-upload of photos and videos in background"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This permission is needed to enable auto-upload of photos and videos in background"
-          }
-        },
-        "pt_PT": {
+        "nn_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to enable auto-upload of photos and videos in background"
@@ -744,7 +732,7 @@
             "value": "จำเป็นต้องได้รับอนุญาตนี้เพื่อเปิดใช้งานการอัปโหลดรูปภาพและวิดีโอโดยอัตโนมัติในพื้นหลัง"
           }
         },
-        "nn_NO": {
+        "tr": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to enable auto-upload of photos and videos in background"
@@ -754,6 +742,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to enable auto-upload of photos and videos in background"
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This permission is needed to enable auto-upload of photos and videos in background"
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Essa permissão é necessária para habilitar o envio automático de fotos e vídeos em segundo plano."
           }
         }
       }
@@ -869,25 +869,13 @@
             "value": "录制视频需要此权限"
           }
         },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Esta permissão é necessária para gravar vídeos"
-          }
-        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to record videos"
           }
         },
-        "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "This permission is needed to record videos"
-          }
-        },
-        "pt_PT": {
+        "nn_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to record videos"
@@ -899,7 +887,7 @@
             "value": "โปรดอนุญาตคำขอนี้เพื่อใช้งานบันทึกวิดีโอ"
           }
         },
-        "nn_NO": {
+        "tr": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to record videos"
@@ -909,6 +897,18 @@
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to record videos"
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This permission is needed to record videos"
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esta permissão é necessária para gravar vídeos"
           }
         }
       }
@@ -1024,16 +1024,22 @@
             "value": "需要此权限才能从你的图片库中上传照片和视频。"
           }
         },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Essa permissão é necessária para fazer envios de fotos e vídeos da sua biblioteca de fotos."
-          }
-        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to upload photos and videos from your photo library."
+          }
+        },
+        "nn_NO": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This permission is needed to upload photos and videos from your photo library."
+          }
+        },
+        "th_TH": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "จำเป็นต้องได้รับอนุญาตเพื่ออัปโหลดรูปภาพและวิดีโอจากคลังรูปภาพของคุณ"
           }
         },
         "tr": {
@@ -1054,16 +1060,10 @@
             "value": "This permission is needed to upload photos and videos from your photo library."
           }
         },
-        "nn_NO": {
+        "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "This permission is needed to upload photos and videos from your photo library."
-          }
-        },
-        "th_TH": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "จำเป็นต้องได้รับอนุญาตเพื่ออัปโหลดรูปภาพและวิดีโอจากคลังรูปภาพของคุณ"
+            "value": "Essa permissão é necessária para fazer envios de fotos e vídeos da sua biblioteca de fotos."
           }
         }
       }
@@ -1179,16 +1179,22 @@
             "value": "需要此权限才能从你的图片库中上传照片和视频。"
           }
         },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Essa permissão é necessária para fazer envios de fotos e vídeos da sua biblioteca de fotos."
-          }
-        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "This permission is needed to upload photos and videos from your photo library."
+          }
+        },
+        "nn_NO": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "This permission is needed to upload photos and videos from your photo library."
+          }
+        },
+        "th_TH": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "จำเป็นต้องได้รับอนุญาตเพื่ออัปโหลดรูปภาพและวิดีโอจากคลังรูปภาพของคุณ"
           }
         },
         "tr": {
@@ -1209,16 +1215,10 @@
             "value": "This permission is needed to upload photos and videos from your photo library."
           }
         },
-        "nn_NO": {
+        "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "This permission is needed to upload photos and videos from your photo library."
-          }
-        },
-        "th_TH": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "จำเป็นต้องได้รับอนุญาตเพื่ออัปโหลดรูปภาพและวิดีโอจากคลังรูปภาพของคุณ"
+            "value": "Essa permissão é necessária para fazer envios de fotos e vídeos da sua biblioteca de fotos."
           }
         }
       }
