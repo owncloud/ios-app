@@ -710,6 +710,19 @@
   },
   {
     "autoExpansion" : "none",
+    "category" : "Authentication",
+    "categoryTag" : "authentication",
+    "classIdentifier" : "authentication",
+    "className" : "OCAuthenticationMethod",
+    "description" : "Overrides whether the default WebDAV endpoint should be probed to detect available authentication methods. By default, the necessity for this is determined dynamically.",
+    "flatIdentifier" : "authentication.skip-www-authenticate-checks",
+    "key" : "skip-www-authenticate-checks",
+    "label" : "authentication.skip-www-authenticate-checks",
+    "status" : "supported",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Bookmarks",
     "categoryTag" : "bookmarks",
     "classIdentifier" : "bookmark",
