@@ -22,10 +22,52 @@
             "value": "Authorization failed"
           }
         },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authorization failed"
+          }
+        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "Authorization failed"
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authorization failed"
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authorization failed"
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authorization failed"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authorization failed"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Authorization failed"
+          }
+        },
+        "sq": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Autorizimi dështoi"
           }
         },
         "en_GB": {
@@ -34,7 +76,7 @@
             "value": "Authorization failed"
           }
         },
-        "fr": {
+        "mk": {
           "stringUnit": {
             "state": "translated",
             "value": "Authorization failed"
@@ -52,55 +94,13 @@
             "value": "Authorization failed"
           }
         },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Authorization failed"
-          }
-        },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Authorization failed"
-          }
-        },
         "th_TH": {
           "stringUnit": {
             "state": "translated",
             "value": "Authorization failed"
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Authorization failed"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Authorization failed"
-          }
-        },
         "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Authorization failed"
-          }
-        },
-        "sq": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Autorizimi dështoi"
-          }
-        },
-        "mk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Authorization failed"
-          }
-        },
-        "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "Authorization failed"
@@ -122,10 +122,52 @@
             "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
           }
         },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
+          }
+        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
+          }
+        },
+        "sq": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hyrja te Shërbimi i Kartelave është çaktivizuar nga përgjegjësi. Ju lutemi, për të krijuar kartela të reja, përdorni aplikacionin."
           }
         },
         "en_GB": {
@@ -134,7 +176,13 @@
             "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
           }
         },
-        "fr": {
+        "mk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
@@ -152,61 +200,13 @@
             "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
           }
         },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
-          }
-        },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
-          }
-        },
         "th_TH": {
           "stringUnit": {
             "state": "translated",
             "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
-          }
-        },
         "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
-          }
-        },
-        "sq": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyrja te Shërbimi i Kartelave është çaktivizuar nga përgjegjësi. Ju lutemi, për të krijuar kartela të reja, përdorni aplikacionin."
-          }
-        },
-        "mk": {
           "stringUnit": {
             "state": "translated",
             "value": "File Provider access has been disabled by the administrator. Please use the app to create new folders."
@@ -228,10 +228,52 @@
             "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
           }
         },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
+          }
+        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
+          }
+        },
+        "sq": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Hyrja te Shërbimi i Kartelave është çaktivizuar nga përgjegjësi. Ju lutemi, për të importuar kartela, përdorni zgjerimin për ndarje më të tjerë."
           }
         },
         "en_GB": {
@@ -240,7 +282,13 @@
             "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
           }
         },
-        "fr": {
+        "mk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
@@ -258,61 +306,13 @@
             "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
           }
         },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
-          }
-        },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
-          }
-        },
         "th_TH": {
           "stringUnit": {
             "state": "translated",
             "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
-          }
-        },
         "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
-          }
-        },
-        "sq": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Hyrja te Shërbimi i Kartelave është çaktivizuar nga përgjegjësi. Ju lutemi, për të importuar kartela, përdorni zgjerimin për ndarje më të tjerë."
-          }
-        },
-        "mk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
-          }
-        },
-        "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "File Provider access has been disabled by the administrator. Please use the share extension to import files."
@@ -334,10 +334,52 @@
             "value": "Importing files through the File Provider is not allowed on this device."
           }
         },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importing files through the File Provider is not allowed on this device."
+          }
+        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "Importing files through the File Provider is not allowed on this device."
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importing files through the File Provider is not allowed on this device."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importing files through the File Provider is not allowed on this device."
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importing files through the File Provider is not allowed on this device."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importing files through the File Provider is not allowed on this device."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importing files through the File Provider is not allowed on this device."
+          }
+        },
+        "sq": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Në këtë pajisje nuk lejohet importim kartelash përmes Shërbimit të Kartelave."
           }
         },
         "en_GB": {
@@ -346,7 +388,13 @@
             "value": "Importing files through the File Provider is not allowed on this device."
           }
         },
-        "fr": {
+        "mk": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Importing files through the File Provider is not allowed on this device."
+          }
+        },
+        "en": {
           "stringUnit": {
             "state": "translated",
             "value": "Importing files through the File Provider is not allowed on this device."
@@ -364,61 +412,13 @@
             "value": "Importing files through the File Provider is not allowed on this device."
           }
         },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importing files through the File Provider is not allowed on this device."
-          }
-        },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importing files through the File Provider is not allowed on this device."
-          }
-        },
-        "en": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importing files through the File Provider is not allowed on this device."
-          }
-        },
         "th_TH": {
           "stringUnit": {
             "state": "translated",
             "value": "Importing files through the File Provider is not allowed on this device."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importing files through the File Provider is not allowed on this device."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importing files through the File Provider is not allowed on this device."
-          }
-        },
         "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importing files through the File Provider is not allowed on this device."
-          }
-        },
-        "sq": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Në këtë pajisje nuk lejohet importim kartelash përmes Shërbimit të Kartelave."
-          }
-        },
-        "mk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Importing files through the File Provider is not allowed on this device."
-          }
-        },
-        "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "Importing files through the File Provider is not allowed on this device."
@@ -447,10 +447,52 @@
             "value": "Log into your account %@ in the app for more details."
           }
         },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log into your account %@ in the app for more details."
+          }
+        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "Log into your account %@ in the app for more details."
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log into your account %@ in the app for more details."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log into your account %@ in the app for more details."
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log into your account %@ in the app for more details."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log into your account %@ in the app for more details."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log into your account %@ in the app for more details."
+          }
+        },
+        "sq": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Për më tepër hollësi, bëni hyrjen te llogaria juaj %@ te aplikacioni."
           }
         },
         "en_GB": {
@@ -459,7 +501,7 @@
             "value": "Log into your account %@ in the app for more details."
           }
         },
-        "fr": {
+        "mk": {
           "stringUnit": {
             "state": "translated",
             "value": "Log into your account %@ in the app for more details."
@@ -477,55 +519,13 @@
             "value": "Log into your account %@ in the app for more details."
           }
         },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log into your account %@ in the app for more details."
-          }
-        },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log into your account %@ in the app for more details."
-          }
-        },
         "th_TH": {
           "stringUnit": {
             "state": "translated",
             "value": "Log into your account %@ in the app for more details."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log into your account %@ in the app for more details."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log into your account %@ in the app for more details."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log into your account %@ in the app for more details."
-          }
-        },
         "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log into your account %@ in the app for more details."
-          }
-        },
-        "sq": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Për më tepër hollësi, bëni hyrjen te llogaria juaj %@ te aplikacioni."
-          }
-        },
-        "mk": {
           "stringUnit": {
             "state": "translated",
             "value": "Log into your account %@ in the app for more details."
@@ -553,10 +553,52 @@
             "value": "Log into your account in the app for more details."
           }
         },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log into your account in the app for more details."
+          }
+        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "Log into your account in the app for more details."
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log into your account in the app for more details."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log into your account in the app for more details."
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log into your account in the app for more details."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log into your account in the app for more details."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Log into your account in the app for more details."
+          }
+        },
+        "sq": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Për më tepër hollësi, bëni hyrjen te llogaria juaj te aplikacioni."
           }
         },
         "en_GB": {
@@ -565,7 +607,7 @@
             "value": "Log into your account in the app for more details."
           }
         },
-        "fr": {
+        "mk": {
           "stringUnit": {
             "state": "translated",
             "value": "Log into your account in the app for more details."
@@ -583,55 +625,13 @@
             "value": "Log into your account in the app for more details."
           }
         },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log into your account in the app for more details."
-          }
-        },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log into your account in the app for more details."
-          }
-        },
         "th_TH": {
           "stringUnit": {
             "state": "translated",
             "value": "Log into your account in the app for more details."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log into your account in the app for more details."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log into your account in the app for more details."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log into your account in the app for more details."
-          }
-        },
         "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Log into your account in the app for more details."
-          }
-        },
-        "sq": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Për më tepër hollësi, bëni hyrjen te llogaria juaj te aplikacioni."
-          }
-        },
-        "mk": {
           "stringUnit": {
             "state": "translated",
             "value": "Log into your account in the app for more details."
@@ -660,10 +660,52 @@
             "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
           }
         },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
+          }
+        },
         "nb_NO": {
           "stringUnit": {
             "state": "translated",
             "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
+          }
+        },
+        "pt_BR": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
+          }
+        },
+        "ru": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
+          }
+        },
+        "pt_PT": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
+          }
+        },
+        "sq": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Në këtë shërbyes s’u gjet dot dosja vendmbërritje. Aktualisht nuk mbulohet kalimi i objekteve nga shërbyes në shërbyes."
           }
         },
         "en_GB": {
@@ -672,7 +714,7 @@
             "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
           }
         },
-        "fr": {
+        "mk": {
           "stringUnit": {
             "state": "translated",
             "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
@@ -690,55 +732,13 @@
             "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
           }
         },
-        "pt_PT": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
-          }
-        },
-        "pt_BR": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
-          }
-        },
         "th_TH": {
           "stringUnit": {
             "state": "translated",
             "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
           }
         },
-        "ru": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
-          }
-        },
         "tr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
-          }
-        },
-        "sq": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Në këtë shërbyes s’u gjet dot dosja vendmbërritje. Aktualisht nuk mbulohet kalimi i objekteve nga shërbyes në shërbyes."
-          }
-        },
-        "mk": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
-          }
-        },
-        "zh-Hans": {
           "stringUnit": {
             "state": "translated",
             "value": "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
