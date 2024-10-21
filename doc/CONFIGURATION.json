@@ -660,6 +660,20 @@
   },
   {
     "autoExpansion" : "none",
+    "category" : "OAuth2",
+    "categoryTag" : "oauth2",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "defaultValue" : false,
+    "description" : "Send Client ID and Client Secret in the body of POST requests to the token endpoint. As per RFC 6749 section 2.3.1, this should only be used if the token endpoint does not support receiving these via Basic authentication.",
+    "flatIdentifier" : "authentication-oauth2.post-client-id-and-secret",
+    "key" : "post-client-id-and-secret",
+    "label" : "authentication-oauth2.post-client-id-and-secret",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Authentication",
     "categoryTag" : "authentication",
     "classIdentifier" : "authentication",
@@ -705,6 +719,19 @@
     "flatIdentifier" : "authentication.browser-session-prefers-ephermal",
     "key" : "browser-session-prefers-ephermal",
     "label" : "authentication.browser-session-prefers-ephermal",
+    "status" : "supported",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Authentication",
+    "categoryTag" : "authentication",
+    "classIdentifier" : "authentication",
+    "className" : "OCAuthenticationMethod",
+    "description" : "Overrides whether the default WebDAV endpoint should be probed to detect available authentication methods. By default, the necessity for this is determined dynamically.",
+    "flatIdentifier" : "authentication.skip-www-authenticate-checks",
+    "key" : "skip-www-authenticate-checks",
+    "label" : "authentication.skip-www-authenticate-checks",
     "status" : "supported",
     "type" : "bool"
   },
