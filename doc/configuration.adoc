@@ -406,6 +406,12 @@ tag::authentication[]
 |Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.
 |supported `candidate`
 
+|authentication.skip-www-authenticate-checks
+|bool
+|
+|Overrides whether the default WebDAV endpoint should be probed to detect available authentication methods. By default, the necessity for this is determined dynamically.
+|supported `candidate`
+
 |===
 end::authentication[]
 
