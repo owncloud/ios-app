@@ -97,7 +97,7 @@ docker run --rm -d \
  http://localhost:18080/  
  user: admin  
  password: admin
-4. To test the  app on a iOS device in your local network, you can use the IP of your machine as the Server URL
+4. To test the  app on a iOS device in your local network, you can use the IP of your machine as the Server URL. To do so, you'll need to add your IP as a trusted domain with a new environment variable `OWNCLOUD_TRUSTED_DOMAINS=192.168.68.64` to the Docker command
 5. To remove the ownCloud Docker, just run `docker kill owncloud`
 
 Here you can find more information about running ownCloud with Docker:
