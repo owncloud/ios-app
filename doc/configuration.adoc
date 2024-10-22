@@ -1557,6 +1557,12 @@ tag::oauth2[]
 |Omit Authorization Request Parameters - parameter names provided here are omitted from OAuth2 authorization requests.
 |advanced `candidate`
 
+|authentication-oauth2.post-client-id-and-secret
+|bool
+|`false`
+|Send Client ID and Client Secret in the body of POST requests to the token endpoint. As per RFC 6749 section 2.3.1, this should only be used if the token endpoint does not support receiving these via Basic authentication.
+|advanced `candidate`
+
 |authentication-oauth2.oa2-expiration-override-seconds
 |int
 |
