@@ -1,4 +1,4 @@
-name: Build and Analyze
+name: Build Xcode project
 
 on:
   push:
@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    name: Build and analyse default scheme using xcodebuild command
+    name: Build Xcode project
     runs-on: macos-latest
 
     steps:
@@ -22,7 +22,7 @@ jobs:
           echo Using default scheme: $default
       - name: Build
         env:
-          scheme: ${{ 'default' }}
+          scheme: ${{ 'ownCloud' }}
           platform: ${{ 'iOS Simulator' }}
         run: |
           # xcrun xctrace returns via stderr, not the expected stdout (see https://developer.apple.com/forums/thread/663959)
