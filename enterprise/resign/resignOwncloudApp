@@ -18,6 +18,14 @@ SUCCESS="$(tput setaf 2)"
 INFO="$(tput setaf 3)"
 NC="$(tput sgr0)" # No Color
 
+# Abort the script if running via SSH since it will not be possible to sign (no access to the KeyChain)
+#!/bin/bash
+
+# Check if SSH environment variables are set
+if [ -n "$SSH_CONNECTION" ] || [ -n "$SSH_TTY" ]; then
+    echo "${WARN}Error: Running via SSH cannot access the certificate in the Keychain.${NC}"
+    exit 1
+fi
 
 usage()
 {
