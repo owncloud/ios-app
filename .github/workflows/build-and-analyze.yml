@@ -32,6 +32,6 @@ jobs:
           file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
           echo xcodebuild clean build -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=$platform,name=$device"
           xcodebuild clean build -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=$platform,name=$device" 
-	  # | xcpretty && exit ${PIPESTATUS[0]}
+          # | xcpretty && exit ${PIPESTATUS[0]}
 
 
