@@ -223,6 +223,9 @@ action.create-document-mode
 !===
 ! Value
 ! Description
+! `com.apple.DocumentManagerUICore.SaveToFiles`
+! Save To Files
+
 ! `com.apple.UIKit.activity.AddToReadingList`
 ! Add to reading list
 
@@ -251,7 +254,7 @@ action.create-document-mode
 ! Print
 
 ! `com.apple.UIKit.activity.SaveToCameraRoll`
-! Save to camera roll
+! Save Image / Save Video / Save to camera roll
 
 !===
 
