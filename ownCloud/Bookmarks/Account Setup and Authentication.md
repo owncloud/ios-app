@@ -1,6 +1,6 @@
 #  Account Setup and Authentication
 
-This document gives you an overview over the flow and internals when setting up a new account using `BookmarkComposer`. Where other components and configuration options are involved, a reference is given to the respective code part.
+This document gives you an overview over the flow and internals when setting up a new account using `BookmarkComposer`. Where other components and configuration options are involved, references are provided respectively.
 
 ## Terminology
 
@@ -39,31 +39,31 @@ The URL string is then inspected and processed in the following order by the SDK
 3) search for `/index.php/apps/` and removal of anything before its start
 4) check for existance of schemes, prepending `https://` in case none was provided in the URL string
 5) look for and extract provided username and password (f.ex. `https://user:pass@hostname/`) into `$username` and `$password` to make them available to authentication methods lateron
-6) ensure root URLs end with a slash (`/`) - f.ex. `https://demo.owncloud.com``/`
+6) ensure root URLs end with a slash (`/`) - f.ex. `https://demo.owncloud.com/`
 
 The resulting URL is saved in `$serverURL`.
 
 ## Server location and authentication method probing (`BookmarkComposer.enterURL()`)
 
-This invokes the SDK's `-[OCConnection prepareForSetupWithOptions:]` to determine the final server location (URL), the available authentication methods - and which one should be used.
+This invokes the SDK's `-[OCConnection prepareForSetupWithOptions:]` to examine the targeted server, especially with regards to available authentication methods and the actual `$serverURL` to use.
 
-This SDK method performs the following steps:
+This happens in several steps:
 
 ### Plain HTTP check
 
-Checks if `$serverURL` uses plain `http` and, if it does, warn the user and ask for confirmation before proceeding. This behavior can be changed via `connection.plain-http-policy`.
+Checks if `$serverURL` uses plain `http` and, if it does, warns the user and asks for confirmation before proceeding. This behavior can be changed via `connection.plain-http-policy`.
 
 ### Server Instance lookup (optional)
 
-If a server locator module is provided via `server-locator.use`, an existing or entered username (via `BookmarkComposer.enterUsername()` or `BookmarkSetupStepEnterUsernameViewController`) is used to determine the URL of the server the user's account is hosted on.
+If a server locator module is provided via `server-locator.use`, an existing or entered username (via `BookmarkComposer.enterUsername()` or `BookmarkSetupStepEnterUsernameViewController`) is used to determine the actual `$serverURL` of the server the user's account is hosted on.
 
-If the `web-finger` server locator (implemented in the SDK as `OCServerLocatorWebFinger`) has been configured, the client sends a request to the `$serverURL`:
+If the `web-finger` server locator (implemented in the SDK as `OCServerLocatorWebFinger`) has been configured, the client sends a request to the provided `$serverURL`:
 
 ```
 GET /.well-known/webfinger?resource=acct:user@example.com&rel=http%3A%2F%2Fwebfinger.owncloud%2Frel%2Fserver-instance HTTP/1.1
 ```
 
-If the user is known on the server, it responds with a JSON body containing the URL of the server to use in the next steps:
+The server then responds with a JSON body containing the URL of the server to use in the next steps:
 
 ```json
 {
@@ -84,7 +84,7 @@ For security reasons, [Authenticated Instance Discovery](https://doc.owncloud.co
 
 ### Perform OpenID Connect Discovery
 
-The SDK first checks, if OpenID Connect is an allowed Authentication Method (which is the case if `connection.allowed-authentication-methods` contains `com.owncloud.openid-connect`) - which it is by default. If it is not allowed, this step is skipped.
+The SDK only performs this step, if OpenID Connect is an allowed Authentication Method (which is the case if `connection.allowed-authentication-methods` contains `com.owncloud.openid-connect` (default)). If it is not allowed, this step is skipped.
 
 During [OpenID Connect Discovery](https://doc.owncloud.com/ocis/next/deployment/services/s-list/webfinger.html#openid-connect-discovery), a `GET` request is sent to `$serverURL/.well-known/webfinger?resource=$serverURL`.
 
@@ -92,10 +92,10 @@ If the server responds with an error status code, the SDK proceeds to the next s
 
 If the server responds with a success status code and a JSON body, the SDK checks that `subject` is identical to `$serverURL` and then looks for a `http://openid.net/specs/connect/1.0/issuer` `rel`ation in the `links` section.
 
-If that relation exists, it derives the following variable values for later usage:
+If that relation exists, it stores the following variable values for later usage:
 - `$alternateIDPBaseURL`: the aforementioned value for `href`.
 - `$authenticationRefererURL`: is set to `$serverURL`.
-- `$webFingerAccountLookupURL`: is set to `$serverURL/.well-known/webfinger?resource=acct:me@$serverURLHostname` (f.ex. `https://demo.owncloud.com/.well-known/webfinger?resource=acct:me@demo.owncloud.com`)
+- `$webFingerAccountLookupURL`: is set to `$serverURL/.well-known/webfinger?resource=acct:me@$serverURLHostname` (f.ex. `https://demo.owncloud.com/.well-known/webfinger?resource=acct:me@demo.owncloud.com`) where `$serverURLHostname` is the hostname of `$serverURL`
 
 Example response:
 ```json
@@ -121,7 +121,7 @@ If the response comes back with an error status, the user is informed that a con
 If the response comes back with a `301 Moved Permanently` status, the SDK follows [this logic](https://github.com/owncloud/administration/blob/master/redirectServer/Readme.md) to determine a new URL for `$serverURL` based on the `Location`, asks the user for confirmation, uses the determined new URL as `$serverURL` if the user agrees and restarts this step with the new URL.
 
 If the response comes back with a success status, it typically looks like this:
-```
+```json
 {
     "installed": true,
     "maintenance": false,
@@ -159,7 +159,7 @@ The SDK in `-[OCConnection requestSupportedAuthenticationMethodsWithOptions:comp
 
 Each Authentication Method is asked to provide a list of URLs they need to inspect to determine if the authentication mechanism they implement is supported by the server. To allow maximum flexibility, these URLs are returned from the Authentication Methods in the form of completely parametrized HTTP requests (via `-[OCAuthenticationMethod detectionRequestsForConnection:options:]`).
 
-The SDK combines all returned requests into one list, eliminates duplicate requests and subsequently carries them out.
+The SDK consolidates all returned requests into one list (eliminating duplicates) and then performs them.
 
 #### Pass responses to Authentication Methods as starting point for further evaluation
 
@@ -181,7 +181,7 @@ This request is skipped if `$skipWWWAuthenticateChecks` is `true`, which is the 
 
 The response's `Www-Authenticate` HTTP header contains a single or multiple (comma-seperated) values:
 - `Basic` indicates Basic Auth _is_ available
-- `Bearer` indicates OAuth2 and OIDC _may be_ available
+- `Bearer` indicates OAuth2 and/or OIDC _may be_ available
 
 ##### OAuth2 Token Endpoint
 
@@ -189,7 +189,7 @@ To determine if OAuth2 is available, a `GET` request is sent to the OAuth2 Token
 
 ##### OpenID Configuration
 
-To determine OIDC availability and further parametrization, a `GET` request is sent to the OpenID Configuration endpoint, which is computed from `$serverURL` and `$wellKnown` - or was determined earlier through OpenID Connect Discovery.
+To determine OIDC availability and further parametrization, a `GET` request is sent to the OpenID Configuration endpoint, which is computed from `$serverURL` and `$wellKnown` - or was determined earlier during OpenID Connect Discovery.
 
 If `$authenticationRefererURL` has a value, it is send in the `Referer` header.
 
@@ -252,7 +252,7 @@ $serverURL/index.php/apps/oauth2/authorize?$oauth2Parameters
 The `$authorizationURL` is then opened in a webview to present the server's login page and allow the user to log in. On success, the login page eventually opens the custom scheme `redirect_uri` and returns an Authorization Code as parameter:
 
 ```
-oc://ios.owncloud.com?state=…&code=$authCode&grant_type=authorization_code
+oc://ios.owncloud.com?state=…&code=as798da897sd9&grant_type=authorization_code
 ```
 
 If `state` is returned, the Authentication Method checks if its value is identical to the value it included in the `$authorizationURL`.
@@ -318,9 +318,9 @@ Host: idp.example.com
 Referer: https://cloud.example.com/
 ```
 
-If the server responds with a success status and a JSON body, the Authentication Method looks for parameters:
+If the server responds with a success status and a JSON body, the Authentication Method looks for configuration values:
 
-Parameter                               | Stored as                            | Description
+Configuration value                     | Stored as                            | Description
 ----------------------------------------|--------------------------------------|---------------------
 `registration_endpoint`                 | `$clientRegistrationEndpointURL`     | Client Registration Endpoint 
 `authorization_endpoint`                | `$authorizationEndpointURL`          | URL of the authorization endpoint
@@ -351,7 +351,7 @@ Parameter               | Contents                | Status   | Comment
 The `$authorizationURL` is then opened in a webview to present the server's login page and allow the user to log in. On success, the login page eventually opens the custom scheme `redirect_uri` and returns an Authorization Code as parameter:
 
 ```
-oc://ios.owncloud.com?state=…&code=$authCode&scope=offline_access%20email%20profile%20openid&grant_type=authorization_code
+oc://ios.owncloud.com?state=…&code=as798da897sd9&scope=offline_access%20email%20profile%20openid&grant_type=authorization_code
 ```
 
 If `state` is returned, the Authentication Method checks if its value is identical to the value it included in the `$authorizationURL`.
@@ -432,7 +432,7 @@ Example:
 }
 ```
 
-If the server returns only a single server instance, it is automatically picked. If more than one server instance is returned, the user may be offered to choose a server in the future.
+If the server returns only a single server instance, it is automatically picked. If more than one server instance is returned, the user may be offered to choose a server.
 
 Once a server instance is chosen, it's `href` value is used as new `$serverURL`.
 
@@ -440,8 +440,16 @@ Once a server instance is chosen, it's `href` value is used as new `$serverURL`.
 
 Finally, the Bookmark Composer verifies the result of the Setup and Authentication flow by connecting to the newly added server, in which course requests are sent to:
 - the status endpoint
-- the capabilities endpoint
-- the user endpoint
-- the drives list (for instances indicating drive support in the capabilities) from the endpoint at `$serverURL/graph/v1.0/me/drives`.
+- the capabilities endpoint (authenticated)
+- the user endpoint (authenticated)
+- the drives list for instances indicating drive support in the capabilities) from the endpoint at `$serverURL/graph/v1.0/me/drives` (authenticated)
 
 If any issues occur, the user is notified. If none occur, the account is now set up.
+
+## Prepopulate database (`BookmarkComposer.prepopulate()`)
+
+As an optional, additional step, the client can perform an infinite `PROPFIND` to efficiently retrieve all items in the account with a single request - and prepopulate the local database quickly.
+
+A precondition for this is that the server's capabilities indicate support in `ocs.data.capabilities.dav.propfind.depth_infinity` and that the following conditions are met:
+- the parent folder of every item should always have been sent before the items it contains
+- folders are sent in correct hierarchical order, i.e. `/folder`, `/folder/subfolder`, `/folder2` and **not** `/folder`, `/folder2`, `/folder/subfolder`. This is important because as soon as `/folder2` is seen after `/folder`, the SDK assumes that `/folder` and all of its contents has already been received. Without this assumption, it would not be possible to end prepopulation at any point and end up with a consistent local view of the items without re-examining the whole instance (at which point prepopulation no longer makes any sense).
