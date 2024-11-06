@@ -17,7 +17,6 @@
  */
 
 import UIKit
-import ownCloudAppShared
 import ownCloudApp
 
 

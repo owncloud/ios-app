@@ -225,7 +225,7 @@ extension VendorServices : OCClassSettingsSupport {
 				.enableReviewPrompt: VendorServices.shared.enableReviewPrompt,
 
 				.appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
-				.recommendToFriendEnabled: !VendorServices.shared.isBranded
+				.recommendToFriendEnabled: !VendorServices.shared.isBranded,
 
 				.watermarkEnabled: false,
 				.watermarkOpacity: 80,

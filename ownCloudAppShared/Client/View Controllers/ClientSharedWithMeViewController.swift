@@ -42,15 +42,15 @@ class ClientSharedWithMeViewController: CollectionViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
-	observeScreenshotEvent()
-	watermark(
-			username: self.clientContext?.core?.bookmark.userName,
-			userMail: self.clientContext?.core?.bookmark.user?.emailAddress
-		)
-
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		observeScreenshotEvent()
+		watermark(
+			username: self.clientContext?.core?.bookmark.userName,
+			userMail: self.clientContext?.core?.bookmark.user?.emailAddress
+		)
+		
 		// Disable dragging of items, so keyboard control does
 		// not include "Drag Item" in the accessibility actions
 		// invoked with Tab + Z
