@@ -72453,6 +72453,12 @@
     "ScreenshotNotificationButton" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "أنا أفهم"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -72464,18 +72470,18 @@
             "state" : "translated",
             "value" : "I understand"
           }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "أنا أفهم"
-          }
         }
       }
     },
     "ScreenshotNotificationMessage" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : " تم اكتشاف لقطة شاشة، ولا يسمح بلقطات الشاشة وتسجيلات الشاشة لهذا التطبيق"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -72487,18 +72493,18 @@
             "state" : "translated",
             "value" : "Screen Capture Detected, Screenshots and screen recordings of this app are not allowed."
           }
-        },
-        "ar" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : " تم اكتشاف لقطة شاشة، ولا يسمح بلقطات الشاشة وتسجيلات الشاشة لهذا التطبيق"
-          }
         }
       }
     },
     "ScreenshotNotificationTitle" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screenshot taken"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
@@ -72506,12 +72512,6 @@
           }
         },
         "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Screenshot taken"
-          }
-        },
-        "ar" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Screenshot taken"

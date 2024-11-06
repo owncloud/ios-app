@@ -17,6 +17,7 @@
  */
 
 import UIKit
+import ownCloudApp
 
 public extension UIViewController {
 
@@ -177,7 +178,7 @@ class Watermark: UIView {
 		self.watermarkText = watermarkText
 		self.watermarkShowMail = watermarkShowMail
 		self.watermarkShowDate = watermarkShowDate
-		self.username = username ?? "Unknown USE"
+		self.username = username ?? "Unknown User"
 		self.userMail = userMail
 		super.init(frame: .zero)
         self.translatesAutoresizingMaskIntoConstraints = false

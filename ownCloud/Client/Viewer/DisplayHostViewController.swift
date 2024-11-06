@@ -129,8 +129,8 @@ class DisplayHostViewController: UIPageViewController {
 		super.viewDidLoad()
 
 		watermark(
-			username: self.clientContext?.accountConnection?.core?.connection.loggedInUser?.userName,
-			userMail: self.clientContext?.accountConnection?.core?.connection.loggedInUser?.emailAddress
+			username: self.clientContext?.core?.bookmark.userName,
+			userMail: self.clientContext?.core?.bookmark.user?.emailAddress
 		)
 
 

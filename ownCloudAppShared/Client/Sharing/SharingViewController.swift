@@ -229,6 +229,16 @@ open class SharingViewController: CollectionViewController {
 		}
 	}
 
+	override open func viewDidLoad() {
+		super.viewDidLoad()
+		observeScreenshotEvent()
+		watermark(
+			username: self.clientContext?.core?.bookmark.userName,
+			userMail: self.clientContext?.core?.bookmark.user?.emailAddress
+		)
+	}
+
+
 	deinit {
 		if let core = clientContext?.core, let itemSharesQuery {
 			core.stop(itemSharesQuery)

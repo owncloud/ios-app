@@ -32,6 +32,11 @@ extension Action {
 		let moreViewController = FrameViewController(header: header, viewController: tableViewController)
 		let actions = Action.sortedApplicableActions(for: context)
 
+		moreViewController.watermark(
+			username: core.bookmark.userName,
+			userMail: core.bookmark.user?.emailAddress
+		)
+
 		actions.forEach({
 			$0.actionWillRunHandler = { [weak moreViewController] (_ donePreparing: @escaping () -> Void) in
 				moreViewController?.dismiss(animated: true, completion: donePreparing)
