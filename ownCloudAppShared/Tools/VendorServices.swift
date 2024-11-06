@@ -203,6 +203,14 @@ public extension OCClassSettingsKey {
 
 	static let appStoreLink = OCClassSettingsKey("app-store-link")
 	static let recommendToFriendEnabled = OCClassSettingsKey("recommend-to-friend-enabled")
+
+	static let watermarkEnabled = OCClassSettingsKey("watermark-enabled")
+	static let watermarkOpacity = OCClassSettingsKey("watermark-opacity")
+	static let watermarkFontSize = OCClassSettingsKey("watermark-font-size")
+	static let watermarkText = OCClassSettingsKey("watermark-text")
+	static let watermarkShowMail = OCClassSettingsKey("watermark-show-mail")
+	static let watermarkShowDate = OCClassSettingsKey("watermark-show-date")
+	static let showScreenshotNotification = OCClassSettingsKey("show-screenshot-notification")
 }
 
 extension VendorServices : OCClassSettingsSupport {
