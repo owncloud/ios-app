@@ -103,6 +103,58 @@ public class VendorServices : NSObject {
 		return false
 	}
 
+	public var watermarkEnabled: Bool {
+		if let watermarkEnabled = self.classSetting(forOCClassSettingsKey: .watermarkEnabled) as? Bool {
+			return watermarkEnabled
+		}
+
+		return false
+	}
+	
+	public var watermarkOpacity: Int {
+		if let watermarkOpacity = self.classSetting(forOCClassSettingsKey: .watermarkOpacity) as? Int {
+			return watermarkOpacity
+		}
+
+		return 100
+	}
+	
+	public var watermarkFontSize: Int {
+		if let watermarkFontSize = self.classSetting(forOCClassSettingsKey: .watermarkFontSize) as? Int {
+			return watermarkFontSize
+		}
+
+		return 15
+	}
+	
+	public var watermarkText: String? {
+		return self.classSetting(forOCClassSettingsKey: .watermarkText) as? String
+	}
+	
+	public var watermarkShowMail: Bool {
+		if let watermarkShowMail = self.classSetting(forOCClassSettingsKey: .watermarkShowMail) as? Bool {
+			return watermarkShowMail
+		}
+
+		return false
+	}
+	
+	public var watermarkShowDate: Bool {
+		if let watermarkShowDate = self.classSetting(forOCClassSettingsKey: .watermarkShowDate) as? Bool {
+			return watermarkShowDate
+		}
+
+		return false
+	}
+	
+	public var showScreenshotNotification: Bool {
+		if let showScreenshotNotification = self.classSetting(forOCClassSettingsKey: .showScreenshotNotification) as? Bool {
+			return showScreenshotNotification
+		}
+
+		return false
+	}
+
 	static public var shared : VendorServices = {
 		return VendorServices()
 	}()
@@ -166,6 +218,15 @@ extension VendorServices : OCClassSettingsSupport {
 
 				.appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
 				.recommendToFriendEnabled: !VendorServices.shared.isBranded
+
+				.watermarkEnabled: false,
+				.watermarkOpacity: 80,
+				.watermarkFontSize: 20,
+				.watermarkText: "",
+				.watermarkShowMail: true,
+				.watermarkShowDate: true,
+				.showScreenshotNotification: true,
+
 			]
 		}
 

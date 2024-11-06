@@ -334,6 +334,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	public override func viewDidLoad() {
 		super.viewDidLoad()
 
+		watermark(
+			username: self.clientContext?.accountConnection?.core?.connection.loggedInUser?.userName,
+			userMail: self.clientContext?.accountConnection?.core?.connection.loggedInUser?.emailAddress
+		)
+
 		// Add navigation bar button items
 		updateNavigationBarButtonItems()
 

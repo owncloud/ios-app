@@ -42,6 +42,12 @@ class ClientSharedWithMeViewController: CollectionViewController {
 		fatalError("init(coder:) has not been implemented")
 	}
 
+	observeScreenshotEvent()
+	watermark(
+			username: self.clientContext?.core?.bookmark.userName,
+			userMail: self.clientContext?.core?.bookmark.user?.emailAddress
+		)
+
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
@@ -122,5 +128,9 @@ class ClientSharedWithMeViewController: CollectionViewController {
 		}
 
 		setCoverView(coverView, layout: .top)
+	}
+	
+	deinit {
+		stopObserveScreenshotEvent()
 	}
 }

@@ -251,6 +251,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 				expirationDate = Date(timeIntervalSinceNow: numberOfDays.doubleValue * (24 * 60 * 60))
 			}
 		}
+		observeScreenshotEvent()
 	}
 
 	required public init?(coder: NSCoder) {
@@ -335,6 +336,12 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		}
 
 		updateState()
+
+		watermark(
+			username: self.clientContext?.core?.bookmark.userName,
+			userMail: self.clientContext?.core?.bookmark.user?.emailAddress
+		)
+
 	}
 
 	// MARK: - Share Role & permissions
@@ -1073,4 +1080,9 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 			}
 		}
 	}
+	
+	deinit {
+		stopObserveScreenshotEvent()
+	}
+
 }

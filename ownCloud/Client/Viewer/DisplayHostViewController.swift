@@ -128,6 +128,12 @@ class DisplayHostViewController: UIPageViewController {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		watermark(
+			username: self.clientContext?.accountConnection?.core?.connection.loggedInUser?.userName,
+			userMail: self.clientContext?.accountConnection?.core?.connection.loggedInUser?.emailAddress
+		)
+
+
 		self.dataSource = self
 		self.delegate = self
 
