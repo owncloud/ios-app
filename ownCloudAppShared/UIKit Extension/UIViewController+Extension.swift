@@ -314,8 +314,8 @@ class Watermark: UIView {
 		watermarkLabel.lineBreakMode = .byClipping
 		watermarkLabel.layer.shadowColor = UIColor.black.cgColor
 		watermarkLabel.layer.shadowOffset = CGSize(width: 1, height: 1)
-		watermarkLabel.layer.shadowOpacity = 1
-		watermarkLabel.layer.shadowRadius = 10.0
+		watermarkLabel.layer.shadowOpacity = 0.5
+		watermarkLabel.layer.shadowRadius = 5.0
 		return watermarkLabel
 	}
 }
