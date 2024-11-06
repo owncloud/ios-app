@@ -72463,7 +72463,8 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "I understand"
-          },
+          }
+        },
         "ar" : {
           "stringUnit" : {
             "state" : "translated",
