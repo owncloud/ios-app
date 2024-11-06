@@ -17,6 +17,9 @@
  */
 
 import UIKit
+import ownCloudAppShared
+import ownCloudApp
+
 
 public extension UIView {
 	// MARK: - Animation

@@ -48,3 +48,41 @@ public extension UIViewController {
 		return true
 	}
 }
+
+public extension UIViewController {
+	func observeScreenshotEvent() {
+		NotificationCenter.default.addObserver(
+			self,
+			selector: #selector(userDidTakeScreenshot),
+			name: UIApplication.userDidTakeScreenshotNotification,
+			object: nil
+		)
+	}
+	
+	func stopObserveScreenshotEvent() {
+		NotificationCenter.default.removeObserver(
+			self,
+			name: UIApplication.userDidTakeScreenshotNotification,
+			object: nil
+		)
+	}
+	
+	@objc private func userDidTakeScreenshot() {
+		if VendorServices.shared.showScreenshotNotification {
+			showScreenshotAlert()
+		}
+	}
+	
+	private func showScreenshotAlert() {
+		let alert = UIAlertController(
+			title: OCLocalizedString("ScreenshotNotificationTitle", nil),
+			message: OCLocalizedString("ScreenshotNotificationMessage", nil),
+			preferredStyle: .alert
+		)
+		
+		alert.addAction(UIAlertAction(title: OCLocalizedString("ScreenshotNotificationButton", nil), style: .default, handler: nil))
+		
+		// Present the alert
+		self.present(alert, animated: true, completion: nil)
+	}
+}

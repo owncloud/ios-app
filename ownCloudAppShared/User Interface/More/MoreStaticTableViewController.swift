@@ -27,10 +27,12 @@ open class MoreStaticTableViewController: StaticTableViewController {
 		super.init(style: style)
 
 		cssSelectors = [.more]
+		observeScreenshotEvent()
 	}
 
 	deinit {
 		themeApplierTokens.forEach({ token in Theme.shared.remove(applierForToken: token) })
+		stopObserveScreenshotEvent()
 	}
 
 	required public init?(coder aDecoder: NSCoder) {
