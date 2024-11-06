@@ -177,7 +177,7 @@ class Watermark: UIView {
 		self.watermarkText = watermarkText
 		self.watermarkShowMail = watermarkShowMail
 		self.watermarkShowDate = watermarkShowDate
-		self.username = username ?? "Unknown User"
+		self.username = username ?? "Unknown USE"
 		self.userMail = userMail
 		super.init(frame: .zero)
         self.translatesAutoresizingMaskIntoConstraints = false
