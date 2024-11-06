@@ -72450,6 +72450,57 @@
         }
       }
     },
+    "ScreenshotNotificationButton" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verstanden"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "I understand"
+          }
+        }
+      }
+    },
+    "ScreenshotNotificationMessage" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedenken Sie:Sie bearbeiten vertrauliche Daten. Gehen Sie verantwortungsvoll mit ihnen um."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keep in mind:You are handling sensitive data. Handle them responsibly."
+          }
+        }
+      }
+    },
+    "ScreenshotNotificationTitle" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bildschirmaufnahme gemacht"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Screenshot taken"
+          }
+        }
+      }
+    },
     "Scroll to Bottom": {
       "extractionState": "manual",
       "localizations": {
