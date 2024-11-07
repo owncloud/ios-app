@@ -301,6 +301,7 @@
 		DC2A68D729D4E93300BFF393 /* SharedKeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2A68D629D4E93300BFF393 /* SharedKeyCommands.swift */; };
 		DC2A8E6A2B57EA8F001F0522 /* AccountControllerSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2A8E692B57EA8F001F0522 /* AccountControllerSearchViewController.swift */; };
 		DC2FB16A2D3EF4FD00726E97 /* ConfidentialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D091B52D079644001329DF /* ConfidentialManager.m */; };
+		DC2BB5402CD96C1600320384 /* ServerSideSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2BB53F2CD96C1600320384 /* ServerSideSearchScope.swift */; };
 		DC36885824DC98BF00333600 /* OCFileProviderServiceSession.h in Headers */ = {isa = PBXBuildFile; fileRef = DC36885624DC98BF00333600 /* OCFileProviderServiceSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC36885924DC98BF00333600 /* OCFileProviderServiceSession.m in Sources */ = {isa = PBXBuildFile; fileRef = DC36885724DC98BF00333600 /* OCFileProviderServiceSession.m */; };
 		DC36885D24DD916800333600 /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
@@ -1273,6 +1274,7 @@
 		DC2A68D429D492B200BFF393 /* space.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = space.tvg; path = "img/filetypes-tvg/space.tvg"; sourceTree = SOURCE_ROOT; };
 		DC2A68D629D4E93300BFF393 /* SharedKeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedKeyCommands.swift; sourceTree = "<group>"; };
 		DC2A8E692B57EA8F001F0522 /* AccountControllerSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountControllerSearchViewController.swift; sourceTree = "<group>"; };
+		DC2BB53F2CD96C1600320384 /* ServerSideSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSideSearchScope.swift; sourceTree = "<group>"; };
 		DC321260207EB01B00DB171D /* ThemeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeImage.swift; sourceTree = "<group>"; };
 		DC3393A722E0C4ED00DD3DA4 /* icon-available-offline.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-available-offline.tvg"; path = "../img/filetypes-tvg/icon-available-offline.tvg"; sourceTree = "<group>"; };
 		DC36885624DC98BF00333600 /* OCFileProviderServiceSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderServiceSession.h; sourceTree = "<group>"; };
@@ -2451,6 +2453,7 @@
 				DC24E10628B7BFD6002E4F5B /* ItemSearchScope.swift */,
 				DC24E10A28B7C185002E4F5B /* SingleFolderSearchScope.swift */,
 				DC24E10C28B7C19F002E4F5B /* AccountSearchScope.swift */,
+				DC2BB53F2CD96C1600320384 /* ServerSideSearchScope.swift */,
 			);
 			path = Scopes;
 			sourceTree = "<group>";
@@ -4661,6 +4664,7 @@
 			files = (
 				DC0A357E24C0E43C00FB58FC /* ThemeStyle+Extensions.swift in Sources */,
 				DCB1B8C829C8F84800BFF393 /* ThemeCSSProgressView.swift in Sources */,
+				DC2BB5402CD96C1600320384 /* ServerSideSearchScope.swift in Sources */,
 				DC04FFC827F5B79000F22569 /* CollectionViewController.swift in Sources */,
 				DC298CA72936250D009FA87F /* ClientSidebarViewController.swift in Sources */,
 				DC825E352A05083C00BFF393 /* GitInfo.swift in Sources */,
