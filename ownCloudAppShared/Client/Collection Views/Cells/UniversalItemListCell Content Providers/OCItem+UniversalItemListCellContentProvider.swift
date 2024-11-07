@@ -181,6 +181,14 @@ extension OCItem: UniversalItemListCellContentProvider {
 		// Details
 		var detailItems: [SegmentViewItem] = []
 
+		if configuration?.style.showPathDetails == true {
+			// - path breadcrumbs for style.showPathDetails == true
+			if let context, let parentLocation = location?.parent {
+				detailItems = OCLocation.composeSegments(breadcrumbs: parentLocation.breadcrumbs(in: context, includeServerName: false), in: context)
+				detailItems.append(SegmentViewItem(with: nil, title: "|", style: .plain))
+			}
+		}
+
 		// - Cloud status
 		let (cloudStatusIcon, cloudStatusIconAlpha, accessibilityLabel) = cloudStatus(in: context?.core)
 

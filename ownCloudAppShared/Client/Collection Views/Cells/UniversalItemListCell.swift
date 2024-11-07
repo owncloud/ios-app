@@ -1024,10 +1024,11 @@ public extension UICellAccessory {
 public extension CollectionViewCellStyle.StyleOptionKey {
 	static let showRevealButton = CollectionViewCellStyle.StyleOptionKey(rawValue: "showRevealButton")
 	static let showMoreButton = CollectionViewCellStyle.StyleOptionKey(rawValue: "showMoreButton")
+	static let showPathDetails = CollectionViewCellStyle.StyleOptionKey(rawValue: "showPathDetails")
 }
 
 public extension CollectionViewCellStyle {
-	var showRevealButton : Bool {
+	var showRevealButton: Bool {
 		get {
 			return options[.showRevealButton] as? Bool ?? false
 		}
@@ -1037,13 +1038,23 @@ public extension CollectionViewCellStyle {
 		}
 	}
 
-	var showMoreButton : Bool {
+	var showMoreButton: Bool {
 		get {
 			return options[.showMoreButton] as? Bool ?? true
 		}
 
 		set {
 			options[.showMoreButton] = newValue
+		}
+	}
+
+	var showPathDetails: Bool {
+		get {
+			return options[.showPathDetails] as? Bool ?? false
+		}
+
+		set {
+			options[.showPathDetails] = newValue
 		}
 	}
 }
