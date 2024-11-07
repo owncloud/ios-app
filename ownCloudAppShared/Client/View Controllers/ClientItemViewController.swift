@@ -1042,6 +1042,9 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		// - Account
 		scopes.append(.accountSearch(with: clientContext, cellStyle: cellStyle, localizedName: OCLocalizedString("Account", nil)))
 
+		// - Server
+		scopes.append(.serverSideSearch(with: clientContext, cellStyle: cellStyle, localizedName: OCLocalizedString("Server", nil)))
+
 		return scopes
 	}
 
