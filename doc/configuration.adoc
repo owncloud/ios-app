@@ -406,6 +406,12 @@ tag::authentication[]
 |Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.
 |supported `candidate`
 
+|authentication.skip-www-authenticate-checks
+|bool
+|
+|Overrides whether the default WebDAV endpoint should be probed to detect available authentication methods. By default, the necessity for this is determined dynamically.
+|supported `candidate`
+
 |===
 end::authentication[]
 
@@ -1549,6 +1555,12 @@ tag::oauth2[]
 |stringArray
 |
 |Omit Authorization Request Parameters - parameter names provided here are omitted from OAuth2 authorization requests.
+|advanced `candidate`
+
+|authentication-oauth2.post-client-id-and-secret
+|bool
+|`false`
+|Send Client ID and Client Secret in the body of POST requests to the token endpoint. As per RFC 6749 section 2.3.1, this should only be used if the token endpoint does not support receiving these via Basic authentication.
 |advanced `candidate`
 
 |authentication-oauth2.oa2-expiration-override-seconds
