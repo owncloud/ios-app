@@ -4571,7 +4571,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Add to sidebar"
+            "value": "Adicionar à barra lateral"
           }
         },
         "pt_PT": {
@@ -14875,7 +14875,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Clear"
+            "value": "Apagar"
           }
         },
         "pt_PT": {
@@ -14981,7 +14981,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cleared all."
+            "value": "Tudo apagado"
           }
         },
         "pt_PT": {
@@ -15087,7 +15087,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cleared {{settingID}}."
+            "value": "Apagado {{settingID}}."
           }
         },
         "pt_PT": {
@@ -16608,7 +16608,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Connecting"
+            "value": "Conectando"
           }
         },
         "pt_PT": {
@@ -20373,7 +20373,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Create shortcut"
+            "value": "Criar atalho"
           }
         },
         "pt_PT": {
@@ -21925,7 +21925,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Decline share"
+            "value": "Recusar compartilhamento"
           }
         },
         "pt_PT": {
@@ -31146,7 +31146,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Extend by one week"
+            "value": "Extender por uma semana"
           }
         },
         "pt_PT": {
@@ -31999,7 +31999,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Fetching server information…"
+            "value": "Buscando informação do servidor..."
           }
         },
         "pt_PT": {
@@ -36511,7 +36511,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Get in touch with our community in the forums - or file a GitHub issue to report a bug or request a feature."
+            "value": "Entre em contato com nossa comunidade nos foruns - ou registre um problema no GitHub para comunicar um bug ou pedir um novo recurso."
           }
         },
         "pt_PT": {
@@ -38484,7 +38484,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "If you have a moment to give us your feedback, please take our survey."
+            "value": "Se você tiver um momento para nos dar seu feedback, por favor, responda nosso questionário."
           }
         },
         "pt_PT": {
@@ -56715,7 +56715,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open shortcut"
+            "value": "Abrir atalho"
           }
         },
         "pt_PT": {
@@ -57318,7 +57318,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Optic ID"
+            "value": "ID Ótica"
           }
         },
         "pt_PT": {
@@ -60896,7 +60896,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pick a destination for photo uploads"
+            "value": "Escolha um destino para envio de fotos"
           }
         },
         "pt_PT": {
@@ -61002,7 +61002,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pick a destination for video uploads"
+            "value": "Escolha um destino para enviar vídeos"
           }
         },
         "pt_PT": {
@@ -61368,7 +61368,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pick file or folder"
+            "value": "Escolha o arquivo ou pasta"
           }
         },
         "pt_PT": {
@@ -62149,7 +62149,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Please open the app and select the account to re-authenticate."
+            "value": "Por favor, abra o app e selecione a conta para re-autenticar."
           }
         },
         "pt_PT": {
@@ -67692,7 +67692,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Remove expiration date"
+            "value": "Remover data de validade"
           }
         },
         "pt_PT": {
@@ -67798,7 +67798,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Remove from sidebar"
+            "value": "Remover da barra lateral"
           }
         },
         "pt_PT": {
@@ -67904,7 +67904,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Remove password"
+            "value": "Remover senha"
           }
         },
         "pt_PT": {
@@ -69067,7 +69067,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Reveal"
+            "value": "Revelar"
           }
         },
         "pt_PT": {
@@ -76864,7 +76864,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Setup a new account in the app to save to."
+            "value": "Configure uma nova conta no app para onde salvar"
           }
         },
         "pt_PT": {
@@ -79143,7 +79143,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shortcut"
+            "value": "Atalho"
           }
         },
         "pt_PT": {
@@ -79249,7 +79249,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shortcut to '{{hostname}}'"
+            "value": "Atalho para '{{hostname}}'"
           }
         },
         "pt_PT": {
@@ -79509,7 +79509,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shorten by one week"
+            "value": "Encurtado em uma semana"
           }
         },
         "pt_PT": {
@@ -81871,7 +81871,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sort by {{attribute}} in {{direction}} order"
+            "value": "Agrupar por {{attribute}} na ordem de {{direction}}"
           }
         },
         "pt_PT": {
@@ -84179,7 +84179,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Take survey"
+            "value": "Responda o questionário"
           }
         },
         "pt_PT": {
@@ -85470,7 +85470,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it."
+            "value": "O destino para onde este atalho aponta não foi encontrado. Ele pode ter sido apagado ou você pode não ter acesso a ele."
           }
         },
         "pt_PT": {
@@ -86322,7 +86322,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "The password was copied to the clipboard"
+            "value": "A senha foi copiada para a área de transferência."
           }
         },
         "pt_PT": {
@@ -86712,7 +86712,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "The shortcut points to a URL, but the configuration of this app prohibits opening it."
+            "value": "Este atalho aponta para uma URL, mas a configuração deste app proíbe abri-la."
           }
         },
         "pt_PT": {
@@ -86818,7 +86818,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "The shortcut points to a URL, but the configuration of this app prohibits opening it."
+            "value": "O atalho aponta para uma URL, mas a configuração deste app proíbe abri-la."
           }
         },
         "pt_PT": {
@@ -86924,7 +86924,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "The {{app.name}} share extension is not available on this system."
+            "value": "A extenção de compartilhamento de {{app.name}} não está disponível neste sistema."
           }
         },
         "pt_PT": {
@@ -88061,7 +88061,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "This shortcut points to:\n{{url}}"
+            "value": "Este atalho aponta para:\n{{url}}"
           }
         },
         "pt_PT": {
@@ -88866,7 +88866,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Toggle layout"
+            "value": "Acionar layout"
           }
         },
         "pt_PT": {
@@ -92270,7 +92270,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Uploading {{remainingFileCount}} files…"
+            "value": "Enviando {{remainingFileCount}} arquivos…"
           }
         },
         "pt_PT": {
@@ -96591,7 +96591,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "ascending"
+            "value": "subindo"
           }
         },
         "pt_PT": {
@@ -98550,7 +98550,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "on"
+            "value": "ligado"
           }
         },
         "pt_PT": {
