@@ -23,6 +23,19 @@ import ownCloudApp
 class ServerSideSearchScope: ItemSearchScope {
 	var searchResult: OCSearchResult?
 
+	override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
+		var pathAndRevealCellStyle : CollectionViewCellStyle?
+
+		if let cellStyle = cellStyle {
+			pathAndRevealCellStyle = CollectionViewCellStyle(from: cellStyle, changing: { cellStyle in
+				cellStyle.showRevealButton = true
+				cellStyle.showPathDetails = true
+			})
+		}
+
+		super.init(with: context, cellStyle: pathAndRevealCellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
+	}
+
 	override var queryCondition: OCQueryCondition? {
 		didSet {
 			updateSearch()
