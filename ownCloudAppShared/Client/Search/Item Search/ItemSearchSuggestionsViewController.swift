@@ -28,6 +28,11 @@ extension OCQueryCondition {
 
 class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdating {
 	class Category {
+		enum Identifier: String {
+			case type
+			case date
+			case size
+		}
 		typealias SelectionBehaviour = (_ deselectOption: OCQueryCondition, _ whenOption: OCQueryCondition, _ isSelected: Bool) -> Bool
 
 		static let mutuallyExclusiveSelectionBehaviour : SelectionBehaviour = { (deselectOption, whenOption, isSelected) in
@@ -39,12 +44,14 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 		}
 
 		var name: String
+		var id: Identifier
 		var selectionBehaviour: SelectionBehaviour
 		var options: [OCQueryCondition]
 
 		var popupController: PopupButtonController?
 
-		init(name: String, selectionBehaviour: @escaping SelectionBehaviour, options: [OCQueryCondition]) {
+		init(id: Identifier, name: String, selectionBehaviour: @escaping SelectionBehaviour, options: [OCQueryCondition]) {
+			self.id = id
 			self.name = name
 			self.selectionBehaviour = selectionBehaviour
 			self.options = options
@@ -56,7 +63,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 	}
 
 	var categories: [Category] = [
-		Category(name: OCLocalizedString("Type", nil), selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
+		Category(id: .type, name: OCLocalizedString("Type", nil), selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
 			OCQueryCondition.fromSearchTerm(":file")!,
 			OCQueryCondition.fromSearchTerm(":folder")!,
 			OCQueryCondition.fromSearchTerm(":document")!,
@@ -65,16 +72,17 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			OCQueryCondition.fromSearchTerm(":pdf")!,
 			OCQueryCondition.fromSearchTerm(":image")!,
 			OCQueryCondition.fromSearchTerm(":video")!,
-			OCQueryCondition.fromSearchTerm(":audio")!
+			OCQueryCondition.fromSearchTerm(":audio")!,
+			OCQueryCondition.fromSearchTerm(":archive")!
 		]),
-		Category(name: OCLocalizedString("Date", nil), selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
+		Category(id: .date, name: OCLocalizedString("Date", nil), selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
 			OCQueryCondition.fromSearchTerm(":recent")!,
 			OCQueryCondition.fromSearchTerm(":today")!,
 			OCQueryCondition.fromSearchTerm(":week")!,
 			OCQueryCondition.fromSearchTerm(":month")!,
 			OCQueryCondition.fromSearchTerm(":year")!
 		]),
-		Category(name: OCLocalizedString("Size", nil), selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
+		Category(id: .size, name: OCLocalizedString("Size", nil), selectionBehaviour: Category.mutuallyExclusiveSelectionBehaviour, options: [
 			OCQueryCondition.fromSearchTerm("smaller:10mb")!,
 			OCQueryCondition.fromSearchTerm("greater:10mb")!,
 			OCQueryCondition.fromSearchTerm("smaller:100mb")!,
@@ -94,8 +102,14 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 	var categoryActiveButtonConfig : UIButton.Configuration?
 	var categoryUnusedButtonConfig : UIButton.Configuration?
 
-	init(with scope: SearchScope) {
+	init(with scope: SearchScope, excludeCategories: [Category.Identifier]? = nil) {
 		super.init(nibName: nil, bundle: nil)
+		categories = categories.filter({ category in
+			if let excludeCategories {
+				return !excludeCategories.contains(category.id)
+			}
+			return true
+		})
 		self.scope = scope
 	}
 
@@ -211,6 +225,10 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 		view = rootView
 	}
 
+	private var scopeSupportsContentSearch: Bool {
+		scope?.searchableContent.contains(.contents) ?? false
+	}
+
 	override func viewDidLoad() {
 		categoryActiveButtonConfig = UIButton.Configuration.borderedTinted()
 		categoryActiveButtonConfig?.contentInsets.leading = 0
@@ -226,6 +244,30 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			if let button = category.popupController?.button {
 				stackView?.addArrangedSubview(button)
 			}
+		}
+
+		if scopeSupportsContentSearch {
+			let contentOptionsView = UIView()
+			let toggleView = UISwitch()
+			let toggleLabel = UILabel()
+
+			toggleView.translatesAutoresizingMaskIntoConstraints = false
+			toggleView.addAction(UIAction(handler: { [weak self, weak toggleView] _ in
+				if let toggleView, toggleView.isOn {
+					self?.scope?.searchedContent = [.contents, .itemName]
+				} else {
+					self?.scope?.searchedContent = [.itemName]
+				}
+			}), for: .valueChanged)
+
+			toggleLabel.translatesAutoresizingMaskIntoConstraints = false
+			toggleLabel.text = OCLocalizedString("Content", nil)
+
+			contentOptionsView.embedHorizontally(views: [toggleView,toggleLabel], insets: .zero, spacingProvider: { leadingView, trailingView in
+				return (leadingView == toggleView) ? 5 : 0
+			})
+
+			stackView?.addArrangedSubview(contentOptionsView)
 		}
 	}
 
