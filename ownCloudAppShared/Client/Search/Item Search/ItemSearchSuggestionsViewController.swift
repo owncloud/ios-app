@@ -26,6 +26,14 @@ extension OCQueryCondition {
 	}
 }
 
+class SearchedContent: NSObject {
+	var flags: OCKQLSearchedContent = []
+
+	init(_ flags: OCKQLSearchedContent) {
+		self.flags = flags
+	}
+}
+
 class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdating {
 	class Category {
 		enum Identifier: String {
@@ -96,6 +104,9 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 
 	var stackView : UIStackView?
 	private var rootView : UIView?
+
+	var savedSearchPopup: PopupButtonController?
+	var searchedContentPopup: PopupButtonController?
 
 	weak var scope: SearchScope?
 
@@ -203,6 +214,46 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 		savedSearchPopup?.button.setAttributedTitle(nil, for: .normal)
 		savedSearchPopup?.button.configuration = buttonConfiguration
 
+		// Searched content popup
+		let fileNameOnlyChoice = PopupButtonChoice(with: OCLocalizedString("names", ""), image: nil, representedObject: SearchedContent(.itemName))
+		let contentsOnlyChoice = PopupButtonChoice(with: OCLocalizedString("contents", ""), image: nil, representedObject: SearchedContent(.contents))
+		let fileNameAndContentsChoice = PopupButtonChoice(with: OCLocalizedString("name + contents", ""), image: nil, representedObject: SearchedContent([.contents, .itemName]))
+
+		searchedContentPopup = PopupButtonController(with: [], dropDown: false, selectionCustomizer: { [weak self] (choice, isSelected) in
+			if let scope = self?.scope, let searchedContent = choice.representedObject as? SearchedContent {
+				return scope.searchedContent == searchedContent.flags
+			}
+			return isSelected
+		}, choiceHandler: { [weak self] (choice, wasSelected) in
+			if let scope = self?.scope, let searchedContent = choice.representedObject as? SearchedContent {
+				scope.searchedContent = searchedContent.flags
+			}
+		})
+		searchedContentPopup?.choicesProvider = { [weak self] (_ popupController: PopupButtonController) in
+			var choices: [PopupButtonChoice] = []
+
+			if let scope = self?.scope {
+				if scope.searchableContent.contains(.itemName) {
+					choices.append(fileNameOnlyChoice)
+				}
+				if scope.searchableContent.contains(.contents) {
+					choices.append(contentsOnlyChoice)
+				}
+				if scope.searchableContent.contains(.itemName) && scope.searchableContent.contains(.contents) {
+					choices.append(fileNameAndContentsChoice)
+				}
+			}
+
+			return choices
+		}
+		if let searchedContent = scope?.searchedContent {
+			switch searchedContent {
+				case .contents: searchedContentPopup?.selectedChoice = contentsOnlyChoice
+				case .itemName: searchedContentPopup?.selectedChoice = fileNameOnlyChoice
+				default: searchedContentPopup?.selectedChoice = fileNameAndContentsChoice
+			}
+		}
+
 		rootView = UIView()
 		rootView?.translatesAutoresizingMaskIntoConstraints = false
 
@@ -246,32 +297,33 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			}
 		}
 
-		if scopeSupportsContentSearch {
-			let contentOptionsView = UIView()
-			let toggleView = UISwitch()
-			let toggleLabel = UILabel()
+		if scopeSupportsContentSearch, let searchedContentPopup {
+			let containerView = UIView()
+			containerView.translatesAutoresizingMaskIntoConstraints = false
 
-			toggleView.translatesAutoresizingMaskIntoConstraints = false
-			toggleView.addAction(UIAction(handler: { [weak self, weak toggleView] _ in
-				if let toggleView, toggleView.isOn {
-					self?.scope?.searchedContent = [.contents, .itemName]
-				} else {
-					self?.scope?.searchedContent = [.itemName]
-				}
-			}), for: .valueChanged)
+			let popupButton = searchedContentPopup.button
+			let searchInLabel = UILabel()
+			searchInLabel.text = OCLocalizedString("Search in", nil)
+			searchInLabel.translatesAutoresizingMaskIntoConstraints = false
 
-			toggleLabel.translatesAutoresizingMaskIntoConstraints = false
-			toggleLabel.text = OCLocalizedString("Content", nil)
+			style(popupButton: searchedContentPopup.button, hasMatch: false)
 
-			contentOptionsView.embedHorizontally(views: [toggleView,toggleLabel], insets: .zero, spacingProvider: { leadingView, trailingView in
-				return (leadingView == toggleView) ? 5 : 0
-			})
+			containerView.addSubview(searchInLabel)
+			containerView.addSubview(popupButton)
 
-			stackView?.addArrangedSubview(contentOptionsView)
+			NSLayoutConstraint.activate([
+				searchInLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
+				popupButton.leadingAnchor.constraint(equalTo: searchInLabel.trailingAnchor, constant: 2),
+				popupButton.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+
+				searchInLabel.firstBaselineAnchor.constraint(equalTo: popupButton.titleLabel!.firstBaselineAnchor),
+				popupButton.topAnchor.constraint(equalTo: containerView.topAnchor),
+				popupButton.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+			])
+
+			stackView?.addArrangedSubview(containerView)
 		}
 	}
-
-	var savedSearchPopup: PopupButtonController?
 
 	func createPopups() {
 		// Create popups for all categories
@@ -339,6 +391,21 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 		scope?.searchViewController?.restore(savedTemplate: savedSearch)
 	}
 
+	private func style(popupButton: UIButton, hasMatch: Bool) {
+		var buttonConfig : UIButton.Configuration?
+
+		if hasMatch {
+			buttonConfig = categoryActiveButtonConfig?.updated(for: popupButton)
+		} else {
+			buttonConfig = categoryUnusedButtonConfig?.updated(for: popupButton)
+		}
+
+		if let attributedTitle = popupButton.currentAttributedTitle {
+			buttonConfig?.attributedTitle = AttributedString(attributedTitle)
+		}
+		popupButton.configuration = buttonConfig
+	}
+
 	func updateFor(_ searchElements: [SearchElement]) {
 		self.searchElements = searchElements
 
@@ -360,18 +427,7 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			}
 
 			if let categoryPopupButton = category.popupController?.button {
-				var buttonConfig : UIButton.Configuration?
-
-				if categoryHasMatch {
-					buttonConfig = categoryActiveButtonConfig?.updated(for: categoryPopupButton)
-				} else {
-					buttonConfig = categoryUnusedButtonConfig?.updated(for: categoryPopupButton)
-				}
-
-				if let attributedTitle = categoryPopupButton.currentAttributedTitle {
-					buttonConfig?.attributedTitle = AttributedString(attributedTitle)
-				}
-				categoryPopupButton.configuration = buttonConfig
+				style(popupButton: categoryPopupButton, hasMatch: categoryHasMatch)
 			}
 
 			category.popupController?.button.sizeToFit()
