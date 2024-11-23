@@ -199,6 +199,7 @@
 			TranslateKeyword(@"image"),
 			TranslateKeyword(@"video"),
 			TranslateKeyword(@"audio"),
+			TranslateKeyword(@"archive"),
 			TranslateKeyword(@"document"),
 			TranslateKeyword(@"spreadsheet"),
 			TranslateKeyword(@"presentation"),
@@ -313,11 +314,15 @@
 			}
 			else if ([keyword isEqual:@"spreadsheet"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias startsWith:@"x-office/spreadsheet"]] withSymbolName:@"tablecells" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No spreadsheet") : OCLocalizedViaLocalizationBundle(@"Spreadsheet")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias isEqualTo:@"x-office/spreadsheet"]] withSymbolName:@"tablecells" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No spreadsheet") : OCLocalizedViaLocalizationBundle(@"Spreadsheet")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"presentation"])
 			{
-				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias startsWith:@"x-office/presentation"]] withSymbolName:@"chart.pie" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No presentation") : OCLocalizedViaLocalizationBundle(@"Presentation")) searchSegment:searchSegment]);
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias isEqualTo:@"x-office/presentation"]] withSymbolName:@"chart.pie" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No presentation") : OCLocalizedViaLocalizationBundle(@"Presentation")) searchSegment:searchSegment]);
+			}
+			else if ([keyword isEqual:@"archive"])
+			{
+				return ([[OCQueryCondition negating:negateCondition condition:[OCQueryCondition where:OCItemPropertyNameTypeAlias isEqualTo:@"package/x-generic"]] withSymbolName:@"archivebox" localizedDescription:(negateCondition ? OCLocalizedViaLocalizationBundle(@"No archive") : OCLocalizedViaLocalizationBundle(@"Archive")) searchSegment:searchSegment]);
 			}
 			else if ([keyword isEqual:@"pdf"])
 			{
@@ -606,6 +611,18 @@
 @end
 
 @implementation OCQueryCondition (SearchSegmentDescription)
+
++ (NSDictionary<NSString *,NSString *> *)typeAliasToKeywordMap
+{
+	// Mapping of TypeAliases used in local DB back to keywords
+	return @{
+		@"image" 		 : @"image",
+		@"x-office/document" 	 : @"document",
+		@"x-office/spreadsheet"  : @"spreadsheet",
+		@"x-office/presentation" : @"presentation",
+		@"package/x-generic"     : @"archive"
+	};
+}
 
 - (void)setValue:(id)value forMutableUserInfoKey:(OCQueryConditionUserInfoKey)key
 {
