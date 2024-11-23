@@ -29,7 +29,7 @@ open class ItemSearchScope : SearchScope {
 		super.init(with: context, cellStyle: cellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
 
 		tokenizer = CustomQuerySearchTokenizer(scope: self, clientContext: context)
-		scopeViewController = ItemSearchSuggestionsViewController(with: self)
+		scopeViewController = createScopeViewController()
 
 		sortDescriptorObserver = context.observe(\.sortDescriptor, changeHandler: { [weak self] context, change in
 			self?.sortDescriptorChanged(to: context.sortDescriptor)
@@ -76,6 +76,11 @@ open class ItemSearchScope : SearchScope {
 
 	open var searchTerm: String? {
 		return queryCondition?.composedSearchTerm
+	}
+
+	// MARK: - Subclassing points
+	open func createScopeViewController() -> (UIViewController & SearchElementUpdating)? {
+		return ItemSearchSuggestionsViewController(with: self)
 	}
 
 	// MARK: - Saved search support

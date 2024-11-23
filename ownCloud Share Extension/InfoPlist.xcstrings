@@ -3,7 +3,6 @@
   "strings" : {
     "CFBundleDisplayName" : {
       "comment" : "Bundle display name",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -80,7 +79,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Compartilhar no ownCloud"
+            "value" : "Share to ownCloud"
           }
         },
         "pt-PT" : {
@@ -123,7 +122,6 @@
     },
     "CFBundleName" : {
       "comment" : "Bundle name",
-      "extractionState" : "extracted_with_value",
       "localizations" : {
         "cs" : {
           "stringUnit" : {
@@ -188,7 +186,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Extensão de compartilhamento ownCloud"
+            "value" : "ownCloud Share Extension"
           }
         },
         "pt-PT" : {
@@ -295,7 +293,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Extensão de compartilhamento indisponível"
+            "value" : "Share Extension unavailable"
           }
         },
         "pt-PT" : {
@@ -402,7 +400,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "A extensão de compartilhamento não está disponível neste sistema."
+            "value" : "The Share Extension is not available on this system."
           }
         },
         "pt-PT" : {
