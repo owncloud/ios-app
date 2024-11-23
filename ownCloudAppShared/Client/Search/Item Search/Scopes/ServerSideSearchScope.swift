@@ -20,34 +20,51 @@ import UIKit
 import ownCloudSDK
 import ownCloudApp
 
-class ServerSideSearchScope: SearchScope {
+class ServerSideSearchScope: ItemSearchScope {
 	var searchResult: OCSearchResult?
 
-	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
-		var pathAndRevealCellStyle : CollectionViewCellStyle?
-
-		if let cellStyle = cellStyle {
-			pathAndRevealCellStyle = CollectionViewCellStyle(from: cellStyle, changing: { cellStyle in
-				cellStyle.showRevealButton = true
-				cellStyle.showPathDetails = true
-			})
+	override var queryCondition: OCQueryCondition? {
+		didSet {
+			updateSearch()
 		}
-
-		super.init(with: context, cellStyle: pathAndRevealCellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
-
-		tokenizer = SearchTokenizer(scope: self, clientContext: clientContext)
-		results = nil
 	}
 
-	open override func updateFor(_ searchElements: [SearchElement]) {
-		let searchTerm = searchElements.composedSearchTerm
-		let kqlQuery = "*" + searchTerm + "*"
+	override func createScopeViewController() -> (any UIViewController & SearchElementUpdating)? {
+		return ItemSearchSuggestionsViewController(with: self, excludeCategories: [.size])
+	}
 
-		if searchResult?.kqlQuery != kqlQuery, let core = clientContext.core {
-			searchResult?.cancel()
+	override var searchableContent: OCKQLSearchedContent {
+		return [.contents, .itemName]
+	}
 
-			searchResult = core.searchFiles(withPattern: kqlQuery, limit: 100)
-			results = searchResult?.results
+	override var searchedContent: OCKQLSearchedContent {
+		didSet {
+			updateSearch()
 		}
+	}
+
+	var kqlQuery: String? {
+		didSet {
+			if let kqlQuery {
+				if kqlQuery != searchResult?.kqlQuery, let core = clientContext.core {
+					searchResult?.cancel()
+
+					searchResult = core.searchFiles(withPattern: kqlQuery, limit: 100)
+					results = searchResult?.results
+				}
+			} else {
+				searchResult?.cancel()
+				searchResult = nil
+
+				results = nil
+			}
+		}
+	}
+
+	func updateSearch() {
+		// OCQueryCondition.typeAliasToKeywordMap is currently matching KQL types defined in
+		// https://github.com/owncloud/ocis/blob/cff364c998355b1295793e9244e5efdfea064536/services/search/pkg/query/bleve/compiler.go#L287
+		// If they diverge, an additional conversion from locally used keyword to server used keyword needs to take place here.
+		kqlQuery = queryCondition?.kqlStringWithTypeAlias(toKQLTypeMap: OCQueryCondition.typeAliasToKeywordMap, targetContent: searchedContent)
 	}
 }
