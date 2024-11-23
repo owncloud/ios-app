@@ -49,6 +49,12 @@ open class SearchScope: NSObject, SearchElementUpdating {
 	open func updateFor(_ searchElements: [SearchElement]) {
 	}
 
+	// Content search
+	open var searchableContent: OCKQLSearchedContent {
+		return .itemName
+	}
+	open var searchedContent: OCKQLSearchedContent = .itemName
+
 	// Save and restore searches
 	open var canSaveSearch: Bool {
 		// subclasses should return true if the scope can save the current search
