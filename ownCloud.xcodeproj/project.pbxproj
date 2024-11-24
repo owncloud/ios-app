@@ -3866,6 +3866,7 @@
 				DC6F0B952AE9014B00BFF393 /* Copy branding assets */,
 				DCC6567020C9B7E400110A97 /* Embed Foundation Extensions */,
 				23DFDCF120AEEC77003BD16B /* Update LastGitCommit key in Info.plist */,
+				DC86F85C2CF347F100D757DA /* Normalize xcstrings files */,
 			);
 			buildRules = (
 			);
@@ -4533,6 +4534,30 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
 			shellScript = "#!/bin/bash\n\n# Determine branding assets folder to use\nASSETS_SOURCE_FOLDER=\"${PROJECT_DIR}/ownCloud/Resources/Theming/com.owncloud.ios-app/\"\n\nASSETS_FILE_COUNT=$(ls -A \"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\"branding-*.png | wc -l)\necho \"File count in branding-assets:\" ${ASSETS_FILE_COUNT}\n\nif [ -e \"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\" ]; then\n\tif [ $ASSETS_FILE_COUNT -ne 0 ]; then\n\t\t# Copy branding-*.png files from branding-assets\n\t\tASSETS_SOURCE_FOLDER=\"${PROJECT_DIR}/ownCloud/Resources/Theming/branding-assets/\"\n\tfi\nfi\n\n# Copy branding-*.png assets\necho \"Copying branding-*.png files from\" ${ASSETS_SOURCE_FOLDER}\necho cp ${ASSETS_SOURCE_FOLDER}branding-*.png \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/\"\ncp ${ASSETS_SOURCE_FOLDER}branding-*.png \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/\"\n\n# Remove assets from the assets folder that aren't used by the app from the build product\nif [ -e \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-icon.png\" ]; then\n    rm \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/branding-icon.png\"\nfi\n";
+		};
+		DC86F85C2CF347F100D757DA /* Normalize xcstrings files */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/ownCloud Action Extension/InfoPlist.xcstrings",
+				"$(SRCROOT)/ownCloud File Provider/Localizable.xcstrings",
+				"$(SRCROOT)/ownCloud Share Extension/InfoPlist.xcstring",
+				"$(SRCROOT)/ownCloud/Resources/InfoPlist.xcstrings",
+				"$(SRCROOT)/ownCloud/Resources/Localizable.xcstrings",
+				"$(SRCROOT)/ownCloudAppFramework/Resources/Localizable.xcstrings",
+			);
+			name = "Normalize xcstrings files";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if ! command -v jq 2>&1 >/dev/null\nthen\n    echo \"jq could not be found\"\n    exit 0\nfi\n\nbeautifyJSON() {\n  jq --sort-keys . \"$1\" >\"$1.tmp\"\n  mv \"$1.tmp\" \"$1\"\n}\nbeautifyJSON \"ownCloud Action Extension/InfoPlist.xcstrings\"\nbeautifyJSON \"ownCloud File Provider/Localizable.xcstrings\"\nbeautifyJSON \"ownCloud Share Extension/InfoPlist.xcstrings\"\nbeautifyJSON \"ownCloud/Resources/InfoPlist.xcstrings\"\nbeautifyJSON \"ownCloud/Resources/Localizable.xcstrings\"\nbeautifyJSON \"ownCloudAppFramework/Resources/Localizable.xcstrings\"\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
