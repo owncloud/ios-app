@@ -14727,7 +14727,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sélectionner le dossier de destination …"
+            "value": "Sélectionner le dossier de destination…"
           }
         },
         "ko": {
@@ -51753,7 +51753,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Next item"
+            "value": "Article suivant"
           }
         },
         "ko": {
@@ -51989,7 +51989,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "No account configured"
+            "value": "Aucun compte configuré"
           }
         },
         "ko": {
@@ -54269,7 +54269,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "No user or group matches your search."
+            "value": "Aucun utilisateur ou groupe ne correspond à votre recherche."
           }
         },
         "ko": {
@@ -55098,7 +55098,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Offline"
+            "value": "Hors ligne"
           }
         },
         "ko": {
@@ -55358,7 +55358,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Online"
+            "value": "En ligne"
           }
         },
         "ko": {
@@ -55905,7 +55905,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open help page"
+            "value": "Ouvrir la page d'aide"
           }
         },
         "ko": {
