@@ -1,19 +1,18 @@
 ###################################################################
 
-	Copyright (C) 2018, ownCloud GmbH.
+     Copyright (C) 2024, ownCloud GmbH.
 
 
-  	This code is covered by the GNU Public License Version 3.
-  
-  	For distribution utilizing Apple mechanisms please see
- 	https://owncloud.org/contribute/iOS-license-exception/
+     This code is covered by the GNU Public License Version 3.
 
-	
-	You should have received a copy of this license along with this program. 
-	If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>,
-	<https://owncloud.com/de/licenses/owncloud-commercial/>.
-	
-	
+     For distribution utilizing Apple mechanisms please see
+     https://owncloud.org/contribute/iOS-license-exception/
+
+
+     You should have received a copy of this license along with this program.
+     If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>,
+     <https://owncloud.com/de/licenses/owncloud-commercial/>.
+
 ###################################################################
 
 
@@ -47,41 +46,45 @@ that govern this software, for the purposes they are being used.
 
 The third party software included and used by this project is:
 
- * 	ownCloud iOS SDK v 0.0.1
-   	Copyright (c) 2018-2019 ownCloud GmbH. (http://www.owncloud.org/)
-   	Licensed under GNU Public License, Version 3.
-   	Placed at ios-sdk
-	Original license document included at ios-sdk/LICENSE.
-   	See https://github.com/owncloud/ios-sdk
-   	
- * 	earlGrey v 1.12.1
-   	Copyright (c) 2016 Google Inc.
-   	Licensed under Apache License, Version 2.0.
-   	Placed at Pods/EarlGrey
-	Original license document included at Pods/EarlGrey/EarlGrey/LICENSE
-	See https://github.com/google/EarlGrey
-   	
- * 	PocketSVG
-   	Copyright (c) Ponderwell, Ariel Elkin, Fjšlnir çsgeirsson, and Contributors
-   	Licensed under MIT License.
-   	Placed at external/PocketSVG
-	Original license document included at external/PocketSVG/LICENSE
-	See https://github.com/pocketsvg/PocketSVG
- 	
- * 	libzip
-	Copyright (C) 1999-2017 Dieter Baron and Thomas Klausner
-	Licensed under a 3-clause BSD license
-	Placed at external/libzip
-	Original license document included at external/libzip/LICENSE
-	See https://github.com/nih-at/libzip
+ *      ownCloud iOS SDK
+        Copyright (c) 2018-2024 ownCloud GmbH. (http://www.owncloud.org/)
+        Licensed under GNU Public License, Version 3.
+        Placed at ios-sdk
+        Original license document included at ios-sdk/LICENSE.
+        See https://github.com/owncloud/ios-sdk
 
- * 	PLCrashReporter
-   	Copyright (c) Microsoft Corporation.
-	Copyright (c) 2008 - 2014 Plausible Labs Cooperative, Inc.
-   	Licensed under proprietary license
-   	Placed as swift package
-	Original license document included at plcrashreporter/LICENSE.
-   	See https://github.com/microsoft/plcrashreporter
+ *      Down
+        Copyright (c) 2016 Rob Phillips.
+        Licensed under MIT License. Components used by "Down" under indivdiual licenses.
+        Placed as Swift package
+        Original license document included at ownCloudAppShared/Down.LICENSE.
+        See https://github.com/johnxnguyen/Down
 
+ *      ISRunLoopThread
+        Copyright (c) 2014 Felix Schwarz.
+        Licensed under MIT License.
+        Placed at ios-sdk/ownCloudSDK/External/ISRunLoopThread
+        Original license document included at ios-sdk/ownCloudSDK/External/ISRunLoopThread/ISRunLoopThread.LICENSE.
+        See https://gist.github.com/felix-schwarz/9fa9055b6ade900f1f21
 
+ *      OpenSSL 3
+        Copyright (c) 2024 OpenSSL.
+        Licensed under Apache-2.0 license.
+        Placed as Swift package
+        Original license document included at "ios-sdk/ownCloudUI/Certificate Metadata/OpenSSL license/OpenSSL.LICENSE".
+        See https://github.com/openssl/openssl
 
+ *      PLCrashReporter
+        Copyright (c) Microsoft Corporation.
+        Copyright (c) 2008 - 2014 Plausible Labs Cooperative, Inc.
+        Licensed under proprietary license
+        Placed as Swift package
+        Original license document included at ownCloud/Resources/PLCrashReporter.LICENSE.
+        See https://github.com/microsoft/plcrashreporter
+
+ *      PocketSVG
+        Copyright (c) Ponderwell, Ariel Elkin, Fjšlnir çsgeirsson, and Contributors
+        Licensed under MIT License.
+        Placed as Swift package
+        Original license document included at ownCloudAppShared/PocketSVG.LICENSE.
+        See https://github.com/pocketsvg/PocketSVG
