@@ -2483,7 +2483,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Accept or decline"
+            "value": "Aceitar ou declinar"
           }
         },
         "pt_PT": {
@@ -2589,7 +2589,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Accept share"
+            "value": "Aceitar compartilhamento"
           }
         },
         "pt_PT": {
@@ -4571,7 +4571,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Add to sidebar"
+            "value": "Adicionar à barra lateral"
           }
         },
         "pt_PT": {
@@ -8486,7 +8486,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Audios"
+            "value": "Áudios"
           }
         },
         "pt_PT": {
@@ -9054,7 +9054,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Authentication error"
+            "value": "Erro de autenticação"
           }
         },
         "pt_PT": {
@@ -9160,7 +9160,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Authentication failed"
+            "value": "Falha na autenticação"
           }
         },
         "pt_PT": {
@@ -10396,7 +10396,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Auto upload disabled"
+            "value": "Carregamento automático desativado"
           }
         },
         "pt_PT": {
@@ -10964,7 +10964,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Available offline"
+            "value": "Disponível fora de linha"
           }
         },
         "pt_PT": {
@@ -12204,7 +12204,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Busy"
+            "value": "Ocupado"
           }
         },
         "pt_PT": {
@@ -14533,7 +14533,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Change password"
+            "value": "Mudar senha"
           }
         },
         "pt_PT": {
@@ -14639,7 +14639,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Changed {{settingID}} to {{newValue}}."
+            "value": "Mudou {{settingID}} para {{newValue}}."
           }
         },
         "pt_PT": {
@@ -14727,7 +14727,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sélectionner le dossier de destination …"
+            "value": "Sélectionner le dossier de destination…"
           }
         },
         "ko": {
@@ -14875,7 +14875,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Clear"
+            "value": "Apagar"
           }
         },
         "pt_PT": {
@@ -14981,7 +14981,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cleared all."
+            "value": "Tudo apagado"
           }
         },
         "pt_PT": {
@@ -15087,7 +15087,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cleared {{settingID}}."
+            "value": "Apagado {{settingID}}."
           }
         },
         "pt_PT": {
@@ -16608,7 +16608,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Connecting"
+            "value": "Conectando"
           }
         },
         "pt_PT": {
@@ -18799,7 +18799,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Copy to clipboard"
+            "value": "Copiar para a área de tranferência"
           }
         },
         "pt_PT": {
@@ -20373,7 +20373,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Create shortcut"
+            "value": "Criar atalho"
           }
         },
         "pt_PT": {
@@ -21511,7 +21511,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Debug"
+            "value": "Depurar"
           }
         },
         "pt_PT": {
@@ -21925,7 +21925,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Decline share"
+            "value": "Recusar compartilhamento"
           }
         },
         "pt_PT": {
@@ -23579,7 +23579,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Deletion of '%@' failed"
+            "value": "Falha na exclusão de '%@'"
           }
         },
         "pt_PT": {
@@ -24656,7 +24656,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Disable"
+            "value": "Desativar"
           }
         },
         "pt_PT": {
@@ -26100,7 +26100,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Download"
+            "value": "Baixar"
           }
         },
         "pt_PT": {
@@ -31146,7 +31146,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Extend by one week"
+            "value": "Extender por uma semana"
           }
         },
         "pt_PT": {
@@ -31999,7 +31999,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Fetching server information…"
+            "value": "Buscando informação do servidor..."
           }
         },
         "pt_PT": {
@@ -32783,7 +32783,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "File an issue"
+            "value": "registrar um problema"
           }
         },
         "pt_PT": {
@@ -34181,7 +34181,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Find information, answers and solutions in the detailed documentation."
+            "value": "Você pode encontrar informações, repostas e soluções na documentação detalhada."
           }
         },
         "pt_PT": {
@@ -36405,7 +36405,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Generate"
+            "value": "Gerar"
           }
         },
         "pt_PT": {
@@ -36511,7 +36511,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Get in touch with our community in the forums - or file a GitHub issue to report a bug or request a feature."
+            "value": "Entre em contato com nossa comunidade nos foruns - ou registre um problema no GitHub para comunicar um bug ou pedir um novo recurso."
           }
         },
         "pt_PT": {
@@ -37032,7 +37032,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Group"
+            "value": "Grupo"
           }
         },
         "pt_PT": {
@@ -37448,7 +37448,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Help & Contact"
+            "value": "Ajuda & Contato"
           }
         },
         "pt_PT": {
@@ -37554,7 +37554,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Hide"
+            "value": "Esconder"
           }
         },
         "pt_PT": {
@@ -38484,7 +38484,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "If you have a moment to give us your feedback, please take our survey."
+            "value": "Se você tiver um momento para nos dar seu feedback, por favor, responda nosso questionário."
           }
         },
         "pt_PT": {
@@ -41198,7 +41198,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "In the cloud"
+            "value": "Na nuvem"
           }
         },
         "pt_PT": {
@@ -44841,7 +44841,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Local copy"
+            "value": "Cópia local"
           }
         },
         "pt_PT": {
@@ -44947,7 +44947,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Local version"
+            "value": "Versão local"
           }
         },
         "pt_PT": {
@@ -46078,7 +46078,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Log out of '%@' failed"
+            "value": "Falha no logout de '%@'"
           }
         },
         "pt_PT": {
@@ -48288,7 +48288,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Messages"
+            "value": "Mensagens"
           }
         },
         "pt_PT": {
@@ -48987,7 +48987,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "More for {{title}}"
+            "value": "Mais para {{title}}"
           }
         },
         "pt_PT": {
@@ -51753,7 +51753,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Next item"
+            "value": "Article suivant"
           }
         },
         "ko": {
@@ -51783,7 +51783,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Next item"
+            "value": "Próximo item"
           }
         },
         "pt_PT": {
@@ -51989,7 +51989,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "No account configured"
+            "value": "Aucun compte configuré"
           }
         },
         "ko": {
@@ -52019,7 +52019,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "No account configured"
+            "value": "Nenhuma conta configurada"
           }
         },
         "pt_PT": {
@@ -54063,7 +54063,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "No spaces"
+            "value": "Nenhum espaço"
           }
         },
         "pt_PT": {
@@ -54269,7 +54269,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "No user or group matches your search."
+            "value": "Aucun utilisateur ou groupe ne correspond à votre recherche."
           }
         },
         "ko": {
@@ -54299,7 +54299,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "No user or group matches your search."
+            "value": "Nenhum usuário ou grupo corresponde à sua presquisa."
           }
         },
         "pt_PT": {
@@ -55098,7 +55098,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Offline"
+            "value": "Hors ligne"
           }
         },
         "ko": {
@@ -55128,7 +55128,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Offline"
+            "value": "Fora de linha"
           }
         },
         "pt_PT": {
@@ -55358,7 +55358,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Online"
+            "value": "En ligne"
           }
         },
         "ko": {
@@ -55388,7 +55388,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Online"
+            "value": "Em Linha"
           }
         },
         "pt_PT": {
@@ -55905,7 +55905,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open help page"
+            "value": "Ouvrir la page d'aide"
           }
         },
         "ko": {
@@ -55935,7 +55935,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open help page"
+            "value": "Abrir a página de ajuda"
           }
         },
         "pt_PT": {
@@ -56479,7 +56479,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open link"
+            "value": "Abrir o link"
           }
         },
         "pt_PT": {
@@ -56715,7 +56715,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Open shortcut"
+            "value": "Abrir atalho"
           }
         },
         "pt_PT": {
@@ -56951,7 +56951,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Opening link failed"
+            "value": "Falha ao abrir o link"
           }
         },
         "pt_PT": {
@@ -57318,7 +57318,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Optic ID"
+            "value": "ID Ótica"
           }
         },
         "pt_PT": {
@@ -60896,7 +60896,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pick a destination for photo uploads"
+            "value": "Escolha um destino para envio de fotos"
           }
         },
         "pt_PT": {
@@ -61002,7 +61002,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pick a destination for video uploads"
+            "value": "Escolha um destino para enviar vídeos"
           }
         },
         "pt_PT": {
@@ -61368,7 +61368,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pick file or folder"
+            "value": "Escolha o arquivo ou pasta"
           }
         },
         "pt_PT": {
@@ -62149,7 +62149,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Please open the app and select the account to re-authenticate."
+            "value": "Por favor, abra o app e selecione a conta para re-autenticar."
           }
         },
         "pt_PT": {
@@ -64238,7 +64238,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Previous item"
+            "value": "Itens anteriores"
           }
         },
         "pt_PT": {
@@ -67692,7 +67692,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Remove expiration date"
+            "value": "Remover data de validade"
           }
         },
         "pt_PT": {
@@ -67798,7 +67798,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Remove from sidebar"
+            "value": "Remover da barra lateral"
           }
         },
         "pt_PT": {
@@ -67904,7 +67904,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Remove password"
+            "value": "Remover senha"
           }
         },
         "pt_PT": {
@@ -69067,7 +69067,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Reveal"
+            "value": "Revelar"
           }
         },
         "pt_PT": {
@@ -74766,7 +74766,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Select Destination"
+            "value": "Selecionar o Destino"
           }
         },
         "pt_PT": {
@@ -75338,7 +75338,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Select folder"
+            "value": "Selecionar pasta"
           }
         },
         "pt_PT": {
@@ -76604,7 +76604,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Set"
+            "value": "Definir"
           }
         },
         "pt_PT": {
@@ -76864,7 +76864,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Setup a new account in the app to save to."
+            "value": "Configure uma nova conta no app para onde salvar"
           }
         },
         "pt_PT": {
@@ -77403,7 +77403,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Share Extension unavailable"
+            "value": "A extensão de compartilhamento está indisponível"
           }
         },
         "pt_PT": {
@@ -77639,7 +77639,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shared"
+            "value": "Compartilhado"
           }
         },
         "pt_PT": {
@@ -79143,7 +79143,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shortcut"
+            "value": "Atalho"
           }
         },
         "pt_PT": {
@@ -79249,7 +79249,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shortcut to '{{hostname}}'"
+            "value": "Atalho para '{{hostname}}'"
           }
         },
         "pt_PT": {
@@ -79509,7 +79509,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Shorten by one week"
+            "value": "Encurtado em uma semana"
           }
         },
         "pt_PT": {
@@ -79615,7 +79615,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Show"
+            "value": "Mostrar"
           }
         },
         "pt_PT": {
@@ -80159,7 +80159,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Show message"
+            "value": "Mostrar mensagens"
           }
         },
         "pt_PT": {
@@ -80526,7 +80526,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Show/Hide sidebar"
+            "value": "Mostrar/Esconder barra lateral"
           }
         },
         "pt_PT": {
@@ -81871,7 +81871,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Sort by {{attribute}} in {{direction}} order"
+            "value": "Agrupar por {{attribute}} na ordem de {{direction}}"
           }
         },
         "pt_PT": {
@@ -81977,7 +81977,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Space"
+            "value": "Espaço"
           }
         },
         "pt_PT": {
@@ -82083,7 +82083,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Spaces"
+            "value": "Espaços"
           }
         },
         "pt_PT": {
@@ -84179,7 +84179,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Take survey"
+            "value": "Responda o questionário"
           }
         },
         "pt_PT": {
@@ -85470,7 +85470,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "The destination this shortcut points to could not be found. It may have been deleted or you may not have access to it."
+            "value": "O destino para onde este atalho aponta não foi encontrado. Ele pode ter sido apagado ou você pode não ter acesso a ele."
           }
         },
         "pt_PT": {
@@ -86322,7 +86322,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "The password was copied to the clipboard"
+            "value": "A senha foi copiada para a área de transferência."
           }
         },
         "pt_PT": {
@@ -86712,7 +86712,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "The shortcut points to a URL, but the configuration of this app prohibits opening it."
+            "value": "Este atalho aponta para uma URL, mas a configuração deste app proíbe abri-la."
           }
         },
         "pt_PT": {
@@ -86818,7 +86818,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "The shortcut points to a URL, but the configuration of this app prohibits opening it."
+            "value": "O atalho aponta para uma URL, mas a configuração deste app proíbe abri-la."
           }
         },
         "pt_PT": {
@@ -86924,7 +86924,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "The {{app.name}} share extension is not available on this system."
+            "value": "A extenção de compartilhamento de {{app.name}} não está disponível neste sistema."
           }
         },
         "pt_PT": {
@@ -88061,7 +88061,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "This shortcut points to:\n{{url}}"
+            "value": "Este atalho aponta para:\n{{url}}"
           }
         },
         "pt_PT": {
@@ -88866,7 +88866,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Toggle layout"
+            "value": "Acionar layout"
           }
         },
         "pt_PT": {
@@ -89646,7 +89646,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "URL of webpage or item"
+            "value": "URL da página da Web ou do item"
           }
         },
         "pt_PT": {
@@ -90190,7 +90190,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Unknown"
+            "value": "Desconhecido"
           }
         },
         "pt_PT": {
@@ -92270,7 +92270,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Uploading {{remainingFileCount}} files…"
+            "value": "Enviando {{remainingFileCount}} arquivos…"
           }
         },
         "pt_PT": {
@@ -93727,7 +93727,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Verbose"
+            "value": "Verboso"
           }
         },
         "pt_PT": {
@@ -93833,7 +93833,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Verifying password…"
+            "value": "Verificando a senha…"
           }
         },
         "pt_PT": {
@@ -94543,7 +94543,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "View documentation"
+            "value": "Ver documentação"
           }
         },
         "pt_PT": {
@@ -94649,7 +94649,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Visit the forums"
+            "value": "Visitar os fóruns"
           }
         },
         "pt_PT": {
@@ -96591,7 +96591,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "ascending"
+            "value": "subindo"
           }
         },
         "pt_PT": {
@@ -97005,7 +97005,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "descending"
+            "value": "descendente"
           }
         },
         "pt_PT": {
@@ -98550,7 +98550,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "on"
+            "value": "ligado"
           }
         },
         "pt_PT": {
@@ -99118,7 +99118,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "undated"
+            "value": "não datado"
           }
         },
         "pt_PT": {
@@ -99485,7 +99485,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "{{fileName}} (file)"
+            "value": "{{fileName}} (arquivo)"
           }
         },
         "pt_PT": {
@@ -99591,7 +99591,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "{{folderName}} (folder)"
+            "value": "{{folderName}} (diretório)"
           }
         },
         "pt_PT": {
@@ -99827,7 +99827,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "{{itemName}} ({{link}}) | password: {{password}}"
+            "value": "{{itemName}} ({{link}}) | senha: {{password}}"
           }
         },
         "pt_PT": {
@@ -99933,7 +99933,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "{{link}} | password: {{password}}"
+            "value": "{{link}} | senha: {{password}}"
           }
         },
         "pt_PT": {
@@ -100169,7 +100169,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "{{spaceName}} (space)"
+            "value": "{{spaceName}} (espaço)"
           }
         },
         "pt_PT": {
