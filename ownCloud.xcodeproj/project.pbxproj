@@ -230,8 +230,6 @@
 		DC1251E82C7470C30040FBC6 /* OCBookmark+AppExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = DC7C100F24B5F81E00227085 /* OCBookmark+AppExtensions.m */; };
 		DC1251E92C7470F80040FBC6 /* AppLockSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DC6A0E5326EA9E740076B533 /* AppLockSettings.m */; };
 		DC1251EA2C7471620040FBC6 /* OCCore+BundleImport.m in Sources */ = {isa = PBXBuildFile; fileRef = DC774E6222F44E6D000B11A1 /* OCCore+BundleImport.m */; };
-		DC1251EB2C74716A0040FBC6 /* ZIPArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = DC774E5D22F44E4A000B11A1 /* ZIPArchive.m */; };
-		DC1251EC2C74718B0040FBC6 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE93FF321FCA434000E14F2 /* libzip.framework */; };
 		DC1251F42C7474910040FBC6 /* NotificationManager.m in Sources */ = {isa = PBXBuildFile; fileRef = DCC832EA242CB4D600153F8C /* NotificationManager.m */; };
 		DC1621352B8FE26200EB17F8 /* OCVault+SidebarItems.h in Headers */ = {isa = PBXBuildFile; fileRef = DC1621332B8FE26200EB17F8 /* OCVault+SidebarItems.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC1621362B8FE26200EB17F8 /* OCVault+SidebarItems.m in Sources */ = {isa = PBXBuildFile; fileRef = DC1621342B8FE26200EB17F8 /* OCVault+SidebarItems.m */; };
@@ -352,7 +350,6 @@
 		DC62F57429268D710095BB5D /* ClientWebAppViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFE682628D869A400091D2A /* ClientWebAppViewController.swift */; };
 		DC62F57529268D710095BB5D /* OpenInWebAppAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0CE19128C7DBE3009ABDFB /* OpenInWebAppAction.swift */; };
 		DC62F6F5292819C80095BB5D /* AccountConnectionRichStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC62F6F4292819C80095BB5D /* AccountConnectionRichStatus.swift */; };
-		DC63207E21FCA731007EC0A8 /* libzip.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = DCE93FF321FCA434000E14F2 /* libzip.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DC63208321FCAC1E007EC0A8 /* ClientActivityViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208221FCAC1E007EC0A8 /* ClientActivityViewController.swift */; };
 		DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC63208421FCEBE9007EC0A8 /* ClientActivityCell.swift */; };
 		DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6428CF2081406800493A01 /* CollapsibleProgressBar.swift */; };
@@ -381,11 +378,8 @@
 		DC6FDAF72953AD50004F0C7F /* ClientSharedWithMeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6FDAF62953AD50004F0C7F /* ClientSharedWithMeViewController.swift */; };
 		DC70398526128B89009F2DC1 /* NSString+ByteCountParser.h in Headers */ = {isa = PBXBuildFile; fileRef = DC70398326128B89009F2DC1 /* NSString+ByteCountParser.h */; };
 		DC70398626128B89009F2DC1 /* NSString+ByteCountParser.m in Sources */ = {isa = PBXBuildFile; fileRef = DC70398426128B89009F2DC1 /* NSString+ByteCountParser.m */; };
-		DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */ = {isa = PBXBuildFile; fileRef = DC774E5D22F44E4A000B11A1 /* ZIPArchive.m */; };
-		DC774E6022F44E57000B11A1 /* ZIPArchive.h in Headers */ = {isa = PBXBuildFile; fileRef = DC774E5C22F44E4A000B11A1 /* ZIPArchive.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC774E6322F44E6D000B11A1 /* OCCore+BundleImport.h in Headers */ = {isa = PBXBuildFile; fileRef = DC774E6122F44E6D000B11A1 /* OCCore+BundleImport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */ = {isa = PBXBuildFile; fileRef = DC774E6222F44E6D000B11A1 /* OCCore+BundleImport.m */; };
-		DC774E6822F44F6A000B11A1 /* libzip.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCE93FF321FCA434000E14F2 /* libzip.framework */; };
 		DC7C101124B5FA7700227085 /* OCBookmark+AppExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = DC7C100E24B5F81E00227085 /* OCBookmark+AppExtensions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC7C101224B5FD6500227085 /* OCBookmark+AppExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = DC7C100F24B5F81E00227085 /* OCBookmark+AppExtensions.m */; };
 		DC7DBA37207F84BF00E7337D /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC7DBA36207F84BF00E7337D /* main.swift */; };
@@ -858,20 +852,6 @@
 			remoteGlobalIDString = DC3094832057358800189B9A;
 			remoteInfo = ownCloudUI;
 		};
-		DC63207C21FCA71B007EC0A8 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DCE93FE221FCA42C000E14F2;
-			remoteInfo = libzip;
-		};
-		DC774E6622F44F65000B11A1 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = DCE93FE221FCA42C000E14F2;
-			remoteInfo = libzip;
-		};
 		DCB2C058250C1C3F001083CA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 233BDE94204FEFE500C06732 /* Project object */;
@@ -949,13 +929,6 @@
 			remoteGlobalIDString = DCC8F9AA202852A200EB6701;
 			remoteInfo = ownCloudSDK;
 		};
-		DCE93FF221FCA434000E14F2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = DCE93FE321FCA42C000E14F2;
-			remoteInfo = libzip;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -984,7 +957,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				DC63207E21FCA731007EC0A8 /* libzip.framework in Copy Frameworks */,
 				394A0B0122EEFC2C00603813 /* ownCloudAppShared.framework in Copy Frameworks */,
 				DCC085722293F1FD008CC05C /* ownCloudApp.framework in Copy Frameworks */,
 				DCFBAD0C21BE67A100943F76 /* ownCloudUI.framework in Copy Frameworks */,
@@ -1385,8 +1357,6 @@
 		DC6FDAF62953AD50004F0C7F /* ClientSharedWithMeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientSharedWithMeViewController.swift; sourceTree = "<group>"; };
 		DC70398326128B89009F2DC1 /* NSString+ByteCountParser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+ByteCountParser.h"; sourceTree = "<group>"; };
 		DC70398426128B89009F2DC1 /* NSString+ByteCountParser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+ByteCountParser.m"; sourceTree = "<group>"; };
-		DC774E5C22F44E4A000B11A1 /* ZIPArchive.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZIPArchive.h; sourceTree = "<group>"; };
-		DC774E5D22F44E4A000B11A1 /* ZIPArchive.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZIPArchive.m; sourceTree = "<group>"; };
 		DC774E6122F44E6D000B11A1 /* OCCore+BundleImport.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "OCCore+BundleImport.h"; sourceTree = "<group>"; };
 		DC774E6222F44E6D000B11A1 /* OCCore+BundleImport.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "OCCore+BundleImport.m"; sourceTree = "<group>"; };
 		DC7C100E24B5F81E00227085 /* OCBookmark+AppExtensions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCBookmark+AppExtensions.h"; sourceTree = "<group>"; };
@@ -1615,7 +1585,6 @@
 		DCE5E89F2080D780005F60CE /* folder-shared.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-shared.tvg"; path = "img/filetypes-tvg/folder-shared.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "x-office-presentation.tvg"; path = "img/filetypes-tvg/x-office-presentation.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE8AB722AE8121B00BFF393 /* branding-assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "branding-assets"; sourceTree = "<group>"; };
-		DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = libzip.xcodeproj; path = external/libzip/libzip.xcodeproj; sourceTree = SOURCE_ROOT; };
 		DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeNavigationController.swift; sourceTree = "<group>"; };
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
 		DCEA7F3F282D3B110050A3C0 /* VFSManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VFSManager.h; sourceTree = "<group>"; };
@@ -1762,7 +1731,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				DCEAF06D280767CF00980B6D /* OpenSSL in Frameworks */,
-				DC774E6822F44F6A000B11A1 /* libzip.framework in Frameworks */,
 				DCC0857B2293F29F008CC05C /* ownCloudSDK.framework in Frameworks */,
 				DC6C9A132A12859900BFF393 /* PocketSVG in Frameworks */,
 			);
@@ -1782,7 +1750,6 @@
 			files = (
 				399FBF8D2CABE3A600F1AACF /* CrashReporter in Frameworks */,
 				DC27A18F20CAA0BA008ACB6C /* ownCloudSDK.framework in Frameworks */,
-				DC1251EC2C74718B0040FBC6 /* libzip.framework in Frameworks */,
 				DC2565EE225F5A1900828AA5 /* UserNotifications.framework in Frameworks */,
 				DC973BBE24A28ED0001DEEC4 /* CoreServices.framework in Frameworks */,
 			);
@@ -1819,7 +1786,6 @@
 				DCB86E8E2BD7B9EE00492C09 /* PrivacyInfo.xcprivacy */,
 				233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */,
 				233BDE9E204FEFE500C06732 /* ownCloud */,
-				DC7DBA10207F59C500E7337D /* External */,
 				233BDEB3204FEFE500C06732 /* ownCloudTests */,
 				DCC0855D2293F1FD008CC05C /* ownCloudAppFramework */,
 				DCC0856A2293F1FD008CC05C /* ownCloudAppFrameworkTests */,
@@ -2729,15 +2695,6 @@
 			path = "Display Settings";
 			sourceTree = "<group>";
 		};
-		DC774E5B22F44E4A000B11A1 /* ZIP Archive */ = {
-			isa = PBXGroup;
-			children = (
-				DC774E5D22F44E4A000B11A1 /* ZIPArchive.m */,
-				DC774E5C22F44E4A000B11A1 /* ZIPArchive.h */,
-			);
-			path = "ZIP Archive";
-			sourceTree = "<group>";
-		};
 		DC774E6522F44EA7000B11A1 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -2745,15 +2702,6 @@
 				DCA344912C94369D004DFC73 /* Localizable.xcstrings */,
 			);
 			path = Resources;
-			sourceTree = "<group>";
-		};
-		DC7DBA10207F59C500E7337D /* External */ = {
-			isa = PBXGroup;
-			children = (
-				DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */,
-			);
-			name = External;
-			path = ownCloud;
 			sourceTree = "<group>";
 		};
 		DC7DBA21207F672700E7337D /* TVG */ = {
@@ -3195,7 +3143,6 @@
 				DC0030BE2350B1CE00BB8570 /* Tools */,
 				DCEA7F38282D3ACA0050A3C0 /* VFS */,
 				DC3DDEFE287E1AA500E5586D /* UIKit Extensions */,
-				DC774E5B22F44E4A000B11A1 /* ZIP Archive */,
 				DC774E6522F44EA7000B11A1 /* Resources */,
 			);
 			path = ownCloudAppFramework;
@@ -3470,14 +3417,6 @@
 				23EC77572137F3DD0032D4E6 /* OCExtensionType+Extension.swift */,
 			);
 			path = "SDK Extensions";
-			sourceTree = "<group>";
-		};
-		DCE93FEF21FCA434000E14F2 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				DCE93FF321FCA434000E14F2 /* libzip.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		DCEA7F38282D3ACA0050A3C0 /* VFS */ = {
@@ -3805,7 +3744,6 @@
 				DCF2DA8324C83BFB0026D790 /* OCFileProviderService.h in Headers */,
 				DCF2DA8624C87A330026D790 /* OCCore+FPServices.h in Headers */,
 				DCF575EF2796CE38003BEBBA /* OCViewHost.h in Headers */,
-				DC774E6022F44E57000B11A1 /* ZIPArchive.h in Headers */,
 				DC24B28725BA2A2E005783E2 /* Branding.h in Headers */,
 				DCF072D82798559900E0B01D /* OCCircularImageView.h in Headers */,
 				DCFEFE9C2368D7FA009A142F /* OCLicenseObserver.h in Headers */,
@@ -3862,7 +3800,6 @@
 				DC85573420513CCC00189B9A /* Copy Frameworks */,
 				233BDE99204FEFE500C06732 /* Frameworks */,
 				233BDE9A204FEFE500C06732 /* Resources */,
-				DC63207821FCA6A4007EC0A8 /* Copy libzip license */,
 				DC6F0B952AE9014B00BFF393 /* Copy branding assets */,
 				DCC6567020C9B7E400110A97 /* Embed Foundation Extensions */,
 				23DFDCF120AEEC77003BD16B /* Update LastGitCommit key in Info.plist */,
@@ -3870,8 +3807,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				DC9B4FCC29413B4D0037F8F8 /* PBXTargetDependency */,
-				DC63207D21FCA71B007EC0A8 /* PBXTargetDependency */,
 				DC3BE0CF2077BC52002A0AC0 /* PBXTargetDependency */,
 				DC3BE0D12077BC52002A0AC0 /* PBXTargetDependency */,
 				DCC6566420C9B7E400110A97 /* PBXTargetDependency */,
@@ -4035,7 +3970,6 @@
 			);
 			dependencies = (
 				DC6C9A112A12858F00BFF393 /* PBXTargetDependency */,
-				DC774E6722F44F65000B11A1 /* PBXTargetDependency */,
 				DCC0857A2293F296008CC05C /* PBXTargetDependency */,
 			);
 			name = ownCloudApp;
@@ -4221,10 +4155,6 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = DCE93FEF21FCA434000E14F2 /* Products */;
-					ProjectRef = DCE93FEE21FCA434000E14F2 /* libzip.xcodeproj */;
-				},
-				{
 					ProductGroup = 239369712076110900BCE21A /* Products */;
 					ProjectRef = 233BDEBF204FEFF300C06732 /* ownCloudSDK.xcodeproj */;
 				},
@@ -4287,13 +4217,6 @@
 			fileType = wrapper.cfbundle;
 			path = ownCloudMockingTests.xctest;
 			remoteRef = DC0196A720F754CA00C41B78 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		DCE93FF321FCA434000E14F2 /* libzip.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = libzip.framework;
-			remoteRef = DCE93FF221FCA434000E14F2 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -4493,26 +4416,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# echo \"${TARGET_BUILD_DIR}/../../../SourcePackages/checkouts/PocketSVG/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/PocketSVG.LICENSE\"\n# cp \"${TARGET_BUILD_DIR}/../../../SourcePackages/checkouts/PocketSVG/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/PocketSVG.LICENSE\"\n";
-		};
-		DC63207821FCA6A4007EC0A8 /* Copy libzip license */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PROJECT_DIR}/external/libzip/LICENSE",
-			);
-			name = "Copy libzip license";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/libzip.LICENSE",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "echo \"${PROJECT_DIR}/external/libzip/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/libzip.LICENSE\"\ncp \"${PROJECT_DIR}/external/libzip/LICENSE\" \"${TARGET_BUILD_DIR}/${WRAPPER_NAME}/libzip.LICENSE\"\n";
 		};
 		DC6F0B952AE9014B00BFF393 /* Copy branding assets */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -5025,7 +4928,6 @@
 				DCF072DD279857C800E0B01D /* OCCircularContentView.m in Sources */,
 				DC0030C12350B1CE00BB8570 /* NSData+Encoding.m in Sources */,
 				DCF072D72798558B00E0B01D /* OCCircularImageView.m in Sources */,
-				DC774E5F22F44E57000B11A1 /* ZIPArchive.m in Sources */,
 				DC3DDF06287E1C0800E5586D /* UIViewController+HostBundleID.m in Sources */,
 				DCDBB60B2525306000FAD707 /* NotificationAuthErrorForwarder.m in Sources */,
 				3912D8AE29958BF400EDCB9A /* OCThemeValues.m in Sources */,
@@ -5070,7 +4972,6 @@
 				DC1251E12C746FA60040FBC6 /* NotificationAuthErrorForwarder.m in Sources */,
 				DC1251E32C7470080040FBC6 /* OCVault+VFSManager.m in Sources */,
 				DC1251F42C7474910040FBC6 /* NotificationManager.m in Sources */,
-				DC1251EB2C74716A0040FBC6 /* ZIPArchive.m in Sources */,
 				DC2218C62822C5B900808BCE /* OCVFSNode+FileProviderItem.m in Sources */,
 				DC1251E72C74708B0040FBC6 /* BrandingClassSettingsSource.m in Sources */,
 				DC98BBD420FF824600F4ED3E /* FileProviderEnumeratorObserver.m in Sources */,
@@ -5218,27 +5119,13 @@
 			name = ownCloudUI;
 			targetProxy = DC3BE0D02077BC52002A0AC0 /* PBXContainerItemProxy */;
 		};
-		DC63207D21FCA71B007EC0A8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = libzip;
-			targetProxy = DC63207C21FCA71B007EC0A8 /* PBXContainerItemProxy */;
-		};
 		DC6C9A112A12858F00BFF393 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = DC6C9A102A12858F00BFF393 /* PocketSVG */;
 		};
-		DC774E6722F44F65000B11A1 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = libzip;
-			targetProxy = DC774E6622F44F65000B11A1 /* PBXContainerItemProxy */;
-		};
 		DC9B4FC829413B400037F8F8 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			productRef = DC9B4FC729413B400037F8F8 /* Down */;
-		};
-		DC9B4FCC29413B4D0037F8F8 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			productRef = DC9B4FCB29413B4D0037F8F8 /* Down */;
 		};
 		DCB2C059250C1C3F001083CA /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -6403,11 +6290,6 @@
 			productName = Down;
 		};
 		DC9B4FC929413B480037F8F8 /* Down */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = DCEAF08B28084B3800980B6D /* XCRemoteSwiftPackageReference "Down" */;
-			productName = Down;
-		};
-		DC9B4FCB29413B4D0037F8F8 /* Down */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = DCEAF08B28084B3800980B6D /* XCRemoteSwiftPackageReference "Down" */;
 			productName = Down;

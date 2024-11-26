@@ -35,7 +35,6 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/NSObject+AnnotatedProperties.h>
 #import <ownCloudApp/NSDate+RFC3339.h>
 #import <ownCloudApp/NSDate+ComputedTimes.h>
-#import <ownCloudApp/ZIPArchive.h>
 
 #import <ownCloudApp/UIViewController+HostBundleID.h>
 

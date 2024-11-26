@@ -30,7 +30,6 @@
 #import "OCFileProviderSettings.h"
 #import "VFSManager.h"
 #import "AppLockSettings.h"
-#import "ZIPArchive.h"
 // END: shared with ownCloudApp.framework
 
 #import "FileProviderExtension.h"
