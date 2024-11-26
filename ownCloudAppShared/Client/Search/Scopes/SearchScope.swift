@@ -49,6 +49,12 @@ open class SearchScope: NSObject, SearchElementUpdating {
 	open func updateFor(_ searchElements: [SearchElement]) {
 	}
 
+	// Content search
+	open var searchableContent: OCKQLSearchedContent {
+		return .itemName
+	}
+	open var searchedContent: OCKQLSearchedContent = .itemName
+
 	// Save and restore searches
 	open var canSaveSearch: Bool {
 		// subclasses should return true if the scope can save the current search
@@ -105,6 +111,10 @@ extension SearchScope {
 
 	static public func accountSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
 		return AccountSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: OCLocalizedString("Search account", nil), icon: OCSymbol.icon(forSymbolName: "person"))
+	}
+
+	static public func serverSideSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
+		return ServerSideSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: OCLocalizedString("Search server", nil), icon: OCSymbol.icon(forSymbolName: "server.rack"))
 	}
 
 	static public func recipientSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, item: OCItem, localizedName: String) -> SearchScope {
