@@ -80,7 +80,7 @@
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Share to ownCloud"
+            "value": "Compartilhar no ownCloud"
           }
         },
         "pt-PT": {
@@ -188,7 +188,7 @@
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "ownCloud Share Extension"
+            "value": "Extensão de compartilhamento ownCloud"
           }
         },
         "pt-PT": {
@@ -295,7 +295,7 @@
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Share Extension unavailable"
+            "value": "Extensão de compartilhamento indisponível"
           }
         },
         "pt-PT": {
@@ -402,7 +402,7 @@
         "pt-BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "The Share Extension is not available on this system."
+            "value": "A extensão de compartilhamento não está disponível neste sistema."
           }
         },
         "pt-PT": {

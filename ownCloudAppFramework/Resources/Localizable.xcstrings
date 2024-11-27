@@ -108,7 +108,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ already unlocked for %@."
+            "value": "%@ já desbloqueado para %@."
           }
         },
         "pt_PT": {
@@ -220,7 +220,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ unlocked for QA."
+            "value": "%@ desbloqueado para garantia da qualidade (QA)."
           }
         },
         "pt_PT": {
@@ -368,7 +368,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lu day"
+            "value": "%lu dia"
           }
         },
         "pt_PT": {
@@ -522,7 +522,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lu days"
+            "value": "%lu dias"
           }
         },
         "pt_PT": {
@@ -676,7 +676,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lu month"
+            "value": "%lu mês"
           }
         },
         "pt_PT": {
@@ -830,7 +830,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lu months"
+            "value": "%lu meses"
           }
         },
         "pt_PT": {
@@ -984,7 +984,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lu week"
+            "value": "%lu semana"
           }
         },
         "pt_PT": {
@@ -1138,7 +1138,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lu weeks"
+            "value": "%lu semanas"
           }
         },
         "pt_PT": {
@@ -1292,7 +1292,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lu year"
+            "value": "%lu ano"
           }
         },
         "pt_PT": {
@@ -1446,7 +1446,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "%lu years"
+            "value": "%lu anos"
           }
         },
         "pt_PT": {
@@ -1559,7 +1559,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "> %d months ago"
+            "value": "há > %d meses"
           }
         },
         "pt_PT": {
@@ -1666,7 +1666,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "> %d years ago"
+            "value": "há > %d anos"
           }
         },
         "pt_PT": {
@@ -1773,7 +1773,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": ">%d days ago"
+            "value": "há > %d dias"
           }
         },
         "pt_PT": {
@@ -1880,7 +1880,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": ">%d weeks ago"
+            "value": "há > %d semanas"
           }
         },
         "pt_PT": {
@@ -1987,7 +1987,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "After"
+            "value": "Depois"
           }
         },
         "pt_PT": {
@@ -2249,7 +2249,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Audio"
+            "value": "Áudio"
           }
         },
         "pt_PT": {
@@ -2356,7 +2356,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Before"
+            "value": "Antes"
           }
         },
         "pt_PT": {
@@ -2463,7 +2463,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Before last month"
+            "value": "Antes do mês passado"
           }
         },
         "pt_PT": {
@@ -2570,7 +2570,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Before last week"
+            "value": "Antes da semana passada"
           }
         },
         "pt_PT": {
@@ -2677,7 +2677,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Before last year"
+            "value": "Antes do ano passado"
           }
         },
         "pt_PT": {
@@ -2784,7 +2784,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Before this month"
+            "value": "Antes deste mês"
           }
         },
         "pt_PT": {
@@ -2891,7 +2891,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Before this week"
+            "value": "Antes desta semana"
           }
         },
         "pt_PT": {
@@ -2998,7 +2998,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Before this year"
+            "value": "Antes deste ano"
           }
         },
         "pt_PT": {
@@ -3105,7 +3105,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Before today"
+            "value": "Antes de hoje"
           }
         },
         "pt_PT": {
@@ -3212,7 +3212,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Before yesterday"
+            "value": "Antes de ontem"
           }
         },
         "pt_PT": {
@@ -3360,7 +3360,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Cancelled"
+            "value": "Cancelado"
           }
         },
         "pt_PT": {
@@ -3514,7 +3514,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Date"
+            "value": "Data"
           }
         },
         "pt_PT": {
@@ -3627,7 +3627,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Document"
+            "value": "Documento"
           }
         },
         "pt_PT": {
@@ -4100,7 +4100,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "File"
+            "value": "Arquivo"
           }
         },
         "pt_PT": {
@@ -4207,7 +4207,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Folder"
+            "value": "Diretório"
           }
         },
         "pt_PT": {
@@ -4313,7 +4313,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Free"
+            "value": "Livre"
           }
         },
         "pt_PT": {
@@ -4420,7 +4420,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Image"
+            "value": "Imagem"
           }
         },
         "pt_PT": {
@@ -4633,7 +4633,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Last %d days"
+            "value": "Últimos %d dias"
           }
         },
         "pt_PT": {
@@ -4740,7 +4740,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Last %d months"
+            "value": "Últimos %d meses"
           }
         },
         "pt_PT": {
@@ -4847,7 +4847,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Last %d weeks"
+            "value": "Últimas %d semanas"
           }
         },
         "pt_PT": {
@@ -4954,7 +4954,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Last %d years"
+            "value": "Últimos %d anos"
           }
         },
         "pt_PT": {
@@ -5102,7 +5102,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Manage subscription"
+            "value": "Gerenciar subscrição"
           }
         },
         "pt_PT": {
@@ -5215,7 +5215,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "No Document"
+            "value": "Nenhum documento"
           }
         },
         "pt_PT": {
@@ -5322,7 +5322,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "No PDF"
+            "value": "Nenhum PDF"
           }
         },
         "pt_PT": {
@@ -5429,7 +5429,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "No audio"
+            "value": "Nenhum áudio"
           }
         },
         "pt_PT": {
@@ -5536,7 +5536,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "No file"
+            "value": "Nenhum arquivo"
           }
         },
         "pt_PT": {
@@ -5644,7 +5644,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "No folder"
+            "value": "Nenhum diretório"
           }
         },
         "pt_PT": {
@@ -5751,7 +5751,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "No image"
+            "value": "Nenhuma imagem"
           }
         },
         "pt_PT": {
@@ -5858,7 +5858,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "No presentation"
+            "value": "Nenhuma apresentação"
           }
         },
         "pt_PT": {
@@ -5965,7 +5965,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "No spreadsheet"
+            "value": "Nenhuma planilha"
           }
         },
         "pt_PT": {
@@ -6072,7 +6072,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "No video"
+            "value": "Nenhum vídeo"
           }
         },
         "pt_PT": {
@@ -6714,7 +6714,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Presentation"
+            "value": "Apresentação"
           }
         },
         "pt_PT": {
@@ -6862,7 +6862,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Product"
+            "value": "Produto"
           }
         },
         "pt_PT": {
@@ -7016,7 +7016,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Purchased App Version"
+            "value": "Versão Comprada do Aplicativo"
           }
         },
         "pt_PT": {
@@ -7170,7 +7170,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Purchases are not allowed on this device."
+            "value": "Compras não são permitidas neste dispositivo."
           }
         },
         "pt_PT": {
@@ -7324,7 +7324,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Quantity"
+            "value": "Quantidade"
           }
         },
         "pt_PT": {
@@ -7478,7 +7478,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Receipt Date"
+            "value": "Data de Recebimento"
           }
         },
         "pt_PT": {
@@ -7591,7 +7591,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Recently used"
+            "value": "Usado recentemente"
           }
         },
         "pt_PT": {
@@ -7698,7 +7698,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Since last month"
+            "value": "Desde o mês passado"
           }
         },
         "pt_PT": {
@@ -7805,7 +7805,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Since last week"
+            "value": "Desde a semana passada"
           }
         },
         "pt_PT": {
@@ -7912,7 +7912,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Since last year"
+            "value": "Desde o ano passado"
           }
         },
         "pt_PT": {
@@ -8019,7 +8019,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Since yesterday"
+            "value": "Desde ontem"
           }
         },
         "pt_PT": {
@@ -8126,7 +8126,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Spreadsheet"
+            "value": "Planilha"
           }
         },
         "pt_PT": {
@@ -8233,7 +8233,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "This month"
+            "value": "Este mês"
           }
         },
         "pt_PT": {
@@ -8340,7 +8340,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "This week"
+            "value": "Esta semana"
           }
         },
         "pt_PT": {
@@ -8447,7 +8447,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "This year"
+            "value": "Este ano"
           }
         },
         "pt_PT": {
@@ -8554,7 +8554,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Today"
+            "value": "Hoje"
           }
         },
         "pt_PT": {
@@ -8702,7 +8702,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Type"
+            "value": "Tipo"
           }
         },
         "pt_PT": {
@@ -8815,7 +8815,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "Video"
+            "value": "Vídeo"
           }
         },
         "pt_PT": {
@@ -8963,7 +8963,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "day"
+            "value": "dia"
           }
         },
         "pt_PT": {
@@ -9076,7 +9076,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "after"
+            "value": "depois"
           }
         },
         "pt_PT": {
@@ -9183,7 +9183,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "audio"
+            "value": "áudio"
           }
         },
         "pt_PT": {
@@ -9290,7 +9290,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "before"
+            "value": "antes"
           }
         },
         "pt_PT": {
@@ -9505,7 +9505,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "document"
+            "value": "documento"
           }
         },
         "pt_PT": {
@@ -9612,7 +9612,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "file"
+            "value": "arquivo"
           }
         },
         "pt_PT": {
@@ -9719,7 +9719,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "folder"
+            "value": "diretório"
           }
         },
         "pt_PT": {
@@ -9826,7 +9826,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "greater"
+            "value": "maior"
           }
         },
         "pt_PT": {
@@ -9933,7 +9933,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "image"
+            "value": "imagem"
           }
         },
         "pt_PT": {
@@ -10148,7 +10148,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "month"
+            "value": "mês"
           }
         },
         "pt_PT": {
@@ -10362,7 +10362,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "owner"
+            "value": "dono"
           }
         },
         "pt_PT": {
@@ -10576,7 +10576,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "presentation"
+            "value": "apresentação"
           }
         },
         "pt_PT": {
@@ -10790,7 +10790,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "smaller"
+            "value": "menor"
           }
         },
         "pt_PT": {
@@ -10897,7 +10897,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "spreadsheet"
+            "value": "planilha"
           }
         },
         "pt_PT": {
@@ -11004,7 +11004,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "today"
+            "value": "hoje"
           }
         },
         "pt_PT": {
@@ -11112,7 +11112,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "type"
+            "value": "tipo"
           }
         },
         "pt_PT": {
@@ -11219,7 +11219,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "video"
+            "value": "vídeo"
           }
         },
         "pt_PT": {
@@ -11434,7 +11434,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "week"
+            "value": "semana"
           }
         },
         "pt_PT": {
@@ -11649,7 +11649,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "year"
+            "value": "ano"
           }
         },
         "pt_PT": {
@@ -11797,7 +11797,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "month"
+            "value": "mês"
           }
         },
         "pt_PT": {
@@ -11952,7 +11952,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "none"
+            "value": "nenhum"
           }
         },
         "pt_PT": {
@@ -12107,7 +12107,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "purchase"
+            "value": "compra"
           }
         },
         "pt_PT": {
@@ -12262,7 +12262,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "subscription"
+            "value": "subscriçáo"
           }
         },
         "pt_PT": {
@@ -12417,7 +12417,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "trial"
+            "value": "prova"
           }
         },
         "pt_PT": {
@@ -12571,7 +12571,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "week"
+            "value": "semana"
           }
         },
         "pt_PT": {
@@ -12725,7 +12725,7 @@
         "pt_BR": {
           "stringUnit": {
             "state": "translated",
-            "value": "year"
+            "value": "ano"
           }
         },
         "pt_PT": {

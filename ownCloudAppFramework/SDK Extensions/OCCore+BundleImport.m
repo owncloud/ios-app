@@ -17,105 +17,39 @@
  */
 
 #import "OCCore+BundleImport.h"
-#import "ZIPArchive.h"
 
 @implementation OCCore (BundleImport)
 
 - (nullable NSProgress *)importItemNamed:(nullable NSString *)newFileName at:(OCItem *)parentItem fromURL:(NSURL *)inputFileURL isSecurityScoped:(BOOL)isSecurityScoped options:(nullable NSDictionary<OCCoreOption,id> *)inOptions placeholderCompletionHandler:(nullable OCCorePlaceholderCompletionHandler)placeholderCompletionHandler resultHandler:(nullable OCCoreUploadResultHandler)resultHandler
 {
-	OCCoreImportTransformation transformation = nil;
-	NSString *resourceType=nil;
 	NSError *error = nil;
 	NSMutableDictionary<OCCoreOption,id> *options = (inOptions != nil) ? [inOptions mutableCopy] : [NSMutableDictionary new];
 	BOOL relinquishSecurityScopedResourceAccess = NO;
+	__block NSProgress *progress = nil;
 
 	if (isSecurityScoped)
 	{
 		relinquishSecurityScopedResourceAccess = [inputFileURL startAccessingSecurityScopedResource];
 	}
 
-	if ([inputFileURL getResourceValue:&resourceType forKey:NSURLFileResourceTypeKey error:&error])
-	{
-		OCLogDebug(@"Importing resourceType=%@", resourceType);
-	}
+	// Using NSFileCoordinatior with "NSFileCoordinatorReadingForUploading" transparently converts bundle-based formats like f.ex. Keynote and Pages documents to flat files
+	NSFileCoordinator *fileCoordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+	[fileCoordinator coordinateReadingItemAtURL:inputFileURL options:NSFileCoordinatorReadingWithoutChanges|NSFileCoordinatorReadingForUploading error:&error byAccessor:^(NSURL * _Nonnull importURL) {
+
+		OCLogDebug(@"Coordinated read of readURL=%@, attributes=%@", importURL, [NSFileManager.defaultManager attributesOfItemAtPath:importURL.path error:nil]);
+
+		// File pointed to by importURL may be ephermal and copies are "free" in APFS as far as space is concerned
+		options[OCCoreOptionImportByCopying] = @(YES);
+
+		progress = [self importFileNamed:newFileName at:parentItem fromURL:importURL isSecurityScoped:isSecurityScoped options:options placeholderCompletionHandler:placeholderCompletionHandler resultHandler:resultHandler];
+	}];
 
 	if (isSecurityScoped && relinquishSecurityScopedResourceAccess)
 	{
 		[inputFileURL stopAccessingSecurityScopedResource];
 	}
 
-	if (resourceType != nil)
-	{
-		if ([resourceType isEqual:NSURLFileResourceTypeDirectory])
-		{
-			NSString *bundleType = inputFileURL.pathExtension.lowercaseString;
-
-			if ([bundleType isEqual:@"pages"] || 	// Pages
-			    [bundleType isEqual:@"key"])	// Keynote
-			{
-				// Special handling for Pages and Keynote files
-				OCLogDebug(@"Importing with transformer for bundle-document of type=%@", bundleType);
-
-				transformation = ^(NSURL *sourceURL) {
-					NSError *error = nil;
-					NSURL *zipURL = [sourceURL URLByAppendingPathExtension:@".zip"];
-
-					if ((error = [ZIPArchive compressContentsOf:sourceURL asZipFile:zipURL]) == nil)
-					{
-						BOOL success = [[NSFileManager defaultManager] removeItemAtURL:sourceURL error:&error];
-
-						OCFileOpLog(@"rm", error, @"Removed ZIP source at %@", sourceURL.path);
-
-						if (success)
-						{
-							success = [[NSFileManager defaultManager] moveItemAtURL:zipURL toURL:sourceURL error:&error];
-
-							OCFileOpLog(@"mv", error, @"Renamed from ZIPped %@ to %@", zipURL.path, sourceURL.path);
-
-							if (!success)
-							{
-								OCLogDebug(@"Moving %@ to %@ failed with error=%@", OCLogPrivate(zipURL), OCLogPrivate(sourceURL), OCLogPrivate(error));
-							}
-						}
-						else
-						{
-							OCLogDebug(@"Removing %@ failed with error=%@", OCLogPrivate(sourceURL), OCLogPrivate(error));
-						}
-					}
-					else
-					{
-						OCLogDebug(@"Compressing %@ as %@ failed with error=%@", OCLogPrivate(sourceURL), OCLogPrivate(zipURL), OCLogPrivate(error));
-					}
-
-					OCLogDebug(@"Import transformation finished with error=%@", error);
-
-					return (error);
-				};
-
-				// ZIP the document in-place after copying
-				options[OCCoreOptionImportTransformation] = [transformation copy];
-
-				// Make sure to copy the input item, as it about to be replaced
-				options[OCCoreOptionImportByCopying] = @(YES);
-			}
-			else
-			{
-				// Import of directories not currently supported
-				if (placeholderCompletionHandler != nil)
-				{
-					placeholderCompletionHandler(OCError(OCErrorFeatureNotSupportedForItem), nil);
-				}
-
-				if (resultHandler != nil)
-				{
-					resultHandler(OCError(OCErrorFeatureNotSupportedForItem), self, nil, nil);
-				}
-				return(nil);
-			}
-		}
-	}
-
-	return ([self importFileNamed:newFileName at:parentItem fromURL:inputFileURL isSecurityScoped:isSecurityScoped options:options placeholderCompletionHandler:placeholderCompletionHandler resultHandler:resultHandler]);
+	return (progress);
 }
 
 @end
