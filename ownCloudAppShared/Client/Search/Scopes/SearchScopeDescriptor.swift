@@ -20,16 +20,17 @@ import UIKit
 import ownCloudSDK
 
 public struct SearchScopeDescriptor {
-	var identifier: String
+	public var identifier: SearchScope.Identifier
 
-	var title: String
-	var icon: UIImage?
+	public var localizedName: String
+	public var localizedDescription: String?
+	public var icon: UIImage?
 
-	var searchableContent: OCKQLSearchedContent
+	public var searchableContent: OCKQLSearchedContent
 
-	var scopeCreator: (_ clientContext: ClientContext, _ cellStyle: CollectionViewCellStyle?, _ descriptor: SearchScopeDescriptor) -> SearchScope?
+	public var scopeCreator: (_ clientContext: ClientContext, _ cellStyle: CollectionViewCellStyle?, _ descriptor: SearchScopeDescriptor) -> SearchScope?
 
-	func createSearchScope(_ clientContext: ClientContext, _ cellStyle: CollectionViewCellStyle?) -> SearchScope? {
+	public func createSearchScope(_ clientContext: ClientContext, _ cellStyle: CollectionViewCellStyle?) -> SearchScope? {
 		return self.scopeCreator(clientContext, cellStyle, self)
 	}
 }

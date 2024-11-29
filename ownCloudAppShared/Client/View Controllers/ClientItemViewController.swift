@@ -1018,7 +1018,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	// MARK: - Search
 	open var searchViewController: SearchViewController?
 
-	open func searchScopes(for clientContext: ClientContext, cellStyle: CollectionViewCellStyle) -> [SearchScope] {
+	open func searchScopes(for clientContext: ClientContext, cellStyle: CollectionViewCellStyle) -> ([SearchScope], SearchScope?) {
 		return SearchScope.availableScopes(for: clientContext, cellStyle: cellStyle)
 	}
 
@@ -1026,7 +1026,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		if searchViewController == nil {
 			if let clientContext = clientContext, let cellStyle = itemSection?.cellStyle {
 				// Scopes
-				let scopes = searchScopes(for: clientContext, cellStyle: cellStyle)
+				let (scopes, defaultScope) = searchScopes(for: clientContext, cellStyle: cellStyle)
 
 				// No results
 				let noResultContent = SearchViewController.Content(type: .noResults, source: OCDataSourceArray(), style: emptySection!.cellStyle)
@@ -1047,7 +1047,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				}
 
 				// Create and install SearchViewController
-				searchViewController = SearchViewController(with: clientContext, scopes: scopes, suggestionContent: suggestionsContent, noResultContent: noResultContent, delegate: self)
+				searchViewController = SearchViewController(with: clientContext, scopes: scopes, defaultScope: defaultScope, suggestionContent: suggestionsContent, noResultContent: noResultContent, delegate: self)
 
 				if let searchViewController = searchViewController {
 					self.addStacked(child: searchViewController, position: .top)
