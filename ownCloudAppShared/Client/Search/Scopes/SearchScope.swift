@@ -20,6 +20,7 @@ import UIKit
 import ownCloudSDK
 
 open class SearchScope: NSObject, SearchElementUpdating {
+	public typealias Identifier = String
 	open class var descriptor: SearchScopeDescriptor? { return nil }
 
 	public var localizedName : String

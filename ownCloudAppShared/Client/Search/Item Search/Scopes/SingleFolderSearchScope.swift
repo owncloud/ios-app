@@ -68,9 +68,9 @@ open class QueryModifyingSearchScope : ItemSearchScope {
 // Subclass
 open class SingleFolderSearchScope : QueryModifyingSearchScope {
 	open override class var descriptor: SearchScopeDescriptor {
-		return SearchScopeDescriptor(identifier: "folder", title: OCLocalizedString("Folder", nil), icon: OCSymbol.icon(forSymbolName: "folder"), searchableContent: .itemName, scopeCreator: { (clientContext, cellStyle, descriptor) in
+		return SearchScopeDescriptor(identifier: "folder", localizedName: OCLocalizedString("Folder", nil), localizedDescription: OCLocalizedString("Searches the current folder ONLY.", nil), icon: OCSymbol.icon(forSymbolName: "folder"), searchableContent: .itemName, scopeCreator: { (clientContext, cellStyle, descriptor) in
 			if clientContext.query?.queryLocation != nil {
-				return SingleFolderSearchScope(with: clientContext, cellStyle: nil, localizedName: descriptor.title, localizedPlaceholder: OCLocalizedString("Search folder", nil), icon: descriptor.icon)
+				return SingleFolderSearchScope(with: clientContext, cellStyle: nil, localizedName: descriptor.localizedName, localizedPlaceholder: OCLocalizedString("Search folder", nil), icon: descriptor.icon)
 			}
 			return nil
 		})
