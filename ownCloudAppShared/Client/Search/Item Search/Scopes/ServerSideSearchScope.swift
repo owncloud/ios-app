@@ -21,6 +21,15 @@ import ownCloudSDK
 import ownCloudApp
 
 class ServerSideSearchScope: ItemSearchScope {
+	open override class var descriptor: SearchScopeDescriptor {
+		return SearchScopeDescriptor(identifier: "server", title: OCLocalizedString("Server", nil), icon: OCSymbol.icon(forSymbolName: "server.rack"), searchableContent: [.itemName, .contents], scopeCreator: { (clientContext, cellStyle, descriptor) in
+			if let cellStyle {
+				return ServerSideSearchScope(with: clientContext, cellStyle: cellStyle, localizedName: descriptor.title, localizedPlaceholder: OCLocalizedString("Search server", nil), icon: descriptor.icon)
+			}
+			return nil
+		})
+	}
+
 	var searchResult: OCSearchResult?
 
 	override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
@@ -80,4 +89,8 @@ class ServerSideSearchScope: ItemSearchScope {
 		// If they diverge, an additional conversion from locally used keyword to server used keyword needs to take place here.
 		kqlQuery = queryCondition?.kqlStringWithTypeAlias(toKQLTypeMap: OCQueryCondition.typeAliasToKeywordMap, targetContent: searchedContent)
 	}
+}
+
+public extension SearchScopeDescriptor {
+	static var server = ServerSideSearchScope.descriptor
 }

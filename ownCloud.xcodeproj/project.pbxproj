@@ -407,6 +407,8 @@
 		DC89EA6B29959BD200BFF393 /* AppStateActionRestoreNavigationBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC89EA6A29959BD200BFF393 /* AppStateActionRestoreNavigationBookmark.swift */; };
 		DC8AA7BE29DC154400BFF393 /* ItemLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8AA7BD29DC154400BFF393 /* ItemLayout.swift */; };
 		DC8BFC0E2A14CAB900BFF393 /* PocketSVG in Frameworks */ = {isa = PBXBuildFile; productRef = DC8BFC0D2A14CAB900BFF393 /* PocketSVG */; };
+		DC8C07262CF9D6CC007B70E6 /* SearchScopeDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8C07252CF9D6CC007B70E6 /* SearchScopeDescriptor.swift */; };
+		DC8C072B2CF9DCC9007B70E6 /* SearchScope+Registry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8C072A2CF9DCC9007B70E6 /* SearchScope+Registry.swift */; };
 		DC8E99DC297E79E900594697 /* BrowserNavigationHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8E99DB297E79E900594697 /* BrowserNavigationHistory.swift */; };
 		DC8E99E2297E906200594697 /* OCLicenseQAProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E99DE297E8D3800594697 /* OCLicenseQAProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC8E99E3297E906700594697 /* OCLicenseQAProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E99DF297E8D3800594697 /* OCLicenseQAProvider.m */; };
@@ -1401,6 +1403,8 @@
 		DC89EA6829958DF500BFF393 /* UIViewController+BrowserNavigation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+BrowserNavigation.swift"; sourceTree = "<group>"; };
 		DC89EA6A29959BD200BFF393 /* AppStateActionRestoreNavigationBookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateActionRestoreNavigationBookmark.swift; sourceTree = "<group>"; };
 		DC8AA7BD29DC154400BFF393 /* ItemLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemLayout.swift; sourceTree = "<group>"; };
+		DC8C07252CF9D6CC007B70E6 /* SearchScopeDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScopeDescriptor.swift; sourceTree = "<group>"; };
+		DC8C072A2CF9DCC9007B70E6 /* SearchScope+Registry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchScope+Registry.swift"; sourceTree = "<group>"; };
 		DC8E99DB297E79E900594697 /* BrowserNavigationHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserNavigationHistory.swift; sourceTree = "<group>"; };
 		DC8E99DE297E8D3800594697 /* OCLicenseQAProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseQAProvider.h; sourceTree = "<group>"; };
 		DC8E99DF297E8D3800594697 /* OCLicenseQAProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseQAProvider.m; sourceTree = "<group>"; };
@@ -3045,6 +3049,8 @@
 			isa = PBXGroup;
 			children = (
 				DCB5D5A628632C17004AF425 /* SearchScope.swift */,
+				DC8C07252CF9D6CC007B70E6 /* SearchScopeDescriptor.swift */,
+				DC8C072A2CF9DCC9007B70E6 /* SearchScope+Registry.swift */,
 			);
 			path = Scopes;
 			sourceTree = "<group>";
@@ -4719,6 +4725,7 @@
 				DC01AF2128411D8400903101 /* ThemeableCollectionViewListCell.swift in Sources */,
 				DC60F2A629802ABE00905EC8 /* UINavigationItem+NavigationContent.swift in Sources */,
 				DCB1B99929D187B400BFF393 /* ThemeCSSButton.swift in Sources */,
+				DC8C07262CF9D6CC007B70E6 /* SearchScopeDescriptor.swift in Sources */,
 				399725E1233DF39300FC3B94 /* Calendar+Extension.swift in Sources */,
 				DC298C9E2934D6D9009FA87F /* AccountAuthenticationUpdater.swift in Sources */,
 				DC2A8E6A2B57EA8F001F0522 /* AccountControllerSearchViewController.swift in Sources */,
@@ -4823,6 +4830,7 @@
 				DC66A9F6279EEC3100792AC8 /* ResourceViewHost.swift in Sources */,
 				DC65592E28A644E10003D130 /* SearchTokenizer.swift in Sources */,
 				DC24E0F828B41694002E4F5B /* OCQueryCondition+SearchToken.swift in Sources */,
+				DC8C072B2CF9DCC9007B70E6 /* SearchScope+Registry.swift in Sources */,
 				399EA73A25E656A900B6FF11 /* UITableView+Extension.swift in Sources */,
 				DC46F3C72844A75200038880 /* OCDataItem+InteractionProtocols.swift in Sources */,
 				DCCE1BFA28CA45D90098E3FE /* ItemSearchSuggestionsViewController.swift in Sources */,
