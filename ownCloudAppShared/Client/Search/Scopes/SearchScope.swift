@@ -20,6 +20,8 @@ import UIKit
 import ownCloudSDK
 
 open class SearchScope: NSObject, SearchElementUpdating {
+	open class var descriptor: SearchScopeDescriptor? { return nil }
+
 	public var localizedName : String
 	public var localizedPlaceholder: String?
 	public var icon : UIImage?
@@ -89,34 +91,6 @@ open class SearchScope: NSObject, SearchElementUpdating {
 
 // MARK: - Convenience methods
 extension SearchScope {
-	static public func modifyingQuery(with context: ClientContext, localizedName: String) -> SearchScope {
-		return SingleFolderSearchScope(with: context, cellStyle: nil, localizedName: localizedName, localizedPlaceholder: OCLocalizedString("Search folder", nil), icon: OCSymbol.icon(forSymbolName: "folder"))
-	}
-
-	static public func driveSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
-		var placeholder = OCLocalizedString("Search space", nil)
-		if let driveName = context.drive?.name, driveName.count > 0 {
-			placeholder = OCLocalizedFormat("Search {{space.name}}", ["space.name" : driveName])
-		}
-		return DriveSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: placeholder, icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"))
-	}
-
-	static public func containerSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
-		var placeholder = OCLocalizedString("Search tree", nil)
-		if let path = context.query?.queryLocation?.lastPathComponent, path.count > 0 {
-			placeholder = OCLocalizedFormat("Search from {{folder.name}}", ["folder.name" : path])
-		}
-		return ContainerSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: placeholder, icon: OCSymbol.icon(forSymbolName: "square.stack.3d.up"))
-	}
-
-	static public func accountSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
-		return AccountSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: OCLocalizedString("Search account", nil), icon: OCSymbol.icon(forSymbolName: "person"))
-	}
-
-	static public func serverSideSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, localizedName: String) -> SearchScope {
-		return ServerSideSearchScope(with: context, cellStyle: cellStyle, localizedName: localizedName, localizedPlaceholder: OCLocalizedString("Search server", nil), icon: OCSymbol.icon(forSymbolName: "server.rack"))
-	}
-
 	static public func recipientSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, item: OCItem, localizedName: String) -> SearchScope {
 		return RecipientSearchScope(with: context, cellStyle: cellStyle, item: item, localizedName: localizedName, localizedPlaceholder: OCLocalizedString("Search for users or groups", nil), icon: OCSymbol.icon(forSymbolName: "person.circle"))
 	}
