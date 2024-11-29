@@ -342,7 +342,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 	}
 
 	// MARK: - Radio Item
-	convenience public init(radioItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, value: Any, title: String, subtitle: String? = nil, selected: Bool, identifier : String? = nil) {
+	convenience public init(radioItemWithAction: StaticTableViewRowAction?, groupIdentifier: String, value: Any, icon: UIImage? = nil, title: String, subtitle: String? = nil, selected: Bool, identifier : String? = nil) {
 		self.init()
 		type = .radio
 
@@ -354,6 +354,7 @@ open class StaticTableViewRow : NSObject, UITextFieldDelegate {
 
 		self.cell = ThemeTableViewCell(style: tableViewStyle, reuseIdentifier: nil)
 		self.cell?.textLabel?.text = title
+		self.cell?.imageView?.image = icon
 		if subtitle != nil {
 			self.cell?.detailTextLabel?.text = subtitle
 			self.cell?.detailTextLabel?.numberOfLines = 0

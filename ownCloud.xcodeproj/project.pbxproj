@@ -409,6 +409,7 @@
 		DC8BFC0E2A14CAB900BFF393 /* PocketSVG in Frameworks */ = {isa = PBXBuildFile; productRef = DC8BFC0D2A14CAB900BFF393 /* PocketSVG */; };
 		DC8C07262CF9D6CC007B70E6 /* SearchScopeDescriptor.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8C07252CF9D6CC007B70E6 /* SearchScopeDescriptor.swift */; };
 		DC8C072B2CF9DCC9007B70E6 /* SearchScope+Registry.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8C072A2CF9DCC9007B70E6 /* SearchScope+Registry.swift */; };
+		DC8C072D2CFA0FDF007B70E6 /* SearchSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8C072C2CFA0FDF007B70E6 /* SearchSettingsViewController.swift */; };
 		DC8E99DC297E79E900594697 /* BrowserNavigationHistory.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC8E99DB297E79E900594697 /* BrowserNavigationHistory.swift */; };
 		DC8E99E2297E906200594697 /* OCLicenseQAProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DC8E99DE297E8D3800594697 /* OCLicenseQAProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC8E99E3297E906700594697 /* OCLicenseQAProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC8E99DF297E8D3800594697 /* OCLicenseQAProvider.m */; };
@@ -1405,6 +1406,7 @@
 		DC8AA7BD29DC154400BFF393 /* ItemLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemLayout.swift; sourceTree = "<group>"; };
 		DC8C07252CF9D6CC007B70E6 /* SearchScopeDescriptor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScopeDescriptor.swift; sourceTree = "<group>"; };
 		DC8C072A2CF9DCC9007B70E6 /* SearchScope+Registry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SearchScope+Registry.swift"; sourceTree = "<group>"; };
+		DC8C072C2CFA0FDF007B70E6 /* SearchSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchSettingsViewController.swift; sourceTree = "<group>"; };
 		DC8E99DB297E79E900594697 /* BrowserNavigationHistory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserNavigationHistory.swift; sourceTree = "<group>"; };
 		DC8E99DE297E8D3800594697 /* OCLicenseQAProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseQAProvider.h; sourceTree = "<group>"; };
 		DC8E99DF297E8D3800594697 /* OCLicenseQAProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseQAProvider.m; sourceTree = "<group>"; };
@@ -3609,6 +3611,7 @@
 				02DC7C8F24CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift */,
 				025FC744247EF0F1009307A7 /* BackgroundUploadsSettingsSection.swift */,
 				DC3F4521271A23A000ED2383 /* AcknowledgementsTableViewController.swift */,
+				DC8C072C2CFA0FDF007B70E6 /* SearchSettingsViewController.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -4558,6 +4561,7 @@
 				DC6428D02081406800493A01 /* CollapsibleProgressBar.swift in Sources */,
 				39CD755423D8392D00193950 /* EditDocumentViewController.swift in Sources */,
 				025F063A24AA18C7009D8FC5 /* ImageMetadataViewController.swift in Sources */,
+				DC8C072D2CFA0FDF007B70E6 /* SearchSettingsViewController.swift in Sources */,
 				DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */,
 				DC62514A225CEB4300736874 /* UploadMediaAction.swift in Sources */,
 				025FC72924781659009307A7 /* AutoUploadSettingsSection.swift in Sources */,
