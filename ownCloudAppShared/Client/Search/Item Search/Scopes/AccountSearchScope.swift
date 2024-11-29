@@ -153,7 +153,12 @@ open class AccountSearchScope : CustomQuerySearchScope {
 	open override class var descriptor: SearchScopeDescriptor {
 		return SearchScopeDescriptor(identifier: "account", localizedName: OCLocalizedString("Account", nil), localizedDescription: OCLocalizedString("Searches the personal folder and all spaces.", nil), icon: OCSymbol.icon(forSymbolName: "person"), searchableContent: .itemName, scopeCreator: { (clientContext, cellStyle, descriptor) in
 			if let cellStyle {
-				return AccountSearchScope(with: clientContext, cellStyle: cellStyle, localizedName: descriptor.localizedName, localizedPlaceholder: OCLocalizedString("Search account", nil), icon: descriptor.icon)
+				let pathAndRevealCellStyle = CollectionViewCellStyle(from: cellStyle, changing: { cellStyle in
+					cellStyle.showRevealButton = true
+					cellStyle.showPathDetails = true
+				})
+
+				return AccountSearchScope(with: clientContext, cellStyle: pathAndRevealCellStyle, localizedName: descriptor.localizedName, localizedPlaceholder: OCLocalizedString("Search account", nil), icon: descriptor.icon)
 			}
 			return nil
 		})
