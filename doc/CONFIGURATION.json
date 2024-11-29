@@ -1452,6 +1452,21 @@
   },
   {
     "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "categoryTag" : "endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "remote.php/dav/spaces",
+    "description" : "Endpoint to as for WebDAV spaces.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.endpoint-webdav-spaces",
+    "key" : "endpoint-webdav-spaces",
+    "label" : "connection.endpoint-webdav-spaces",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Connection",
     "categoryTag" : "connection",
     "classIdentifier" : "connection",
@@ -2604,6 +2619,42 @@
     "key" : "lastSeenReleaseNotesVersion",
     "label" : "releasenotes.lastSeenReleaseNotesVersion",
     "status" : "debugOnly",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "App",
+    "categoryTag" : "app",
+    "classIdentifier" : "search",
+    "className" : "ownCloudAppShared.SearchScope",
+    "defaultValue" : "folder",
+    "description" : "The search scope to pre-select when search is invoked inside a folder.",
+    "flatIdentifier" : "search.defaultScope",
+    "key" : "defaultScope",
+    "label" : "search.defaultScope",
+    "possibleValues" : [
+      {
+        "description" : "Account",
+        "value" : "account"
+      },
+      {
+        "description" : "Space",
+        "value" : "drive"
+      },
+      {
+        "description" : "Folder",
+        "value" : "folder"
+      },
+      {
+        "description" : "Server",
+        "value" : "server"
+      },
+      {
+        "description" : "Tree",
+        "value" : "tree"
+      }
+    ],
+    "status" : "supported",
     "type" : "string"
   },
   {
