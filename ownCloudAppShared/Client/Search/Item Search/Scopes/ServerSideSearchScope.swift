@@ -22,9 +22,9 @@ import ownCloudApp
 
 class ServerSideSearchScope: ItemSearchScope {
 	open override class var descriptor: SearchScopeDescriptor {
-		return SearchScopeDescriptor(identifier: "server", title: OCLocalizedString("Server", nil), icon: OCSymbol.icon(forSymbolName: "server.rack"), searchableContent: [.itemName, .contents], scopeCreator: { (clientContext, cellStyle, descriptor) in
+		return SearchScopeDescriptor(identifier: "server", localizedName: OCLocalizedString("Server", nil), localizedDescription: OCLocalizedString("Searches using the server.", nil), icon: OCSymbol.icon(forSymbolName: "server.rack"), searchableContent: [.itemName, .contents], scopeCreator: { (clientContext, cellStyle, descriptor) in
 			if let cellStyle {
-				return ServerSideSearchScope(with: clientContext, cellStyle: cellStyle, localizedName: descriptor.title, localizedPlaceholder: OCLocalizedString("Search server", nil), icon: descriptor.icon)
+				return ServerSideSearchScope(with: clientContext, cellStyle: cellStyle, localizedName: descriptor.localizedName, localizedPlaceholder: OCLocalizedString("Search server", nil), icon: descriptor.icon)
 			}
 			return nil
 		})
