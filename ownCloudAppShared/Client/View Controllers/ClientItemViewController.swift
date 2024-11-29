@@ -1019,33 +1019,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	open var searchViewController: SearchViewController?
 
 	open func searchScopes(for clientContext: ClientContext, cellStyle: CollectionViewCellStyle) -> [SearchScope] {
-		var scopes : [SearchScope] = []
-
-		if clientContext.query?.queryLocation != nil {
-			// - Folder
-			// - Tree (folder + subfolders)
-			scopes.append(contentsOf: [
-				// - In this folder
-				.modifyingQuery(with: clientContext, localizedName: OCLocalizedString("Folder", nil)),
-
-				// - Folder and subfolders (tree / container)
-				.containerSearch(with: clientContext, cellStyle: cellStyle, localizedName: OCLocalizedString("Tree", nil))
-			])
-
-			// - Drive
-			if clientContext.core?.useDrives == true {
-				let driveName = OCLocalizedString("Space", nil)
-				scopes.append(.driveSearch(with: clientContext, cellStyle: cellStyle, localizedName: driveName))
-			}
-		}
-
-		// - Account
-		scopes.append(.accountSearch(with: clientContext, cellStyle: cellStyle, localizedName: OCLocalizedString("Account", nil)))
-
-		// - Server
-		scopes.append(.serverSideSearch(with: clientContext, cellStyle: cellStyle, localizedName: OCLocalizedString("Server", nil)))
-
-		return scopes
+		return SearchScope.availableScopes(for: clientContext, cellStyle: cellStyle)
 	}
 
 	@objc open func startSearch() {
