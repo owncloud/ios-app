@@ -23,7 +23,7 @@ import ownCloudApp
 class ServerSideSearchScope: ItemSearchScope {
 	open override class var descriptor: SearchScopeDescriptor {
 		return SearchScopeDescriptor(identifier: "server", localizedName: OCLocalizedString("Server", nil), localizedDescription: OCLocalizedString("Searches using the server.", nil), icon: OCSymbol.icon(forSymbolName: "server.rack"), searchableContent: [.itemName, .contents], scopeCreator: { (clientContext, cellStyle, descriptor) in
-			if let cellStyle {
+			if let cellStyle, clientContext.core?.connection.capabilities?.serverSideSearchSupported == true, clientContext.core?.connection.capabilities?.enabledServerSideSearchProperties?.contains("content") == true {
 				return ServerSideSearchScope(with: clientContext, cellStyle: cellStyle, localizedName: descriptor.localizedName, localizedPlaceholder: OCLocalizedString("Search server", nil), icon: descriptor.icon)
 			}
 			return nil
@@ -78,24 +78,34 @@ class ServerSideSearchScope: ItemSearchScope {
 		}
 	}
 
+	func sendSearchRequest() {
+		guard let core = clientContext.core, let kqlQuery else { return }
+
+		searchResult?.cancel()
+
+		searchResult = core.searchFiles(withPattern: kqlQuery, limit: 100)
+		if searchResult?.error != nil {
+			updateWith(results: nil, error: searchResult?.error)
+		} else {
+			updateWith(results: searchResult?.results, error: nil)
+		}
+	}
+
+	func cancelSearchRequest() {
+		searchResult?.cancel()
+		searchResult = nil
+
+		updateWith(results: nil, error: nil)
+	}
+
 	var kqlQuery: String? {
 		didSet {
 			if let kqlQuery {
-				if kqlQuery != searchResult?.kqlQuery, let core = clientContext.core {
-					searchResult?.cancel()
-
-					searchResult = core.searchFiles(withPattern: kqlQuery, limit: 100)
-					if searchResult?.error != nil {
-						updateWith(results: nil, error: searchResult?.error)
-					} else {
-						updateWith(results: searchResult?.results, error: nil)
-					}
+				if kqlQuery != searchResult?.kqlQuery {
+					sendSearchRequest()
 				}
 			} else {
-				searchResult?.cancel()
-				searchResult = nil
-
-				updateWith(results: nil, error: nil)
+				cancelSearchRequest()
 			}
 		}
 	}
@@ -111,7 +121,7 @@ class ServerSideSearchScope: ItemSearchScope {
 		didSet {
 			if oldValue != isOnline {
 				if isOnline {
-					updateSearch()
+					sendSearchRequest()
 				}
 				updateDisplay()
 			}
