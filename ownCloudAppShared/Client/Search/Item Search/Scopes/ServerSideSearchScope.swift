@@ -32,6 +32,8 @@ class ServerSideSearchScope: ItemSearchScope {
 
 	var searchResult: OCSearchResult?
 
+	var connectionStatusObservation: NSKeyValueObservation?
+
 	override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
 		var pathAndRevealCellStyle : CollectionViewCellStyle?
 
@@ -43,6 +45,17 @@ class ServerSideSearchScope: ItemSearchScope {
 		}
 
 		super.init(with: context, cellStyle: pathAndRevealCellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
+
+		connectionStatusObservation = context.core?.observe(\.connectionStatus, options: .initial, changeHandler: { [weak self] core, _ in
+			let isOnline = core.connectionStatus == .online
+			OnMainThread {
+				self?.isOnline = isOnline
+			}
+		})
+	}
+
+	deinit {
+		connectionStatusObservation?.invalidate()
 	}
 
 	override var queryCondition: OCQueryCondition? {
@@ -72,13 +85,17 @@ class ServerSideSearchScope: ItemSearchScope {
 					searchResult?.cancel()
 
 					searchResult = core.searchFiles(withPattern: kqlQuery, limit: 100)
-					results = searchResult?.results
+					if searchResult?.error != nil {
+						updateWith(results: nil, error: searchResult?.error)
+					} else {
+						updateWith(results: searchResult?.results, error: nil)
+					}
 				}
 			} else {
 				searchResult?.cancel()
 				searchResult = nil
 
-				results = nil
+				updateWith(results: nil, error: nil)
 			}
 		}
 	}
@@ -88,6 +105,33 @@ class ServerSideSearchScope: ItemSearchScope {
 		// https://github.com/owncloud/ocis/blob/cff364c998355b1295793e9244e5efdfea064536/services/search/pkg/query/bleve/compiler.go#L287
 		// If they diverge, an additional conversion from locally used keyword to server used keyword needs to take place here.
 		kqlQuery = queryCondition?.kqlStringWithTypeAlias(toKQLTypeMap: OCQueryCondition.typeAliasToKeywordMap, targetContent: searchedContent)
+	}
+
+	var isOnline: Bool = true {
+		didSet {
+			if oldValue != isOnline {
+				if isOnline {
+					updateSearch()
+				}
+				updateDisplay()
+			}
+		}
+	}
+
+	var searchResults: OCDataSource?
+	func updateWith(results source: OCDataSource?, error: Error?) {
+		searchResults = source
+		updateDisplay()
+	}
+
+	func updateDisplay() {
+		if isOnline {
+			results = searchResults
+		} else {
+			let noResultsView = ComposedMessageView.infoBox(image: OCSymbol.icon(forSymbolName: "wifi.slash"), title: OCLocalizedString("Server search requires a connection", nil), subtitle: OCLocalizedString("Search on the server is unavailable while not connected. To search offline, switch to the Account scope.", nil))
+
+			results = OCDataSourceArray(items: [noResultsView])
+		}
 	}
 }
 
