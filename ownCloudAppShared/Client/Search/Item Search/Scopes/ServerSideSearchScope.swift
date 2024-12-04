@@ -73,7 +73,15 @@ class ServerSideSearchScope: ItemSearchScope {
 	}
 
 	override var searchedContent: OCKQLSearchedContent {
-		didSet {
+		get {
+			let value = OCAppIdentity.shared.userDefaults?.value(forKey: "LastUsedSearchedContent")
+			if let intVal = value as? Int {
+				return OCKQLSearchedContent(rawValue: intVal)
+			}
+			return [.itemName, .contents]
+		}
+		set {
+			OCAppIdentity.shared.userDefaults?.setValue(newValue.rawValue, forKey: "LastUsedSearchedContent")
 			updateSearch()
 		}
 	}
