@@ -53,11 +53,17 @@ jobs:
       - name: Verify Swift installation
         run: swift -v
 
+      - name: Show Swift file
+        run: cat tools/normalizestrings/main.swift
+
       - name: Compile Swift file
         run: swiftc tools/normalizestrings/main.swift -o ocstringstool
 
       - name: Run compiled Swift program
-        run: ./ocstringstool normalize "ownCloud/Resources/" "ownCloud Action Extension/" "ownCloud File Provider/" "ownCloud Share Extension/" "ownCloudAppFramework/Resources/"
+        run: ./ocstringstool normalize "ownCloud/Resources" "ownCloud Action Extension" "ownCloud File Provider" "ownCloud Share Extension"" "ownCloudAppFramework/Resources"
+
+      - name: Cleanup download and ocstringstool
+        run: rm swift-5.3-RELEASE-ubuntu20.04.tar.gz ocstringstool
 
       - uses: GuillaumeFalourd/git-commit-push@v1.3
         with:
