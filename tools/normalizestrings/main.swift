@@ -64,12 +64,25 @@ func commandNormalize(rootPath locRootPath: String) {
 
 			var encoding: String.Encoding = .utf8
 
-			if !isDirectory, fileName.hasSuffix(".strings"),
-			   let strings = try? String(contentsOf: fileURL, usedEncoding: &encoding), encoding != .utf8 {
-				print("[normalize] converting \(fileURL.absoluteString) to UTF-8…")
-				if let utf8Data = strings.data(using: .utf8, allowLossyConversion: false) {
-					try? utf8Data.write(to: fileURL)
-					convertedFilesCount += 1
+			if !isDirectory {
+				if fileName.hasSuffix(".strings"),
+				   let strings = try? String(contentsOf: fileURL, usedEncoding: &encoding), encoding != .utf8 {
+					print("[normalize] converting \(fileURL.absoluteString) to UTF-8…")
+					if let utf8Data = strings.data(using: .utf8, allowLossyConversion: false) {
+						try? utf8Data.write(to: fileURL)
+						convertedFilesCount += 1
+					}
+				}
+
+				if fileName.hasSuffix(".xcstrings"),
+				   let data = try? Data(contentsOf: fileURL),
+				   let jsonObj = try? JSONSerialization.jsonObject(with: data) {
+					print("[normalize] normalizing \(fileURL.absoluteString) to AppleJSON[sortedKeys,prettyPrinted,withoutEscapingSlashes]…")
+
+				   	if let reformattedJSONData = try? JSONSerialization.data(withJSONObject: jsonObj, options: [.sortedKeys, .prettyPrinted, .withoutEscapingSlashes]) {
+						try? reformattedJSONData.write(to: fileURL)
+						convertedFilesCount += 1
+					}
 				}
 			}
 		}
