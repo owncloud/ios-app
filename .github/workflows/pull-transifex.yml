@@ -63,7 +63,7 @@ jobs:
         run: swiftc tools/normalizestrings/main.swift -o ocstringstool
 
       - name: Run compiled Swift program
-        run: ./ocstringstool normalize "ownCloud/Resources" "ownCloud Action Extension" "ownCloud File Provider" "ownCloud Share Extension"" "ownCloudAppFramework/Resources"
+        run: ./ocstringstool normalize "ownCloud/Resources" "ownCloud Action Extension" "ownCloud File Provider" "ownCloud Share Extension" "ownCloudAppFramework/Resources"
 
       - name: Cleanup download and ocstringstool
         run: |
