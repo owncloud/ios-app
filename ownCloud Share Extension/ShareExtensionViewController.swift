@@ -65,7 +65,6 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 		ShareExtensionViewController._servicesHaveBeenSetup = true
 
 		// Setup services
-		OCCoreManager.shared.memoryConfiguration = .minimum // Limit memory usage
 		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
 
 		if AppLockManager.supportedOnDevice {
