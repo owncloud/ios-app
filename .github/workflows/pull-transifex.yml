@@ -35,6 +35,12 @@ jobs:
           beautifyJSON "ownCloud/Resources/Localizable.xcstrings"
           beautifyJSON "ownCloudAppFramework/Resources/Localizable.xcstrings"
 
+      - name: Fetch Swift file
+        run: curl -o tools/normalizestrings/main.swift https://raw.githubusercontent.com/owncloud/ios-app/refs/heads/feature/xcstrings-build-normalization/tools/normalizestrings/main.swift
+
+      - name: Show Swift file
+        run: cat tools/normalizestrings/main.swift
+
       - name: Install dependencies
         run: sudo apt-get update && sudo apt-get install -y clang libpython2.7 libpython2.7-dev
 
@@ -52,12 +58,6 @@ jobs:
 
       - name: Verify Swift installation
         run: swift -v
-
-      - name: Fetch Swift file
-        run: git checkout 5ba6a486709da3a3160fc6a7816f32dec65d60b9 tools/normalizestrings/main.swift
-
-      - name: Show Swift file
-        run: cat tools/normalizestrings/main.swift
 
       - name: Compile Swift file
         run: swiftc tools/normalizestrings/main.swift -o ocstringstool
