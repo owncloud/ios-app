@@ -35,6 +35,30 @@ jobs:
           beautifyJSON "ownCloud/Resources/Localizable.xcstrings"
           beautifyJSON "ownCloudAppFramework/Resources/Localizable.xcstrings"
 
+      - name: Install dependencies
+        run: sudo apt-get update && sudo apt-get install -y clang libpython2.7 libpython2.7-dev
+
+      - name: Download Swift
+        run: wget https://swift.org/builds/swift-5.3-release/ubuntu2004/swift-5.3-RELEASE/swift-5.3-RELEASE-ubuntu20.04.tar.gz
+
+      - name: Extract Swift
+        run: tar xzf swift-5.3-RELEASE-ubuntu20.04.tar.gz
+
+      - name: Move Swift to /usr/share
+        run: sudo mv swift-5.3-RELEASE-ubuntu20.04 /usr/share/swift
+
+      - name: Add Swift to PATH
+        run: echo "export PATH=/usr/share/swift/usr/bin:\$PATH" >> $GITHUB_ENV
+
+      - name: Verify Swift installation
+        run: swift -v
+
+      - name: Compile Swift file
+        run: swiftc tools/normalizestrings/main.swift -o ocstringstool
+
+      - name: Run compiled Swift program
+        run: ./ocstringstool normalize "ownCloud/Resources/" "ownCloud Action Extension/" "ownCloud File Provider/" ""ownCloud Share Extension/" "ownCloudAppFramework/Resources/"
+
       - uses: GuillaumeFalourd/git-commit-push@v1.3
         with:
           email: devops@owncloud.com
