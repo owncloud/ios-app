@@ -67,6 +67,7 @@ jobs:
 
       - name: Cleanup download and ocstringstool
         run: |
+          tail -n 100 "ownCloud/Resources/Localizable.xcstrings"
           rm swift-5.3-RELEASE-ubuntu20.04.tar.gz ocstringstool
           git checkout tools/normalizestrings/main.swift
 
