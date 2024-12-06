@@ -35,28 +35,15 @@ jobs:
           beautifyJSON "ownCloud/Resources/Localizable.xcstrings"
           beautifyJSON "ownCloudAppFramework/Resources/Localizable.xcstrings"
 
-      - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y clang libpython2.7 libpython2.7-dev
+      - name: Setup Swift
+        uses: swift-actions/setup-swift@v2.1.0
 
-      - name: Download Swift
-        run: curl -o /tmp/swift-6.0.2-RELEASE-ubuntu20.04.tar.gz https://download.swift.org/swift-6.0.2-release/ubuntu2004/swift-6.0.2-RELEASE/swift-6.0.2-RELEASE-ubuntu20.04.tar.gz
+      - name: Build ocstringstool
+        run: |
+          swift -v
+          swiftc tools/normalizestrings/main.swift -o /tmp/ocstringstool
 
-      - name: Extract Swift
-        run: tar -xzf /tmp/swift-6.0.2-RELEASE-ubuntu20.04.tar.gz
-
-      - name: Move Swift to /usr/share
-        run: sudo mv swift-6.0.2-RELEASE-ubuntu20.04 /usr/share/swift
-
-      - name: Add Swift to PATH
-        run: echo "export PATH=/usr/share/swift/usr/bin:\$PATH" >> $GITHUB_ENV
-
-      - name: Verify Swift installation
-        run: swift -v
-
-      - name: Compile Swift file
-        run: swiftc tools/normalizestrings/main.swift -o /tmp/ocstringstool
-
-      - name: Run compiled Swift program
+      - name: Run ocstringstool
         run: /tmp/ocstringstool normalize "ownCloud/Resources" "ownCloud Action Extension" "ownCloud File Provider" "ownCloud Share Extension" "ownCloudAppFramework/Resources"
 
       - uses: GuillaumeFalourd/git-commit-push@v1.3
