@@ -56,5 +56,5 @@ jobs:
           file_to_build=$(echo "$file_to_build" | awk '{$1=$1;print}')
 
           # Run xcodebuild with xcpretty
-          xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=iOS Simulator,name=$device,OS=$latest_ios_version" | xcpretty
+          xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=iOS Simulator,name=$device,OS=$latest_ios_version" ARCHS=x86_64 | xcpretty
           exit ${PIPESTATUS[0]}
