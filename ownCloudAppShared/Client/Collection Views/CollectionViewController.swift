@@ -167,10 +167,14 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	public override func loadView() {
 		super.loadView()
 
+		let secureView = SecureTextField().secureContainerView
+
+		view.embed(toFillWith: secureView, enclosingAnchors: compressForKeyboard ? view.safeAreaWithKeyboardAnchorSet : view.safeAreaAnchorSet)
+		
 		if usesStackViewRoot {
 			createStackView()
 			if let stackView {
-				view.embed(toFillWith: stackView, enclosingAnchors: compressForKeyboard ? view.safeAreaWithKeyboardAnchorSet : view.safeAreaAnchorSet)
+				secureView.embed(toFillWith: stackView, enclosingAnchors: compressForKeyboard ? view.safeAreaWithKeyboardAnchorSet : view.safeAreaAnchorSet)
 			}
 		}
 	}

@@ -20,8 +20,8 @@ import UIKit
 import ownCloudSDK
 
 public extension OCAction {
-	func uiAction(with options: [OCActionRunOptionKey : Any]? = nil) -> UIAction {
-		return UIAction(title: title, image: icon, attributes: [], handler: { action in
+	func uiAction(with options: [OCActionRunOptionKey : Any]? = nil, redacted: Bool = false) -> UIAction {
+		return UIAction(title: redacted ? title.redacted() : title, image: icon, attributes: [], handler: { action in
 			self.run(options: options)
 		})
 	}

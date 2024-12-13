@@ -121,6 +121,7 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 			}
 		}
 		timer!.resume()
+		self.view.secureView(core: core)
 	}
 
 	@objc func enableEditingMode() {

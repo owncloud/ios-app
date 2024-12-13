@@ -86,6 +86,12 @@ open class MoreViewHeader: UIView {
 
 	private func render() {
 		cssSelectors = [.more, .header]
+		
+		let secureView = SecureTextField().secureContainerView
+		let contentContainerView = UIView()
+		contentContainerView.translatesAutoresizingMaskIntoConstraints = false
+		secureView.addSubview(contentContainerView)
+		self.addSubview(secureView)
 
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -104,8 +110,18 @@ open class MoreViewHeader: UIView {
 		titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 		detailLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 		labelContainerView.setContentCompressionResistancePriority(.required, for: .vertical)
-
+		
+		
 		NSLayoutConstraint.activate([
+			secureView.topAnchor.constraint(equalTo: self.topAnchor),
+			secureView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+			secureView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+			secureView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+			
+			contentContainerView.topAnchor.constraint(equalTo: self.topAnchor),
+			contentContainerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+			contentContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+			
 			titleLabel.leadingAnchor.constraint(equalTo: labelContainerView.leadingAnchor),
 			titleLabel.trailingAnchor.constraint(equalTo: labelContainerView.trailingAnchor),
 			titleLabel.topAnchor.constraint(equalTo: labelContainerView.topAnchor),
@@ -116,8 +132,8 @@ open class MoreViewHeader: UIView {
 			detailLabel.bottomAnchor.constraint(equalTo: labelContainerView.bottomAnchor)
 		])
 
-		self.addSubview(iconView)
-		self.addSubview(labelContainerView)
+		contentContainerView.addSubview(iconView)
+		contentContainerView.addSubview(labelContainerView)
 
 		NSLayoutConstraint.activate([
 			iconView.widthAnchor.constraint(equalToConstant: thumbnailSize.width),
@@ -211,6 +227,8 @@ open class MoreViewHeader: UIView {
 		core?.vault.resourceManager?.start(iconRequest)
 
 		titleLabel.numberOfLines = 0
+		
+		self.secureView(core: core)
 	}
 
 	public func updateHeader(title: String, subtitle: String) {

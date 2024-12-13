@@ -311,6 +311,9 @@ open class Action : NSObject {
 				   disallowedActions.contains(actionIdentifier.rawValue) {
 					return .noMatch
 				}
+				if let disallowedActions = ConfidentialManager.shared.disallowedActions, disallowedActions.contains(actionIdentifier.rawValue) {
+					return .noMatch
+				}
 			}
 
 			if self.applicablePosition(forContext: actionContext) == .none {

@@ -139,6 +139,10 @@ extension DriveListCell {
 			if let coverImageRequest = coverImageRequest {
 				resourceManager?.start(coverImageRequest)
 			}
+			
+			if let clientItemViewController = collectionItemRef.ocCellConfiguration?.hostViewController as? CollectionViewController {
+				cell.secureView(core: clientItemViewController.clientContext?.core)
+			}
 
 			cell.accessories = [ .disclosureIndicator() ]
 		}
@@ -168,6 +172,10 @@ extension DriveListCell {
 
 			cell.collectionItemRef = collectionItemRef
 			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
+			
+			if let clientItemViewController = collectionItemRef.ocCellConfiguration?.hostViewController as? CollectionViewController {
+				cell.secureView(core: clientItemViewController.clientContext?.core)
+			}
 
 			if let coverImageRequest = coverImageRequest {
 				resourceManager?.start(coverImageRequest)
@@ -213,6 +221,10 @@ extension DriveListCell {
 
 			cell.collectionItemRef = collectionItemRef
 			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
+			
+			if let clientItemViewController = collectionItemRef.ocCellConfiguration?.hostViewController as? CollectionViewController {
+				cell.secureView(core: clientItemViewController.clientContext?.core)
+			}
 
 			if let coverImageRequest = coverImageRequest {
 				resourceManager?.start(coverImageRequest)
@@ -247,13 +259,12 @@ extension DriveListCell {
 
 			var content = cell.defaultContentConfiguration()
 
-			content.text = title
+			content.text = title?.redacted()
 			content.image = icon
-
+			
 			cell.backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
 			cell.contentConfiguration = content
 			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
-
 			cell.accessibilityTraits = .button
 		}
 
