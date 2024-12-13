@@ -27,11 +27,34 @@ jobs:
           scheme: ${{ 'ownCloud' }}
           platform: ${{ 'iOS Simulator' }}
         run: |
-          # xcrun xctrace returns via stderr, not the expected stdout (see https://developer.apple.com/forums/thread/663959)
-          device=`xcrun xctrace list devices 2>&1 | grep -oE 'iPhone.*?[^\(]+' | head -1 | awk '{$1=$1;print}' | sed -e "s/ Simulator$//"`
-          if [ $scheme = default ]; then scheme=$(cat default); fi
-          if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then filetype_parameter="workspace" && file_to_build="`ls -A | grep -i \\.xcworkspace\$`"; else filetype_parameter="project" && file_to_build="`ls -A | grep -i \\.xcodeproj\$`"; fi
-          file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
-          xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=$platform,name=$device" | xcpretty && exit ${PIPESTATUS[0]}
+          set -e  # Exit immediately on any error
 
+          # Get the latest iOS version
+          latest_ios_version=$(xcrun simctl list devices | grep -oE '^-- iOS [0-9.]+' | awk '{print $3}' | sort -r | head -1)
 
+          # Get the first available iPhone for that iOS version
+          device=$(xcrun simctl list devices | grep -A 1 "^-- iOS $latest_ios_version" | grep -oE 'iPhone [^()]*' | head -1)
+
+          # Set scheme if it's default
+          if [ "$scheme" = "default" ]; then
+            scheme=$(cat default)
+          fi
+
+          # Find the Xcode workspace or project
+          if ls *.xcworkspace >/dev/null 2>&1; then
+            filetype_parameter="workspace"
+            file_to_build=$(find . -maxdepth 1 -name "*.xcworkspace" | head -1)
+          elif ls *.xcodeproj >/dev/null 2>&1; then
+            filetype_parameter="project"
+            file_to_build=$(find . -maxdepth 1 -name "*.xcodeproj" | head -1)
+          else
+            echo "Error: No .xcworkspace or .xcodeproj found!"
+            exit 1
+          fi
+
+          # Clean up the file name
+          file_to_build=$(echo "$file_to_build" | awk '{$1=$1;print}')
+
+          # Run xcodebuild with xcpretty
+          xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=iOS Simulator,name=$device,OS=$latest_ios_version" | xcpretty
+          exit ${PIPESTATUS[0]}

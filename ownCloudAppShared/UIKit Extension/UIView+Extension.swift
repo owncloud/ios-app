@@ -86,7 +86,7 @@ public extension UIView {
 		overlayView.translatesAutoresizingMaskIntoConstraints = false
 		
 		if self.frame.height <= 200 {
-			overlayView.angle = 20
+			overlayView.angle = 15
 			self.insertSubview(overlayView, aboveSubview: self)
 		} else {
 			overlayView.angle = 45

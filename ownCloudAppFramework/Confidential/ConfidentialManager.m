@@ -86,22 +86,22 @@
 {
 	return (@{
 		OCClassSettingsKeyAllowScreenshots : @{
-			@"type" : @"boolean",
+			@"type" : OCClassSettingsMetadataTypeBoolean,
 			@"description" : @"Controls whether screenshots are allowed or not. If not allowed confidential views will be marked as sensitive and are not visible in screenshots.",
-			@"category" : @"Confidential",
-			@"status" : @"debugOnly"
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
 		},
 		OCClassSettingsKeyMarkConfidentialViews : @{
-			@"type" : @"boolean",
+			@"type" : OCClassSettingsMetadataTypeBoolean,
 			@"description" : @"Controls if views which contains sensitive content contains a watermark or not.",
-			@"category" : @"Confidential",
-			@"status" : @"debugOnly"
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
 		},
 		OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings : @{
-			@"type" : @"boolean",
+			@"type" : OCClassSettingsMetadataTypeBoolean,
 			@"description" : @"Controls if confidential related MDM settings can be overwritten.",
-			@"category" : @"Confidential",
-			@"status" : @"debugOnly"
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
 		}
 	});
 }
