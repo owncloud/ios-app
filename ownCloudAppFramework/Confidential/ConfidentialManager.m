@@ -74,8 +74,8 @@
 {
 	if ([identifier isEqual:OCClassSettingsIdentifierConfidential]) {
 		return @{
-			OCClassSettingsKeyAllowScreenshots : @NO,
-			OCClassSettingsKeyMarkConfidentialViews : @YES,
+			OCClassSettingsKeyAllowScreenshots : @YES,
+			OCClassSettingsKeyMarkConfidentialViews : @NO,
 			OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings : @NO
 		};
 	}
