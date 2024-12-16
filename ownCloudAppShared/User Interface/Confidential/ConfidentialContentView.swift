@@ -31,12 +31,22 @@ public class ConfidentialContentView: UIView {
 			setNeedsDisplay()
 		}
 	}
-	var textColor: UIColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.button], for: nil)?.withAlphaComponent(0.7) ?? .red {
+	var textColor: UIColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.button], for: nil)?.withAlphaComponent(0.8) ?? .red {
+		didSet {
+			setNeedsDisplay()
+		}
+	}
+	var subtitleTextColor: UIColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.button], for: nil)?.withAlphaComponent(0.4) ?? .red {
 		didSet {
 			setNeedsDisplay()
 		}
 	}
 	var font: UIFont = UIFont.systemFont(ofSize: 14) {
+		didSet {
+			setNeedsDisplay()
+		}
+	}
+	var subtitleFont: UIFont = UIFont.systemFont(ofSize: 8) {
 		didSet {
 			setNeedsDisplay()
 		}
@@ -52,6 +62,11 @@ public class ConfidentialContentView: UIView {
 		}
 	}
 	var lineSpacing: CGFloat = 40 {
+		didSet {
+			setNeedsDisplay()
+		}
+	}
+	var marginY: CGFloat = 10 {
 		didSet {
 			setNeedsDisplay()
 		}
@@ -128,9 +143,9 @@ public class ConfidentialContentView: UIView {
 		let rotatedDiagonal = sqrt(rect.width * rect.width + rect.height * rect.height)
 		
 		let startX = -rotatedDiagonal
-		let startY = -rotatedDiagonal
+		let startY = -rotatedDiagonal + marginY
 		let endX = rotatedDiagonal
-		let endY = rotatedDiagonal
+		let endY = rotatedDiagonal - marginY
 		
 		var y = startY
 		while y <= endY {
@@ -150,5 +165,21 @@ public class ConfidentialContentView: UIView {
 		}
 		
 		context.restoreGState()
+		
+		if angle < 45.0 {
+			let combinedText = "\(subtext) - \(text)"
+			let combinedTextAttributes: [NSAttributedString.Key: Any] = [
+				.font: subtitleFont,
+				.foregroundColor: subtitleTextColor
+			]
+			let combinedTextSize = combinedText.size(withAttributes: combinedTextAttributes)
+			
+			var x = CGFloat(0)
+			let subtextY = rect.height - combinedTextSize.height - 2
+			while x < rect.width {
+				combinedText.draw(at: CGPoint(x: x, y: subtextY), withAttributes: combinedTextAttributes)
+				x += combinedTextSize.width + columnSpacing
+			}
+		}
 	}
 }
