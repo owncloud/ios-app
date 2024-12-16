@@ -903,7 +903,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "%@ is not available, when this account is offline. Please open the app and log into your account before you can do this action."
+            "value": "%@ est pas disponible, quand votre compte est hors-ligne. S'il vous plaît, ouvrez l'application et connectez-vous à votre compte avant de pouvoir faire cette action."
           }
         },
         "ko": {
@@ -1465,7 +1465,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "%ld Item was copied to the clipboard"
+            "value": "%ld Item a été copié dans le presse-papier"
           }
         },
         "ko": {
@@ -1595,7 +1595,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "%ld Items were copied to the clipboard"
+            "value": "%ld Items ont été copiés dans le presse-papier"
           }
         },
         "ko": {
@@ -3269,7 +3269,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Account setup complete"
+            "value": "Configuration du compte complétée "
           }
         },
         "ko": {
@@ -5992,7 +5992,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Allow this app to refresh the content when on Wi-Fi or mobile network in background."
+            "value": "Autoriser cette app a rafraîchir le contenu en Wi-Fi ou données cellulaire en arrière-plan. "
           }
         },
         "ko": {
@@ -10798,7 +10798,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Disponible hors ligne"
+            "value": "Disponible Hors-ligne"
           }
         },
         "ko": {
@@ -10934,7 +10934,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Available offline"
+            "value": "Disponible hors-ligne"
           }
         },
         "ko": {
@@ -100021,7 +100021,7 @@
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "{{remaining}} available"
+            "value": "{{remaining}} disponible"
           }
         },
         "ko": {
