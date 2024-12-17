@@ -19,6 +19,7 @@
 import UIKit
 import VisionKit
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 
 class ImageScrollView: UIScrollView {
@@ -196,6 +197,7 @@ extension ImageScrollView {
 	}
 
 	var imageInteractionsAllowed: Bool {
+		guard ConfidentialManager.shared.allowOverwriteConfidentialMDMSettings else { return false }
 		return Action.classSetting(forOCClassSettingsKey: .allowImageInteractions) as? Bool ?? true
 	}
 }

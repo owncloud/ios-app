@@ -48,7 +48,7 @@ open class ClientLocationPopupButton: ThemeCSSButton {
 
 				if let clientContext = self?.clientContext, let breadcrumbs = breadcrumbLocation?.breadcrumbs(in: clientContext, includeServerName: false, action: .reveal).reversed() {
 					for crumbAction in breadcrumbs {
-						menuItems.append(crumbAction.uiAction())
+						menuItems.append(crumbAction.uiAction(redacted: true))
 					}
 				}
 
@@ -66,7 +66,7 @@ open class ClientLocationPopupButton: ThemeCSSButton {
 	}
 
 	func updateButton() {
-		let title = location?.displayName(in: clientContext) ?? "-"
+		let title = location?.displayName(in: clientContext).redacted() ?? "-"
 		let attributedTitle = AttributedString(NSAttributedString(string: title, attributes: [.font : UIFont.systemFont(ofSize: UIFont.buttonFontSize, weight: .semibold)]))
 		let symbolConfiguration = UIImage.SymbolConfiguration(pointSize: 0.7 * UIFont.buttonFontSize)
 		let chevronBackgroundColor = Theme.shared.activeThemeCSS.getColor(.fill, selectors: [.popupButton, .icon], for: self) ?? .lightGray

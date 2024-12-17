@@ -725,9 +725,9 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 		if navigationLocation == nil || !useNavigationLocationBreadcrumbDropdown || navigationLocation?.isRoot == true {
 			if let navigationTitle {
-				self.navigationTitle = navigationTitle
+				self.navigationTitle = navigationTitle.redacted()
 			} else {
-				self.navigationTitle = navigationItem.title
+				self.navigationTitle = navigationItem.title?.redacted()
 			}
 		}
 	}

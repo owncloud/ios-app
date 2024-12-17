@@ -17,6 +17,7 @@
  */
 
 #import "OCFileProviderSettings.h"
+#import "ownCloudApp/ConfidentialManager.h"
 
 @implementation OCFileProviderSettings
 
@@ -46,6 +47,10 @@
 
 + (BOOL)browseable
 {
+	if ([[ConfidentialManager sharedConfidentialManager] allowOverwriteConfidentialMDMSettings] == false) {
+		return false;
+	}
+	
 	return ([([self classSettingForOCClassSettingsKey:OCClassSettingsKeyFileProviderBrowseable]) boolValue]);
 }
 

@@ -19,6 +19,7 @@
 import Foundation
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 
 private let _sharedAppBundle = Bundle(identifier: "com.owncloud.ownCloudAppShared")
 
@@ -73,5 +74,17 @@ extension String {
 		let boundingBox = self.boundingRect(with: constraintRect, options: .usesLineFragmentOrigin, attributes: [.font: font], context: nil)
 
 		return ceil(boundingBox.width)
+	}
+	
+	/// Redacts the string with a specified character.
+	/// - Parameter replacement: The character to use for redaction (default is `•`).
+	/// - Returns: A new string where each character is replaced with the redaction character.
+	public func redacted(after visibleCount: Int = 3, with replacement: Character = "•") -> String {
+		guard ConfidentialManager.shared.markConfidentialViews else { return self }
+		
+		guard self.count > visibleCount else { return self }
+		let visiblePart = self.prefix(visibleCount) // First `visibleCount` characters
+		let redactedPart = String(repeating: replacement, count: self.count - visibleCount)
+		return visiblePart + redactedPart
 	}
 }
