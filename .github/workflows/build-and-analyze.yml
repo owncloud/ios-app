@@ -2,9 +2,9 @@ name: Build Xcode project
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
 
 jobs:
   build:
@@ -16,45 +16,10 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: true
-      - name: Set Default Scheme
-        run: |
-          scheme_list=$(xcodebuild -list -json | tr -d "\n")
-          default=$(echo $scheme_list | ruby -e "require 'json'; puts JSON.parse(STDIN.gets)['project']['targets'][0]")
-          echo $default | cat >default
-          echo Using default scheme: $default
-      - name: Build
-        env:
-          scheme: ${{ 'ownCloud' }}
-          platform: ${{ 'iOS Simulator' }}
-        run: |
-          set -e  # Exit immediately on any error
-
-          # Get the latest iOS version
-          latest_ios_version=$(xcrun simctl list devices | grep -oE '^-- iOS [0-9.]+' | awk '{print $3}' | sort -r | head -1)
-
-          # Get the first available iPhone for that iOS version
-          device=$(xcrun simctl list devices | grep -A 1 "^-- iOS $latest_ios_version" | grep -oE 'iPhone [^()]*' | head -1)
-
-          # Set scheme if it's default
-          if [ "$scheme" = "default" ]; then
-            scheme=$(cat default)
-          fi
-
-          # Find the Xcode workspace or project
-          if ls *.xcworkspace >/dev/null 2>&1; then
-            filetype_parameter="workspace"
-            file_to_build=$(find . -maxdepth 1 -name "*.xcworkspace" | head -1)
-          elif ls *.xcodeproj >/dev/null 2>&1; then
-            filetype_parameter="project"
-            file_to_build=$(find . -maxdepth 1 -name "*.xcodeproj" | head -1)
-          else
-            echo "Error: No .xcworkspace or .xcodeproj found!"
-            exit 1
-          fi
-
-          # Clean up the file name
-          file_to_build=$(echo "$file_to_build" | awk '{$1=$1;print}')
-
-          # Run xcodebuild with xcpretty
-          xcodebuild clean build analyze -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=iOS Simulator,name=$device,OS=$latest_ios_version" ARCHS=x86_64 | xcpretty
-          exit ${PIPESTATUS[0]}
+      - name: mxcl/Xcodebuild
+        uses: mxcl/xcodebuild@v3.4.0
+        with:
+          scheme: ownCloud
+          action: build
+          platform: iOS
+          platform-version: 18.2
