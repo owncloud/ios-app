@@ -70,7 +70,10 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		contentContainerView.cssSelector = .content
 		contentContainerView.translatesAutoresizingMaskIntoConstraints = false
 		contentContainerView.focusGroupIdentifier = "com.owncloud.content"
-		view.addSubview(contentContainerView)
+		
+		let secureView = SecureTextField().secureContainerView
+		secureView.addSubview(contentContainerView)
+		view.addSubview(secureView)
 
 		navigationView.translatesAutoresizingMaskIntoConstraints = false
 		navigationView.delegate = self
@@ -89,6 +92,12 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		navigationBarTopConstraint = navigationBarTopConstraint(for: navigationBarHidden)
 
 		NSLayoutConstraint.activate([
+			
+			secureView.topAnchor.constraint(equalTo: view.topAnchor),
+			secureView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+			secureView.leadingAnchor.constraint(equalTo: view.leadingAnchor).with(priority: .defaultHigh),
+			secureView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			
 			contentContainerView.topAnchor.constraint(equalTo: view.topAnchor),
 			contentContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
 			contentContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor).with(priority: .defaultHigh), // Allow for flexibility without having to remove this constraint. It will be overridden by constraints with higher priority (default is .required) when necessary

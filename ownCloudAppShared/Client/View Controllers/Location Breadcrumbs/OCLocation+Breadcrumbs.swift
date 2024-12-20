@@ -218,8 +218,10 @@ extension OCLocation {
 				seperatorSegment.insets.trailing = 0
 				segments.append(seperatorSegment)
 			}
+			
+			let title = (breadcrumb.properties[.location] as? OCLocation) != nil ? breadcrumb.title.redacted() : breadcrumb.title
 
-			let segment = SegmentViewItem(with: breadcrumb.icon, title: breadcrumb.title, style: .plain, titleTextStyle: .footnote)
+			let segment = SegmentViewItem(with: breadcrumb.icon, title: title, style: .plain, titleTextStyle: .footnote)
 
 			if let segmentConfigurator {
 				segmentConfigurator(breadcrumb, segment)

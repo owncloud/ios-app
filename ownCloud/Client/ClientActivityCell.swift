@@ -95,6 +95,8 @@ class ClientActivityCell: ThemeTableViewCell {
 			messageButton.topAnchor.constraint(equalTo: statusCircle.topAnchor),
 			messageButton.bottomAnchor.constraint(equalTo: statusCircle.bottomAnchor)
 		])
+		
+		self.secureView(core: core)
 	}
 
 	// MARK: - Message support
