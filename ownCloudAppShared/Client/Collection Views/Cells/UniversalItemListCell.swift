@@ -801,7 +801,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		}
 
 		if let moreItemHandling = clientContext.moreItemHandler {
-			moreItemHandling.moreOptions(for: item, at: .moreItem, context: clientContext, sender: self)
+			moreItemHandling.moreOptions(for: item, obj: nil, at: .moreItem, context: clientContext, sender: self)
 		}
 	}
 
@@ -1063,6 +1063,12 @@ extension SegmentViewItem {
 	static public func detailText(_ detailText: String, linebreakMode: NSLineBreakMode? = nil) -> SegmentViewItem {
 		let item = SegmentViewItem(with: nil, title: detailText, style: .plain, titleTextStyle: .footnote, linebreakMode: linebreakMode)
 		item.insets = .zero
+		return item
+	}
+
+	static public func token(_ tokenText: String, linebreakMode: NSLineBreakMode? = nil) -> SegmentViewItem {
+		let item = SegmentViewItem(with: nil, title: tokenText, style: .token, titleTextStyle: .footnote, linebreakMode: linebreakMode)
+		item.insets = NSDirectionalEdgeInsets(top: 0, leading: 3, bottom: 0, trailing: 3)
 		return item
 	}
 }

@@ -171,11 +171,13 @@ extension OCItem: UniversalItemListCellContentProvider {
 
 		// Title
 		if let name {
-			var displayName = name
-			if configuration?.style.type == .header {
-				displayName = name.redacted()
+			let isHeader = configuration?.style.type == .header
+			if !isFile, isRoot, let driveID, let core = context?.core, let drive = core.drive(withIdentifier: driveID, attachedOnly: true), let driveName = drive.name {
+				content.title = .drive(name: isHeader ? driveName.redacted() : driveName)
+			} else {
+				let displayName = isHeader ? name.redacted() : name
+				content.title = isFile ? .file(name: displayName) : .folder(name: displayName)
 			}
-			content.title = isFile ? .file(name: displayName) : .folder(name: displayName)
 		}
 
 		// Details

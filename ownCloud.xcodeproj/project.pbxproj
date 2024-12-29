@@ -378,6 +378,7 @@
 		DC680576212DF548006C3B1F /* CertificateManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */; };
 		DC6A0E5426EA9E740076B533 /* AppLockSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DC6A0E5226EA9E740076B533 /* AppLockSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC6A0E5526EA9E740076B533 /* AppLockSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DC6A0E5326EA9E740076B533 /* AppLockSettings.m */; };
+		DC6B971D2D21F7620045E73F /* MembersSpaceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6B971C2D21F7620045E73F /* MembersSpaceAction.swift */; };
 		DC6C0A4929239E560045FF2A /* AppRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6C0A4829239E560045FF2A /* AppRootViewController.swift */; };
 		DC6C0A542923FFF30045FF2A /* AccountControllerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6C0A532923FFF30045FF2A /* AccountControllerSection.swift */; };
 		DC6C68362574FD0400E46BD4 /* PLCrashReporter.LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = DC6C68352574FD0400E46BD4 /* PLCrashReporter.LICENSE */; };
@@ -437,6 +438,10 @@
 		DC9BFBB320A19AF4007064B5 /* doc in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB220A19AF3007064B5 /* doc */; };
 		DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */; };
 		DC9C1AEC247C76470067895A /* MessageGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9C1AEB247C76470067895A /* MessageGroupCell.swift */; };
+		DC9CE3B82D0C4D1400979C44 /* ThemeCSSTextField+Styled.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9CE3B72D0C4D1400979C44 /* ThemeCSSTextField+Styled.swift */; };
+		DC9CE3D42D10813700979C44 /* DetailsSpaceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9CE3D12D1080EE00979C44 /* DetailsSpaceAction.swift */; };
+		DC9CE3D52D10813F00979C44 /* ManageSpaceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9CE3BD2D0F31ED00979C44 /* ManageSpaceAction.swift */; };
+		DC9CE3D62D10814400979C44 /* DisableSpaceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9CE3C02D0F399B00979C44 /* DisableSpaceAction.swift */; };
 		DCA05A602AE6603E00BFF393 /* ClientLocationPopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA05A5F2AE6603E00BFF393 /* ClientLocationPopupButton.swift */; };
 		DCA05A622AE664F200BFF393 /* OCAction+UIAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA05A612AE664F200BFF393 /* OCAction+UIAction.swift */; };
 		DCA2EDE2279B16F1001F04E6 /* ResourceSourceItemIcons.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA2EDE1279B16F1001F04E6 /* ResourceSourceItemIcons.swift */; };
@@ -518,6 +523,7 @@
 		DCBAEAE829A568D500BFF393 /* TitleSupplementaryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAE729A568D500BFF393 /* TitleSupplementaryCell.swift */; };
 		DCBAEAED29A627D900BFF393 /* DataSourceCondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBAEAEC29A627D900BFF393 /* DataSourceCondition.swift */; };
 		DCBD8EA824B3751900D92E1F /* OCItem+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 397754E123279EED00119FCB /* OCItem+Extension.swift */; };
+		DCBE9C812D08E2A200332D3B /* SpaceManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCBE9C802D08E2A200332D3B /* SpaceManagementViewController.swift */; };
 		DCC085512293ED52008CC05C /* DisplaySettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */; };
 		DCC085652293F1FD008CC05C /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
 		DCC0856E2293F1FD008CC05C /* ownCloudApp.h in Headers */ = {isa = PBXBuildFile; fileRef = DCC0855E2293F1FD008CC05C /* ownCloudApp.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1367,6 +1373,7 @@
 		DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCertificateViewController.swift; sourceTree = "<group>"; };
 		DC6A0E5226EA9E740076B533 /* AppLockSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppLockSettings.h; sourceTree = "<group>"; };
 		DC6A0E5326EA9E740076B533 /* AppLockSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppLockSettings.m; sourceTree = "<group>"; };
+		DC6B971C2D21F7620045E73F /* MembersSpaceAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembersSpaceAction.swift; sourceTree = "<group>"; };
 		DC6C0A4829239E560045FF2A /* AppRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootViewController.swift; sourceTree = "<group>"; };
 		DC6C0A532923FFF30045FF2A /* AccountControllerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountControllerSection.swift; sourceTree = "<group>"; };
 		DC6C68352574FD0400E46BD4 /* PLCrashReporter.LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = PLCrashReporter.LICENSE; sourceTree = "<group>"; };
@@ -1434,6 +1441,10 @@
 		DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-password-manager.tvg"; path = "img/filetypes-tvg/icon-password-manager.tvg"; sourceTree = SOURCE_ROOT; };
 		DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManagerAccess.swift; sourceTree = "<group>"; };
 		DC9C1AEB247C76470067895A /* MessageGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupCell.swift; sourceTree = "<group>"; };
+		DC9CE3B72D0C4D1400979C44 /* ThemeCSSTextField+Styled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeCSSTextField+Styled.swift"; sourceTree = "<group>"; };
+		DC9CE3BD2D0F31ED00979C44 /* ManageSpaceAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageSpaceAction.swift; sourceTree = "<group>"; };
+		DC9CE3C02D0F399B00979C44 /* DisableSpaceAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisableSpaceAction.swift; sourceTree = "<group>"; };
+		DC9CE3D12D1080EE00979C44 /* DetailsSpaceAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsSpaceAction.swift; sourceTree = "<group>"; };
 		DCA05A5F2AE6603E00BFF393 /* ClientLocationPopupButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientLocationPopupButton.swift; sourceTree = "<group>"; };
 		DCA05A612AE664F200BFF393 /* OCAction+UIAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCAction+UIAction.swift"; sourceTree = "<group>"; };
 		DCA2EDE1279B16F1001F04E6 /* ResourceSourceItemIcons.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResourceSourceItemIcons.swift; sourceTree = "<group>"; };
@@ -1517,6 +1528,7 @@
 		DCBAEAE729A568D500BFF393 /* TitleSupplementaryCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleSupplementaryCell.swift; sourceTree = "<group>"; };
 		DCBAEAEC29A627D900BFF393 /* DataSourceCondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataSourceCondition.swift; sourceTree = "<group>"; };
 		DCBD8EA924B3755B00D92E1F /* OCItem+AppExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OCItem+AppExtension.swift"; sourceTree = "<group>"; };
+		DCBE9C802D08E2A200332D3B /* SpaceManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceManagementViewController.swift; sourceTree = "<group>"; };
 		DCC085502293ED52008CC05C /* DisplaySettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplaySettingsSection.swift; sourceTree = "<group>"; };
 		DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ownCloudApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		DCC0855E2293F1FD008CC05C /* ownCloudApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ownCloudApp.h; sourceTree = "<group>"; };
@@ -1960,6 +1972,7 @@
 				DCA2EDDB279B0E5D001F04E6 /* Resource Sources */,
 				DCE4E43424C199860051722F /* Actions */,
 				DC16213C2B8FF02500EB17F8 /* Sidebar Items */,
+				DC9CE3BC2D0F31C800979C44 /* Spaces */,
 				399EA6ED25E6544000B6FF11 /* Sharing */,
 				DCC73F2C2B86BC170009A210 /* Password Composer */,
 				DCE4E42F24C1963F0051722F /* User Interface */,
@@ -2220,6 +2233,10 @@
 		6E586CF52199A70100F680C4 /* Actions+Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				DC9CE3C02D0F399B00979C44 /* DisableSpaceAction.swift */,
+				DC9CE3BD2D0F31ED00979C44 /* ManageSpaceAction.swift */,
+				DC6B971C2D21F7620045E73F /* MembersSpaceAction.swift */,
+				DC9CE3D12D1080EE00979C44 /* DetailsSpaceAction.swift */,
 				391220932344C30F0026C290 /* CutAction.swift */,
 				399697F1260255B100E5AEBA /* PDFGotoPageAction.swift */,
 				391220922344C30F0026C290 /* ImportPasteboardAction.swift */,
@@ -2925,6 +2942,14 @@
 			path = EmbeddingViewController;
 			sourceTree = "<group>";
 		};
+		DC9CE3BC2D0F31C800979C44 /* Spaces */ = {
+			isa = PBXGroup;
+			children = (
+				DCBE9C802D08E2A200332D3B /* SpaceManagementViewController.swift */,
+			);
+			path = Spaces;
+			sourceTree = "<group>";
+		};
 		DCA2EDDB279B0E5D001F04E6 /* Resource Sources */ = {
 			isa = PBXGroup;
 			children = (
@@ -2967,6 +2992,7 @@
 				DCB1B8AA29C89E0900BFF393 /* ThemeCSSLabel.swift */,
 				DCB1B8C729C8F84800BFF393 /* ThemeCSSProgressView.swift */,
 				DCB1B99629D1813D00BFF393 /* ThemeCSSTextField.swift */,
+				DC9CE3B72D0C4D1400979C44 /* ThemeCSSTextField+Styled.swift */,
 				DCB1B8C129C8A6E500BFF393 /* ThemeCSSView.swift */,
 			);
 			path = Views;
@@ -4526,6 +4552,7 @@
 				DC5908772AA87ABF00BFF393 /* BookmarkSetupStepAuthenticateViewController.swift in Sources */,
 				4C464BF62187AF1500D30602 /* PDFTocItem.swift in Sources */,
 				6E3A103E219D5BBA00F90C96 /* RenameAction.swift in Sources */,
+				DC6B971D2D21F7620045E73F /* MembersSpaceAction.swift in Sources */,
 				DCDC208F23994DFB003CFF5B /* LicenseTransactionsViewController.swift in Sources */,
 				4CC4A21222FA20AD00AE7E2C /* URL+Extensions.swift in Sources */,
 				4C464BF52187AF1500D30602 /* PDFThumbnailsCollectionViewController.swift in Sources */,
@@ -4535,6 +4562,7 @@
 				DC815C3F2A65D9CB00BFF393 /* AvailableOfflineAction.swift in Sources */,
 				4CB8ADE022DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift in Sources */,
 				392DDB1424CF024D009E5406 /* ImportFilesController.swift in Sources */,
+				DC9CE3D42D10813700979C44 /* DetailsSpaceAction.swift in Sources */,
 				396C82FB2319AFDD00938262 /* CollaborateAction.swift in Sources */,
 				0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */,
 				DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */,
@@ -4619,6 +4647,7 @@
 				025FC73A247BF8BE009307A7 /* PHAsset+InstantUploads.swift in Sources */,
 				399DD7C722A691BC00B45EB2 /* UnshareAction.swift in Sources */,
 				4C1561EF22232357009C4EF3 /* PhotoSelectionViewCell.swift in Sources */,
+				DC9CE3D62D10814400979C44 /* DisableSpaceAction.swift in Sources */,
 				397754F82327A33500119FCB /* OpenSceneAction.swift in Sources */,
 				4CAF783C2282FD40000C85CF /* FileManager+Extension.swift in Sources */,
 				DCEE1C9C23A0EADD00FE8D98 /* LicenseOfferView.swift in Sources */,
@@ -4627,6 +4656,7 @@
 				DC51FD922475715F0069AB79 /* CellularSettingsViewController.swift in Sources */,
 				DCC8536023CE1AF8007BA3EB /* PurchasesSettingsSection.swift in Sources */,
 				DCD2D40622F06ECA0071FB8F /* DataSettingsSection.swift in Sources */,
+				DC9CE3D52D10813F00979C44 /* ManageSpaceAction.swift in Sources */,
 				39969904260A3CF500E5AEBA /* CutAction.swift in Sources */,
 				4C464BF22187AF1500D30602 /* PDFSearchViewController.swift in Sources */,
 				DC6C0A4929239E560045FF2A /* AppRootViewController.swift in Sources */,
@@ -4677,6 +4707,7 @@
 				DC2BB5402CD96C1600320384 /* ServerSideSearchScope.swift in Sources */,
 				DC04FFC827F5B79000F22569 /* CollectionViewController.swift in Sources */,
 				DC298CA72936250D009FA87F /* ClientSidebarViewController.swift in Sources */,
+				DC9CE3B82D0C4D1400979C44 /* ThemeCSSTextField+Styled.swift in Sources */,
 				DC825E352A05083C00BFF393 /* GitInfo.swift in Sources */,
 				DC921A042966DFDC00F538EE /* OCItem+UniversalItemListCellContentProvider.swift in Sources */,
 				DCB6B1E6292B6BE500D27573 /* OCLocation+Interactions.swift in Sources */,
@@ -4808,6 +4839,7 @@
 				DC99154E28E6371500DA0AB8 /* SegmentViewItem.swift in Sources */,
 				DCFC9ED528002F33005D9144 /* CollectionViewCellConfiguration.swift in Sources */,
 				DCBAEADB29A3674700BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift in Sources */,
+				DCBE9C812D08E2A200332D3B /* SpaceManagementViewController.swift in Sources */,
 				DC0A355624C0E33A00FB58FC /* Log.swift in Sources */,
 				DC0A359624C0E61500FB58FC /* UIView+Extension.swift in Sources */,
 				DCB6B1F2292B9A7A00D27573 /* OCMessage+Extension.swift in Sources */,
