@@ -50,6 +50,9 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 			})
 		}
 
+		let plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createSpace))
+		navigationItem.rightBarButtonItem = plusBarButton
+
 		// Disable dragging of items, so keyboard control does
 		// not include "Drag Item" in the accessibility actions
 		// invoked with Tab + Z
@@ -88,5 +91,13 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 		}
 
 		return viewController
+	}
+
+	@objc func createSpace() {
+		guard let clientContext else { return }
+		let createSpaceViewController = SpaceManagementViewController(clientContext: clientContext, completionHandler: { error, drive in
+		})
+		let navigationController = ThemeNavigationController(rootViewController: createSpaceViewController)
+		clientContext.present(navigationController, animated: true)
 	}
 }

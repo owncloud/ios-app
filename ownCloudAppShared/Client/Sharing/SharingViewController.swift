@@ -40,6 +40,7 @@ open class SharingViewController: CollectionViewController {
 			itemSectionDatasource.setVersionedItems([item])
 		}
 	}
+	public var itemIsDriveRoot: Bool
 
 	var itemSharesQuery: OCShareQuery?
 
@@ -47,6 +48,7 @@ open class SharingViewController: CollectionViewController {
 		var sections: [CollectionViewSection] = []
 
 		self.item = item
+		self.itemIsDriveRoot = item.isRoot && item.driveID != nil && clientContext.core?.drive(withIdentifier: item.driveID!, attachedOnly: true)?.specialType == .space
 
 		// Item section
 		let itemSectionContext = ClientContext(with: clientContext, modifier: { context in
@@ -108,7 +110,7 @@ open class SharingViewController: CollectionViewController {
 
 			recipientsSection = CollectionViewSection(identifier: "recipients", dataSource: recipientsSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: managementClientContext)
 			recipientsSection?.boundarySupplementaryItems = [
-				.mediumTitle(OCLocalizedString("Shared with", nil))
+				.mediumTitle(itemIsDriveRoot ? OCLocalizedString("Members", nil) : OCLocalizedString("Shared with", nil))
 			]
 			sections.append(recipientsSection!)
 		}
@@ -150,7 +152,7 @@ open class SharingViewController: CollectionViewController {
 
 				linksSection = CollectionViewSection(identifier: "links", dataSource: linksSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: managementClientContext)
 				linksSection?.boundarySupplementaryItems = [
-					.mediumTitle(OCLocalizedString("Links", nil))
+					.mediumTitle(OCLocalizedString("Public Links", nil))
 				]
 				sections.append(linksSection!)
 			}
@@ -158,7 +160,7 @@ open class SharingViewController: CollectionViewController {
 
 		// Init
 		super.init(context: managementClientContext, sections: sections, useStackViewRoot: true)
-		navigationItem.titleLabelText = OCLocalizedString("Sharing", nil)
+		navigationItem.titleLabelText = itemIsDriveRoot ? OCLocalizedString("Members", nil) : OCLocalizedString("Sharing", nil)
 		navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .done, primaryAction: UIAction(handler: { [weak self] action in
 			self?.dismiss(animated: true)
 		}))
