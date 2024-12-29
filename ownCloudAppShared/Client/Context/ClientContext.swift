@@ -33,7 +33,7 @@ public protocol ViewItemAction : AnyObject {
 }
 
 public protocol MoreItemAction : AnyObject {
-	@discardableResult func moreOptions(for item: OCDataItem, at location: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> Bool
+	@discardableResult func moreOptions(for item: OCDataItem, obj: AnyObject?, at location: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> Bool
 }
 
 public protocol ActionProgressHandlerProvider : AnyObject {
@@ -153,6 +153,9 @@ public class ClientContext: NSObject {
 	public var permissionHandlers : [PermissionHandler]?
 	public var permissions : [ClientItemInteraction]?
 
+	// MARK: - Sharing NG
+	public var sharingRoles: [OCShareRole]?
+
 	// MARK: - Display options
 	@objc public dynamic var sortDescriptor: SortDescriptor?
 	public var itemStyler: ItemStyler?
@@ -215,6 +218,8 @@ public class ClientContext: NSObject {
 
 		permissions = inParent?.permissions
 		permissionHandlers = inParent?.permissionHandlers
+
+		sharingRoles = inParent?.sharingRoles
 
 		modifier?(self)
 	}

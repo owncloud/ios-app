@@ -319,7 +319,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 		// Set up view
 		if let share, let core = clientContext?.core {
-			role = core.matchingShareRole(for: share)
+			role = core.matching(for: share, from: nil)
 		}
 
 		if let share, let recipient = share.recipient {
@@ -380,23 +380,50 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		}
 
 		if let location, let clientContext, let shareType {
-			if let shareRoles = clientContext.core?.availableShareRoles(for: shareType, location: location) {
-				let roleOptions: [OptionItem] = shareRoles.map({ shareRole in
-					OptionItem(kind: .multipleChoice, contentFrom: shareRole, state: (shareRole == role))
+			if let shareRoles = clientContext.sharingRoles {
+				self.shareRoles = shareRoles
+			} else {
+				clientContext.core?.availableShareRoles(for: shareType, location: location, completionHandler: { [weak self] error, shareRoles in
+					if let shareRoles {
+						OnMainThread {
+							self?.shareRoles = shareRoles
+						}
+					}
 				})
-
-				rolesSectionOptionGroup = OptionGroup()
-				rolesSectionOptionGroup?.items = roleOptions
-				rolesSectionOptionGroup?.changeAction = { [weak self] (group, selectedItem) in
-					self?.role = selectedItem.value as? OCShareRole
-				}
-				if let role {
-					rolesSectionOptionGroup?.chosenValues = [ role ]
-				}
-
-				rolesSectionDatasource?.setVersionedItems(roleOptions)
-				rolesSection?.hidden = false
 			}
+		} else {
+			rolesSection?.hidden = true
+		}
+	}
+
+	var shareRoles: [OCShareRole]? {
+		didSet {
+			_updateRoles(with: shareRoles)
+		}
+	}
+
+	private func _updateRoles(with shareRoles: [OCShareRole]?) {
+		if let shareRoles {
+			let roleOptions: [OptionItem] = shareRoles.map({ shareRole in
+				OptionItem(kind: .multipleChoice, contentFrom: shareRole, state: shareRole == role)
+			})
+
+			rolesSectionOptionGroup = OptionGroup()
+			rolesSectionOptionGroup?.items = roleOptions
+			rolesSectionOptionGroup?.changeAction = { [weak self] (group, selectedItem) in
+				self?.role = selectedItem.value as? OCShareRole
+			}
+			if let role {
+				rolesSectionOptionGroup?.chosenValues = [ role ]
+			}
+
+			rolesSectionDatasource?.setVersionedItems(roleOptions)
+			rolesSection?.hidden = false
+
+			if role == nil, let share, let core = clientContext?.core {
+				role = core.matching(for: share, from: shareRoles)
+			}
+
 		} else {
 			rolesSection?.hidden = true
 		}
@@ -900,16 +927,23 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		switch mode {
 			case .create:
 				var newShare: OCShare?
+				var sharePermission: OCSharePermission?
+
+				if clientContext?.core?.useDrives == true, let role {
+					sharePermission = OCSharePermission(role: role)
+				} else if let permissions {
+					sharePermission = OCSharePermission(permissionsMask: permissions)
+				}
 
 				switch type {
 					case .share:
-						if let recipient, let permissions, let location {
-							newShare = OCShare(recipient: recipient, location: location, permissions: permissions, expiration: nil)
+						if let recipient, let sharePermission, let location {
+							newShare = OCShare(recipient: recipient, location: location, permissions: [sharePermission], expiration: nil)
 						}
 
 					case .link:
-						if let location, let permissions {
-							newShare = OCShare(publicLinkTo: location, linkName: name, permissions: permissions, password: nil, expiration: nil)
+						if let location, let sharePermission {
+							newShare = OCShare(publicLinkTo: location, linkName: name, permissions: [sharePermission], password: nil, expiration: nil)
 						}
 				}
 

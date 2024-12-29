@@ -103,6 +103,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
 
+		OCExtensionManager.shared.addExtension(ManageSpaceAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MembersSpaceAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DisableSpaceAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DetailsSpaceAction.actionExtension)
+
 		// Register class settings for extensions added on a per-connection basis
 		OnMainThread {
 			OpenInWebAppAction.registerSettings()

@@ -129,6 +129,8 @@ public class ActionContext: OCExtensionContext {
 		}
 	}
 
+	public var drives: [OCDrive]?
+
 	public var itemsSharedWithUser: [OCItem] {
 		return cachedSharedItems
 	}
@@ -168,11 +170,13 @@ public class ActionContext: OCExtensionContext {
 	}
 
 	// MARK: - Init & Deinit.
-	public init(viewController: UIViewController, clientContext: ClientContext? = nil, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
+	public init(viewController: UIViewController, clientContext: ClientContext? = nil, core: OCCore, query: OCQuery? = nil, items: [OCItem]=[], drives: [OCDrive]? = nil, location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
 
 		itemStorage = items
 
 		super.init()
+
+		self.drives = drives
 
 		self.viewController = viewController
 		self.sender = sender
