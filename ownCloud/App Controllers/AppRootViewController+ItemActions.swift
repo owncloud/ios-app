@@ -38,13 +38,15 @@ extension AppRootViewController: ViewItemAction {
 }
 
 extension AppRootViewController: MoreItemAction {
-	public func moreOptions(for item: OCDataItem, at locationIdentifier: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> Bool {
+	public func moreOptions(for item: OCDataItem, obj: AnyObject?, at locationIdentifier: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> Bool {
 		guard let sender = sender, let core = context.core, let item = item as? OCItem else {
 			return false
 		}
+		let drive = obj as? OCDrive
+		let drives = drive != nil ? [drive!] : nil
 		let originatingViewController : UIViewController = context.originatingViewController ?? self
 		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: locationIdentifier)
-		let actionContext = ActionContext(viewController: originatingViewController, clientContext: context, core: core, query: context.query, items: [item], location: actionsLocation, sender: sender)
+		let actionContext = ActionContext(viewController: originatingViewController, clientContext: context, core: core, query: context.query, items: [item], drives: drives, location: actionsLocation, sender: sender)
 
 		if let moreViewController = Action.cardViewController(for: item, with: actionContext, progressHandler: context.actionProgressHandlerProvider?.makeActionProgressHandler(), completionHandler: nil) {
 			originatingViewController.present(asCard: moreViewController, animated: true)
