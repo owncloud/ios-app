@@ -880,6 +880,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		let passwordViewController = PasswordComposerViewController(password: password ?? "", policy: passwordPolicy, saveButtonTitle: OCLocalizedString("Set", nil), resultHandler: { [weak self] password, cancelled in
 			if !cancelled, let password {
 				self?.password = password
+				self?.removePassword = false
 				self?.updateOptions()
 			}
 		})
@@ -900,6 +901,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		}
 		if let generatedPassword {
 			self.password = generatedPassword
+			self.removePassword = false
 			self.updateOptions()
 		}
 	}
@@ -1032,7 +1034,11 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 								bottomButtonBar?.modalActionRunning = true
 
 								core.update(share, afterPerformingChanges: { [weak self] share in
-									share.permissions = permissions
+									if share.firstRoleID != nil, let role = self?.role {
+										share.sharePermissions = [ OCSharePermission(role: role) ]
+									} else {
+										share.permissions = permissions
+									}
 
 									if let removePassword = self?.removePassword, removePassword {
 										share.password = nil
