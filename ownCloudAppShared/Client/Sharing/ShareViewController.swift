@@ -670,7 +670,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		return false
 	}
 	var hasExpirationOption: Bool {
-		return (type == .link)
+		return (type == .link) || (clientContext?.core?.connection.useDriveAPI == true)
 	}
 	var expirationDateRequired: Bool {
 		return type == .link ? (clientContext?.core?.connection.capabilities?.publicSharingExpireDateEnforceDateAndDaysDeterminesLastAllowedDate == true) : false
