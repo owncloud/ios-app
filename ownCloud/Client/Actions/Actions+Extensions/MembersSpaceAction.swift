@@ -28,7 +28,7 @@ class MembersSpaceAction: Action {
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.items.count == 1, let core = forContext.core, core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1, let item = forContext.items.first, let driveID = item.driveID, let drive = core.drive(withIdentifier: driveID, attachedOnly: true), drive.specialType == .space {
+		if forContext.items.count == 1, let core = forContext.core, core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1, let item = forContext.items.first, item.isRoot, let driveID = item.driveID, let drive = core.drive(withIdentifier: driveID, attachedOnly: true), drive.specialType == .space {
 			return .first
 		}
 
