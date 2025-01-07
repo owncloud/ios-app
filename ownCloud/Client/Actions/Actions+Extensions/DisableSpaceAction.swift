@@ -30,16 +30,16 @@ public class DisableSpaceAction : Action {
 
 	// MARK: - Extension matching
 	override open class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-		if forContext.drives == nil || forContext.drives?.count != 1 {
-			return .none
+		if let core = forContext.core, core.connectionStatus == .online, let drive = forContext.drive, drive.specialType == .space {
+			return .last
 		}
 
-		return .last
+		return .none
 	}
 
 	// MARK: - Action implementation
 	override open func run() {
-		guard let viewController = context.viewController, let drive = context.drives?.first, let clientContext = context.clientContext else {
+		guard let viewController = context.viewController, let drive = context.drive, let clientContext = context.clientContext else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}

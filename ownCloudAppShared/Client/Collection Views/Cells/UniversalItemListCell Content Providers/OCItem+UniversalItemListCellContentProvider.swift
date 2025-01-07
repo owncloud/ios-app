@@ -217,6 +217,10 @@ extension OCItem: UniversalItemListCellContentProvider {
 		// - Description
 		var detailString: String = sizeLocalized
 
+		if location?.type == .drive, let core = context?.core {
+			detailString = driveQuotaLocalized(core: core)
+		}
+
 		if size < 0 {
 			detailString = OCLocalizedString("Pending", nil)
 		}
