@@ -44,14 +44,17 @@ public class SpaceManagementViewController: CollectionViewController {
 	}
 	var subtitleTextField: UITextField
 
-	var quotaValid: Bool = true
-	var quota: Int64? {
+	var quotaEnabled: Bool = false {
 		didSet {
-			updateState()
+			quotaTextField.isHidden = !quotaEnabled
+			quotaOnOffSwitch?.isOn = quotaEnabled
 		}
 	}
-	var quotaTextField: UITextField
-	var quotaFormatter: ByteCountFormatter
+	var quotaBytes: UInt64? {
+		return quotaEnabled ? ((quotaTextField.byteCount > 0) ? quotaTextField.byteCount : nil)  : nil
+	}
+	var quotaTextField: ByteCountEditView
+	var quotaOnOffSwitch: UISwitch?
 
 	var bottomButtonBar: BottomButtonBar?
 
@@ -68,6 +71,52 @@ public class SpaceManagementViewController: CollectionViewController {
 		]
 
 		return (textField, section)
+	}
+
+	static func addQuotaSection(withID sectionID: String, title: String, switchTitle: String?, byteCount: UInt64?, accessibilityLabel: String?, clientContext: ClientContext) -> (ByteCountEditView, UISwitch?, CollectionViewSection) {
+		let cellStyle: CollectionViewCellStyle = .init(with: .tableCell)
+		let byteCountEditView = ByteCountEditView(withByteCount: byteCount)
+		var onOffSwitch: UISwitch?
+		let sectionDatasource: OCDataSourceArray
+
+		if let switchTitle {
+			let quotaSwitch = UISwitch()
+			quotaSwitch.translatesAutoresizingMaskIntoConstraints = false
+			onOffSwitch = quotaSwitch
+
+			let quotaSwitchLabel = ThemeCSSLabel(withSelectors: [ .title ])
+			quotaSwitchLabel.translatesAutoresizingMaskIntoConstraints = false
+			quotaSwitchLabel.setContentHuggingPriority(.required, for: .horizontal)
+			quotaSwitchLabel.text = switchTitle
+
+			let containerView = UIView()
+			containerView.translatesAutoresizingMaskIntoConstraints = false
+			containerView.addSubview(quotaSwitch)
+			containerView.addSubview(quotaSwitchLabel)
+			containerView.addSubview(byteCountEditView)
+
+			NSLayoutConstraint.activate([
+				quotaSwitch.leftAnchor.constraint(equalTo: containerView.leftAnchor),
+				quotaSwitchLabel.leftAnchor.constraint(equalTo: quotaSwitch.rightAnchor, constant: 10),
+				byteCountEditView.leftAnchor.constraint(equalTo: quotaSwitchLabel.rightAnchor, constant: 10),
+				byteCountEditView.rightAnchor.constraint(equalTo: containerView.rightAnchor),
+
+				quotaSwitch.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+				quotaSwitchLabel.centerYAnchor.constraint(equalTo: containerView.centerYAnchor),
+				byteCountEditView.topAnchor.constraint(equalTo: containerView.topAnchor),
+				byteCountEditView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+			])
+
+			sectionDatasource = OCDataSourceArray(items: [containerView.withPadding()])
+		} else {
+			sectionDatasource = OCDataSourceArray(items: [byteCountEditView.withPadding()])
+		}
+		let section = CollectionViewSection(identifier: sectionID, dataSource: sectionDatasource, cellStyle: cellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: clientContext)
+		section.boundarySupplementaryItems = [
+			.mediumTitle(title)
+		]
+
+		return (byteCountEditView, onOffSwitch, section)
 	}
 
 	public init(clientContext: ClientContext, rootItem: OCItem? = nil, drive: OCDrive? = nil, mode: Mode = .create, completionHandler: CompletionHandler?) {
@@ -96,9 +145,9 @@ public class SpaceManagementViewController: CollectionViewController {
 		sections.append(section)
 
 		// Quota section
-		(quotaTextField, section) = SpaceManagementViewController.addTextFieldSection(withID: "quota", title: OCLocalizedString("Quota", nil), placeholder: OCLocalizedString("Available space", nil), text: drive?.desc, accessibilityLabel: OCLocalizedString("Available space", nil), clientContext: spaceControllerContext)
-		// sections.append(section)
-		quotaFormatter = ByteCountFormatter()
+		(quotaTextField, quotaOnOffSwitch, section) = SpaceManagementViewController.addQuotaSection(withID: "quota", title: OCLocalizedString("Quota", nil), switchTitle: OCLocalizedString("Limit space", nil), byteCount: drive?.quota?.total?.uint64Value, accessibilityLabel: OCLocalizedString("Available space", nil), clientContext: spaceControllerContext)
+
+		sections.append(section)
 
 		super.init(context: spaceControllerContext, sections: sections, useStackViewRoot: true)
 
@@ -171,18 +220,27 @@ public class SpaceManagementViewController: CollectionViewController {
 			}
 		}), for: .allEditingEvents)
 
-		// Wire up quota textfield
-		self.quota = drive?.quota?.total?.int64Value
-		quotaTextField.addAction(UIAction(handler: { [weak self, weak quotaTextField] _ in
-			if let quotaTextField, let self {
-				var bytes: AnyObject?
-				var errorDesc: NSString?
-				self.quotaValid = self.quotaFormatter.getObjectValue(&bytes, for: quotaTextField.text ?? "", errorDescription: &errorDesc)
-				if self.quotaValid {
-					self.quota = bytes as? Int64
+		// Wire up quota
+		quotaOnOffSwitch?.addAction(UIAction(handler: { [weak self] action in
+			if let onOffSwitch = action.sender as? UISwitch {
+ 				let quotaEnabled = onOffSwitch.isOn
+
+				if quotaEnabled && self?.quotaBytes == nil {
+					// Quota was enabled, but quotaBytes itself is 0 => propose a 1 GB quota
+					self?.quotaTextField.set(byteCount: ByteCountUnit.gigaBytes.byteCount)
+					self?.quotaTextField.textField.becomeFirstResponder()
 				}
+
+				self?.quotaEnabled = quotaEnabled
+
 			}
-		}), for: .allEditingEvents)
+		}), for: .primaryActionTriggered)
+
+		if let quota = drive?.quota {
+			quotaEnabled = (quota.total?.uint64Value ?? 0) > 0
+		} else {
+			quotaEnabled = false
+		}
 
 		// Set up view
 		updateState()
@@ -202,9 +260,11 @@ public class SpaceManagementViewController: CollectionViewController {
 			return
 		}
 
+		let quotaTotalBytes: UInt64? = quotaBytes
+
 		switch mode {
 			case .create:
-				core.connection.createDrive(withName: name, description: subtitle, quota: nil) { [weak self] error, drive in
+				core.connection.createDrive(withName: name, description: subtitle, quota: NSNumber(value: quotaTotalBytes ?? 0)) { [weak self] error, drive in
 					self?.complete(with: drive, error: error)
 				}
 
@@ -220,6 +280,12 @@ public class SpaceManagementViewController: CollectionViewController {
 
 				if let subtitle {
 					changes[.description] = subtitle
+				}
+
+				if let quotaTotalBytes {
+					changes[.quotaTotal] = quotaTotalBytes
+				} else {
+					changes[.quotaTotal] = 0 // Setting the quota.total to 0 disables the quota
 				}
 
 				core.connection.updateDrive(drive, properties: changes) { [weak self] error, drive in
