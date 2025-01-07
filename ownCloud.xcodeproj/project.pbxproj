@@ -378,6 +378,7 @@
 		DC680576212DF548006C3B1F /* CertificateManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC680575212DF548006C3B1F /* CertificateManagementViewController.swift */; };
 		DC6A0E5426EA9E740076B533 /* AppLockSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = DC6A0E5226EA9E740076B533 /* AppLockSettings.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC6A0E5526EA9E740076B533 /* AppLockSettings.m in Sources */ = {isa = PBXBuildFile; fileRef = DC6A0E5326EA9E740076B533 /* AppLockSettings.m */; };
+		DC6B938B2D2D43290016A549 /* ByteCountEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6B938A2D2D43290016A549 /* ByteCountEditView.swift */; };
 		DC6B971D2D21F7620045E73F /* MembersSpaceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6B971C2D21F7620045E73F /* MembersSpaceAction.swift */; };
 		DC6C0A4929239E560045FF2A /* AppRootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6C0A4829239E560045FF2A /* AppRootViewController.swift */; };
 		DC6C0A542923FFF30045FF2A /* AccountControllerSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC6C0A532923FFF30045FF2A /* AccountControllerSection.swift */; };
@@ -1372,6 +1373,7 @@
 		DC680579212EAB5E006C3B1F /* ThemeCertificateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeCertificateViewController.swift; sourceTree = "<group>"; };
 		DC6A0E5226EA9E740076B533 /* AppLockSettings.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppLockSettings.h; sourceTree = "<group>"; };
 		DC6A0E5326EA9E740076B533 /* AppLockSettings.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppLockSettings.m; sourceTree = "<group>"; };
+		DC6B938A2D2D43290016A549 /* ByteCountEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ByteCountEditView.swift; sourceTree = "<group>"; };
 		DC6B971C2D21F7620045E73F /* MembersSpaceAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembersSpaceAction.swift; sourceTree = "<group>"; };
 		DC6C0A4829239E560045FF2A /* AppRootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppRootViewController.swift; sourceTree = "<group>"; };
 		DC6C0A532923FFF30045FF2A /* AccountControllerSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountControllerSection.swift; sourceTree = "<group>"; };
@@ -3431,6 +3433,7 @@
 				3912208123436EB80026C290 /* SortMethod.swift */,
 				DC8AA7BD29DC154400BFF393 /* ItemLayout.swift */,
 				DCB330D929F12A0D00BFF393 /* BottomButtonBar.swift */,
+				DC6B938A2D2D43290016A549 /* ByteCountEditView.swift */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -4806,6 +4809,7 @@
 				DC0A355424C0E2C200FB58FC /* SortBar.swift in Sources */,
 				39D091AF2D073593001329DF /* SecureTextField.swift in Sources */,
 				DC9B4FC3293F453C0037F8F8 /* EmbeddingViewController.swift in Sources */,
+				DC6B938B2D2D43290016A549 /* ByteCountEditView.swift in Sources */,
 				DC298C972934D354009FA87F /* IssuesCardViewController.swift in Sources */,
 				DCA2EDE2279B16F1001F04E6 /* ResourceSourceItemIcons.swift in Sources */,
 				DCB330E629F18C6F00BFF393 /* OptionGroup.swift in Sources */,

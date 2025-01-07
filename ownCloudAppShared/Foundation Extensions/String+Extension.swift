@@ -36,6 +36,11 @@ extension String {
 		return !self.isEmpty && rangeOfCharacter(from: nonDigitsCharacterSet) == nil
 	}
 
+	public var isFormattedNumeric: Bool {
+		let nonFormattedNumericCharacterSet = CharacterSet(charactersIn: "0123456789.,").inverted
+		return !self.isEmpty && rangeOfCharacter(from: nonFormattedNumericCharacterSet) == nil
+	}
+
 	public var pathRepresentation : String {
 		if !self.hasSuffix("/") {
 			return String(format: "%@/", self)
