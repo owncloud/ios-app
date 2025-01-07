@@ -129,7 +129,12 @@ public class ActionContext: OCExtensionContext {
 		}
 	}
 
-	public var drives: [OCDrive]?
+	public var drive: OCDrive? { //!< Returns the OCDrive in case .items holds only one object and that is the root item of a drive
+		if items.count == 1, let core, core.connection.capabilities?.sharingAPIEnabled == 1, let item = items.first, item.isRoot, let driveID = item.driveID, let drive = core.drive(withIdentifier: driveID, attachedOnly: true) {
+			return drive
+		}
+		return nil
+	}
 
 	public var itemsSharedWithUser: [OCItem] {
 		return cachedSharedItems
@@ -170,13 +175,11 @@ public class ActionContext: OCExtensionContext {
 	}
 
 	// MARK: - Init & Deinit.
-	public init(viewController: UIViewController, clientContext: ClientContext? = nil, core: OCCore, query: OCQuery? = nil, items: [OCItem]=[], drives: [OCDrive]? = nil, location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
+	public init(viewController: UIViewController, clientContext: ClientContext? = nil, core: OCCore, query: OCQuery? = nil, items: [OCItem]=[], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
 
 		itemStorage = items
 
 		super.init()
-
-		self.drives = drives
 
 		self.viewController = viewController
 		self.sender = sender

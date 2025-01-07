@@ -663,7 +663,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		}
 
 		if let moreItemHandler = clientContext?.moreItemHandler, let clientContext = clientContext {
-			moreItemHandler.moreOptions(for: rootItem, obj: nil, at: .moreFolder, context: clientContext, sender: sender)
+			moreItemHandler.moreOptions(for: rootItem, at: .moreFolder, context: clientContext, sender: sender)
 		}
 	}
 
