@@ -30,22 +30,20 @@ public class DetailsSpaceAction : Action {
 
 	// MARK: - Extension matching
 	override open class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-
-		if forContext.drives == nil || forContext.drives?.count != 1 {
-			return .none
+		if let core = forContext.core, core.connectionStatus == .online, let drive = forContext.drive, drive.specialType == .space {
+			return .middle
 		}
-
-		return .middle
+		return .none
 	}
 
 	// MARK: - Action implementation
 	override open func run() {
-		guard let viewController = context.viewController, let drive = context.drives?.first, let clientContext = context.clientContext else {
+		guard let viewController = context.viewController, let drive = context.drive, let clientContext = context.clientContext else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
 
-		let editSpaceViewController = SpaceManagementViewController(clientContext: clientContext, drive: drive, mode: .details, completionHandler: { error, drive in
+		let editSpaceViewController = SpaceManagementViewController(clientContext: clientContext, rootItem: context.items.first, drive: drive, mode: .details, completionHandler: { error, drive in
 		})
 		let navigationController = ThemeNavigationController(rootViewController: editSpaceViewController)
 		viewController.present(navigationController, animated: true)

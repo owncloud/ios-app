@@ -801,7 +801,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		}
 
 		if let moreItemHandling = clientContext.moreItemHandler {
-			moreItemHandling.moreOptions(for: item, obj: nil, at: .moreItem, context: clientContext, sender: self)
+			moreItemHandling.moreOptions(for: item, at: .moreItem, context: clientContext, sender: self)
 		}
 	}
 
