@@ -25,35 +25,25 @@ import ownCloudAppShared
 public class ManageSpaceAction : Action {
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.managespace") }
 	override open class var category : ActionCategory? { return .edit }
-	override open class var name : String? { return OCLocalizedString("Manage space", nil) }
+	override open class var name : String? { return OCLocalizedString("Edit space", nil) }
 	override open class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder] }
 
 	// MARK: - Extension matching
 	override open class func applicablePosition(forContext: ActionContext) -> ActionPosition {
-
-		if forContext.drives == nil || forContext.drives?.count != 1 {
-			return .none
+		if let core = forContext.core, core.connectionStatus == .online, let drive = forContext.drive, drive.specialType == .space {
+			return .first
 		}
-
-		return .middle
+		return  .none
 	}
 
 	// MARK: - Action implementation
 	override open func run() {
-		guard let viewController = context.viewController, let drive = context.drives?.first, let clientContext = context.clientContext else {
+		guard let viewController = context.viewController, let drive = context.drive, let clientContext = context.clientContext else {
 			self.completed(with: NSError(ocError: .insufficientParameters))
 			return
 		}
-//
-//		guard let spaceItem = try? clientContext.core?.cachedItem(at: drive.rootLocation) else {
-//			self.completed(with: NSError(ocError: .insufficientParameters))
-//			return
-//		}
-//
-//		let editMembersViewController = SharingViewController(clientContext: clientContext, item: spaceItem)
-//		let navigationController = ThemeNavigationController(rootViewController: editMembersViewController)
 
-		let editSpaceViewController = SpaceManagementViewController(clientContext: clientContext, drive: drive, mode: .edit, completionHandler: { error, drive in
+		let editSpaceViewController = SpaceManagementViewController(clientContext: clientContext, rootItem: context.items.first, drive: drive, mode: .edit, completionHandler: { error, drive in
 		})
 		let navigationController = ThemeNavigationController(rootViewController: editSpaceViewController)
 		viewController.present(navigationController, animated: true)

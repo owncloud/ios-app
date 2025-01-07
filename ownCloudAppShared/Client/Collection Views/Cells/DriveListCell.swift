@@ -200,7 +200,7 @@ extension DriveListCell {
 							clientContext.core?.cachedItem(at: drive.rootLocation, resultHandler: { error, item in
 								if let item {
 									OnMainThread {
-										moreItemHandling?.moreOptions(for: item, obj: drive, at: .moreFolder, context: clientContext, sender: action)
+										moreItemHandling?.moreOptions(for: item, at: .moreFolder, context: clientContext, sender: action)
 									}
 								}
 								completion(error)

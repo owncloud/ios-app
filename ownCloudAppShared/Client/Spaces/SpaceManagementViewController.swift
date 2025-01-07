@@ -27,6 +27,7 @@ public class SpaceManagementViewController: CollectionViewController {
 	}
 
 	var drive: OCDrive?
+	var rootItem: OCItem?
 	var mode: Mode
 
 	var name: String? {
@@ -52,8 +53,6 @@ public class SpaceManagementViewController: CollectionViewController {
 	var quotaTextField: UITextField
 	var quotaFormatter: ByteCountFormatter
 
-	var shareQuery: OCShareQuery?
-
 	var bottomButtonBar: BottomButtonBar?
 
 	public typealias CompletionHandler = (_ error: Error?, _ drive: OCDrive?) -> Void
@@ -71,13 +70,14 @@ public class SpaceManagementViewController: CollectionViewController {
 		return (textField, section)
 	}
 
-	public init(clientContext: ClientContext, drive: OCDrive? = nil, mode: Mode = .create, completionHandler: CompletionHandler?) {
+	public init(clientContext: ClientContext, rootItem: OCItem? = nil, drive: OCDrive? = nil, mode: Mode = .create, completionHandler: CompletionHandler?) {
 		var sections: [CollectionViewSection] = []
 		var section: CollectionViewSection
 
 		defer {
 			// Use defer to also trigger the didSet
 			self.drive = drive
+			self.rootItem = rootItem
 		}
 		self.mode = mode
 		self.completionHandler = completionHandler
@@ -100,31 +100,6 @@ public class SpaceManagementViewController: CollectionViewController {
 		// sections.append(section)
 		quotaFormatter = ByteCountFormatter()
 
-		// Owner section
-		let cellStyle: CollectionViewCellStyle = .init(with: .tableCell)
-
-		let managementCellStyle: CollectionViewCellStyle = .init(with: .tableCell)
-		managementCellStyle.options = [
-			.showManagementView : true
-		]
-
-		ownerSectionDatasource = OCDataSourceArray(items: [])
-		ownerSection = CollectionViewSection(identifier: "owner", dataSource: ownerSectionDatasource, cellStyle: cellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: spaceControllerContext)
-		ownerSection?.boundarySupplementaryItems = [
-			.mediumTitle(OCLocalizedString("Owner",nil))
-		]
-		ownerSection?.hidden = true
-		sections.append(ownerSection!)
-
-		// Permissions section
-		permissionSectionDatasource = OCDataSourceArray(items: [])
-		permissionSection = CollectionViewSection(identifier: "permissions", dataSource: permissionSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: spaceControllerContext)
-		permissionSection?.boundarySupplementaryItems = [
-			.mediumTitle(OCLocalizedString("Permissions",nil))
-		]
-		permissionSection?.hidden = (mode == .create)
-		sections.append(permissionSection!)
-
 		super.init(context: spaceControllerContext, sections: sections, useStackViewRoot: true)
 
 		cssSelector = .grouped
@@ -132,12 +107,6 @@ public class SpaceManagementViewController: CollectionViewController {
 
 	@MainActor required public init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
-	}
-
-	deinit {
-		if let shareQuery {
-			clientContext?.core?.stop(shareQuery)
-		}
 	}
 
 	open override func viewDidLoad() {
@@ -215,62 +184,9 @@ public class SpaceManagementViewController: CollectionViewController {
 			}
 		}), for: .allEditingEvents)
 
-		if let drive, let core = clientContext?.core, let driveRootItem = try? core.cachedItem(at: drive.rootLocation) {
-			shareQuery = OCShareQuery(scope: .item, item: driveRootItem)
-			shareQuery?.refreshInterval = 5
-			shareQuery?.changesAvailableNotificationHandler = { [weak self] query in
-				OnMainThread {
-					self?.permissionSection?.clientContext?.sharingRoles = query.allowedRoles // Needs to use the section's clientContext as self.context can be (is) a copy of the spaceControllerContext used for creating that section and setting its .sharingRoles would therefore not be visible to the section's cells
-					self?.permissions = (query.queryResults as NSArray).sortedArray(comparator: { share1, share2 in
-						let weight1 = ((share1 as? OCShare)?.sharePermissions?.first?.role?.weight ?? 0)
-						let weight2 = ((share2 as? OCShare)?.sharePermissions?.first?.role?.weight ?? 0)
-
-						if weight1.intValue > weight2.intValue {
-							return .orderedAscending
-						}
-						if weight1.intValue < weight2.intValue {
-							return .orderedDescending
-						}
-
-						return .orderedSame
-					}) as? [OCShare]
-				}
-			}
-
-			if let shareQuery {
-				core.start(shareQuery)
-			}
-		}
-
 		// Set up view
 		updateState()
 	}
-
-	var permissions: [OCShare]? {
-		didSet {
-			if let permissions {
-				permissionSectionDatasource?.setVersionedItems(permissions)
-			} else {
-				permissionSectionDatasource?.setVersionedItems([])
-			}
-		}
-	}
-	var permissionSection: CollectionViewSection?
-	var permissionSectionDatasource: OCDataSourceArray?
-
-	var owner: OCIdentity? {
-		didSet {
-			if let owner {
-				ownerSectionDatasource?.setVersionedItems([ owner ])
-				ownerSection?.hidden = false
-			} else {
-				ownerSectionDatasource?.setVersionedItems([])
-				ownerSection?.hidden = true
-			}
-		}
-	}
-	var ownerSection: CollectionViewSection?
-	var ownerSectionDatasource: OCDataSourceArray?
 
 	func updateState() {
 		var createOrSaveIsEnabled: Bool

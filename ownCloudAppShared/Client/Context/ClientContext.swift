@@ -33,7 +33,7 @@ public protocol ViewItemAction : AnyObject {
 }
 
 public protocol MoreItemAction : AnyObject {
-	@discardableResult func moreOptions(for item: OCDataItem, obj: AnyObject?, at location: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> Bool
+	@discardableResult func moreOptions(for item: OCDataItem, at location: OCExtensionLocationIdentifier, context: ClientContext, sender: AnyObject?) -> Bool
 }
 
 public protocol ActionProgressHandlerProvider : AnyObject {

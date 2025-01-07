@@ -439,7 +439,6 @@
 		DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */; };
 		DC9C1AEC247C76470067895A /* MessageGroupCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9C1AEB247C76470067895A /* MessageGroupCell.swift */; };
 		DC9CE3B82D0C4D1400979C44 /* ThemeCSSTextField+Styled.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9CE3B72D0C4D1400979C44 /* ThemeCSSTextField+Styled.swift */; };
-		DC9CE3D42D10813700979C44 /* DetailsSpaceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9CE3D12D1080EE00979C44 /* DetailsSpaceAction.swift */; };
 		DC9CE3D52D10813F00979C44 /* ManageSpaceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9CE3BD2D0F31ED00979C44 /* ManageSpaceAction.swift */; };
 		DC9CE3D62D10814400979C44 /* DisableSpaceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9CE3C02D0F399B00979C44 /* DisableSpaceAction.swift */; };
 		DCA05A602AE6603E00BFF393 /* ClientLocationPopupButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA05A5F2AE6603E00BFF393 /* ClientLocationPopupButton.swift */; };
@@ -4562,7 +4561,6 @@
 				DC815C3F2A65D9CB00BFF393 /* AvailableOfflineAction.swift in Sources */,
 				4CB8ADE022DF5EC500F1FEBC /* UIAlertViewController+SystemPermissions.swift in Sources */,
 				392DDB1424CF024D009E5406 /* ImportFilesController.swift in Sources */,
-				DC9CE3D42D10813700979C44 /* DetailsSpaceAction.swift in Sources */,
 				396C82FB2319AFDD00938262 /* CollaborateAction.swift in Sources */,
 				0233F45E246E9D960095A799 /* UploadCameraMediaAction.swift in Sources */,
 				DC854936218331CF00782BA8 /* UserInterfaceSettingsSection.swift in Sources */,
