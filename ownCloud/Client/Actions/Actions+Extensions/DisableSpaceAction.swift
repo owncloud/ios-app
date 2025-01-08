@@ -26,12 +26,16 @@ public class DisableSpaceAction : Action {
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.disablespace") }
 	override open class var category : ActionCategory? { return .edit }
 	override open class var name : String? { return OCLocalizedString("Disable space", nil) }
-	override open class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder] }
+	override open class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .spaceAction] }
 
 	// MARK: - Extension matching
 	override open class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if let core = forContext.core, core.connectionStatus == .online, let drive = forContext.drive, drive.specialType == .space {
-			return .last
+			if let shareActions = core.connection.shareActions(for: drive) {
+				if shareActions.contains(.updatePermissions) {
+					return .last
+				}
+			}
 		}
 
 		return .none
