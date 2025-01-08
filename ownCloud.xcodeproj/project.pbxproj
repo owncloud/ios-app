@@ -500,6 +500,7 @@
 		DCB6B20A292E296800D27573 /* CollectionSidebarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B209292E296800D27573 /* CollectionSidebarAction.swift */; };
 		DCB6B20C292E428000D27573 /* AccountController+ExtraItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20B292E428000D27573 /* AccountController+ExtraItems.swift */; };
 		DCB6B20F292F843800D27573 /* CollectionViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20E292F843800D27573 /* CollectionViewAction.swift */; };
+		DCB750522D2F0B3600CCF68C /* DetailsSpaceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9CE3D12D1080EE00979C44 /* DetailsSpaceAction.swift */; };
 		DCB796472BC4847200D6D759 /* ShortcutFileDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796462BC4847200D6D759 /* ShortcutFileDisplayViewController.swift */; };
 		DCB796492BC4854800D6D759 /* INIFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796482BC4854800D6D759 /* INIFile.swift */; };
 		DCB7964C2BC4901400D6D759 /* INIFile+URLFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7964B2BC4901400D6D759 /* INIFile+URLFile.swift */; };
@@ -4594,6 +4595,7 @@
 				DC63208521FCEBE9007EC0A8 /* ClientActivityCell.swift in Sources */,
 				DC62514A225CEB4300736874 /* UploadMediaAction.swift in Sources */,
 				025FC72924781659009307A7 /* AutoUploadSettingsSection.swift in Sources */,
+				DCB750522D2F0B3600CCF68C /* DetailsSpaceAction.swift in Sources */,
 				DC1BEEF62C2DFE940016C94F /* HelpAndSupportViewController.swift in Sources */,
 				DC9BFBBD20A1C37B007064B5 /* PasswordManagerAccess.swift in Sources */,
 				23D5241521491C670002C566 /* DisplayViewController.swift in Sources */,
