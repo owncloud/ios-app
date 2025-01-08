@@ -31,12 +31,12 @@ public class ConfidentialContentView: UIView {
 			setNeedsDisplay()
 		}
 	}
-	var textColor: UIColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.button], for: nil)?.withAlphaComponent(0.8) ?? .red {
+	var textColor: UIColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.button], for: nil)?.withAlphaComponent(0.7) ?? .red {
 		didSet {
 			setNeedsDisplay()
 		}
 	}
-	var subtitleTextColor: UIColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.button], for: nil)?.withAlphaComponent(0.4) ?? .red {
+	var subtitleTextColor: UIColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.button], for: nil)?.withAlphaComponent(0.6) ?? .red {
 		didSet {
 			setNeedsDisplay()
 		}
@@ -66,7 +66,7 @@ public class ConfidentialContentView: UIView {
 			setNeedsDisplay()
 		}
 	}
-	var marginY: CGFloat = 10 {
+	var padding: CGFloat = 10 {
 		didSet {
 			setNeedsDisplay()
 		}
@@ -143,9 +143,9 @@ public class ConfidentialContentView: UIView {
 		let rotatedDiagonal = sqrt(rect.width * rect.width + rect.height * rect.height)
 		
 		let startX = -rotatedDiagonal
-		let startY = -rotatedDiagonal + marginY
+		let startY = -rotatedDiagonal + padding
 		let endX = rotatedDiagonal
-		let endY = rotatedDiagonal - marginY
+		let endY = rotatedDiagonal - padding
 		
 		var y = startY
 		while y <= endY {
@@ -174,7 +174,7 @@ public class ConfidentialContentView: UIView {
 			]
 			let combinedTextSize = combinedText.size(withAttributes: combinedTextAttributes)
 			
-			var x = CGFloat(0)
+			var x = CGFloat(padding)
 			let subtextY = rect.height - combinedTextSize.height - 2
 			while x < rect.width {
 				combinedText.draw(at: CGPoint(x: x, y: subtextY), withAttributes: combinedTextAttributes)

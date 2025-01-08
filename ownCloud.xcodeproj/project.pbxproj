@@ -85,6 +85,8 @@
 		399EA74625E6575B00B6FF11 /* NotificationHUDViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 399EA74525E6575A00B6FF11 /* NotificationHUDViewController.swift */; };
 		399FBF8D2CABE3A600F1AACF /* CrashReporter in Frameworks */ = {isa = PBXBuildFile; productRef = 02AE32E324D2FA8B00A19476 /* CrashReporter */; };
 		39A7138722E79C6700089423 /* ownCloud Intents.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 39A7138022E79C6700089423 /* ownCloud Intents.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		39B9A3822D1190C400F39318 /* MYAudioTapProcessor.h in Headers */ = {isa = PBXBuildFile; fileRef = 39B9A3802D1190C400F39318 /* MYAudioTapProcessor.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		39B9A3832D1190C400F39318 /* MYAudioTapProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = 39B9A3812D1190C400F39318 /* MYAudioTapProcessor.m */; };
 		39BC9C3023DB831F0097C52D /* DocumentEditingAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CD755123D787E400193950 /* DocumentEditingAction.swift */; };
 		39BE385D23435AFE0062A2FE /* String+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BE385C23435AFE0062A2FE /* String+Extension.swift */; };
 		39BF674C25E7FE020039663F /* CancelLabelViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BF674B25E7FE020039663F /* CancelLabelViewController.swift */; };
@@ -1089,6 +1091,8 @@
 		39B289A7226F1EE000BE0E11 /* MessageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageView.swift; sourceTree = "<group>"; };
 		39B39446238532DC00892E8D /* ThemeTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeTableViewCell.swift; sourceTree = "<group>"; };
 		39B394482385334D00892E8D /* ThemeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ThemeView.swift; sourceTree = "<group>"; };
+		39B9A3802D1190C400F39318 /* MYAudioTapProcessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MYAudioTapProcessor.h; sourceTree = "<group>"; };
+		39B9A3812D1190C400F39318 /* MYAudioTapProcessor.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MYAudioTapProcessor.m; sourceTree = "<group>"; };
 		39BE385C23435AFE0062A2FE /* String+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extension.swift"; sourceTree = "<group>"; };
 		39BF674B25E7FE020039663F /* CancelLabelViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CancelLabelViewController.swift; sourceTree = "<group>"; };
 		39CC8AE5228C12100020253B /* Array+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extension.swift"; sourceTree = "<group>"; };
@@ -2109,6 +2113,15 @@
 				39A7138422E79C6700089423 /* Info.plist */,
 			);
 			path = "ownCloud Intents";
+			sourceTree = "<group>";
+		};
+		39B9A37C2D11909D00F39318 /* SpeechRecognition */ = {
+			isa = PBXGroup;
+			children = (
+				39B9A3802D1190C400F39318 /* MYAudioTapProcessor.h */,
+				39B9A3812D1190C400F39318 /* MYAudioTapProcessor.m */,
+			);
+			path = SpeechRecognition;
 			sourceTree = "<group>";
 		};
 		39C31F8E22F1A4F50023923D /* Theming */ = {
@@ -3153,6 +3166,7 @@
 		DCC0855D2293F1FD008CC05C /* ownCloudAppFramework */ = {
 			isa = PBXGroup;
 			children = (
+				39B9A37C2D11909D00F39318 /* SpeechRecognition */,
 				39D091B02D0788D1001329DF /* Confidential */,
 				DCC0855E2293F1FD008CC05C /* ownCloudApp.h */,
 				DC774E5A22F44E2A000B11A1 /* Display Settings */,
@@ -3807,6 +3821,7 @@
 				DC66F3AB23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.h in Headers */,
 				DC049156258C00C400DEDC27 /* OCFileProviderServiceStandby.h in Headers */,
 				39D091B42D079640001329DF /* ConfidentialManager.h in Headers */,
+				39B9A3822D1190C400F39318 /* MYAudioTapProcessor.h in Headers */,
 				3912D8AD29958BF400EDCB9A /* OCThemeValues.h in Headers */,
 				DCFEFE972368D099009A142F /* OCLicenseEnvironment.h in Headers */,
 				DC6A0E5426EA9E740076B533 /* AppLockSettings.h in Headers */,
@@ -4944,6 +4959,7 @@
 				DCF2DA7E24C835BF0026D790 /* OCVault+FPServices.m in Sources */,
 				DC2A128728D0725D0088A2B7 /* OCSavedSearch.m in Sources */,
 				DCDC208D239912DC003CFF5B /* OCLicenseTransaction.m in Sources */,
+				39B9A3832D1190C400F39318 /* MYAudioTapProcessor.m in Sources */,
 				DC1621362B8FE26200EB17F8 /* OCVault+SidebarItems.m in Sources */,
 				DC23D1D9238F390A00423F62 /* OCLicenseAppStoreReceipt.m in Sources */,
 				DCC832F2242CC28400153F8C /* NotificationMessagePresenter.m in Sources */,

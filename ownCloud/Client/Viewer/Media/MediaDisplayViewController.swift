@@ -20,9 +20,12 @@ import UIKit
 import AVKit
 import MediaPlayer
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 import CoreServices
 import UniformTypeIdentifiers
+import Speech
+import NaturalLanguage
 
 extension AVPlayer {
     var isAudioAvailable: Bool? {
@@ -59,6 +62,14 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 		return false
 	}
+	
+	
+	var captionLabel: UILabel?
+	private var tap: MYAudioTapProcessor!
+
+	private let speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-EN"))!
+	private var recognitionRequest: SFSpeechAudioBufferRecognitionRequest?
+	private var recognitionTask: SFSpeechRecognitionTask?
 
 	deinit {
 		playerStatusObservation?.invalidate()
@@ -112,13 +123,15 @@ class MediaDisplayViewController : DisplayViewController {
 		NotificationCenter.default.addObserver(self, selector: #selector(handleDidEnterBackgroundNotification), name: UIApplication.didEnterBackgroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleWillEnterForegroundNotification), name: UIApplication.willEnterForegroundNotification, object: nil)
 		NotificationCenter.default.addObserver(self, selector: #selector(handleAVPlayerItem(notification:)), name: Notification.Name.AVPlayerItemDidPlayToEndTime, object: nil)
+		
+		requestSeechPermission()
 	}
 
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
 		hasFocus = true
-		player?.play()
+		self.play()
 	}
 
 	override func viewDidDisappear(_ animated: Bool) {
@@ -168,6 +181,24 @@ class MediaDisplayViewController : DisplayViewController {
 					playerViewController.view.leadingAnchor.constraint(equalTo: self.view.leadingAnchor),
 					playerViewController.view.trailingAnchor.constraint(equalTo: self.view.trailingAnchor)
 				])
+				
+				captionLabel = UILabel()
+				if let captionLabel = captionLabel {
+					captionLabel.numberOfLines = 1
+					captionLabel.lineBreakMode = .byTruncatingHead
+					captionLabel.textAlignment = .center
+					captionLabel.textColor = .white
+					captionLabel.font = UIFont.systemFont(ofSize: 20)
+					captionLabel.backgroundColor = .black.withAlphaComponent(0.5)
+					captionLabel.translatesAutoresizingMaskIntoConstraints = false
+					playerViewController.view.addSubview(captionLabel)
+					
+					NSLayoutConstraint.activate([
+						captionLabel.bottomAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.bottomAnchor, constant: -20.0),
+						captionLabel.leadingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.leadingAnchor, constant: 20),
+						captionLabel.trailingAnchor.constraint(equalTo: self.view.safeAreaLayoutGuide.trailingAnchor, constant: -20)
+					])
+				}
 			}
 		}
 
@@ -178,6 +209,17 @@ class MediaDisplayViewController : DisplayViewController {
 
 			let asset = AVURLAsset(url: directURL, options: self.httpAuthHeaders != nil ? ["AVURLAssetHTTPHeaderFieldsKey" : self.httpAuthHeaders!] : nil )
 			playerItem = AVPlayerItem(asset: asset)
+			
+			guard let audioTrack = asset.tracks(withMediaType: AVMediaType.audio).first else {
+				print("can't get audioTrack")
+				return
+			}
+			player?.volume = 0.0
+			
+			tap = MYAudioTapProcessor(audioAssetTrack: audioTrack)
+			tap.delegate = self
+			
+			playerItem?.audioMix = tap.audioMix
 
 			playerItemStatusObservation = playerItem?.observe(\AVPlayerItem.status, options: [.initial, .new], changeHandler: { [weak self] (item, _) in
 				if item.status == .failed {
@@ -216,7 +258,7 @@ class MediaDisplayViewController : DisplayViewController {
 
 						if (self?.hasFocus)! {
 							// .. with playback starting here.
-							self?.player?.play()
+							self?.play()
 						} else {
 							// .. or the loading indicator being updated when the file is ready to play, here.
 							self?.updateLoadingIndicator()
@@ -234,6 +276,28 @@ class MediaDisplayViewController : DisplayViewController {
 			completion(true)
 		} else {
 			completion(false)
+		}
+	}
+	
+	func transcribeAudio(url: URL) {
+		// create a new recognizer and point it at our audio
+		let recognizer = SFSpeechRecognizer()
+		let request = SFSpeechURLRecognitionRequest(url: url)
+
+		// start recognition!
+		recognizer?.recognitionTask(with: request) { [unowned self] (result, error) in
+			// abort if we didn't get any transcription back
+			print("---#### \(result?.bestTranscription.formattedString)")
+			guard let result = result else {
+				print("There was an error: \(error!)")
+				return
+			}
+
+			// if we got the final transcription back, print it
+			if result.isFinal {
+				// pull out the best transcription...
+				print(result.bestTranscription.formattedString)
+			}
 		}
 	}
 
@@ -285,6 +349,44 @@ class MediaDisplayViewController : DisplayViewController {
 		// Extract artist meta-data item
 		mediaItemArtist = asset.commonMetadata.filter({$0.commonKey == AVMetadataKey.commonKeyArtist}).first?.value as? String
 	}
+	
+	func requestSeechPermission() {
+		SFSpeechRecognizer.requestAuthorization { authStatus in
+			switch authStatus {
+			case .authorized:
+				print("Speech recognition authorized")
+			case .denied:
+				print("Speech recognition authorization denied")
+			case .restricted:
+				print("Not available on this device")
+			case .notDetermined:
+				print("Not determined")
+			}
+		}
+	}
+	
+	private func setupRecognition() {
+		print("--> setupRecognition")
+	 let recognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+	 // we want to get continuous recognition and not everything at once at the end of the video
+	 recognitionRequest.shouldReportPartialResults = true
+	 recognitionTask = speechRecognizer.recognitionTask(with: recognitionRequest) { [weak self] result, error in
+		 print("--### \(result?.bestTranscription.formattedString)")
+		 if let captionLabel = self?.captionLabel {
+			 captionLabel.text = result?.bestTranscription.formattedString
+		 }
+		 
+
+		 // once in about every minute recognition task finishes so we need to set up a new one to continue recognition
+		 if result?.isFinal == true {
+			 self?.recognitionRequest = nil
+			 self?.recognitionTask = nil
+
+			 self?.setupRecognition()
+		 }
+	 }
+	 self.recognitionRequest = recognitionRequest
+ }
 
 	private func present(error:Error?) {
 		guard let error = error else { return }
@@ -458,6 +560,7 @@ class MediaDisplayViewController : DisplayViewController {
 
 	public func play() {
 		player?.play()
+		self.setupRecognition()
 	}
 
 	public func pause() {
@@ -523,4 +626,11 @@ extension MediaDisplayViewController: DisplayExtension {
 	static var displayExtensionIdentifier: String = "org.owncloud.media"
 	static var supportedMimeTypes: [String]?
 	static var features: [String : Any]? = [FeatureKeys.canEdit : false]
+}
+
+extension MediaDisplayViewController: MYAudioTabProcessorDelegate {
+	// getting audio buffer back from the tap and feeding into speech recognizer
+	func audioTabProcessor(_ audioTabProcessor: MYAudioTapProcessor!, didReceive buffer: AVAudioPCMBuffer!) {
+		recognitionRequest?.append(buffer)
+	}
 }

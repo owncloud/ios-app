@@ -87,7 +87,7 @@ public extension UIView {
 		
 		if self.frame.height <= 200 {
 			overlayView.angle = 10
-			self.insertSubview(overlayView, aboveSubview: self)
+			self.insertSubview(overlayView, belowSubview: self)
 		} else {
 			overlayView.angle = 45
 			self.addSubview(overlayView)
