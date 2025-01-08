@@ -71,6 +71,7 @@ public extension OCExtensionLocationIdentifier {
 	static let locationPickerBar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("locationPickerBar") //!< Used in ClientLocationPicker
 	static let directOpen: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("directOpen") //!< Used in OCItem+Interactions to implement direct actions for opening files
 	static let accessibilityCustomAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("accessibilityCustomAction") //!< Accessibility custom action available in VoiceOver and in Keyboard Control when pressing Tab + Z
+	static let spaceAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("spaceAction") //!< Present as action in the space management UI when editing/viewing space details
 }
 
 public class ActionExtension: OCExtension {

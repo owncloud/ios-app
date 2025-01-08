@@ -24,7 +24,7 @@ class MembersSpaceAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.spacemembers") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return OCLocalizedString("Members", nil) }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .moreItem, .moreDetailItem, .accessibilityCustomAction] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .spaceAction] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {

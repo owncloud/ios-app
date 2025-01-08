@@ -31,7 +31,11 @@ public class ManageSpaceAction : Action {
 	// MARK: - Extension matching
 	override open class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if let core = forContext.core, core.connectionStatus == .online, let drive = forContext.drive, drive.specialType == .space {
-			return .first
+			if let shareActions = core.connection.shareActions(for: drive) {
+				if shareActions.contains(.updatePermissions) {
+					return .first
+				}
+			}
 		}
 		return  .none
 	}
