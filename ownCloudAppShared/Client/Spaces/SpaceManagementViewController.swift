@@ -149,7 +149,40 @@ public class SpaceManagementViewController: CollectionViewController {
 
 		sections.append(section)
 
+		// Actions section
+		var actionsDataSource: OCDataSourceArray?
+		var actionSection: CollectionViewSection?
+
+		if mode != .create {
+			let cellStyle: CollectionViewCellStyle = .init(with: .tableCell)
+			actionsDataSource = OCDataSourceArray(items: [])
+			actionSection = CollectionViewSection(identifier: "actions", dataSource: actionsDataSource, cellStyle: cellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: clientContext)
+			if let actionSection {
+				actionSection.boundarySupplementaryItems = [
+					.mediumTitle(OCLocalizedString("Actions",nil))
+				]
+				actionSection.hidden = true
+				sections.append(actionSection)
+			}
+		}
+
 		super.init(context: spaceControllerContext, sections: sections, useStackViewRoot: true)
+
+		if let actionsDataSource, let core = spaceControllerContext.core, let rootItem {
+			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .spaceAction)
+			let actionContext = ActionContext(viewController: self, clientContext: spaceControllerContext, core: core, items: [rootItem], location: actionsLocation, sender: nil)
+			let actions = Action.sortedApplicableActions(for: actionContext)
+			var ocActions: [OCAction] = []
+
+			for action in actions {
+				ocActions.append(action.provideOCAction())
+			}
+
+			if ocActions.count > 0 {
+				actionsDataSource.setVersionedItems(ocActions)
+				actionSection?.hidden = false
+			}
+		}
 
 		cssSelector = .grouped
 	}

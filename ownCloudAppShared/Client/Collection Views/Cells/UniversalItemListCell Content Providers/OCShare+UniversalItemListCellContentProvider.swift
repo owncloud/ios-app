@@ -72,7 +72,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 							roleName = matchingRole.localizedName
 						}
 
-						if itemLocation.isDriveRoot, let driveRole = self.sharePermissions?.first?.driveRole {
+						if itemLocation.isDriveRoot {
 							detailToken = self.sharePermissions?.first?.localizedDriveRoleName
 						}
 					}
@@ -150,23 +150,21 @@ extension OCShare: UniversalItemListCellContentProvider {
 			default: break
 		}
 
-		if let detailText {
-			var detailSegments: [SegmentViewItem] = [
-				.detailText(detailText)
-			]
+		var detailSegments: [SegmentViewItem] = []
 
-			if let detailToken {
-				detailSegments.insert(.token(detailToken), at: 0)
-			}
-
-			if let detailExtraItems {
-				detailSegments.append(contentsOf: detailExtraItems)
-			}
-
-			content.details = detailSegments
-		} else {
-			content.details = detailExtraItems
+		if let detailToken {
+			detailSegments.append(.token(detailToken))
 		}
+
+		if let detailText {
+			detailSegments.append(.detailText(detailText))
+		}
+
+		if let detailExtraItems {
+			detailSegments.append(contentsOf: detailExtraItems)
+		}
+
+		content.details = detailSegments
 
 		if showManagementView {
 			// Management view

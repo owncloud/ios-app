@@ -23,6 +23,8 @@ public typealias ItemProvider = () -> OCItem?
 
 open class SharingViewController: CollectionViewController {
 
+	var managementClientContext: ClientContext
+
 	var itemSection: CollectionViewSection
 	var itemSectionDatasource: OCDataSourceArray
 
@@ -59,13 +61,10 @@ open class SharingViewController: CollectionViewController {
 		itemSection = CollectionViewSection(identifier: "item", dataSource: itemSectionDatasource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemSectionContext)
 		sections.append(itemSection)
 
-		// Managament section cell style
-		let managementCellStyle: CollectionViewCellStyle = .init(with: .tableCell)
-		managementCellStyle.options = [
-			.showManagementView : true
-		]
+		// Management section cell style
+		let managementCellStyle = SharingViewController.composeManagementCellStyle(allowEditing: canUpdate)
 
-		let managementClientContext = ClientContext(with: clientContext)
+		managementClientContext = ClientContext(with: clientContext)
 		managementClientContext.postInitializationModifier = { (owner, context) in
 			context.originatingViewController = owner as? UIViewController
 		}
@@ -219,9 +218,28 @@ open class SharingViewController: CollectionViewController {
 
 		revoke(in: clientContext, when: [ .connectionClosed, .connectionOffline ])
 
+		itemSharesQuery?.changesAvailableNotificationHandler = { [weak self] query in
+			// Called when populated the first time - query.allowedPermissionActions should now be available
+			self?.allowedPermissionActions = query.allowedPermissionActions
+		}
+
 		if let core = clientContext.core, let itemSharesQuery {
 			core.start(itemSharesQuery)
 		}
+
+		managementClientContext.add(permissionHandler: { [weak self] context, dataItemRecord, checkInteraction, inViewController in
+			if dataItemRecord?.type == .share, let self {
+				switch checkInteraction {
+					case .selection, .contextMenu, .leadingSwipe, .trailingSwipe:
+						// Only allow selection and contextmenu (editing), leading and trailing swipes (delete) if user has update permission
+						return self.canUpdate
+
+					default: break
+				}
+			}
+
+			return true
+		})
 
 		// Disable dragging of items, so keyboard control does
 		// not include "Drag Item" in the accessibility actions
@@ -237,6 +255,15 @@ open class SharingViewController: CollectionViewController {
 		}
 	}
 
+	static func composeManagementCellStyle(allowEditing: Bool) -> CollectionViewCellStyle {
+		let managementCellStyle: CollectionViewCellStyle = .init(with: .tableCell)
+		managementCellStyle.options = [
+			.showManagementView : true,
+			.withoutDisclosure : !allowEditing
+		]
+		return managementCellStyle
+	}
+
 	func createShare(type: ShareViewController.ShareType) {
 		guard let clientContext else { return }
 
@@ -244,6 +271,31 @@ open class SharingViewController: CollectionViewController {
 		})
 		let navigationController = ThemeNavigationController(rootViewController: shareViewController)
 		self.present(navigationController, animated: true)
+	}
+
+	var allowedPermissionActions: [OCShareActionID]? {
+		didSet {
+			if let allowedPermissionActions {
+				canCreate = allowedPermissionActions.contains(.createPermissions)
+				canUpdate = allowedPermissionActions.contains(.updatePermissions)
+			}
+		}
+	}
+
+	var canCreate: Bool = true {
+		didSet {
+			if let addLinkDataSource, let addRecipientDataSource {
+				linksSectionDatasource?.setInclude(canCreate, for: addLinkDataSource)
+				recipientsSectionDatasource?.setInclude(canCreate, for: addRecipientDataSource)
+			}
+		}
+	}
+	var canUpdate: Bool = true {
+		didSet {
+			let managementCellStyle = SharingViewController.composeManagementCellStyle(allowEditing: canUpdate)
+			recipientsSection?.cellStyle = managementCellStyle
+			linksSection?.cellStyle = managementCellStyle
+		}
 	}
 
 	required public init?(coder: NSCoder) {
