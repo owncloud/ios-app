@@ -153,6 +153,7 @@ open class SharingViewController: CollectionViewController {
 				linksSection?.boundarySupplementaryItems = [
 					.mediumTitle(OCLocalizedString("Public Links", nil))
 				]
+				linksSection?.hideIfEmptyDataSource = linksSectionDatasource
 				sections.append(linksSection!)
 			}
 		}
