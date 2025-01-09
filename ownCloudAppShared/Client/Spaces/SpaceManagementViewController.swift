@@ -207,6 +207,7 @@ public class SpaceManagementViewController: CollectionViewController {
 		// Set titles
 		var navigationTitle: String?
 		var selectButtonTitle: String
+		var cancelButtonTitle: String? = OCLocalizedString("Cancel", nil)
 		var hasCancelButton = true
 
 		switch mode {
@@ -226,7 +227,7 @@ public class SpaceManagementViewController: CollectionViewController {
 		navigationItem.titleLabelText = navigationTitle
 
 		// Add bottom button bar
-		bottomButtonBar = BottomButtonBar(selectButtonTitle: selectButtonTitle, alternativeButtonTitle: nil, cancelButtonTitle: OCLocalizedString("Cancel", nil), hasCancelButton: hasCancelButton, selectAction: UIAction(handler: { [weak self] _ in
+		bottomButtonBar = BottomButtonBar(selectButtonTitle: selectButtonTitle, alternativeButtonTitle: nil, cancelButtonTitle: cancelButtonTitle, hasCancelButton: hasCancelButton, selectAction: UIAction(handler: { [weak self] _ in
 			self?.save()
 		}), cancelAction: UIAction(handler: { [weak self] _ in
 			self?.complete()
@@ -273,6 +274,14 @@ public class SpaceManagementViewController: CollectionViewController {
 			quotaEnabled = (quota.total?.uint64Value ?? 0) > 0
 		} else {
 			quotaEnabled = false
+		}
+
+		// Disable user input in detail view
+		if mode == .details {
+			nameTextField.isEnabled = false
+			subtitleTextField.isEnabled = false
+			quotaOnOffSwitch?.isEnabled = false
+			quotaTextField.isUserInteractionEnabled = false
 		}
 
 		// Set up view
