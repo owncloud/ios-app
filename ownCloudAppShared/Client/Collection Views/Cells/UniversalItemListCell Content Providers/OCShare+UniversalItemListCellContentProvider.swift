@@ -83,7 +83,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 							if let displayName = user.displayName {
 	 							content.title = .text(displayName)
 							}
-							detailText = user.userName
+							detailText = user.userName ?? OCLocalizedString("User", nil)
 						} else if let displayName = recipient?.displayName {
 							content.title = .text(displayName)
 						}
