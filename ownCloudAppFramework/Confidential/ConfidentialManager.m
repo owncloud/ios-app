@@ -40,19 +40,18 @@
 }
 
 - (BOOL)allowScreenshots {
-	id value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyAllowScreenshots];
-	return value ? [value boolValue] : YES;
+	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyAllowScreenshots];
+	return (value != nil) ? value.boolValue : YES;
 }
 
 - (BOOL)markConfidentialViews {
-	id value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyMarkConfidentialViews];
-	return value ? [value boolValue] : YES;
+	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyMarkConfidentialViews];
+	return (value != nil) ? value.boolValue : YES;
 }
 
 - (BOOL)allowOverwriteConfidentialMDMSettings {
-	BOOL confidentialSettingsEnabled = self.confidentialSettingsEnabled;
-	id value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings];
-	return confidentialSettingsEnabled && (value ? [value boolValue] : YES);
+	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings];
+	return self.confidentialSettingsEnabled && ((value != nil) ? value.boolValue : YES);
 }
 
 - (BOOL)confidentialSettingsEnabled {

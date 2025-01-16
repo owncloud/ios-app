@@ -260,16 +260,8 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	open override func viewDidLoad() {
 		super.viewDidLoad()
 		
-		let secureView = SecureTextField().secureContainerView
-		secureView.addSubview(collectionView)
-		view.addSubview(secureView)
-		
-		NSLayoutConstraint.activate([
-			secureView.topAnchor.constraint(equalTo: view.topAnchor),
-			secureView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-			secureView.leadingAnchor.constraint(equalTo: view.leadingAnchor).with(priority: .defaultHigh),
-			secureView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-		])
+		let wrappedContentContainerView = collectionView.withScreenshotProtection
+		view.addSubview(wrappedContentContainerView)
 		
 		// Disable dragging of items, so keyboard control does
 		// not include "Drag Item" in the accessibility actions

@@ -173,7 +173,7 @@ public class ClientLocationPicker : NSObject {
 
 			allowedLocationFilter = { (targetLocation, context) in
 				OnMainThread {
-					self.headerView?.secureView(core: context?.core)
+					headerView?.secureView(core: context?.core)
 				}
 				// Disallow all paths as target that are parent of any of the items
 				if itemParentLocations.contains(targetLocation) {

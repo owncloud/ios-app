@@ -140,9 +140,7 @@ extension DriveListCell {
 				resourceManager?.start(coverImageRequest)
 			}
 			
-			if let clientItemViewController = collectionItemRef.ocCellConfiguration?.hostViewController as? CollectionViewController {
-				cell.secureView(core: clientItemViewController.clientContext?.core)
-			}
+			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
 
 			cell.accessories = [ .disclosureIndicator() ]
 		}
@@ -173,9 +171,7 @@ extension DriveListCell {
 			cell.collectionItemRef = collectionItemRef
 			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
 			
-			if let clientItemViewController = collectionItemRef.ocCellConfiguration?.hostViewController as? CollectionViewController {
-				cell.secureView(core: clientItemViewController.clientContext?.core)
-			}
+			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
 
 			if let coverImageRequest = coverImageRequest {
 				resourceManager?.start(coverImageRequest)
@@ -222,9 +218,7 @@ extension DriveListCell {
 			cell.collectionItemRef = collectionItemRef
 			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
 			
-			if let clientItemViewController = collectionItemRef.ocCellConfiguration?.hostViewController as? CollectionViewController {
-				cell.secureView(core: clientItemViewController.clientContext?.core)
-			}
+			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
 
 			if let coverImageRequest = coverImageRequest {
 				resourceManager?.start(coverImageRequest)

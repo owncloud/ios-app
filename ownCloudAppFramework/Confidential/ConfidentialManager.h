@@ -29,7 +29,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, readonly) BOOL markConfidentialViews;
 @property (assign, readonly) BOOL allowOverwriteConfidentialMDMSettings;
 @property (assign, readonly) BOOL confidentialSettingsEnabled;
-@property (nonatomic, readonly, nullable) NSArray<NSString *> *disallowedActions;
+@property (nonatomic, readonly, nullable) NSArray<OCExtensionIdentifier> *disallowedActions;
 
 @end
 

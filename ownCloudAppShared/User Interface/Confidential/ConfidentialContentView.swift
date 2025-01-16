@@ -19,7 +19,7 @@
 import ownCloudSDK
 import ownCloudApp
 
-public class ConfidentialContentView: UIView {
+public class ConfidentialContentView: UIView, Themeable {
 	
 	var text: String = "Confidential Content" {
 		didSet {
@@ -31,12 +31,12 @@ public class ConfidentialContentView: UIView {
 			setNeedsDisplay()
 		}
 	}
-	var textColor: UIColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.button], for: nil)?.withAlphaComponent(0.8) ?? .red {
+	var textColor: UIColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.confidentialLabel], for: nil) ?? .red {
 		didSet {
 			setNeedsDisplay()
 		}
 	}
-	var subtitleTextColor: UIColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.button], for: nil)?.withAlphaComponent(0.4) ?? .red {
+	var subtitleTextColor: UIColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.confidentialSecondaryLabel], for: nil) ?? .red {
 		didSet {
 			setNeedsDisplay()
 		}
@@ -77,6 +77,7 @@ public class ConfidentialContentView: UIView {
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		setupOrientationObserver()
+		Theme.shared.register(client: self, applyImmediately: true)
 	}
 	
 	required init?(coder: NSCoder) {
@@ -85,6 +86,7 @@ public class ConfidentialContentView: UIView {
 	}
 	
 	deinit {
+		Theme.shared.unregister(client: self)
 		NotificationCenter.default.removeObserver(self)
 	}
 	
@@ -181,5 +183,48 @@ public class ConfidentialContentView: UIView {
 				x += combinedTextSize.width + columnSpacing
 			}
 		}
+	}
+	
+	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		if let color = collection.css.getColor(.stroke, selectors: [.confidentialLabel], for: nil) {
+			textColor = color
+		}
+		if let color = collection.css.getColor(.stroke, selectors: [.confidentialSecondaryLabel], for: nil) {
+			subtitleTextColor = color
+		}
+		
+		drawn = false
+		setNeedsDisplay()
+	}
+}
+
+public extension UIView {
+	
+	func secureView(core: OCCore?) {
+		let overlayView = ConfidentialContentView()
+		overlayView.text = core?.bookmark.user?.emailAddress ?? "Confidential View"
+		overlayView.subtext = core?.bookmark.userName ?? "Confidential View"
+		overlayView.backgroundColor = .clear
+		overlayView.translatesAutoresizingMaskIntoConstraints = false
+		overlayView.angle = (self.frame.height <= 200) ? 10 : 45
+		
+		self.addSubview(overlayView)
+		
+		NSLayoutConstraint.activate([
+			overlayView.topAnchor.constraint(equalTo: self.topAnchor),
+			overlayView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+			overlayView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+			overlayView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
+		])
+	}
+	
+	var withScreenshotProtection: UIView {
+		if ConfidentialManager.shared.allowScreenshots {
+			return self
+		}
+
+		let secureContainerView = SecureTextField().secureContainerView
+		secureContainerView.embed(toFillWith: self)
+		return secureContainerView
 	}
 }

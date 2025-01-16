@@ -71,9 +71,8 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		contentContainerView.translatesAutoresizingMaskIntoConstraints = false
 		contentContainerView.focusGroupIdentifier = "com.owncloud.content"
 		
-		let secureView = SecureTextField().secureContainerView
-		secureView.addSubview(contentContainerView)
-		view.addSubview(secureView)
+		let wrappedContentContainerView = contentContainerView.withScreenshotProtection
+		view.addSubview(wrappedContentContainerView)
 
 		navigationView.translatesAutoresizingMaskIntoConstraints = false
 		navigationView.delegate = self
@@ -92,11 +91,6 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		navigationBarTopConstraint = navigationBarTopConstraint(for: navigationBarHidden)
 
 		NSLayoutConstraint.activate([
-			
-			secureView.topAnchor.constraint(equalTo: view.topAnchor),
-			secureView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-			secureView.leadingAnchor.constraint(equalTo: view.leadingAnchor).with(priority: .defaultHigh),
-			secureView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 			
 			contentContainerView.topAnchor.constraint(equalTo: view.topAnchor),
 			contentContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),

@@ -77,27 +77,4 @@ public extension UIView {
 
 		return hostViewController
 	}
-	
-	func secureView(core: OCCore?) {
-		let overlayView = ConfidentialContentView()
-		overlayView.text = core?.bookmark.user?.emailAddress ?? "Confidential View"
-		overlayView.subtext = core?.bookmark.userName ?? "Confidential View"
-		overlayView.backgroundColor = .clear
-		overlayView.translatesAutoresizingMaskIntoConstraints = false
-		
-		if self.frame.height <= 200 {
-			overlayView.angle = 10
-			self.insertSubview(overlayView, aboveSubview: self)
-		} else {
-			overlayView.angle = 45
-			self.addSubview(overlayView)
-		}
-		
-		NSLayoutConstraint.activate([
-			overlayView.topAnchor.constraint(equalTo: self.topAnchor),
-			overlayView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-			overlayView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-			overlayView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
-		])
-	}
 }
