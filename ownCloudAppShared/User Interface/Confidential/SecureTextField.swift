@@ -46,6 +46,9 @@ class SecureTextField : UITextField {
 			return secureView
 		}
 		
+		// If screenshot protection was not possible, force close the application.
+		exit(0)
+		
 		let view = UIView()
 		view.translatesAutoresizingMaskIntoConstraints = false
 			
