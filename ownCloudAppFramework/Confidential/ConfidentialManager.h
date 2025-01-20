@@ -21,7 +21,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ConfidentialManager : NSObject <OCClassSettingsSupport>
+@interface ConfidentialManager : NSObject <OCClassSettingsSupport, OCClassSettingsSource>
 
 @property(class,strong,nonatomic,readonly) ConfidentialManager *sharedConfidentialManager;
 
@@ -32,6 +32,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly, nullable) NSArray<OCExtensionIdentifier> *disallowedActions;
 
 @end
+
+extern OCClassSettingsSourceIdentifier OCClassSettingsSourceIdentifierConfidentialManager;
 
 extern OCClassSettingsIdentifier OCClassSettingsIdentifierConfidential;
 

@@ -30,10 +30,6 @@ class IntentSettings: NSObject {
 	}
 
 	var isEnabled : Bool {
-		if !ConfidentialManager.shared.allowOverwriteConfidentialMDMSettings {
-			return false
-		}
-		
 		return (self.classSetting(forOCClassSettingsKey: .shortcutsEnabled) as? Bool) ?? true
 	}
 

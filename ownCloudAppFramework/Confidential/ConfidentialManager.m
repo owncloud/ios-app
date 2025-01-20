@@ -17,8 +17,14 @@
  */
 
 #import "ConfidentialManager.h"
+#import "OCFileProviderSettings.h"
 
 @implementation ConfidentialManager
+
++ (void)load
+{
+	[OCClassSettings.sharedSettings addSource:ConfidentialManager.sharedConfidentialManager];
+}
 
 + (instancetype)sharedConfidentialManager
 {
@@ -55,15 +61,14 @@
 }
 
 - (BOOL)confidentialSettingsEnabled {
-	return self.allowScreenshots || self.markConfidentialViews;
+	return !self.allowScreenshots || self.markConfidentialViews;
 }
 
 - (NSArray<NSString *> *)disallowedActions {
 	if (self.confidentialSettingsEnabled && !self.allowOverwriteConfidentialMDMSettings) {
 		return @[
 			@"com.owncloud.action.openin",
-			@"com.owncloud.action.copy",
-			@"action.allow-image-interactions"
+			@"com.owncloud.action.copy"
 		];
 	}
 	return nil;
@@ -105,7 +110,46 @@
 	});
 }
 
+#pragma mark - Class settings source
+- (OCClassSettingsSourceIdentifier)settingsSourceIdentifier
+{
+	return (OCClassSettingsSourceIdentifierConfidentialManager);
+}
+
+- (nullable NSDictionary<OCClassSettingsKey, id> *)settingsForIdentifier:(OCClassSettingsIdentifier)identifier
+{
+	if (!self.allowOverwriteConfidentialMDMSettings && self.confidentialSettingsEnabled) {
+		// Action
+		if ([identifier isEqual:@"action"]) { // OCClassSettingsIdentifier.action
+			// Disallow image interactions (ImageScrollView.imageInteractionsAllowed)
+			return (@{
+				@"allow-image-interactions" : @(NO) // OCClassSettingsKey.allowImageInteractions
+			});
+		}
+
+		// File Provider
+		if ([identifier isEqual:OCClassSettingsIdentifierFileProvider]) {
+			// Disallow File Provider browsing
+			return (@{
+				OCClassSettingsKeyFileProviderBrowseable : @(NO)
+			});
+		}
+
+		// Shortcuts
+		if ([identifier isEqual:@"shortcuts"]) { // OCClassSettingsIdentifier.shortcuts
+			// Disallow shortcuts (IntentSettings.isEnabled)
+			return (@{
+				@"enabled" : @(NO) // OCClassSettingsKey.shortcutsEnabled
+			});
+		}
+	}
+
+	return (nil);
+}
+
 @end
+
+OCClassSettingsSourceIdentifier OCClassSettingsSourceIdentifierConfidentialManager = @"confidential";
 
 OCClassSettingsIdentifier OCClassSettingsIdentifierConfidential = @"confidential";
 

@@ -197,7 +197,6 @@ extension ImageScrollView {
 	}
 
 	var imageInteractionsAllowed: Bool {
-		guard ConfidentialManager.shared.allowOverwriteConfidentialMDMSettings else { return false }
 		return Action.classSetting(forOCClassSettingsKey: .allowImageInteractions) as? Bool ?? true
 	}
 }

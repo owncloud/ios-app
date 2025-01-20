@@ -311,7 +311,7 @@ open class Action : NSObject {
 				   disallowedActions.contains(actionIdentifier.rawValue) {
 					return .noMatch
 				}
-				if let disallowedActions = ConfidentialManager.shared.disallowedActions, disallowedActions.contains(OCExtensionIdentifier(rawValue: actionIdentifier.rawValue)) {
+				if let disallowedActions = ConfidentialManager.shared.disallowedActions, disallowedActions.contains(actionIdentifier) {
 					return .noMatch
 				}
 			}

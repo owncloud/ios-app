@@ -47,10 +47,6 @@
 
 + (BOOL)browseable
 {
-	if ([[ConfidentialManager sharedConfidentialManager] allowOverwriteConfidentialMDMSettings] == false) {
-		return false;
-	}
-	
 	return ([([self classSettingForOCClassSettingsKey:OCClassSettingsKeyFileProviderBrowseable]) boolValue]);
 }
 
