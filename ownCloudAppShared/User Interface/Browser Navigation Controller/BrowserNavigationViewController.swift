@@ -70,7 +70,7 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		contentContainerView.cssSelector = .content
 		contentContainerView.translatesAutoresizingMaskIntoConstraints = false
 		contentContainerView.focusGroupIdentifier = "com.owncloud.content"
-		
+
 		let wrappedContentContainerView = contentContainerView.withScreenshotProtection
 		view.addSubview(wrappedContentContainerView)
 
@@ -91,20 +91,19 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		navigationBarTopConstraint = navigationBarTopConstraint(for: navigationBarHidden)
 
 		NSLayoutConstraint.activate([
-			
-			contentContainerView.topAnchor.constraint(equalTo: view.topAnchor),
-			contentContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-			contentContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor).with(priority: .defaultHigh), // Allow for flexibility without having to remove this constraint. It will be overridden by constraints with higher priority (default is .required) when necessary
-			contentContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+			wrappedContentContainerView.topAnchor.constraint(equalTo: view.topAnchor),
+			wrappedContentContainerView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+			wrappedContentContainerView.leadingAnchor.constraint(equalTo: view.leadingAnchor).with(priority: .defaultHigh), // Allow for flexibility without having to remove this constraint. It will be overridden by constraints with higher priority (default is .required) when necessary
+			wrappedContentContainerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
 
-			contentContainerLidView.topAnchor.constraint(equalTo: contentContainerView.topAnchor),
-			contentContainerLidView.bottomAnchor.constraint(equalTo: contentContainerView.bottomAnchor),
-			contentContainerLidView.leadingAnchor.constraint(equalTo: contentContainerView.leadingAnchor),
-			contentContainerLidView.trailingAnchor.constraint(equalTo: contentContainerView.trailingAnchor),
+			contentContainerLidView.topAnchor.constraint(equalTo: wrappedContentContainerView.topAnchor),
+			contentContainerLidView.bottomAnchor.constraint(equalTo: wrappedContentContainerView.bottomAnchor),
+			contentContainerLidView.leadingAnchor.constraint(equalTo: wrappedContentContainerView.leadingAnchor),
+			contentContainerLidView.trailingAnchor.constraint(equalTo: wrappedContentContainerView.trailingAnchor),
 
-			sideBarSeperatorView.topAnchor.constraint(equalTo: contentContainerView.topAnchor),
-			sideBarSeperatorView.bottomAnchor.constraint(equalTo: contentContainerView.bottomAnchor),
-			sideBarSeperatorView.leadingAnchor.constraint(equalTo: contentContainerView.leadingAnchor, constant: -1),
+			sideBarSeperatorView.topAnchor.constraint(equalTo: wrappedContentContainerView.topAnchor),
+			sideBarSeperatorView.bottomAnchor.constraint(equalTo: wrappedContentContainerView.bottomAnchor),
+			sideBarSeperatorView.leadingAnchor.constraint(equalTo: wrappedContentContainerView.leadingAnchor, constant: -1),
 			sideBarSeperatorView.widthAnchor.constraint(equalToConstant: 1),
 
 			navigationBarTopConstraint!,

@@ -71,25 +71,25 @@ public class ConfidentialContentView: UIView, Themeable {
 			setNeedsDisplay()
 		}
 	}
-	
+
 	private var drawn: Bool = false
-	
+
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		setupOrientationObserver()
 		Theme.shared.register(client: self, applyImmediately: true)
 	}
-	
+
 	required init?(coder: NSCoder) {
 		super.init(coder: coder)
 		setupOrientationObserver()
 	}
-	
+
 	deinit {
 		Theme.shared.unregister(client: self)
 		NotificationCenter.default.removeObserver(self)
 	}
-	
+
 	private func setupOrientationObserver() {
 		NotificationCenter.default.addObserver(
 			self,
@@ -98,12 +98,12 @@ public class ConfidentialContentView: UIView, Themeable {
 			object: nil
 		)
 	}
-	
+
 	@objc private func handleOrientationChange() {
 		drawn = false
 		setNeedsDisplay()
 	}
-	
+
 	public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
 		for subview in subviews.reversed() {
 			let subviewPoint = convert(point, to: subview)
@@ -113,17 +113,17 @@ public class ConfidentialContentView: UIView, Themeable {
 		}
 		return nil // Allow touches to pass through
 	}
-	
+
 	public override func draw(_ rect: CGRect) {
 		guard ConfidentialManager.shared.markConfidentialViews, let context = UIGraphicsGetCurrentContext() else { return }
-		
+
 		drawn = true
-		
+
 		context.saveGState()
-		
+
 		let radians = angle * .pi / 180
 		context.rotate(by: radians)
-		
+
 		let textAttributes: [NSAttributedString.Key: Any] = [
 			.font: font,
 			.foregroundColor: textColor
@@ -132,23 +132,23 @@ public class ConfidentialContentView: UIView, Themeable {
 			.font: font,
 			.foregroundColor: textColor
 		]
-		
+
 		let textSize = text.size(withAttributes: textAttributes)
 		let subtextSize = subtext.size(withAttributes: subtextAttributes)
-		
+
 		let stepX = textSize.width + columnSpacing
 		let stepY = textSize.height + lineSpacing
-		
+
 		let stepSubtextX = subtextSize.width + columnSpacing
 		let stepSubTextY = subtextSize.height + lineSpacing
-		
+
 		let rotatedDiagonal = sqrt(rect.width * rect.width + rect.height * rect.height)
-		
+
 		let startX = -rotatedDiagonal
 		let startY = -rotatedDiagonal + marginY
 		let endX = rotatedDiagonal
 		let endY = rotatedDiagonal - marginY
-		
+
 		var y = startY
 		while y <= endY {
 			var x = startX
@@ -165,9 +165,9 @@ public class ConfidentialContentView: UIView, Themeable {
 			}
 			y += stepY
 		}
-		
+
 		context.restoreGState()
-		
+
 		if angle < 45.0 {
 			let combinedText = "\(subtext) - \(text)"
 			let combinedTextAttributes: [NSAttributedString.Key: Any] = [
@@ -175,7 +175,7 @@ public class ConfidentialContentView: UIView, Themeable {
 				.foregroundColor: subtitleTextColor
 			]
 			let combinedTextSize = combinedText.size(withAttributes: combinedTextAttributes)
-			
+
 			var x = CGFloat(0)
 			let subtextY = rect.height - combinedTextSize.height - 2
 			while x < rect.width {
@@ -184,7 +184,7 @@ public class ConfidentialContentView: UIView, Themeable {
 			}
 		}
 	}
-	
+
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		if let color = collection.css.getColor(.stroke, selectors: [.confidentialLabel], for: nil) {
 			textColor = color
@@ -192,14 +192,14 @@ public class ConfidentialContentView: UIView, Themeable {
 		if let color = collection.css.getColor(.stroke, selectors: [.confidentialSecondaryLabel], for: nil) {
 			subtitleTextColor = color
 		}
-		
+
 		drawn = false
 		setNeedsDisplay()
 	}
 }
 
 public extension UIView {
-	
+
 	func secureView(core: OCCore?) {
 		let overlayView = ConfidentialContentView()
 		overlayView.text = core?.bookmark.user?.emailAddress ?? "Confidential View"
@@ -207,9 +207,9 @@ public extension UIView {
 		overlayView.backgroundColor = .clear
 		overlayView.translatesAutoresizingMaskIntoConstraints = false
 		overlayView.angle = (self.frame.height <= 200) ? 10 : 45
-		
+
 		self.addSubview(overlayView)
-		
+
 		NSLayoutConstraint.activate([
 			overlayView.topAnchor.constraint(equalTo: self.topAnchor),
 			overlayView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
@@ -217,7 +217,7 @@ public extension UIView {
 			overlayView.trailingAnchor.constraint(equalTo: self.trailingAnchor)
 		])
 	}
-	
+
 	var withScreenshotProtection: UIView {
 		if ConfidentialManager.shared.allowScreenshots {
 			return self

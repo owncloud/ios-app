@@ -86,12 +86,12 @@ open class MoreViewHeader: UIView {
 
 	private func render() {
 		cssSelectors = [.more, .header]
-		
-		let secureView = SecureTextField().secureContainerView
+
 		let contentContainerView = UIView()
 		contentContainerView.translatesAutoresizingMaskIntoConstraints = false
-		secureView.addSubview(contentContainerView)
-		self.addSubview(secureView)
+
+		let wrappedContentContainerView = contentContainerView.withScreenshotProtection
+		self.addSubview(wrappedContentContainerView)
 
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -110,18 +110,13 @@ open class MoreViewHeader: UIView {
 		titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 		detailLabel.setContentCompressionResistancePriority(.required, for: .vertical)
 		labelContainerView.setContentCompressionResistancePriority(.required, for: .vertical)
-		
-		
+
 		NSLayoutConstraint.activate([
-			secureView.topAnchor.constraint(equalTo: self.topAnchor),
-			secureView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-			secureView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-			secureView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
-			
-			contentContainerView.topAnchor.constraint(equalTo: self.topAnchor),
-			contentContainerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
-			contentContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
-			
+			wrappedContentContainerView.topAnchor.constraint(equalTo: self.topAnchor),
+			wrappedContentContainerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+			wrappedContentContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+			wrappedContentContainerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+
 			titleLabel.leadingAnchor.constraint(equalTo: labelContainerView.leadingAnchor),
 			titleLabel.trailingAnchor.constraint(equalTo: labelContainerView.trailingAnchor),
 			titleLabel.topAnchor.constraint(equalTo: labelContainerView.topAnchor),
@@ -152,7 +147,7 @@ open class MoreViewHeader: UIView {
 		if showFavoriteButton {
 			updateFavoriteButtonImage()
 			favoriteButton.addTarget(self, action: #selector(toogleFavoriteState), for: UIControl.Event.touchUpInside)
-			self.addSubview(favoriteButton)
+			contentContainerView.addSubview(favoriteButton)
 			favoriteButton.isPointerInteractionEnabled = true
 
 			NSLayoutConstraint.activate([
@@ -163,7 +158,7 @@ open class MoreViewHeader: UIView {
 				favoriteButton.leadingAnchor.constraint(equalTo: labelContainerView.trailingAnchor, constant: 10)
 				])
 		} else if showActivityIndicator {
-			self.addSubview(activityIndicator)
+			contentContainerView.addSubview(activityIndicator)
 
 			NSLayoutConstraint.activate([
 				activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor),
@@ -227,7 +222,7 @@ open class MoreViewHeader: UIView {
 		core?.vault.resourceManager?.start(iconRequest)
 
 		titleLabel.numberOfLines = 0
-		
+
 		self.secureView(core: core)
 	}
 

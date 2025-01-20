@@ -19,25 +19,24 @@ import UIKit
 import ownCloudApp
 
 class SecureTextField : UITextField {
-
 	override init(frame: CGRect) {
 		super.init(frame: .zero)
 		self.isSecureTextEntry = true
 		self.translatesAutoresizingMaskIntoConstraints = false
 	}
-	
+
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
-	
+
 	var secureContainerView: UIView {
 		guard !ConfidentialManager.shared.allowScreenshots else {
 			let view = UIView()
 			view.translatesAutoresizingMaskIntoConstraints = false
-			
+
 			return view
 		}
-		
+
 		if let secureView = self.subviews.filter({ subview in
 			type(of: subview).description().contains("CanvasView")
 		}).first {
@@ -45,16 +44,16 @@ class SecureTextField : UITextField {
 			secureView.isUserInteractionEnabled = true
 			return secureView
 		}
-		
+
 		// If screenshot protection was not possible, force close the application.
 		exit(0)
-		
+
 		let view = UIView()
 		view.translatesAutoresizingMaskIntoConstraints = false
-			
+
 		return view
 	}
-	
+
 	override var canBecomeFirstResponder: Bool { false }
 	override func becomeFirstResponder() -> Bool { false }
 }

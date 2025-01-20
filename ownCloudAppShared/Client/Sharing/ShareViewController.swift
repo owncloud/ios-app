@@ -259,10 +259,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 	open override func viewDidLoad() {
 		super.viewDidLoad()
-		
-		let wrappedContentContainerView = collectionView.withScreenshotProtection
-		view.addSubview(wrappedContentContainerView)
-		
+
 		// Disable dragging of items, so keyboard control does
 		// not include "Drag Item" in the accessibility actions
 		// invoked with Tab + Z
