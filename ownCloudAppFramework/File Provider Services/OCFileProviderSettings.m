@@ -17,7 +17,6 @@
  */
 
 #import "OCFileProviderSettings.h"
-#import "ownCloudApp/ConfidentialManager.h"
 
 @implementation OCFileProviderSettings
 

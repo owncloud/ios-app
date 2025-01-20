@@ -17,7 +17,6 @@
  */
 
 import ownCloudApp
-import ownCloudAppShared
 import ownCloudSDK
 
 class IntentSettings: NSObject {

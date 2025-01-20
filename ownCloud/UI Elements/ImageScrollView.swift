@@ -19,7 +19,6 @@
 import UIKit
 import VisionKit
 import ownCloudSDK
-import ownCloudApp
 import ownCloudAppShared
 
 class ImageScrollView: UIScrollView {
