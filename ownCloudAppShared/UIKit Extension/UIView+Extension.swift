@@ -17,7 +17,6 @@
  */
 
 import UIKit
-import ownCloudSDK
 
 public extension UIView {
 	// MARK: - Animation
