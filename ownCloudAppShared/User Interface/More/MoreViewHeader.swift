@@ -200,7 +200,7 @@ open class MoreViewHeader: UIView {
 				}
 			}
 
-			titleLabel.attributedText = NSAttributedString(string: itemName ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
+			titleLabel.attributedText = NSAttributedString(string: itemName?.redacted() ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
 
 			let byteCountFormatter = ByteCountFormatter()
 			byteCountFormatter.countStyle = .file
@@ -227,8 +227,8 @@ open class MoreViewHeader: UIView {
 	}
 
 	public func updateHeader(title: String, subtitle: String) {
-		titleLabel.text = title
-		detailLabel.text = subtitle
+		titleLabel.text = title.redacted()
+		detailLabel.text = subtitle.redacted()
 	}
 
 	public required init?(coder aDecoder: NSCoder) {
