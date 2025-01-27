@@ -68,7 +68,17 @@
 	if (self.confidentialSettingsEnabled && !self.allowOverwriteConfidentialMDMSettings) {
 		return @[
 			@"com.owncloud.action.openin",
-			@"com.owncloud.action.copy"
+			@"com.owncloud.action.copy",
+			/*
+				As of iOS 18.2.1:
+				The markup action could not be modified to implement protection mechanisms -
+				not even on the CALayer level - without interaction with the system-provided
+				view breaking and becoming unusable in different ways. A possible reason for
+				this is that the markup feature is delivered by the OS as Remote UI (visible
+				as QLRemoteUIHostViewController in the view hierarchy) and that otherwise working
+				approaches to "passing through" events are not usable with these.
+			*/
+			@"com.owncloud.action.markup"
 		];
 	}
 	return nil;

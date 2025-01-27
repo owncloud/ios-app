@@ -121,6 +121,10 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 			}
 		}
 		timer!.resume()
+	}
+
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
 		self.view.secureView(core: core)
 	}
 
