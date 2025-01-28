@@ -326,6 +326,33 @@ tag::app[]
 |Status
 
 
+|search.defaultScope
+|string
+|`folder`
+|The search scope to pre-select when search is invoked inside a folder.
+[cols="1,1"]
+!===
+! Value
+! Description
+! `account`
+! Account
+
+! `drive`
+! Space
+
+! `folder`
+! Folder
+
+! `server`
+! Server
+
+! `tree`
+! Tree
+
+!===
+
+|supported `candidate`
+
 |app.app-store-link
 |string
 |`https://itunes.apple.com/app/id1359583808?mt=8`
@@ -1082,6 +1109,12 @@ tag::endpoints[]
 |string
 |`remote.php/dav/meta`
 |Endpoint to use for WebDAV metadata.
+|advanced `candidate`
+
+|connection.endpoint-webdav-spaces
+|string
+|`remote.php/dav/spaces`
+|Endpoint to as for WebDAV spaces.
 |advanced `candidate`
 
 |connection.well-known
