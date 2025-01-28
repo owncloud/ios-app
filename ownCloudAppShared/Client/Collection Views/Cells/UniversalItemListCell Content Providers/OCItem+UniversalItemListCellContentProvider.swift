@@ -170,8 +170,12 @@ extension OCItem: UniversalItemListCellContentProvider {
 		content.iconDisabled = isPlaceholder
 
 		// Title
-		if let name = self.name {
-			content.title = isFile ? .file(name: name) : .folder(name: name)
+		if let name {
+			var displayName = name
+			if configuration?.style.type == .header {
+				displayName = name.redacted()
+			}
+			content.title = isFile ? .file(name: displayName) : .folder(name: displayName)
 		}
 
 		// Details

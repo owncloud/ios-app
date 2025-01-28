@@ -90,11 +90,11 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 		if usesStackViewRoot, let stackView = stackView {
 			let safeAreaView = ThemeCSSView(frame: view.bounds)
 			safeAreaView.translatesAutoresizingMaskIntoConstraints = false
-			safeAreaView.embed(toFillWith: collectionView, enclosingAnchors: safeAreaView.safeAreaAnchorSet)
+			safeAreaView.embed(toFillWith: collectionView.withScreenshotProtection, enclosingAnchors: safeAreaView.safeAreaAnchorSet)
 
 			stackView.addArrangedSubview(safeAreaView)
 		} else {
-			view.embed(toFillWith: collectionView, enclosingAnchors: view.defaultAnchorSet)
+			view.embed(toFillWith: collectionView.withScreenshotProtection, enclosingAnchors: view.defaultAnchorSet)
 		}
 	}
 

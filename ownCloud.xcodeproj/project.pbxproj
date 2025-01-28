@@ -93,6 +93,10 @@
 		39CC8AE6228C12100020253B /* Array+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CC8AE5228C12100020253B /* Array+Extension.swift */; };
 		39CD755423D8392D00193950 /* EditDocumentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39CD755323D8392D00193950 /* EditDocumentViewController.swift */; };
 		39D06BEC229BE8D8000D7FC9 /* SettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */; };
+		39D091AD2D073498001329DF /* ConfidentialContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D091AC2D073492001329DF /* ConfidentialContentView.swift */; };
+		39D091AF2D073593001329DF /* SecureTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39D091AE2D07358C001329DF /* SecureTextField.swift */; };
+		39D091B42D079640001329DF /* ConfidentialManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 39D091B32D07963B001329DF /* ConfidentialManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		39D091B62D079646001329DF /* ConfidentialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D091B52D079644001329DF /* ConfidentialManager.m */; };
 		39DC7CD025C2E1570001E08C /* DocumentActionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39DC7CCF25C2E1570001E08C /* DocumentActionViewController.swift */; };
 		39DC7CD325C2E1570001E08C /* MainInterface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39DC7CD125C2E1570001E08C /* MainInterface.storyboard */; };
 		39DC7CD725C2E1570001E08C /* ownCloud File Provider UI.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 39DC7CCD25C2E1570001E08C /* ownCloud File Provider UI.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
@@ -293,6 +297,7 @@
 		DC2A68D529D492B300BFF393 /* space.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC2A68D429D492B200BFF393 /* space.tvg */; };
 		DC2A68D729D4E93300BFF393 /* SharedKeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2A68D629D4E93300BFF393 /* SharedKeyCommands.swift */; };
 		DC2A8E6A2B57EA8F001F0522 /* AccountControllerSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2A8E692B57EA8F001F0522 /* AccountControllerSearchViewController.swift */; };
+		DC2FB16A2D3EF4FD00726E97 /* ConfidentialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D091B52D079644001329DF /* ConfidentialManager.m */; };
 		DC36885824DC98BF00333600 /* OCFileProviderServiceSession.h in Headers */ = {isa = PBXBuildFile; fileRef = DC36885624DC98BF00333600 /* OCFileProviderServiceSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC36885924DC98BF00333600 /* OCFileProviderServiceSession.m in Sources */ = {isa = PBXBuildFile; fileRef = DC36885724DC98BF00333600 /* OCFileProviderServiceSession.m */; };
 		DC36885D24DD916800333600 /* ownCloudApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCC0855C2293F1FD008CC05C /* ownCloudApp.framework */; };
@@ -1091,6 +1096,10 @@
 		39CD755123D787E400193950 /* DocumentEditingAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DocumentEditingAction.swift; sourceTree = "<group>"; };
 		39CD755323D8392D00193950 /* EditDocumentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditDocumentViewController.swift; sourceTree = "<group>"; };
 		39D06BEB229BE8D8000D7FC9 /* SettingsSection.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsSection.swift; sourceTree = "<group>"; };
+		39D091AC2D073492001329DF /* ConfidentialContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfidentialContentView.swift; sourceTree = "<group>"; };
+		39D091AE2D07358C001329DF /* SecureTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecureTextField.swift; sourceTree = "<group>"; };
+		39D091B32D07963B001329DF /* ConfidentialManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConfidentialManager.h; sourceTree = "<group>"; };
+		39D091B52D079644001329DF /* ConfidentialManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ConfidentialManager.m; sourceTree = "<group>"; };
 		39D8397F25A7219100FAA0A8 /* sq */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = sq; path = sq.lproj/Intents.strings; sourceTree = "<group>"; };
 		39D8398925A7219300FAA0A8 /* ar */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ar; path = ar.lproj/Intents.strings; sourceTree = "<group>"; };
 		39D8399325A7219600FAA0A8 /* eu */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = eu; path = eu.lproj/Intents.strings; sourceTree = "<group>"; };
@@ -2114,6 +2123,24 @@
 			path = ownCloud/Resources/Theming;
 			sourceTree = SOURCE_ROOT;
 		};
+		39D091AB2D07347F001329DF /* Confidential */ = {
+			isa = PBXGroup;
+			children = (
+				39D091AE2D07358C001329DF /* SecureTextField.swift */,
+				39D091AC2D073492001329DF /* ConfidentialContentView.swift */,
+			);
+			path = Confidential;
+			sourceTree = "<group>";
+		};
+		39D091B02D0788D1001329DF /* Confidential */ = {
+			isa = PBXGroup;
+			children = (
+				39D091B52D079644001329DF /* ConfidentialManager.m */,
+				39D091B32D07963B001329DF /* ConfidentialManager.h */,
+			);
+			path = Confidential;
+			sourceTree = "<group>";
+		};
 		39DC7CCE25C2E1570001E08C /* ownCloud File Provider UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -2246,6 +2273,7 @@
 				DC0A35A024C1091400FB58FC /* UserInterfaceContext.swift */,
 				DC2A68D629D4E93300BFF393 /* SharedKeyCommands.swift */,
 				DCE4E43624C19A3B0051722F /* More */,
+				39D091AB2D07347F001329DF /* Confidential */,
 				DC0A359024C0E46800FB58FC /* Cursor Support */,
 				DC0A355124C0E1EF00FB58FC /* Theme */,
 				DC298C9B2934D3FA009FA87F /* Alert View */,
@@ -3126,6 +3154,7 @@
 		DCC0855D2293F1FD008CC05C /* ownCloudAppFramework */ = {
 			isa = PBXGroup;
 			children = (
+				39D091B02D0788D1001329DF /* Confidential */,
 				DCC0855E2293F1FD008CC05C /* ownCloudApp.h */,
 				DC774E5A22F44E2A000B11A1 /* Display Settings */,
 				DC6A0E4F26EA9E2B0076B533 /* AppLock Settings */,
@@ -3778,6 +3807,7 @@
 				DCC5E4472326564F002E5B84 /* NSObject+AnnotatedProperties.h in Headers */,
 				DC66F3AB23965C9C00CF4812 /* OCLicenseAppStoreReceiptInAppPurchase.h in Headers */,
 				DC049156258C00C400DEDC27 /* OCFileProviderServiceStandby.h in Headers */,
+				39D091B42D079640001329DF /* ConfidentialManager.h in Headers */,
 				3912D8AD29958BF400EDCB9A /* OCThemeValues.h in Headers */,
 				DCFEFE972368D099009A142F /* OCLicenseEnvironment.h in Headers */,
 				DC6A0E5426EA9E740076B533 /* AppLockSettings.h in Headers */,
@@ -4096,7 +4126,7 @@
 					};
 					DCC0855B2293F1FD008CC05C = {
 						CreatedOnToolsVersion = 10.2.1;
-						LastSwiftMigration = 1100;
+						LastSwiftMigration = 1600;
 						ProvisioningStyle = Automatic;
 					};
 					DCC085632293F1FD008CC05C = {
@@ -4722,6 +4752,7 @@
 				DCB6B1ED292B963300D27573 /* AccountConnection+ItemActions.swift in Sources */,
 				DCB6B200292CF2FE00D27573 /* NavigationRevocationAction.swift in Sources */,
 				DC0A355424C0E2C200FB58FC /* SortBar.swift in Sources */,
+				39D091AF2D073593001329DF /* SecureTextField.swift in Sources */,
 				DC9B4FC3293F453C0037F8F8 /* EmbeddingViewController.swift in Sources */,
 				DC298C972934D354009FA87F /* IssuesCardViewController.swift in Sources */,
 				DCA2EDE2279B16F1001F04E6 /* ResourceSourceItemIcons.swift in Sources */,
@@ -4771,6 +4802,7 @@
 				DCFC9ED3280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift in Sources */,
 				DCB6B20A292E296800D27573 /* CollectionSidebarAction.swift in Sources */,
 				DC0A358D24C0E44B00FB58FC /* ThemedAlertController.swift in Sources */,
+				39D091AD2D073498001329DF /* ConfidentialContentView.swift in Sources */,
 				DC24E10F28B7D2B9002E4F5B /* PopupButtonController.swift in Sources */,
 				DCE4E43C24C19B660051722F /* FrameViewController.swift in Sources */,
 				DC0A35A124C1091400FB58FC /* UserInterfaceContext.swift in Sources */,
@@ -4946,6 +4978,7 @@
 				DCF575F02796CE38003BEBBA /* OCViewHost.m in Sources */,
 				DCB330D729F07ED600BFF393 /* UIImage+ViewProvider.m in Sources */,
 				DCB458EE2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m in Sources */,
+				39D091B62D079646001329DF /* ConfidentialManager.m in Sources */,
 				DC080CF3238C92480044C5D2 /* OCLicenseAppStoreItem.m in Sources */,
 				DCFEFE982368D099009A142F /* OCLicenseEnvironment.m in Sources */,
 				DC049157258C00C400DEDC27 /* OCFileProviderServiceStandby.m in Sources */,
@@ -4979,6 +5012,7 @@
 				DC2218CC2823329100808BCE /* FileProviderContentEnumerator.m in Sources */,
 				DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */,
 				DCF2DA7A24C82E480026D790 /* FileProviderServiceSource.m in Sources */,
+				DC2FB16A2D3EF4FD00726E97 /* ConfidentialManager.m in Sources */,
 				DC625141225C904700736874 /* NSError+MessageResolution.m in Sources */,
 				DC27A1A820CC095C008ACB6C /* OCCore+FileProviderTools.m in Sources */,
 				DC1251E82C7470C30040FBC6 /* OCBookmark+AppExtensions.m in Sources */,
@@ -5365,7 +5399,6 @@
 		233BDEBA204FEFE500C06732 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -5403,7 +5436,6 @@
 		233BDEBB204FEFE500C06732 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = ownCloud/ownCloud.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -5441,7 +5473,6 @@
 		233BDEBD204FEFE600C06732 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
@@ -5461,7 +5492,6 @@
 		233BDEBE204FEFE600C06732 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9B5WD74GWJ;
@@ -5866,6 +5896,7 @@
 				SKIP_INSTALL = YES;
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -5908,6 +5939,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
 				SKIP_INSTALL = YES;
 				STRINGS_FILE_OUTPUT_ENCODING = "UTF-16";
+				SWIFT_VERSION = 6.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";

@@ -41,12 +41,12 @@ class DriveListCell: ThemeableCollectionViewListCell {
 
 	var title : String? {
 		didSet {
-			titleLabel.text = title
+			titleLabel.text = title?.redacted()
 		}
 	}
 	var subtitle : String? {
 		didSet {
-			subtitleLabel.text = subtitle
+			subtitleLabel.text = subtitle?.redacted()
 		}
 	}
 
@@ -139,6 +139,8 @@ extension DriveListCell {
 			if let coverImageRequest = coverImageRequest {
 				resourceManager?.start(coverImageRequest)
 			}
+			
+			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
 
 			cell.accessories = [ .disclosureIndicator() ]
 		}
@@ -151,8 +153,8 @@ extension DriveListCell {
 
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
 				if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
-					title = presentable.title
-					subtitle = presentable.subtitle
+					title = presentable.title?.redacted()
+					subtitle = presentable.subtitle?.redacted()
 
 					resourceManager = cellConfiguration.core?.vault.resourceManager
 
@@ -168,6 +170,8 @@ extension DriveListCell {
 
 			cell.collectionItemRef = collectionItemRef
 			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
+			
+			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
 
 			if let coverImageRequest = coverImageRequest {
 				resourceManager?.start(coverImageRequest)
@@ -213,6 +217,8 @@ extension DriveListCell {
 
 			cell.collectionItemRef = collectionItemRef
 			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
+			
+			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
 
 			if let coverImageRequest = coverImageRequest {
 				resourceManager?.start(coverImageRequest)
@@ -247,13 +253,12 @@ extension DriveListCell {
 
 			var content = cell.defaultContentConfiguration()
 
-			content.text = title
+			content.text = title?.redacted()
 			content.image = icon
-
+			
 			cell.backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
 			cell.contentConfiguration = content
 			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
-
 			cell.accessibilityTraits = .button
 		}
 
