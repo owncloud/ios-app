@@ -21,7 +21,7 @@
 ###########
  
 This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License verions 3,
+it under the terms of the GNU General Public License version 3,
 as published by the Free Software Foundation.
 
 This program is distributed in the hope that it will be useful,
@@ -77,13 +77,13 @@ The third party software included and used by this project is:
  *      PLCrashReporter
         Copyright (c) Microsoft Corporation.
         Copyright (c) 2008 - 2014 Plausible Labs Cooperative, Inc.
-        Licensed under proprietary license
+        Licensed under MIT, Apache License 2.0 (see license file)
         Placed as Swift package
         Original license document included at ownCloud/Resources/PLCrashReporter.LICENSE.
         See https://github.com/microsoft/plcrashreporter
 
  *      PocketSVG
-        Copyright (c) Ponderwell, Ariel Elkin, Fjölnir Ásgeirsson, and Contributors
+        Copyright (c) Ponderwell, Ariel Elkin, Fj√∂lnir √Åsgeirsson, and Contributors
         Licensed under MIT License.
         Placed as Swift package
         Original license document included at ownCloudAppShared/PocketSVG.LICENSE.
