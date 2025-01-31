@@ -149,6 +149,9 @@
 		DC0030C12350B1CE00BB8570 /* NSData+Encoding.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0030BF2350B1CE00BB8570 /* NSData+Encoding.m */; };
 		DC0030C22350B1CE00BB8570 /* NSData+Encoding.h in Headers */ = {isa = PBXBuildFile; fileRef = DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC0030CB2350B75000BB8570 /* ScanViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC1AC7CF2319ADAE002B7892 /* ScanViewController.swift */; };
+		DC0073EC2D4B893100C1C6F7 /* NSURL+OCVaultTools.h in Headers */ = {isa = PBXBuildFile; fileRef = DC0073EB2D4B893100C1C6F7 /* NSURL+OCVaultTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DC0073ED2D4B893100C1C6F7 /* NSURL+OCVaultTools.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0073EA2D4B893100C1C6F7 /* NSURL+OCVaultTools.m */; };
+		DC0073F12D4B898100C1C6F7 /* NSURL+OCVaultTools.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0073EA2D4B893100C1C6F7 /* NSURL+OCVaultTools.m */; };
 		DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */; };
 		DC01AF2128411D8400903101 /* ThemeableCollectionViewListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */; };
 		DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */; };
@@ -1182,6 +1185,8 @@
 		D0D9C062DD1E85A838608B0F /* EarlGrey.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EarlGrey.framework; path = Pods/EarlGrey/EarlGrey/EarlGrey.framework; sourceTree = SOURCE_ROOT; };
 		DC0030BF2350B1CE00BB8570 /* NSData+Encoding.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+Encoding.m"; sourceTree = "<group>"; };
 		DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Encoding.h"; sourceTree = "<group>"; };
+		DC0073EA2D4B893100C1C6F7 /* NSURL+OCVaultTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+OCVaultTools.m"; sourceTree = "<group>"; };
+		DC0073EB2D4B893100C1C6F7 /* NSURL+OCVaultTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+OCVaultTools.h"; sourceTree = "<group>"; };
 		DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUDViewController.swift; sourceTree = "<group>"; };
 		DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableCollectionViewListCell.swift; sourceTree = "<group>"; };
 		DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
@@ -3196,6 +3201,8 @@
 				DCCD776A2604C81B00098573 /* NSDate+ComputedTimes.h */,
 				DC70398426128B89009F2DC1 /* NSString+ByteCountParser.m */,
 				DC70398326128B89009F2DC1 /* NSString+ByteCountParser.h */,
+				DC0073EA2D4B893100C1C6F7 /* NSURL+OCVaultTools.m */,
+				DC0073EB2D4B893100C1C6F7 /* NSURL+OCVaultTools.h */,
 			);
 			path = "Foundation Extensions";
 			sourceTree = "<group>";
@@ -3766,6 +3773,7 @@
 				DC3DDF07287E1C0E00E5586D /* UIViewController+HostBundleID.h in Headers */,
 				DCB330D629F07ECF00BFF393 /* UIImage+ViewProvider.h in Headers */,
 				DCFEFE39236877A7009A142F /* OCLicenseFeature.h in Headers */,
+				DC0073EC2D4B893100C1C6F7 /* NSURL+OCVaultTools.h in Headers */,
 				DC23D1DA238F391200423F62 /* OCLicenseAppStoreReceipt.h in Headers */,
 				DC24E0EA28B36A81002E4F5B /* OCSearchSegment.h in Headers */,
 				DC70398526128B89009F2DC1 /* NSString+ByteCountParser.h in Headers */,
@@ -4940,6 +4948,7 @@
 				DC24B29825BA2A34005783E2 /* Branding.m in Sources */,
 				DCFEFE3E236877B7009A142F /* OCLicenseProduct.m in Sources */,
 				DC774E6422F44E6D000B11A1 /* OCCore+BundleImport.m in Sources */,
+				DC0073ED2D4B893100C1C6F7 /* NSURL+OCVaultTools.m in Sources */,
 				DC6179E828E0578400C7C4E0 /* OCFileProviderSettings.m in Sources */,
 				DC8E99E3297E906700594697 /* OCLicenseQAProvider.m in Sources */,
 				DCF2DA7E24C835BF0026D790 /* OCVault+FPServices.m in Sources */,
@@ -5011,6 +5020,7 @@
 				DC1251E62C7470820040FBC6 /* Branding.m in Sources */,
 				DC2218CC2823329100808BCE /* FileProviderContentEnumerator.m in Sources */,
 				DC27A1E920CC56B0008ACB6C /* FileProviderExtensionThumbnailRequest.m in Sources */,
+				DC0073F12D4B898100C1C6F7 /* NSURL+OCVaultTools.m in Sources */,
 				DCF2DA7A24C82E480026D790 /* FileProviderServiceSource.m in Sources */,
 				DC2FB16A2D3EF4FD00726E97 /* ConfidentialManager.m in Sources */,
 				DC625141225C904700736874 /* NSError+MessageResolution.m in Sources */,
@@ -5263,8 +5273,8 @@
 				APP_BUILD_FLAGS = "$(inherited)";
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
-				APP_SHORT_VERSION = 12.3.1;
-				APP_VERSION = 292;
+				APP_SHORT_VERSION = 12.4.0;
+				APP_VERSION = 295;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -5334,8 +5344,8 @@
 				APP_BUILD_FLAGS = "$(inherited)";
 				APP_BUILD_FLAGS_SWIFT = "$(APP_BUILD_FLAGS)";
 				APP_PRODUCT_NAME = ownCloud;
-				APP_SHORT_VERSION = 12.3.1;
-				APP_VERSION = 292;
+				APP_SHORT_VERSION = 12.4.0;
+				APP_VERSION = 295;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;

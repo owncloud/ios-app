@@ -97,3 +97,5 @@ FOUNDATION_EXPORT const unsigned char ownCloudAppVersionString[];
 #import <ownCloudApp/OCVault+SidebarItems.h>
 
 #import <ownCloudApp/ConfidentialManager.h>
+
+#import <ownCloudApp/NSURL+OCVaultTools.h>

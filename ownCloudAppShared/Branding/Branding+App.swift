@@ -72,7 +72,6 @@ extension Branding : ownCloudApp.BrandingInitialization {
 			.helpURL 	  : "https://owncloud.com/docs-guides/",
 			.privacyURL 	  : "https://owncloud.org/privacy-policy/",
 			.termsOfUseURL 	  : "https://raw.githubusercontent.com/owncloud/ios-app/master/LICENSE",
-			.sendFeedbackURL  : "https://owncloud.com/ios-app-feedback",
 			.canAddAccount : true,
 			.canEditAccount : true,
 			.enableReviewPrompt : false,

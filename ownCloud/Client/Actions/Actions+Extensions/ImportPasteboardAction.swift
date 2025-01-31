@@ -7,14 +7,14 @@
 //
 
 /*
-* Copyright (C) 2019, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2019, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import Foundation
 import ownCloudSDK
@@ -81,19 +81,20 @@ class ImportPasteboardAction : Action {
 		let generalPasteboard = UIPasteboard.general
 
 		if generalPasteboard.contains(pasteboardTypes: [ImportPasteboardAction.InternalPasteboardCopyKey, ImportPasteboardAction.InternalPasteboardCutKey]) {
-
+			// Internal pasteboard items
 			for item in generalPasteboard.itemProviders {
 				// Copy Items Internally
 				item.loadDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCopyKey, completionHandler: { data, error in
-					if let data = data, let object = OCItemPasteboardValue.decode(data: data) {
+					if let data, let object = OCItemPasteboardValue.decode(data: data) {
 						guard let bookmarkUUID = object.bookmarkUUID,
 						      let item = object.item,
 						      let name = item.name
 						else {
-						      return
+							return
 						}
 
 						if core.bookmark.uuid.uuidString == bookmarkUUID {
+							// Copy within account
 							core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
 								if error != nil {
 									self.completed(with: error)
@@ -103,31 +104,40 @@ class ImportPasteboardAction : Action {
 							// Move between Accounts
 							guard let sourceBookmark = OCBookmarkManager.shared.bookmark(forUUIDString: bookmarkUUID), let destinationItem = self.context.items.first else {return }
 
-								OCCoreManager.shared.requestCore(for: sourceBookmark, setup: nil) { (srcCore, error) in
-									if error == nil {
-										srcCore?.downloadItem(item, options: nil, resultHandler: { (error, _, srcItem, _) in
-											if error == nil, let srcItem = srcItem, let localURL = srcCore?.localCopy(of: srcItem) {
-												core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (_, _, _, _) in
-												}
-											}
-										})
-									}
+							// Request core from source account
+							OCCoreManager.shared.requestCore(for: sourceBookmark, setup: nil) { (srcCore, error) in
+								if error == nil {
+									// Download file from source account
+									srcCore?.downloadItem(item, options: nil, resultHandler: { (error, _, srcItem, _) in
+										if error == nil, let srcItem, let localURL = srcCore?.localCopy(of: srcItem) {
+											// Import local copy of file from source account
+											core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { err, core, item, parameter in
+												// Release core of source account
+												OCCoreManager.shared.returnCore(for: sourceBookmark)
+											})
+										} else {
+											// Release core of source account
+											OCCoreManager.shared.returnCore(for: sourceBookmark)
+										}
+									})
 								}
+							}
 						}
 					}
 				})
 
 				// Cut Item Internally
 				item.loadDataRepresentation(forTypeIdentifier: ImportPasteboardAction.InternalPasteboardCutKey, completionHandler: { data, error in
-					if let data = data, let object = OCItemPasteboardValue.decode(data: data) {
+					if let data, let object = OCItemPasteboardValue.decode(data: data) {
 						guard let bookmarkUUID = object.bookmarkUUID,
 						      let item = object.item,
 						      let name = item.name
 						else {
-						      return
+							return
 						}
 
 						if core.bookmark.uuid.uuidString == bookmarkUUID {
+							// Move within same account
 							core.move(item, to: rootItem, withName: name, options: nil) { (error, _, _, _) in
 								if error != nil {
 									self.completed(with: error)
@@ -139,32 +149,44 @@ class ImportPasteboardAction : Action {
 							// Move between Accounts
 							guard let sourceBookmark = OCBookmarkManager.shared.bookmark(forUUIDString: bookmarkUUID), let destinationItem = self.context.items.first else {return }
 
-								OCCoreManager.shared.requestCore(for: sourceBookmark, setup: nil) { (srcCore, error) in
-									if error == nil {
-										srcCore?.downloadItem(item, options: nil, resultHandler: { (error, _, srcItem, _) in
-											if error == nil, let srcItem = srcItem, let localURL = srcCore?.localCopy(of: srcItem) {
-												core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) { (_, _, _, _) in
-
+							// Request a core from the source account
+							OCCoreManager.shared.requestCore(for: sourceBookmark, setup: nil) { (srcCore, error) in
+								if error == nil {
+									// Download item from source account
+									srcCore?.downloadItem(item, options: nil, resultHandler: { (error, _, srcItem, _) in
+										if error == nil, let srcItem, let localURL = srcCore?.localCopy(of: srcItem) {
+											// Import file into destination account
+											core.importItemNamed(srcItem.name, at: destinationItem, from: localURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil) {  err, core, importedItem, parameter in
+												if err == nil {
+													// Delete file from source account
 													srcCore?.delete(srcItem, requireMatch: true, resultHandler: { (error, _, _, _) in
-													   if error != nil {
-														   Log.log("Error \(String(describing: error)) deleting \(String(describing: item.path))")
-													} else {
+														if error != nil {
+															Log.log("Error \(String(describing: error)) deleting \(String(describing: srcItem.path))")
+														} else {
+															generalPasteboard.items = []
+														}
 
-														generalPasteboard.items = []
-													}
-												   })
+														// Return source account core
+														OCCoreManager.shared.returnCore(for: sourceBookmark)
+													})
+												} else {
+													// Return source account core
+													OCCoreManager.shared.returnCore(for: sourceBookmark)
 												}
 											}
-										})
-									}
+										} else {
+											// Return source account core
+											OCCoreManager.shared.returnCore(for: sourceBookmark)
+										}
+									})
 								}
+							}
 						}
 					}
 				})
 			}
 		} else {
 			// System-wide Pasteboard Items
-
 			for item in generalPasteboard.itemProviders {
 				let typeIdentifiers = item.registeredTypeIdentifiers
 				let preferredUTIs = [
@@ -231,9 +253,9 @@ class ImportPasteboardAction : Action {
 						fileName = url.lastPathComponent
 					}
 
-					guard let name = fileName else { return }
+					guard let fileName else { return }
 
-					self.upload(itemURL: url, rootItem: rootItem, name: name)
+					self.upload(itemURL: url, rootItem: rootItem, name: fileName)
 				}
 			}
 		}

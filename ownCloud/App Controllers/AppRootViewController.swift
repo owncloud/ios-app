@@ -267,7 +267,7 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 			let lastGitCommit = GitInfo.app.lastCommit,
 			(lastBetaWarningCommit == nil) || (lastBetaWarningCommit != lastGitCommit) {
 			// Beta warning has never been shown before - or has last been shown for a different release
-			let betaAlert = ThemedAlertController(with: OCLocalizedString("Beta Warning", nil), message: OCLocalizedString("\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.\n\nPlease let us know about any issues that come up via the \"Send Feedback\" option in the settings.", nil), okLabel: OCLocalizedString("Agree", nil)) {
+			let betaAlert = ThemedAlertController(with: OCLocalizedString("Beta Warning", nil), message: OCLocalizedString("\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK.", nil), okLabel: OCLocalizedString("Agree", nil)) {
 				OCAppIdentity.shared.userDefaults?.set(lastGitCommit, forKey: "LastBetaWarningCommit")
 				OCAppIdentity.shared.userDefaults?.set(NSDate(), forKey: "LastBetaWarningAcceptDate")
 			}
