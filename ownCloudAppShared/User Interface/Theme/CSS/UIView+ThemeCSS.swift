@@ -69,4 +69,17 @@ public extension UIView {
 			}
 		}
 	}
+
+	func withPadding() -> UIView {
+		let paddingView = UIView()
+		paddingView.translatesAutoresizingMaskIntoConstraints = false
+		if self as? UITextField != nil {
+			// Space around text fields
+			paddingView.embed(toFillWith: self, insets: NSDirectionalEdgeInsets(top: 10, leading: 18, bottom: 10, trailing: 18))
+		} else {
+			// Space around all other views
+			paddingView.embed(toFillWith: self, insets: NSDirectionalEdgeInsets(top: 10, leading: 18, bottom: 10, trailing: 18))
+		}
+		return paddingView
+	}
 }

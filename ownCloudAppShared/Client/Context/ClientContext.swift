@@ -153,6 +153,9 @@ public class ClientContext: NSObject {
 	public var permissionHandlers : [PermissionHandler]?
 	public var permissions : [ClientItemInteraction]?
 
+	// MARK: - Sharing NG
+	public var sharingRoles: [OCShareRole]?
+
 	// MARK: - Display options
 	@objc public dynamic var sortDescriptor: SortDescriptor?
 	public var itemStyler: ItemStyler?
@@ -215,6 +218,8 @@ public class ClientContext: NSObject {
 
 		permissions = inParent?.permissions
 		permissionHandlers = inParent?.permissionHandlers
+
+		sharingRoles = inParent?.sharingRoles
 
 		modifier?(self)
 	}

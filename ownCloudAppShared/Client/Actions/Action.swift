@@ -71,6 +71,7 @@ public extension OCExtensionLocationIdentifier {
 	static let locationPickerBar: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("locationPickerBar") //!< Used in ClientLocationPicker
 	static let directOpen: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("directOpen") //!< Used in OCItem+Interactions to implement direct actions for opening files
 	static let accessibilityCustomAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("accessibilityCustomAction") //!< Accessibility custom action available in VoiceOver and in Keyboard Control when pressing Tab + Z
+	static let spaceAction: OCExtensionLocationIdentifier = OCExtensionLocationIdentifier("spaceAction") //!< Present as action in the space management UI when editing/viewing space details
 }
 
 public class ActionExtension: OCExtension {
@@ -129,6 +130,13 @@ public class ActionContext: OCExtensionContext {
 		}
 	}
 
+	public var drive: OCDrive? { //!< Returns the OCDrive in case .items holds only one object and that is the root item of a drive
+		if items.count == 1, let core, core.connection.capabilities?.sharingAPIEnabled == 1, let item = items.first, item.isRoot, let driveID = item.driveID, let drive = core.drive(withIdentifier: driveID, attachedOnly: true) {
+			return drive
+		}
+		return nil
+	}
+
 	public var itemsSharedWithUser: [OCItem] {
 		return cachedSharedItems
 	}
@@ -168,7 +176,7 @@ public class ActionContext: OCExtensionContext {
 	}
 
 	// MARK: - Init & Deinit.
-	public init(viewController: UIViewController, clientContext: ClientContext? = nil, core: OCCore, query: OCQuery? = nil, items: [OCItem], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
+	public init(viewController: UIViewController, clientContext: ClientContext? = nil, core: OCCore, query: OCQuery? = nil, items: [OCItem]=[], location: OCExtensionLocation, sender: AnyObject? = nil, requirements: [String : Any]? = nil, preferences: [String : Any]? = nil) {
 
 		itemStorage = items
 
