@@ -1,5 +1,6 @@
 # Table of Contents
 
+* [Changelog for 12.4.0](#changelog-for-owncloud-ios-client-1240-2025-02-03)
 * [Changelog for 12.3.0](#changelog-for-owncloud-ios-client-1230-2024-09-23)
 * [Changelog for 12.2.1](#changelog-for-owncloud-ios-client-1221-2024-04-30)
 * [Changelog for 12.2.0](#changelog-for-owncloud-ios-client-1220-2024-04-23)
@@ -25,6 +26,33 @@
 * [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
 * [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
 * [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
+# Changelog for ownCloud iOS Client [12.4.0] (2025-02-03)
+The following sections list the changes in ownCloud iOS Client 12.4.0 relevant to
+ownCloud admins and users.
+
+[12.4.0]: https://github.com/owncloud/ios-app/compare/milestone/12.3.0...milestone/12.4.0
+
+## Summary
+
+* Bugfix - Memory usage optimizations: [#1416](https://github.com/owncloud/ios-app/pull/1416)
+* Enhancement - Content Protection: [#1430](https://github.com/owncloud/ios-app/pull/1430)
+
+## Details
+
+* Bugfix - Memory usage optimizations: [#1416](https://github.com/owncloud/ios-app/pull/1416)
+
+   Memory optimizations specifically to the file provider to ensure stability.
+
+   https://github.com/owncloud/ios-app/pull/1416
+   https://github.com/owncloud/ios-sdk/pull/121
+
+* Enhancement - Content Protection: [#1430](https://github.com/owncloud/ios-app/pull/1430)
+
+   Content is protected by water marking and screenshot prevention mechanisms.
+   Available via MDM and buils time settings.
+
+   https://github.com/owncloud/ios-app/pull/1430
+
 # Changelog for ownCloud iOS Client [12.3.0] (2024-09-23)
 The following sections list the changes in ownCloud iOS Client 12.3.0 relevant to
 ownCloud admins and users.
