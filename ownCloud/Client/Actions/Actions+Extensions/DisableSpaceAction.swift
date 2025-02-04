@@ -48,22 +48,8 @@ public class DisableSpaceAction : Action {
 			return
 		}
 
-		core?.connection.disableDrive(drive, completionHandler: { error in
-			OnMainThread {
-				if let error {
-					let alertController = ThemedAlertController(
-						with: OCLocalizedFormat("Error disabling {{driveName}}", ["driveName" : drive.name ?? OCLocalizedString("space", nil)]),
-						message: error.localizedDescription,
-						okLabel: OCLocalizedString("OK", nil),
-						action: nil)
-
-					viewController.present(alertController, animated: true)
-				} else {
-					clientContext.core?.fetchUpdates()
-				}
-
-				self.completed(with: error)
-			}
+		drive.disable(with: clientContext, completionHandler: { [weak self] error in
+			self?.completed(with: error)
 		})
 	}
 
