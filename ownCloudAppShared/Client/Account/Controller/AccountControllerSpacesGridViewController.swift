@@ -24,7 +24,10 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 	var noSpacesCondition: DataSourceCondition?
 
 	var canManageSpaces: Bool {
-		return true
+		if let userPermissions = clientContext?.core?.connection.loggedInUser?.permissions {
+			return userPermissions.canCreateSpaces
+		}
+		return false
 	}
 
 	var spacesDataSource: OCDataSourceComposition = OCDataSourceComposition(sources: [])
