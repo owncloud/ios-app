@@ -152,6 +152,7 @@
 		DC0073EC2D4B893100C1C6F7 /* NSURL+OCVaultTools.h in Headers */ = {isa = PBXBuildFile; fileRef = DC0073EB2D4B893100C1C6F7 /* NSURL+OCVaultTools.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC0073ED2D4B893100C1C6F7 /* NSURL+OCVaultTools.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0073EA2D4B893100C1C6F7 /* NSURL+OCVaultTools.m */; };
 		DC0073F12D4B898100C1C6F7 /* NSURL+OCVaultTools.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0073EA2D4B893100C1C6F7 /* NSURL+OCVaultTools.m */; };
+		DC0074112D52685000C1C6F7 /* OCDrive+ManagementActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC0074102D52685000C1C6F7 /* OCDrive+ManagementActions.swift */; };
 		DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DC27A1A420CBEF85008ACB6C /* OCBookmark+FileProvider.m */; };
 		DC01AF2128411D8400903101 /* ThemeableCollectionViewListCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */; };
 		DC01CDCC212EDDF600FC8E38 /* TextViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */; };
@@ -1198,6 +1199,7 @@
 		DC0030C02350B1CE00BB8570 /* NSData+Encoding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+Encoding.h"; sourceTree = "<group>"; };
 		DC0073EA2D4B893100C1C6F7 /* NSURL+OCVaultTools.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSURL+OCVaultTools.m"; sourceTree = "<group>"; };
 		DC0073EB2D4B893100C1C6F7 /* NSURL+OCVaultTools.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSURL+OCVaultTools.h"; sourceTree = "<group>"; };
+		DC0074102D52685000C1C6F7 /* OCDrive+ManagementActions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCDrive+ManagementActions.swift"; sourceTree = "<group>"; };
 		DC018F8B20A1060A00135198 /* ProgressHUDViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressHUDViewController.swift; sourceTree = "<group>"; };
 		DC01AF2028411D8400903101 /* ThemeableCollectionViewListCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeableCollectionViewListCell.swift; sourceTree = "<group>"; };
 		DC01CDCB212EDDF600FC8E38 /* TextViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewController.swift; sourceTree = "<group>"; };
@@ -2948,6 +2950,7 @@
 			isa = PBXGroup;
 			children = (
 				DCBE9C802D08E2A200332D3B /* SpaceManagementViewController.swift */,
+				DC0074102D52685000C1C6F7 /* OCDrive+ManagementActions.swift */,
 			);
 			path = Spaces;
 			sourceTree = "<group>";
@@ -4842,6 +4845,7 @@
 				DCD864122811FC5700CA6631 /* GradientView.swift in Sources */,
 				DC99154E28E6371500DA0AB8 /* SegmentViewItem.swift in Sources */,
 				DCFC9ED528002F33005D9144 /* CollectionViewCellConfiguration.swift in Sources */,
+				DC0074112D52685000C1C6F7 /* OCDrive+ManagementActions.swift in Sources */,
 				DCBAEADB29A3674700BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift in Sources */,
 				DCBE9C812D08E2A200332D3B /* SpaceManagementViewController.swift in Sources */,
 				DC0A355624C0E33A00FB58FC /* Log.swift in Sources */,

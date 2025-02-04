@@ -207,7 +207,7 @@ public class SpaceManagementViewController: CollectionViewController {
 		// Set titles
 		var navigationTitle: String?
 		var selectButtonTitle: String
-		var cancelButtonTitle: String? = OCLocalizedString("Cancel", nil)
+		let cancelButtonTitle: String? = OCLocalizedString("Cancel", nil)
 		var hasCancelButton = true
 
 		switch mode {
@@ -306,7 +306,7 @@ public class SpaceManagementViewController: CollectionViewController {
 
 		switch mode {
 			case .create:
-				core.connection.createDrive(withName: name, description: subtitle, quota: NSNumber(value: quotaTotalBytes ?? 0)) { [weak self] error, drive in
+				core.createDrive(withName: name, description: subtitle, quota: NSNumber(value: quotaTotalBytes ?? 0)) { [weak self] error, drive in
 					self?.complete(with: drive, error: error)
 				}
 
@@ -330,7 +330,7 @@ public class SpaceManagementViewController: CollectionViewController {
 					changes[.quotaTotal] = 0 // Setting the quota.total to 0 disables the quota
 				}
 
-				core.connection.updateDrive(drive, properties: changes) { [weak self] error, drive in
+				core.updateDrive(drive, properties: changes) { [weak self] error, drive in
 					self?.complete(with: drive, error: error)
 				}
 
@@ -352,10 +352,6 @@ public class SpaceManagementViewController: CollectionViewController {
 		}
 
 		OnMainThread(inline: true) {
-			if error == nil {
-				self.clientContext?.core?.fetchUpdates()
-			}
-
 			if self.presentingViewController != nil {
 				self.dismiss(animated: true, completion: {
 					callCompletionHandler()
