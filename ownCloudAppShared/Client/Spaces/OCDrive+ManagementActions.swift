@@ -80,20 +80,30 @@ extension OCDrive {
 	}
 
 	func delete(with clientContext: ClientContext?) {
-		guard let core = clientContext?.core else { return }
+		let alertController = ThemedAlertController(
+			title: OCLocalizedFormat("Delete space \"{{driveName}}\"?", ["driveName" : self.name ?? OCLocalizedString("space", nil)]),
+			message: OCLocalizedString("Are you sure you want to delete this space? This action cannot be undone.", nil),
+			preferredStyle: .alert)
 
-		core.deleteDrive(self, completionHandler: { error in
-			if let error {
-				OnMainThread {
-					let alertController = ThemedAlertController(
-						with: OCLocalizedFormat("Error deleting {{driveName}}", ["driveName" : self.name ?? OCLocalizedString("space", nil)]),
-						message: error.localizedDescription,
-						okLabel: OCLocalizedString("OK", nil),
-						action: nil)
+		alertController.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel, handler: nil))
+		alertController.addAction(UIAlertAction(title: OCLocalizedString("Delete", nil), style: .destructive, handler: { [weak clientContext] (_) in
+			guard let core = clientContext?.core else { return }
 
-					clientContext?.present(alertController, animated: true)
+			core.deleteDrive(self, completionHandler: { error in
+				if let error {
+					OnMainThread {
+						let alertController = ThemedAlertController(
+							with: OCLocalizedFormat("Error deleting {{driveName}}", ["driveName" : self.name ?? OCLocalizedString("space", nil)]),
+							message: error.localizedDescription,
+							okLabel: OCLocalizedString("OK", nil),
+							action: nil)
+
+						clientContext?.present(alertController, animated: true)
+					}
 				}
-			}
-		})
+			})
+		}))
+
+		clientContext?.present(alertController, animated: true)
 	}
 }

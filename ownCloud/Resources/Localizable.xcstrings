@@ -6698,6 +6698,9 @@
         }
       }
     },
+    "Are you sure you want to delete this space? This action cannot be undone." : {
+
+    },
     "Are you sure you want to unshare these items?" : {
       "localizations" : {
         "ar" : {
@@ -18370,6 +18373,9 @@
           }
         }
       }
+    },
+    "Delete space \"{{driveName}}\"?" : {
+
     },
     "Delete unused local copies" : {
       "localizations" : {
