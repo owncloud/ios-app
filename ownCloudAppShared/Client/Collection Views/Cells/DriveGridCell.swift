@@ -19,15 +19,64 @@
 import UIKit
 import ownCloudSDK
 
+extension UIAction.Identifier {
+	static let ocMoreAction = UIAction.Identifier(rawValue: "ocMoreAction")
+}
+
 class DriveGridCell: DriveHeaderCell {
 	var moreButton: UIButton = UIButton()
 	var moreAction: OCAction? {
 		didSet {
-			moreButton.isHidden = (moreAction == nil)
-			if let moreAction {
-				accessibilityCustomActions = [ moreAction.accessibilityCustomAction() ]
-			} else {
-				accessibilityCustomActions = nil
+			configureMoreButton()
+		}
+	}
+
+	var moreMenu: UIMenu? {
+		didSet {
+			configureMoreButton()
+		}
+	}
+
+	func configureMoreButton() {
+		// Reset state
+		moreButton.removeAction(identifiedBy: .ocMoreAction, for: .primaryActionTriggered)
+		moreButton.menu = nil
+		moreButton.showsMenuAsPrimaryAction = false
+		moreButton.isHidden = true
+		accessibilityCustomActions = nil
+
+		if let moreAction {
+			moreButton.addAction(UIAction(identifier: .ocMoreAction, handler: { [weak self] _ in
+				self?.moreAction?.run()
+			}), for: .primaryActionTriggered)
+
+			moreButton.isHidden = false
+			accessibilityCustomActions = [ moreAction.accessibilityCustomAction() ]
+		}
+
+		if let moreMenu {
+			moreButton.menu = moreMenu
+			moreButton.showsMenuAsPrimaryAction = true
+
+			moreButton.isHidden = false
+		}
+	}
+
+	private var disabledLabel: UIView?
+	var isDisabled: Bool = false {
+		didSet {
+			if isDisabled == oldValue { return }
+
+			// Remove disabled label (if any)
+			disabledLabel?.removeFromSuperview()
+			disabledLabel = nil
+
+			if isDisabled {
+				// Create and add disabled label
+				disabledLabel = ComposedMessageView.infoBox(image: nil, title: OCLocalizedString("Disabled", nil), withRoundedBackgroundView: true)
+				if let disabledLabel {
+					embed(centered: disabledLabel)
+				}
 			}
 		}
 	}
@@ -54,11 +103,8 @@ class DriveGridCell: DriveHeaderCell {
 
 		moreButton.configuration = buttonConfig
 		moreButton.translatesAutoresizingMaskIntoConstraints = false
-		moreButton.addAction(UIAction(handler: { [weak self] _ in
-			self?.moreAction?.run()
-		}), for: .primaryActionTriggered)
-		moreButton.isHidden = true
 		moreButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+		configureMoreButton()
 
 		titleLabel.isAccessibilityElement = false
 		subtitleLabel.isAccessibilityElement = false
