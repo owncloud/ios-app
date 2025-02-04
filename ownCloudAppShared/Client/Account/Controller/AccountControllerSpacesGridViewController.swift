@@ -23,6 +23,12 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 	var spacesSection: CollectionViewSection
 	var noSpacesCondition: DataSourceCondition?
 
+	var canManageSpaces: Bool {
+		return true
+	}
+
+	var spacesDataSource: OCDataSourceComposition = OCDataSourceComposition(sources: [])
+
 	init(with context: ClientContext) {
 		let gridContext = ClientContext(with: context)
 
@@ -30,7 +36,7 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 			context.viewControllerPusher = owner as? ViewControllerPusher
 		}
 
-		spacesSection = CollectionViewSection(identifier: "spaces", dataSource: context.core?.projectDrivesDataSource, cellStyle: .init(with: .gridCell), cellLayout: AccountControllerSpacesGridViewController.cellLayout(for: .current))
+		spacesSection = CollectionViewSection(identifier: "spaces", dataSource: spacesDataSource, cellStyle: .init(with: .gridCell), cellLayout: AccountControllerSpacesGridViewController.cellLayout(for: .current))
 
 		super.init(context: gridContext, sections: [ spacesSection ], useStackViewRoot: true, hierarchic: false)
 
@@ -38,20 +44,45 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 
 		navigationItem.title = OCLocalizedString("Spaces", nil)
 
-		if let projectDrivesDataSource = context.core?.projectDrivesDataSource {
-			let noSpacesMessage = ComposedMessageView(elements: [
-				.image(OCSymbol.icon(forSymbolName: "square.grid.2x2")!, size: CGSize(width: 64, height: 48), alignment: .centered),
-				.title(OCLocalizedString("No spaces", nil), alignment: .centered)
-			])
+		let noSpacesMessage = ComposedMessageView(elements: [
+			.image(OCSymbol.icon(forSymbolName: "square.grid.2x2")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+			.title(OCLocalizedString("No spaces", nil), alignment: .centered)
+		])
 
-			noSpacesCondition = DataSourceCondition(.empty, with: projectDrivesDataSource, initial: true, action: { [weak self] condition in
-				let coverView = (condition.fulfilled == true) ? noSpacesMessage : nil
-				self?.setCoverView(coverView, layout: .top)
-			})
+		noSpacesCondition = DataSourceCondition(.empty, with: spacesDataSource, initial: true, action: { [weak self] condition in
+			let coverView = (condition.fulfilled == true) ? noSpacesMessage : nil
+			self?.setCoverView(coverView, layout: .top)
+		})
+
+		if let projectDrivesDataSource = context.core?.projectDrivesDataSource {
+			spacesDataSource.addSources([ projectDrivesDataSource ])
 		}
 
-		let plusBarButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(createSpace))
-		navigationItem.rightBarButtonItem = plusBarButton
+		if canManageSpaces {
+			let spaceActionsButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: nil, action: nil)
+			spaceActionsButton.accessibilityIdentifier = "client.space-actions"
+			spaceActionsButton.accessibilityLabel = OCLocalizedString("Space Actions", nil)
+			spaceActionsButton.menu = UIMenu(title: "", children: [
+				// Create space
+				UIAction(title: OCLocalizedString("Create space",nil), image: OCSymbol.icon(forSymbolName: "plus"), handler: { [weak clientContext] _ in
+					OCDrive.create(with: clientContext)
+				}),
+
+				// Show/Hide disabled spaces
+				UIDeferredMenuElement.uncached({ [weak self] completion in
+					if let self {
+						completion([
+							UIAction(title: self.showDisabledSpaces ? OCLocalizedString("Hide disabled spaces",nil) : OCLocalizedString("Show disabled spaces", nil),
+								 image: OCSymbol.icon(forSymbolName: self.showDisabledSpaces ? "eye.slash" : "eye"),
+								 handler: { _ in
+									 self.showDisabledSpaces = !self.showDisabledSpaces
+								 })
+						])
+					}
+				})
+			])
+			navigationItem.rightBarButtonItem = spaceActionsButton
+		}
 
 		// Disable dragging of items, so keyboard control does
 		// not include "Drag Item" in the accessibility actions
@@ -93,11 +124,17 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 		return viewController
 	}
 
-	@objc func createSpace() {
-		guard let clientContext else { return }
-		let createSpaceViewController = SpaceManagementViewController(clientContext: clientContext, completionHandler: { error, drive in
-		})
-		let navigationController = ThemeNavigationController(rootViewController: createSpaceViewController)
-		clientContext.present(navigationController, animated: true)
+	var showDisabledSpaces: Bool = false {
+		didSet {
+			if let disabledDrivesDataSource = clientContext?.core?.disabledDrivesDataSource {
+				if showDisabledSpaces {
+					if !spacesDataSource.sources.contains(disabledDrivesDataSource) {
+						spacesDataSource.addSources([disabledDrivesDataSource])
+					}
+				} else {
+					spacesDataSource.removeSources([disabledDrivesDataSource])
+				}
+			}
+		}
 	}
 }

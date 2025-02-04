@@ -451,6 +451,9 @@
         }
       }
     },
+    "{{freeSpace}} of {{totalSpace}} available" : {
+
+    },
     "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" : {
       "localizations" : {
         "ar" : {
@@ -9021,6 +9024,9 @@
         }
       }
     },
+    "Available space" : {
+
+    },
     "Average" : {
       "localizations" : {
         "ar" : {
@@ -10166,6 +10172,9 @@
           }
         }
       }
+    },
+    "Bytes" : {
+
     },
     "Camera details" : {
       "localizations" : {
@@ -12181,6 +12190,9 @@
           }
         }
       }
+    },
+    "Close" : {
+
     },
     "Close actions menu" : {
       "localizations" : {
@@ -16136,6 +16148,9 @@
         }
       }
     },
+    "Create space" : {
+
+    },
     "Creating %ld folders…" : {
       "comment" : "Progress summarizer",
       "localizations" : {
@@ -19044,6 +19059,9 @@
         }
       }
     },
+    "Details" : {
+
+    },
     "Diagnostic Overview" : {
       "comment" : "Diagnostic",
       "localizations" : {
@@ -19644,6 +19662,15 @@
           }
         }
       }
+    },
+    "Disable space" : {
+
+    },
+    "disabled" : {
+
+    },
+    "Disabled" : {
+
     },
     "Discard changes" : {
       "localizations" : {
@@ -21621,6 +21648,9 @@
         }
       }
     },
+    "Edit space" : {
+
+    },
     "Enable" : {
       "localizations" : {
         "ar" : {
@@ -23071,6 +23101,18 @@
           }
         }
       }
+    },
+    "Error creating space" : {
+
+    },
+    "Error deleting {{driveName}}" : {
+
+    },
+    "Error disabling {{driveName}}" : {
+
+    },
+    "Error enabling {{driveName}}" : {
+
     },
     "Error fetching transactions" : {
       "localizations" : {
@@ -28087,6 +28129,9 @@
         }
       }
     },
+    "GB" : {
+
+    },
     "General" : {
       "localizations" : {
         "ar" : {
@@ -29188,6 +29233,9 @@
           }
         }
       }
+    },
+    "Hide disabled spaces" : {
+
     },
     "Histogram" : {
       "localizations" : {
@@ -33084,6 +33132,9 @@
         }
       }
     },
+    "KB" : {
+
+    },
     "Keywords" : {
       "localizations" : {
         "ar" : {
@@ -34167,6 +34218,9 @@
         }
       }
     },
+    "Limit space" : {
+
+    },
     "Limited Photo Access" : {
       "comment" : "Limited photo library access",
       "localizations" : {
@@ -34617,6 +34671,7 @@
       }
     },
     "Links" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -37038,6 +37093,9 @@
         }
       }
     },
+    "MB" : {
+
+    },
     "Media Export" : {
       "localizations" : {
         "ar" : {
@@ -37505,6 +37563,9 @@
           }
         }
       }
+    },
+    "Members" : {
+
     },
     "Messages" : {
       "localizations" : {
@@ -46522,6 +46583,9 @@
         }
       }
     },
+    "PB" : {
+
+    },
     "PDF Documents" : {
       "localizations" : {
         "ar" : {
@@ -50919,6 +50983,9 @@
         }
       }
     },
+    "Public Links" : {
+
+    },
     "Purchase" : {
       "localizations" : {
         "ar" : {
@@ -51343,6 +51410,9 @@
           }
         }
       }
+    },
+    "Quota" : {
+
     },
     "Read" : {
       "localizations" : {
@@ -61691,6 +61761,9 @@
         }
       }
     },
+    "Show disabled spaces" : {
+
+    },
     "Show folders on top" : {
       "localizations" : {
         "ar" : {
@@ -63341,6 +63414,9 @@
         }
       }
     },
+    "space" : {
+
+    },
     "Space" : {
       "localizations" : {
         "cs" : {
@@ -63410,6 +63486,9 @@
           }
         }
       }
+    },
+    "Space Actions" : {
+
     },
     "Spaces" : {
       "localizations" : {
@@ -64305,6 +64384,9 @@
         }
       }
     },
+    "Subtitle" : {
+
+    },
     "Switch Theme Style" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -65130,6 +65212,9 @@
           }
         }
       }
+    },
+    "TB" : {
+
     },
     "Terms Of Use" : {
       "localizations" : {
@@ -71663,6 +71748,9 @@
           }
         }
       }
+    },
+    "User" : {
+
     },
     "User Interface" : {
       "localizations" : {
