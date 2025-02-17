@@ -45,7 +45,6 @@ class DocumentActionViewController: FPUIActionExtensionViewController {
 		CollectionViewCellProvider.registerStandardImplementations()
 		CollectionViewSupplementaryCellProvider.registerStandardImplementations()
 
-		OCCoreManager.shared.memoryConfiguration = .minimum // Limit memory usage
 		OCHTTPPipelineManager.setupPersistentPipelines() // Set up HTTP pipelines
 
 		OCItem.registerIcons()

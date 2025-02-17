@@ -30,7 +30,6 @@
 #import "OCFileProviderSettings.h"
 #import "VFSManager.h"
 #import "AppLockSettings.h"
-#import "ZIPArchive.h"
 // END: shared with ownCloudApp.framework
 
 #import "FileProviderExtension.h"
@@ -64,8 +63,6 @@
 	[OCLogger logLevel]; // Make sure +logLevel is called in File Provider, to properly set up the log level
 
 	NSDictionary *bundleInfoDict = [[NSBundle bundleForClass:[FileProviderExtension class]] infoDictionary];
-
-	OCCoreManager.sharedCoreManager.memoryConfiguration = OCCoreMemoryConfigurationMinimum;
 
 	OCAppIdentity.sharedAppIdentity.appIdentifierPrefix = bundleInfoDict[@"OCAppIdentifierPrefix"];
 	OCAppIdentity.sharedAppIdentity.keychainAccessGroupIdentifier = bundleInfoDict[@"OCKeychainAccessGroupIdentifier"];

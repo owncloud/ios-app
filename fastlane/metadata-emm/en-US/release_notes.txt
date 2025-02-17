@@ -1,6 +1,6 @@
-• iOS 18
-The app is now compatible with iOS 18.
+• Confidential Protection
+Watermarking, screenshot protection and more are now available via MDM and branding.
 
-• General Improvements
-General app improvements and internal fixes to enhance performance, synchronization, and stability.
+• File Provider Memory Efficiency
+The File Provider is now more stable thanks to improved memory efficiency.
 

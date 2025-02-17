@@ -1,0 +1,6 @@
+Bugfix: Memory usage optimizations
+
+Memory optimizations specifically to the file provider to ensure stability.
+
+https://github.com/owncloud/ios-app/pull/1416
+https://github.com/owncloud/ios-sdk/pull/121

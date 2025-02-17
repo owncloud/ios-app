@@ -123,6 +123,11 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		timer!.resume()
 	}
 
+	override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		self.view.secureView(core: core)
+	}
+
 	@objc func enableEditingMode() {
 		// Activate editing mode by performing the action on pencil icon. Unfortunately that's the only way to do it apparently
 		if #available(iOS 16.0, *) {
