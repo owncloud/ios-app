@@ -654,6 +654,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			}
 
 			self.accessibilityLabel = accessibilityLabelContent
+			contentView.secureView(core: clientContext?.core)
 		}
 	}
 

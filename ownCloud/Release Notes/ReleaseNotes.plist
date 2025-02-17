@@ -2006,6 +2006,33 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>12.4.0</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Confidential Protection</string>
+					<key>Subtitle</key>
+					<string>Watermarking, screenshot protection and more are now available via MDM and branding.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>slider.horizontal.3</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>File Provider Memory Efficiency</string>
+					<key>Subtitle</key>
+					<string>The File Provider is now more stable thanks to improved memory efficiency.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>memorychip</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

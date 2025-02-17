@@ -618,7 +618,11 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.label, .destructive],		property: .stroke, value: UIColor.red),
 			ThemeCSSRecord(selectors: [.label, .warning],			property: .stroke, value: UIColor(hex: 0xF2994A)),
 			ThemeCSSRecord(selectors: [.label, .error],			property: .stroke, value: UIColor(hex: 0xEB5757)),
-			ThemeCSSRecord(selectors: [.label, .success],			property: .stroke, value: UIColor(hex: 0x27AE60))
+			ThemeCSSRecord(selectors: [.label, .success],			property: .stroke, value: UIColor(hex: 0x27AE60)),
+			
+			// - Confidential
+			ThemeCSSRecord(selectors: [.confidentialLabel],		property: .stroke, value: tintColor.withAlphaComponent(0.8)),
+			ThemeCSSRecord(selectors: [.confidentialSecondaryLabel],		property: .stroke, value: tintColor.withAlphaComponent(0.4))
 		])
 
 		// - Fill styles

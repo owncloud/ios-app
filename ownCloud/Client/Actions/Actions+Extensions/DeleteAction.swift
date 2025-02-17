@@ -61,7 +61,7 @@ class DeleteAction : Action {
 		if items.count > 1 {
 			itemDescripton = OCLocalizedString("Multiple items", nil)
 		} else {
-			itemDescripton = items.first?.name
+			itemDescripton = items.first?.name?.redacted()
 		}
 
 		guard let name = itemDescripton else {

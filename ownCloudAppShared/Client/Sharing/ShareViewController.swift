@@ -610,17 +610,33 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 			   permissions?.contains(.delete) == true && (
 				permissions?.contains(.create) == true ||
 				permissions?.contains(.update) == true) {
+				// Read/Write/Delete
+				if mode == .edit {
+					return capabilities.publicSharingPasswordBlockRemovalForReadWriteDelete == true
+				}
 				return capabilities.publicSharingPasswordEnforcedForReadWriteDelete == true
 			}
 			if permissions?.contains(.read) == true && (
 				permissions?.contains(.create) == true ||
 				permissions?.contains(.update) == true) {
+				// Read/Write
+				if mode == .edit {
+					return capabilities.publicSharingPasswordBlockRemovalForReadWrite == true
+				}
 				return capabilities.publicSharingPasswordEnforcedForReadWrite == true
 			}
 			if permissions?.contains(.create) == true {
+				// Upload only
+				if mode == .edit {
+					return capabilities.publicSharingPasswordBlockRemovalForUploadOnly == true
+				}
 				return capabilities.publicSharingPasswordEnforcedForUploadOnly == true
 			}
 			if permissions?.contains(.read) == true {
+				// Read only
+				if mode == .edit {
+					return capabilities.publicSharingPasswordBlockRemovalForReadOnly == true
+				}
 				return capabilities.publicSharingPasswordEnforcedForReadOnly == true
 			}
 		}

@@ -31,6 +31,7 @@ extension AppRootViewController: ViewItemAction {
 		let itemViewController = DisplayHostViewController(clientContext: context, selectedItem: item, queryDataSource: queryDatasource)
 		itemViewController.hidesBottomBarWhenPushed = true
 		itemViewController.progressSummarizer = context.progressSummarizer
+		itemViewController.view.secureView(core: context.core)
 
 		return itemViewController
 	}
