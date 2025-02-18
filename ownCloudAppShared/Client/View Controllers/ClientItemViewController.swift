@@ -1018,38 +1018,15 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	// MARK: - Search
 	open var searchViewController: SearchViewController?
 
-	open func searchScopes(for clientContext: ClientContext, cellStyle: CollectionViewCellStyle) -> [SearchScope] {
-		var scopes : [SearchScope] = []
-
-		if clientContext.query?.queryLocation != nil {
-			// - Folder
-			// - Tree (folder + subfolders)
-			scopes.append(contentsOf: [
-				// - In this folder
-				.modifyingQuery(with: clientContext, localizedName: OCLocalizedString("Folder", nil)),
-
-				// - Folder and subfolders (tree / container)
-				.containerSearch(with: clientContext, cellStyle: cellStyle, localizedName: OCLocalizedString("Tree", nil))
-			])
-
-			// - Drive
-			if clientContext.core?.useDrives == true {
-				let driveName = OCLocalizedString("Space", nil)
-				scopes.append(.driveSearch(with: clientContext, cellStyle: cellStyle, localizedName: driveName))
-			}
-		}
-
-		// - Account
-		scopes.append(.accountSearch(with: clientContext, cellStyle: cellStyle, localizedName: OCLocalizedString("Account", nil)))
-
-		return scopes
+	open func searchScopes(for clientContext: ClientContext, cellStyle: CollectionViewCellStyle) -> ([SearchScope], SearchScope?) {
+		return SearchScope.availableScopes(for: clientContext, cellStyle: cellStyle)
 	}
 
 	@objc open func startSearch() {
 		if searchViewController == nil {
 			if let clientContext = clientContext, let cellStyle = itemSection?.cellStyle {
 				// Scopes
-				let scopes = searchScopes(for: clientContext, cellStyle: cellStyle)
+				let (scopes, defaultScope) = searchScopes(for: clientContext, cellStyle: cellStyle)
 
 				// No results
 				let noResultContent = SearchViewController.Content(type: .noResults, source: OCDataSourceArray(), style: emptySection!.cellStyle)
@@ -1070,7 +1047,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				}
 
 				// Create and install SearchViewController
-				searchViewController = SearchViewController(with: clientContext, scopes: scopes, suggestionContent: suggestionsContent, noResultContent: noResultContent, delegate: self)
+				searchViewController = SearchViewController(with: clientContext, scopes: scopes, defaultScope: defaultScope, suggestionContent: suggestionsContent, noResultContent: noResultContent, delegate: self)
 
 				if let searchViewController = searchViewController {
 					self.addStacked(child: searchViewController, position: .top)

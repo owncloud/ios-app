@@ -326,6 +326,33 @@ tag::app[]
 |Status
 
 
+|search.defaultScope
+|string
+|`folder`
+|The search scope to pre-select when search is invoked inside a folder.
+[cols="1,1"]
+!===
+! Value
+! Description
+! `account`
+! Account
+
+! `drive`
+! Space
+
+! `folder`
+! Folder
+
+! `server`
+! Server
+
+! `tree`
+! Tree
+
+!===
+
+|supported `candidate`
+
 |app.app-store-link
 |string
 |`https://itunes.apple.com/app/id1359583808?mt=8`
@@ -407,6 +434,12 @@ tag::authentication[]
 |bool
 |`false`
 |Indicates whether the app should ask iOS for a private authentication (web) session for OAuth2 or OpenID Connect. Private authentication sessions do not share cookies and other browsing data with the user's normal browser. Apple only promises that [this setting](https://developer.apple.com/documentation/authenticationservices/aswebauthenticationsession/3237231-prefersephemeralwebbrowsersessio) will be honored if the user has set Safari as default browser.
+|supported `candidate`
+
+|authentication.skip-www-authenticate-checks
+|bool
+|
+|Overrides whether the default WebDAV endpoint should be probed to detect available authentication methods. By default, the necessity for this is determined dynamically.
 |supported `candidate`
 
 |===
@@ -581,7 +614,7 @@ branding.send-feedback-address
  +
 branding.send-feedback-url
 |string
-|`https://owncloud.com/ios-app-feedback`
+|
 |URL to open when selecting the "Send feedback" option. Allows the use of all placeholders provided in `http.user-agent`.
 |advanced `candidate`
 
@@ -768,6 +801,38 @@ tag::build[]
 
 |===
 end::build[]
+
+
+tag::confidential[]
+[cols="2,1,1,2a,1",options=header]
+|=== 
+|Key
+|Type
+|Default
+|Description
+|Status
+
+
+|confidential.allow-overwrite-confidential-mdm-settings
+|bool
+|`false`
+|Controls if confidential related MDM settings can be overwritten.
+|advanced `candidate`
+
+|confidential.allow-screenshots
+|bool
+|`true`
+|Controls whether screenshots are allowed or not. If not allowed confidential views will be marked as sensitive and are not visible in screenshots.
+|advanced `candidate`
+
+|confidential.mark-confidential-views
+|bool
+|`false`
+|Controls if views which contains sensitive content contains a watermark or not.
+|advanced `candidate`
+
+|===
+end::confidential[]
 
 
 tag::connection[]
@@ -1084,6 +1149,12 @@ tag::endpoints[]
 |Endpoint to use for WebDAV metadata.
 |advanced `candidate`
 
+|connection.endpoint-webdav-spaces
+|string
+|`remote.php/dav/spaces`
+|Endpoint to as for WebDAV spaces.
+|advanced `candidate`
+
 |connection.well-known
 |string
 |`.well-known`
@@ -1225,9 +1296,6 @@ tag::extensions[]
 
 ! `license.PocketSVG`
 ! Extension with the identifier license.PocketSVG.
-
-! `license.libzip`
-! Extension with the identifier license.libzip.
 
 ! `license.openssl`
 ! Extension with the identifier license.openssl.
@@ -1554,6 +1622,12 @@ tag::oauth2[]
 |Omit Authorization Request Parameters - parameter names provided here are omitted from OAuth2 authorization requests.
 |advanced `candidate`
 
+|authentication-oauth2.post-client-id-and-secret
+|bool
+|`false`
+|Send Client ID and Client Secret in the body of POST requests to the token endpoint. As per RFC 6749 section 2.3.1, this should only be used if the token endpoint does not support receiving these via Basic authentication.
+|advanced `candidate`
+
 |authentication-oauth2.oa2-expiration-override-seconds
 |int
 |
@@ -1784,6 +1858,12 @@ tag::security[]
 |string
 |
 |Rule that defines the criteria that need to be met by a hostname other than a bookmark's hostname for the associated certificate to be added to the bookmark, tracked for changes and validated by the same rules as the bookmark's primary certificate. No value (default) or a value of `(0 == 1)` disables this feature. A value of `$hostname like "*.mycompany.com"` tracks the certificates for all hosts ending with mycompany.com.
+|advanced `candidate`
+
+|connection.block-password-removal-default
+|bool
+|`true`
+|If a server does not provide `block_password_removal` information as part of its capabilities, this option provides the fallback value controlling whether passwords can (value: false) or can not (value: true) be removed from an existing link even if capabilities otherwise indicate passwords need to be enforced for links.
 |advanced `candidate`
 
 |connection.certificate-extended-validation-rule

@@ -15353,6 +15353,9 @@
         }
       }
     },
+    "contents" : {
+
+    },
     "Contents from cache." : {
       "localizations" : {
         "ar" : {
@@ -19514,6 +19517,9 @@
           }
         }
       }
+    },
+    "Default search scope" : {
+
     },
     "Delete" : {
       "localizations" : {
@@ -43503,6 +43509,9 @@
         }
       }
     },
+    "name + contents" : {
+
+    },
     "Name of saved search" : {
       "localizations" : {
         "ar" : {
@@ -43726,6 +43735,9 @@
           }
         }
       }
+    },
+    "names" : {
+
     },
     "Network unavailable" : {
       "localizations" : {
@@ -63122,6 +63134,12 @@
         }
       }
     },
+    "Search in" : {
+
+    },
+    "Search on the server is unavailable while not connected. To search offline, switch to the Account scope." : {
+
+    },
     "Search PDF" : {
       "localizations" : {
         "ar" : {
@@ -63239,6 +63257,12 @@
           }
         }
       }
+    },
+    "Search server" : {
+
+    },
+    "Search Settings" : {
+
     },
     "Search space" : {
       "localizations" : {
@@ -63687,6 +63711,21 @@
           }
         }
       }
+    },
+    "Searches in the current space ONLY." : {
+
+    },
+    "Searches the current folder and its subfolders." : {
+
+    },
+    "Searches the current folder ONLY." : {
+
+    },
+    "Searches the personal folder and all spaces." : {
+
+    },
+    "Searches using the server." : {
+
     },
     "Security" : {
       "comment" : "Settings Messages",
@@ -65067,6 +65106,9 @@
         }
       }
     },
+    "Server" : {
+
+    },
     "Server name" : {
       "localizations" : {
         "ar" : {
@@ -65302,6 +65344,9 @@
           }
         }
       }
+    },
+    "Server search requires a connection" : {
+
     },
     "Server URL" : {
       "localizations" : {

@@ -664,6 +664,20 @@
   },
   {
     "autoExpansion" : "none",
+    "category" : "OAuth2",
+    "categoryTag" : "oauth2",
+    "classIdentifier" : "authentication-oauth2",
+    "className" : "OCAuthenticationMethodOAuth2",
+    "defaultValue" : false,
+    "description" : "Send Client ID and Client Secret in the body of POST requests to the token endpoint. As per RFC 6749 section 2.3.1, this should only be used if the token endpoint does not support receiving these via Basic authentication.",
+    "flatIdentifier" : "authentication-oauth2.post-client-id-and-secret",
+    "key" : "post-client-id-and-secret",
+    "label" : "authentication-oauth2.post-client-id-and-secret",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Authentication",
     "categoryTag" : "authentication",
     "classIdentifier" : "authentication",
@@ -709,6 +723,19 @@
     "flatIdentifier" : "authentication.browser-session-prefers-ephermal",
     "key" : "browser-session-prefers-ephermal",
     "label" : "authentication.browser-session-prefers-ephermal",
+    "status" : "supported",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Authentication",
+    "categoryTag" : "authentication",
+    "classIdentifier" : "authentication",
+    "className" : "OCAuthenticationMethod",
+    "description" : "Overrides whether the default WebDAV endpoint should be probed to detect available authentication methods. By default, the necessity for this is determined dynamically.",
+    "flatIdentifier" : "authentication.skip-www-authenticate-checks",
+    "key" : "skip-www-authenticate-checks",
+    "label" : "authentication.skip-www-authenticate-checks",
     "status" : "supported",
     "type" : "bool"
   },
@@ -945,7 +972,6 @@
     "categoryTag" : "branding",
     "classIdentifier" : "branding",
     "className" : "Branding",
-    "defaultValue" : "https://owncloud.com/ios-app-feedback",
     "description" : "URL to open when selecting the \"Send feedback\" option. Allows the use of all placeholders provided in `http.user-agent`.",
     "flatIdentifier" : "branding.send-feedback-url",
     "key" : "send-feedback-url",
@@ -1230,6 +1256,48 @@
   },
   {
     "autoExpansion" : "none",
+    "category" : "Confidential",
+    "categoryTag" : "confidential",
+    "classIdentifier" : "confidential",
+    "className" : "ConfidentialManager",
+    "defaultValue" : false,
+    "description" : "Controls if confidential related MDM settings can be overwritten.",
+    "flatIdentifier" : "confidential.allow-overwrite-confidential-mdm-settings",
+    "key" : "allow-overwrite-confidential-mdm-settings",
+    "label" : "confidential.allow-overwrite-confidential-mdm-settings",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Confidential",
+    "categoryTag" : "confidential",
+    "classIdentifier" : "confidential",
+    "className" : "ConfidentialManager",
+    "defaultValue" : true,
+    "description" : "Controls whether screenshots are allowed or not. If not allowed confidential views will be marked as sensitive and are not visible in screenshots.",
+    "flatIdentifier" : "confidential.allow-screenshots",
+    "key" : "allow-screenshots",
+    "label" : "confidential.allow-screenshots",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Confidential",
+    "categoryTag" : "confidential",
+    "classIdentifier" : "confidential",
+    "className" : "ConfidentialManager",
+    "defaultValue" : false,
+    "description" : "Controls if views which contains sensitive content contains a watermark or not.",
+    "flatIdentifier" : "confidential.mark-confidential-views",
+    "key" : "mark-confidential-views",
+    "label" : "confidential.mark-confidential-views",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
     "category" : "Connection",
     "categoryTag" : "connection",
     "classIdentifier" : "connection",
@@ -1314,6 +1382,21 @@
     "label" : "connection.associated-certificates-tracking-rule",
     "status" : "advanced",
     "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Security",
+    "categoryTag" : "security",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : true,
+    "description" : "If a server does not provide `block_password_removal` information as part of its capabilities, this option provides the fallback value controlling whether passwords can (value: false) or can not (value: true) be removed from an existing link even if capabilities otherwise indicate passwords need to be enforced for links.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.block-password-removal-default",
+    "key" : "block-password-removal-default",
+    "label" : "connection.block-password-removal-default",
+    "status" : "advanced",
+    "type" : "bool"
   },
   {
     "autoExpansion" : "none",
@@ -1447,6 +1530,21 @@
     "flatIdentifier" : "connection.endpoint-webdav-meta",
     "key" : "endpoint-webdav-meta",
     "label" : "connection.endpoint-webdav-meta",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "categoryTag" : "endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "remote.php/dav/spaces",
+    "description" : "Endpoint to as for WebDAV spaces.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.endpoint-webdav-spaces",
+    "key" : "endpoint-webdav-spaces",
+    "label" : "connection.endpoint-webdav-spaces",
     "status" : "advanced",
     "type" : "string"
   },
@@ -1925,10 +2023,6 @@
       {
         "description" : "Extension with the identifier license.PocketSVG.",
         "value" : "license.PocketSVG"
-      },
-      {
-        "description" : "Extension with the identifier license.libzip.",
-        "value" : "license.libzip"
       },
       {
         "description" : "Extension with the identifier license.openssl.",
@@ -2604,6 +2698,42 @@
     "key" : "lastSeenReleaseNotesVersion",
     "label" : "releasenotes.lastSeenReleaseNotesVersion",
     "status" : "debugOnly",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "App",
+    "categoryTag" : "app",
+    "classIdentifier" : "search",
+    "className" : "ownCloudAppShared.SearchScope",
+    "defaultValue" : "folder",
+    "description" : "The search scope to pre-select when search is invoked inside a folder.",
+    "flatIdentifier" : "search.defaultScope",
+    "key" : "defaultScope",
+    "label" : "search.defaultScope",
+    "possibleValues" : [
+      {
+        "description" : "Account",
+        "value" : "account"
+      },
+      {
+        "description" : "Space",
+        "value" : "drive"
+      },
+      {
+        "description" : "Folder",
+        "value" : "folder"
+      },
+      {
+        "description" : "Server",
+        "value" : "server"
+      },
+      {
+        "description" : "Tree",
+        "value" : "tree"
+      }
+    ],
+    "status" : "supported",
     "type" : "string"
   },
   {
