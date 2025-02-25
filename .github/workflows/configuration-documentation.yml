@@ -28,6 +28,7 @@ jobs:
           FILEPROVIDERUI_PROVISION_PROFILE_BASE64: ${{ secrets.FILEPROVIDERUI_PROVISION_PROFILE_BASE64 }}
           INTENT_PROVISION_PROFILE_BASE64: ${{ secrets.INTENT_PROVISION_PROFILE_BASE64 }}
           SHAREEXTENSION_PROVISION_PROFILE_BASE64: ${{ secrets.SHAREEXTENSION_PROVISION_PROFILE_BASE64 }}
+          ACTIONEXTENSION_PROVISION_PROFILE_BASE64: ${{ secrets.ACTIONEXTENSION_PROVISION_PROFILE_BASE64 }}
           KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
         run: |
           # Create variables
@@ -37,6 +38,7 @@ jobs:
           FILEPROVIDERUI_PP_PATH=$RUNNER_TEMP/FileProviderUI.mobileprovision
           INTENT_PP_PATH=$RUNNER_TEMP/Intent.mobileprovision
           SHAREEXTENSION_PP_PATH=$RUNNER_TEMP/ShareExtension.mobileprovision
+          ACTIONEXTENSION_PP_PATH=$RUNNER_TEMP/ActionExtension.mobileprovision
           KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
           
           # Import certificate and provisioning profiles from secrets
@@ -46,6 +48,7 @@ jobs:
           echo -n "$FILEPROVIDERUI_PROVISION_PROFILE_BASE64" | base64 --decode --output $FILEPROVIDERUI_PP_PATH
           echo -n "$INTENT_PROVISION_PROFILE_BASE64" | base64 --decode --output $INTENT_PP_PATH
           echo -n "$SHAREEXTENSION_PROVISION_PROFILE_BASE64" | base64 --decode --output $SHAREEXTENSION_PP_PATH
+          echo -n "$ACTIONEXTENSION_PROVISION_PROFILE_BASE64" | base64 --decode --output $ACTIONEXTENSION_PP_PATH
           
           # Create temporary keychain
           security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
@@ -63,6 +66,7 @@ jobs:
           cp $FILEPROVIDERUI_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
           cp $INTENT_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
           cp $SHAREEXTENSION_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+          cp $ACTIONEXTENSION_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
       - name: Install gomplate
         run: brew install gomplate
       - name: Run Generate Docs
