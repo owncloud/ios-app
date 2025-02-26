@@ -306,7 +306,7 @@ public class SpaceManagementViewController: CollectionViewController {
 
 		switch mode {
 			case .create:
-				core.createDrive(withName: name, description: subtitle, quota: NSNumber(value: quotaTotalBytes ?? 0)) { [weak self] error, drive in
+				core.createDrive(withName: name, description: subtitle, quota: NSNumber(value: quotaTotalBytes ?? 0), template: .default) { [weak self] error, drive in
 					self?.complete(with: drive, error: error)
 				}
 

@@ -301,6 +301,8 @@
 		DC2A68D529D492B300BFF393 /* space.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC2A68D429D492B200BFF393 /* space.tvg */; };
 		DC2A68D729D4E93300BFF393 /* SharedKeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2A68D629D4E93300BFF393 /* SharedKeyCommands.swift */; };
 		DC2A8E6A2B57EA8F001F0522 /* AccountControllerSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2A8E692B57EA8F001F0522 /* AccountControllerSearchViewController.swift */; };
+		DC2EB4352D6E303C00100A67 /* EditSpaceDescriptionAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2EB4342D6E303C00100A67 /* EditSpaceDescriptionAction.swift */; };
+		DC2EB43B2D6E367300100A67 /* MarkdownViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2EB43A2D6E367300100A67 /* MarkdownViewController.swift */; };
 		DC2FB16A2D3EF4FD00726E97 /* ConfidentialManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 39D091B52D079644001329DF /* ConfidentialManager.m */; };
 		DC2BB5402CD96C1600320384 /* ServerSideSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2BB53F2CD96C1600320384 /* ServerSideSearchScope.swift */; };
 		DC36885824DC98BF00333600 /* OCFileProviderServiceSession.h in Headers */ = {isa = PBXBuildFile; fileRef = DC36885624DC98BF00333600 /* OCFileProviderServiceSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1286,6 +1288,8 @@
 		DC2A68D629D4E93300BFF393 /* SharedKeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedKeyCommands.swift; sourceTree = "<group>"; };
 		DC2A8E692B57EA8F001F0522 /* AccountControllerSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountControllerSearchViewController.swift; sourceTree = "<group>"; };
 		DC2BB53F2CD96C1600320384 /* ServerSideSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSideSearchScope.swift; sourceTree = "<group>"; };
+		DC2EB4342D6E303C00100A67 /* EditSpaceDescriptionAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSpaceDescriptionAction.swift; sourceTree = "<group>"; };
+		DC2EB43A2D6E367300100A67 /* MarkdownViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownViewController.swift; sourceTree = "<group>"; };
 		DC321260207EB01B00DB171D /* ThemeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeImage.swift; sourceTree = "<group>"; };
 		DC3393A722E0C4ED00DD3DA4 /* icon-available-offline.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-available-offline.tvg"; path = "../img/filetypes-tvg/icon-available-offline.tvg"; sourceTree = "<group>"; };
 		DC36885624DC98BF00333600 /* OCFileProviderServiceSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderServiceSession.h; sourceTree = "<group>"; };
@@ -1977,6 +1981,7 @@
 				DC9CE3BC2D0F31C800979C44 /* Spaces */,
 				399EA6ED25E6544000B6FF11 /* Sharing */,
 				DCC73F2C2B86BC170009A210 /* Password Composer */,
+				DC2EB4392D6E365100100A67 /* Markdown */,
 				DCE4E42F24C1963F0051722F /* User Interface */,
 			);
 			path = Client;
@@ -2235,6 +2240,7 @@
 		6E586CF52199A70100F680C4 /* Actions+Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				DC2EB4342D6E303C00100A67 /* EditSpaceDescriptionAction.swift */,
 				DC9CE3C02D0F399B00979C44 /* DisableSpaceAction.swift */,
 				DC9CE3BD2D0F31ED00979C44 /* ManageSpaceAction.swift */,
 				DC6B971C2D21F7620045E73F /* MembersSpaceAction.swift */,
@@ -2559,6 +2565,14 @@
 				DC2A127B28D06EED0088A2B7 /* Saved Searches */,
 			);
 			path = Search;
+			sourceTree = "<group>";
+		};
+		DC2EB4392D6E365100100A67 /* Markdown */ = {
+			isa = PBXGroup;
+			children = (
+				DC2EB43A2D6E367300100A67 /* MarkdownViewController.swift */,
+			);
+			path = Markdown;
 			sourceTree = "<group>";
 		};
 		DC3AB1932808C2DE00789435 /* View Controllers */ = {
@@ -4613,6 +4627,7 @@
 				02633EFF2483D2EB00B5F58F /* UNUserNotificationCenter+Extensions.swift in Sources */,
 				6E91F37E21ECA6FD009436D2 /* CopyAction.swift in Sources */,
 				4CC4A21922FB4F4C00AE7E2C /* MediaUploadQueue.swift in Sources */,
+				DC2EB4352D6E303C00100A67 /* EditSpaceDescriptionAction.swift in Sources */,
 				4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */,
 				DCB6B1F5292CC46B00D27573 /* AccountController+ItemActions.swift in Sources */,
 				6E5FC172221590B000F60846 /* DisplayHostViewController.swift in Sources */,
@@ -4843,6 +4858,7 @@
 				DCB6B1F2292B9A7A00D27573 /* OCMessage+Extension.swift in Sources */,
 				DCE4E43924C19AB20051722F /* MoreStaticTableViewController.swift in Sources */,
 				DC82663C28168D2800F91F7D /* ClientContext.swift in Sources */,
+				DC2EB43B2D6E367300100A67 /* MarkdownViewController.swift in Sources */,
 				DC0A358C24C0E44B00FB58FC /* ThemeWindow.swift in Sources */,
 				DC0A357124C0E42700FB58FC /* StaticTableViewRow.swift in Sources */,
 				DC3AB1982808C35300789435 /* ClientItemViewController.swift in Sources */,
