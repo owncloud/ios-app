@@ -24024,6 +24024,9 @@
     "Edit space" : {
 
     },
+    "Edit space description" : {
+
+    },
     "Enable" : {
       "localizations" : {
         "ar" : {
@@ -40776,6 +40779,9 @@
         }
       }
     },
+    "Markdown" : {
+
+    },
     "Markup" : {
       "localizations" : {
         "ar" : {
@@ -55787,6 +55793,9 @@
           }
         }
       }
+    },
+    "Preview" : {
+
     },
     "Previous" : {
       "extractionState" : "manual",
