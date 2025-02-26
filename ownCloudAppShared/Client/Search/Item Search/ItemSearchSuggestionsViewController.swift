@@ -306,10 +306,13 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 			searchInLabel.text = OCLocalizedString("Search in", nil)
 			searchInLabel.translatesAutoresizingMaskIntoConstraints = false
 
-			style(popupButton: searchedContentPopup.button, hasMatch: false)
+			style(popupButton: popupButton, hasMatch: false)
 
 			containerView.addSubview(searchInLabel)
 			containerView.addSubview(popupButton)
+
+			popupButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+			popupButton.setContentHuggingPriority(.required, for: .horizontal)
 
 			NSLayoutConstraint.activate([
 				searchInLabel.leadingAnchor.constraint(equalTo: containerView.leadingAnchor, constant: 10),
@@ -350,6 +353,8 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 
 			let button = popupController.button
 			button.addConstraint(button.heightAnchor.constraint(equalToConstant: 25))
+			button.setContentCompressionResistancePriority(.required, for: .horizontal)
+			button.setContentHuggingPriority(.required, for: .horizontal)
 
 			category.popupController = popupController
 		}
@@ -414,7 +419,18 @@ class ItemSearchSuggestionsViewController: UIViewController, SearchElementUpdati
 		if let searchScope = scope as? ItemSearchScope, searchScope.canSaveSearch || searchScope.canSaveTemplate {
 			showSavedSearchButton = true
 		}
-		savedSearchPopup?.button.isHidden = !showSavedSearchButton
+		if let savedSearchPopupButton = savedSearchPopup?.button {
+			if showSavedSearchButton {
+				if savedSearchPopupButton.superview == nil {
+					stackView?.addArrangedSubview(savedSearchPopupButton)
+				}
+			} else {
+				if savedSearchPopupButton.superview != nil {
+					stackView?.removeArrangedSubview(savedSearchPopupButton)
+					savedSearchPopupButton.removeFromSuperview()
+				}
+			}
+		}
 
 		for category in categories {
 			var categoryHasMatch: Bool = false
