@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK." : {
       "localizations" : {
         "cs" : {
@@ -5558,6 +5561,7 @@
       }
     },
     "Albums" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5788,6 +5792,7 @@
       }
     },
     "All Photos" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -13217,6 +13222,9 @@
         }
       }
     },
+    "Choose an image for the space" : {
+
+    },
     "Choose destination directory…" : {
       "localizations" : {
         "ar" : {
@@ -17679,6 +17687,9 @@
           }
         }
       }
+    },
+    "Create image" : {
+
     },
     "Create link" : {
       "localizations" : {
@@ -24021,10 +24032,16 @@
         }
       }
     },
+    "Edit description" : {
+
+    },
+    "Edit image" : {
+
+    },
     "Edit space" : {
 
     },
-    "Edit space description" : {
+    "Emoji or text" : {
 
     },
     "Enable" : {
@@ -24817,6 +24834,9 @@
           }
         }
       }
+    },
+    "Enter a emoji or text" : {
+
     },
     "Enter a new code with %ld digits" : {
       "localizations" : {
@@ -34256,6 +34276,9 @@
           }
         }
       }
+    },
+    "Image Playground" : {
+
     },
     "Images" : {
       "localizations" : {
@@ -53528,6 +53551,9 @@
           }
         }
       }
+    },
+    "Pick a photo" : {
+
     },
     "Pick file or folder" : {
       "localizations" : {
@@ -74341,6 +74367,9 @@
           }
         }
       }
+    },
+    "Text/Emoji" : {
+
     },
     "Thank you for using %@.\n" : {
       "localizations" : {
