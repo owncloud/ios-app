@@ -22,7 +22,6 @@ import ownCloudAppShared
 import Photos
 import PhotosUI
 
-@available(iOS 14, *)
 class PhotoPickerPresenter: NSObject, PHPickerViewControllerDelegate, PHPhotoLibraryChangeObserver {
 
 	typealias AssetSelectionHandler = ([PHAsset]) -> Void
@@ -137,8 +136,8 @@ class UploadMediaAction: UploadBaseAction {
 	override class var keyCommand : String? { return "M" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
-	// We need this to keep PhotoPickerPresenter alive in iOS14. Type is 'Any' since it is iOS14 only and you can't add @available() to stored properties
-	private var picker: Any?
+	// We need this to keep PhotoPickerPresenter alive in iOS14.
+	private var picker: PhotoPickerPresenter?
 
 	private struct AssociatedKeys {
 		static var actionKey = "action"
@@ -172,24 +171,12 @@ class UploadMediaAction: UploadBaseAction {
 		}
 
 		if let viewController = self.context.viewController {
-
-			if #available(iOS 14, *) {
-				picker = PhotoPickerPresenter()
-				(picker as? PhotoPickerPresenter)?.present(in: viewController, with: { [weak self] (assets) in
-					self?.completed()
-					addAssetsToQueue(assets: assets)
-					self?.picker = nil
-				})
-			} else {
-				let photoAlbumViewController = PhotoAlbumTableViewController()
-				photoAlbumViewController.selectionCallback = {(assets) in
-					self.completed()
-					addAssetsToQueue(assets: assets)
-				}
-				let navigationController = ThemeNavigationController(rootViewController: photoAlbumViewController)
-
-				viewController.present(navigationController, animated: true)
-			}
+			picker = PhotoPickerPresenter()
+			picker?.present(in: viewController, with: { [weak self] (assets) in
+				self?.completed()
+				addAssetsToQueue(assets: assets)
+				self?.picker = nil
+			})
 		} else {
 			self.completed(with: NSError(ocError: .internal))
 		}

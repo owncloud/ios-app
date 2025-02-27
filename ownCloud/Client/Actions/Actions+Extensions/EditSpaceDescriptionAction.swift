@@ -23,7 +23,7 @@ import ownCloudAppShared
 class EditSpaceDescriptionAction: Action {
 	override open class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.editspacedescription") }
 	override open class var category : ActionCategory? { return .edit }
-	override open class var name : String? { return OCLocalizedString("Edit space description", nil) }
+	override open class var name : String? { return OCLocalizedString("Edit description", nil) }
 	override open class var locations : [OCExtensionLocationIdentifier]? { return [.moreFolder, .spaceAction] }
 
 	// MARK: - Extension matching
@@ -59,19 +59,19 @@ class EditSpaceDescriptionAction: Action {
 					var encoding: String.Encoding = .utf8
 					if let markdown = try? String(contentsOf: fileURL, usedEncoding: &encoding) {
 						OnMainThread {
-							self.editDescription(markdown, item: item, location: item?.location)
+							self.editDescription(markdown, name: item?.name, existingItem: item)
 						}
 					}
 				})
 			} else {
 				// Open editor to pen new file
-				self.editDescription("", item: nil, location: nil)
+				self.editDescription()
 			}
 		})
 	}
 
-	func editDescription(_ originalMarkdownText: String?, item existingItem: OCItem?, location: OCLocation?) {
-		let fileName = location?.lastPathComponent ?? "readme.md"
+	func editDescription(_ originalMarkdownText: String? = nil, name inFileName: String? = nil, existingItem: OCItem? = nil) {
+		let fileName = inFileName ?? "readme.md"
 
 		let markdownViewController = MarkdownViewController(markdownText: originalMarkdownText, title: fileName, allowEditing: true, completionHandler: { canceled, editedMarkdownText in
 			if !canceled {
@@ -93,7 +93,9 @@ class EditSpaceDescriptionAction: Action {
 
 							if let existingItem {
 								// Update existing file
-								clientContext.core?.reportLocalModification(of: existingItem, parentItem: spaceFolderItem, withContentsOfFileAt: markdownFileURL, isSecurityScoped: false, options: nil, placeholderCompletionHandler: nil, resultHandler: { err, core, item, _ in
+								clientContext.core?.reportLocalModification(of: existingItem, parentItem: spaceFolderItem, withContentsOfFileAt: markdownFileURL, isSecurityScoped: false, options: [
+									.importByCopying: true
+								], placeholderCompletionHandler: nil, resultHandler: { err, core, item, _ in
 									if err == nil {
 										clientContext.core?.updateDrive(drive, resourceFor: .coverDescription, with: item, completionHandler: nil)
 									}
@@ -101,7 +103,10 @@ class EditSpaceDescriptionAction: Action {
 								})
 							} else {
 								// Create new file
-								clientContext.core?.importFileNamed(markdownFileURL.lastPathComponent, at: spaceFolderItem, from: markdownFileURL, isSecurityScoped: false, placeholderCompletionHandler: nil, resultHandler: { err, core, item, _ in
+								clientContext.core?.importFileNamed(markdownFileURL.lastPathComponent, at: spaceFolderItem, from: markdownFileURL, isSecurityScoped: false, options: [
+									.importByCopying: true,
+									OCCoreOption(rawValue: OCConnectionOptionKey.forceReplaceKey.rawValue) : true // Replace existing file
+								], placeholderCompletionHandler: nil, resultHandler: { err, core, item, _ in
 									if err == nil {
 										clientContext.core?.updateDrive(drive, resourceFor: .coverDescription, with: item, completionHandler: nil)
 									}
