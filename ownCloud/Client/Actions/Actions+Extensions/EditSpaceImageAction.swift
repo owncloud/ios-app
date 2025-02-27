@@ -149,6 +149,9 @@ class EditSpaceImageAction: Action, PHPickerViewControllerDelegate {
 		if #available(iOS 18.1, *) {
 			let imagePlaygroundViewController = ImagePlaygroundViewController()
 			imagePlaygroundViewController.delegate = self
+			if let driveName = context.drive?.name {
+				imagePlaygroundViewController.concepts = [.extracted(from: driveName, title: nil)]
+			}
 
 			imagePlaygroundViewController.setValue(self, forAnnotatedProperty: "action") // prevent instance deallocation
 			context.clientContext?.present(imagePlaygroundViewController, animated: true)
@@ -195,10 +198,20 @@ class EditSpaceImageAction: Action, PHPickerViewControllerDelegate {
 @available(iOS 18.1, *)
 extension EditSpaceImageAction: ImagePlaygroundViewController.Delegate {
 	func imagePlaygroundViewController(_ imagePlaygroundViewController: ImagePlaygroundViewController, didCreateImageAt imageURL: URL) {
-		if let imageData = try? Data(contentsOf: imageURL) {
-			editImage(imageData, fileName: "aiGenerated.jpg")
+		imagePlaygroundViewController.dismiss(animated: true)
+
+		// Image Playground returns a HEIC image, so load it, scale it down and save it as JPEG
+		if let image = UIImage(contentsOfFile: imageURL.path)?.scaledImageFitting(in: CGSize(width: 400, height: 400)) {
+			if let imageData = image.jpegData(compressionQuality: 0.6) {
+				editImage(imageData, fileName: "aiGenerated.jpg")
+			}
 		}
 
+		imagePlaygroundViewController.setValue(nil, forAnnotatedProperty: "action") // allow instance deallocation
+	}
+
+	func imagePlaygroundViewControllerDidCancel(_ imagePlaygroundViewController: ImagePlaygroundViewController) {
+		imagePlaygroundViewController.dismiss(animated: true)
 		imagePlaygroundViewController.setValue(nil, forAnnotatedProperty: "action") // allow instance deallocation
 	}
 }
