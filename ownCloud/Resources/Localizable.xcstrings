@@ -1,6 +1,9 @@
 {
   "sourceLanguage" : "en",
   "strings" : {
+    "" : {
+
+    },
     "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK." : {
       "localizations" : {
         "cs" : {
@@ -661,6 +664,9 @@
           }
         }
       }
+    },
+    "{{freeSpace}} of {{totalSpace}} available" : {
+
     },
     "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" : {
       "localizations" : {
@@ -5555,6 +5561,7 @@
       }
     },
     "Albums" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -5785,6 +5792,7 @@
       }
     },
     "All Photos" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -7499,6 +7507,9 @@
           }
         }
       }
+    },
+    "Are you sure you want to delete this space? This action cannot be undone." : {
+
     },
     "Are you sure you want to unshare these items?" : {
       "localizations" : {
@@ -10114,6 +10125,9 @@
         }
       }
     },
+    "Available space" : {
+
+    },
     "Average" : {
       "localizations" : {
         "ar" : {
@@ -11367,6 +11381,9 @@
           }
         }
       }
+    },
+    "Bytes" : {
+
     },
     "Camera details" : {
       "localizations" : {
@@ -13205,6 +13222,9 @@
         }
       }
     },
+    "Choose an image for the space" : {
+
+    },
     "Choose destination directory…" : {
       "localizations" : {
         "ar" : {
@@ -13634,6 +13654,9 @@
           }
         }
       }
+    },
+    "Close" : {
+
     },
     "Close actions menu" : {
       "localizations" : {
@@ -17665,6 +17688,9 @@
         }
       }
     },
+    "Create image" : {
+
+    },
     "Create link" : {
       "localizations" : {
         "ar" : {
@@ -18000,6 +18026,9 @@
           }
         }
       }
+    },
+    "Create space" : {
+
     },
     "Creating %ld folders…" : {
       "comment" : "Progress summarizer",
@@ -20435,6 +20464,9 @@
         }
       }
     },
+    "Delete space \"{{driveName}}\"?" : {
+
+    },
     "Delete unused local copies" : {
       "localizations" : {
         "ar" : {
@@ -21231,6 +21263,9 @@
         }
       }
     },
+    "Details" : {
+
+    },
     "Diagnostic Overview" : {
       "comment" : "Diagnostic",
       "localizations" : {
@@ -21903,6 +21938,15 @@
           }
         }
       }
+    },
+    "Disable space" : {
+
+    },
+    "disabled" : {
+
+    },
+    "Disabled" : {
+
     },
     "Discard changes" : {
       "localizations" : {
@@ -23988,6 +24032,18 @@
         }
       }
     },
+    "Edit description" : {
+
+    },
+    "Edit image" : {
+
+    },
+    "Edit space" : {
+
+    },
+    "Emoji or text" : {
+
+    },
     "Enable" : {
       "localizations" : {
         "ar" : {
@@ -24778,6 +24834,9 @@
           }
         }
       }
+    },
+    "Enter a emoji or text" : {
+
     },
     "Enter a new code with %ld digits" : {
       "localizations" : {
@@ -25582,6 +25641,18 @@
           }
         }
       }
+    },
+    "Error creating space" : {
+
+    },
+    "Error deleting {{driveName}}" : {
+
+    },
+    "Error disabling {{driveName}}" : {
+
+    },
+    "Error enabling {{driveName}}" : {
+
     },
     "Error fetching transactions" : {
       "localizations" : {
@@ -31174,6 +31245,9 @@
         }
       }
     },
+    "GB" : {
+
+    },
     "General" : {
       "localizations" : {
         "ar" : {
@@ -32509,6 +32583,9 @@
           }
         }
       }
+    },
+    "Hide disabled spaces" : {
+
     },
     "Histogram" : {
       "localizations" : {
@@ -34199,6 +34276,9 @@
           }
         }
       }
+    },
+    "Image Playground" : {
+
     },
     "Images" : {
       "localizations" : {
@@ -36837,6 +36917,9 @@
         }
       }
     },
+    "KB" : {
+
+    },
     "Keywords" : {
       "localizations" : {
         "ar" : {
@@ -38082,6 +38165,9 @@
         }
       }
     },
+    "Limit space" : {
+
+    },
     "Limited Photo Access" : {
       "comment" : "Limited photo library access",
       "localizations" : {
@@ -38550,6 +38636,7 @@
       }
     },
     "Links" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -40715,6 +40802,9 @@
         }
       }
     },
+    "Markdown" : {
+
+    },
     "Markup" : {
       "localizations" : {
         "ar" : {
@@ -41187,6 +41277,9 @@
         }
       }
     },
+    "MB" : {
+
+    },
     "Media Export" : {
       "localizations" : {
         "ar" : {
@@ -41654,6 +41747,9 @@
           }
         }
       }
+    },
+    "Members" : {
+
     },
     "Messages" : {
       "localizations" : {
@@ -52089,6 +52185,9 @@
         }
       }
     },
+    "PB" : {
+
+    },
     "PDF Documents" : {
       "localizations" : {
         "ar" : {
@@ -53452,6 +53551,9 @@
           }
         }
       }
+    },
+    "Pick a photo" : {
+
     },
     "Pick file or folder" : {
       "localizations" : {
@@ -55718,6 +55820,9 @@
         }
       }
     },
+    "Preview" : {
+
+    },
     "Previous" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -56990,6 +57095,9 @@
         }
       }
     },
+    "Public Links" : {
+
+    },
     "Purchase" : {
       "localizations" : {
         "ar" : {
@@ -57450,6 +57558,9 @@
           }
         }
       }
+    },
+    "Quota" : {
+
     },
     "Read" : {
       "localizations" : {
@@ -70044,6 +70155,9 @@
         }
       }
     },
+    "Show disabled spaces" : {
+
+    },
     "Show folders on top" : {
       "localizations" : {
         "ar" : {
@@ -71964,6 +72078,9 @@
         }
       }
     },
+    "space" : {
+
+    },
     "Space" : {
       "localizations" : {
         "cs" : {
@@ -72069,6 +72186,9 @@
           }
         }
       }
+    },
+    "Space Actions" : {
+
     },
     "Spaces" : {
       "localizations" : {
@@ -73090,6 +73210,9 @@
         }
       }
     },
+    "Subtitle" : {
+
+    },
     "Switch Theme Style" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -74006,6 +74129,9 @@
         }
       }
     },
+    "TB" : {
+
+    },
     "Terms Of Use" : {
       "localizations" : {
         "ar" : {
@@ -74241,6 +74367,9 @@
           }
         }
       }
+    },
+    "Text/Emoji" : {
+
     },
     "Thank you for using %@.\n" : {
       "localizations" : {
@@ -81204,6 +81333,9 @@
           }
         }
       }
+    },
+    "User" : {
+
     },
     "User Interface" : {
       "localizations" : {
