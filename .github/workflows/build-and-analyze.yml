@@ -23,3 +23,4 @@ jobs:
           action: build
           platform: iOS
           platform-version: 18.2
+          xcode: 16.2
