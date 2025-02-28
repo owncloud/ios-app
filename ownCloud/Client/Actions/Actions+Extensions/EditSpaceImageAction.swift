@@ -59,11 +59,13 @@ class EditSpaceImageAction: Action, PHPickerViewControllerDelegate {
 		alertController.addAction(UIAlertAction(title: OCLocalizedString("Text/Emoji", nil), style: .default, handler: { _ in
 			self.createFromText()
 		}))
-		if #available(iOS 18.1, *) {
-			if ImagePlaygroundViewController.isAvailable {
-				alertController.addAction(UIAlertAction(title: OCLocalizedString("Image Playground", nil), style: .default, handler: { _ in
-					self.createWithImagePlayground()
-				}))
+		if VendorServices.shared.allowAIFeatures {
+			if #available(iOS 18.1, *) {
+				if ImagePlaygroundViewController.isAvailable {
+					alertController.addAction(UIAlertAction(title: OCLocalizedString("Image Playground", nil), style: .default, handler: { _ in
+						self.createWithImagePlayground()
+					}))
+				}
 			}
 		}
 		alertController.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel))
