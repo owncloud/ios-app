@@ -655,6 +655,7 @@
 		DCFA56432975734A0092C89F /* BrowserNavigationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFA56422975734A0092C89F /* BrowserNavigationViewController.swift */; };
 		DCFA5645297574A60092C89F /* BrowserNavigationItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFA5644297574A60092C89F /* BrowserNavigationItem.swift */; };
 		DCFA9CAF2987E14B00004F24 /* BrowserNavigationBookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFA9CAB2987E14B00004F24 /* BrowserNavigationBookmark.swift */; };
+		DCFB046F2D71A4C700CD6C78 /* ImagePlayground.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DCFB046B2D71A4C700CD6C78 /* ImagePlayground.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		DCFBAD0C21BE67A100943F76 /* ownCloudUI.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		DCFC9ECC28002303005D9144 /* CollectionViewSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ECB28002303005D9144 /* CollectionViewSection.swift */; };
 		DCFC9ED128002335005D9144 /* CollectionViewCellProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */; };
@@ -1656,6 +1657,7 @@
 		DCFA56422975734A0092C89F /* BrowserNavigationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserNavigationViewController.swift; sourceTree = "<group>"; };
 		DCFA5644297574A60092C89F /* BrowserNavigationItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserNavigationItem.swift; sourceTree = "<group>"; };
 		DCFA9CAB2987E14B00004F24 /* BrowserNavigationBookmark.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BrowserNavigationBookmark.swift; sourceTree = "<group>"; };
+		DCFB046B2D71A4C700CD6C78 /* ImagePlayground.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImagePlayground.framework; path = System/Library/Frameworks/ImagePlayground.framework; sourceTree = SDKROOT; };
 		DCFC9ECB28002303005D9144 /* CollectionViewSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewSection.swift; sourceTree = "<group>"; };
 		DCFC9ED028002335005D9144 /* CollectionViewCellProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewCellProvider.swift; sourceTree = "<group>"; };
 		DCFC9ED2280023BB005D9144 /* CollectionViewCellProvider+StandardImplementations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CollectionViewCellProvider+StandardImplementations.swift"; sourceTree = "<group>"; };
@@ -1698,6 +1700,7 @@
 				DCC085712293F1FD008CC05C /* ownCloudApp.framework in Frameworks */,
 				DCE0275E21F1DF7E00F2544E /* ownCloudUI.framework in Frameworks */,
 				DCEAF08D28084B3800980B6D /* Down in Frameworks */,
+				DCFB046F2D71A4C700CD6C78 /* ImagePlayground.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2854,6 +2857,7 @@
 		DC85573220513CC700189B9A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				DCFB046B2D71A4C700CD6C78 /* ImagePlayground.framework */,
 				DC1251F22C7474500040FBC6 /* LocalAuthentication.framework */,
 				DC1251F02C74743E0040FBC6 /* UIKit.framework */,
 				DC1251ED2C7474100040FBC6 /* FileProvider.framework */,
