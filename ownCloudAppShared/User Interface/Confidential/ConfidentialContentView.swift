@@ -20,33 +20,39 @@ import ownCloudSDK
 import ownCloudApp
 
 public struct Watermark {
-	var text: String
-	var subtext: String
-	var textColor: UIColor
-	var subtitleTextColor: UIColor
+	var texts: [String]
+	var textColor: UIColor {
+		get {
+			if let textColor = ConfidentialManager.shared.textColor, let color = String(textColor).colorFromHex?.withAlphaComponent(ConfidentialManager.shared.textOpacity) {
+				return color
+			} else {
+				if let color = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.confidentialLabel], for: nil) {
+					return color.withAlphaComponent(ConfidentialManager.shared.textOpacity)
+				}
+			}
+			return .red.withAlphaComponent(ConfidentialManager.shared.textOpacity)
+		}
+		set {
+		}
+	}
 	var font: UIFont
-	var subtitleFont: UIFont
 	var angle: CGFloat
 	var columnSpacing: CGFloat
 	var lineSpacing: CGFloat
 	var marginY: CGFloat
 
-	init(text: String, subtext: String, angle: CGFloat = 45) {
-		self.text = text
-		self.subtext = subtext
-		self.textColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.confidentialLabel], for: nil) ?? .red
-		self.subtitleTextColor = Theme.shared.activeCollection.css.getColor(.stroke, selectors: [.confidentialSecondaryLabel], for: nil) ?? .red
+	init(texts: [String], angle: CGFloat = 45) {
+		self.texts = texts
 		self.font = UIFont.systemFont(ofSize: 14)
-		self.subtitleFont = UIFont.systemFont(ofSize: 8)
 		self.angle = angle
-		self.columnSpacing = 50
-		self.lineSpacing = 40
+		self.columnSpacing = 10
+		self.lineSpacing = ConfidentialManager.shared.lineSpacing
 		self.marginY = 10
 	}
 }
 
 public class ConfidentialContentLayer: CALayer {
-	var watermark: Watermark = .init(text: "Confidential Content", subtext: "Confidential Content") {
+	var watermark: Watermark = .init(texts: ["Confidential Content"]) {
 		didSet {
 			setNeedsDisplay()
 		}
@@ -79,7 +85,7 @@ public class ConfidentialContentLayer: CALayer {
 }
 
 public class ConfidentialContentView: UIView, Themeable {
-	var watermark: Watermark = .init(text: "Confidential Content", subtext: "Confidential Content") {
+	var watermark: Watermark = .init(texts: ["Confidential Content"]) {
 		didSet {
 			setNeedsDisplay()
 		}
@@ -129,10 +135,7 @@ public class ConfidentialContentView: UIView, Themeable {
 
 	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		if let color = collection.css.getColor(.stroke, selectors: [.confidentialLabel], for: nil) {
-			watermark.textColor = color
-		}
-		if let color = collection.css.getColor(.stroke, selectors: [.confidentialSecondaryLabel], for: nil) {
-			watermark.subtitleTextColor = color
+			watermark.textColor = color.withAlphaComponent(ConfidentialManager.shared.textOpacity)
 		}
 		setNeedsDisplay()
 	}
@@ -146,24 +149,18 @@ public extension CGContext {
 
 		let radians = watermark.angle * .pi / 180
 		rotate(by: radians)
+		
+		let text = watermark.texts.joined(separator: ", ")
 
 		let textAttributes: [NSAttributedString.Key: Any] = [
 			.font: watermark.font,
 			.foregroundColor: watermark.textColor
 		]
-		let subtextAttributes: [NSAttributedString.Key: Any] = [
-			.font: watermark.font,
-			.foregroundColor: watermark.textColor
-		]
 
-		let textSize = watermark.text.size(withAttributes: textAttributes)
-		let subtextSize = watermark.subtext.size(withAttributes: subtextAttributes)
+		let textSize = text.size(withAttributes: textAttributes)
 
 		let stepX = textSize.width + watermark.columnSpacing
 		let stepY = textSize.height + watermark.lineSpacing
-
-		let stepSubtextX = subtextSize.width + watermark.columnSpacing
-		let stepSubTextY = subtextSize.height + watermark.lineSpacing
 
 		let rotatedDiagonal = sqrt(rect.width * rect.width + rect.height * rect.height)
 
@@ -177,35 +174,13 @@ public extension CGContext {
 			var x = startX
 			var col = 0
 			while x <= endX {
-				if col % 2 == 0 {
-					watermark.text.draw(at: CGPoint(x: x, y: y), withAttributes: textAttributes)
-					x += stepX
-				} else {
-					watermark.subtext.draw(at: CGPoint(x: x, y: y + (stepSubTextY / 2)), withAttributes: subtextAttributes)
-					x += stepSubtextX
-				}
-				col += 1
+				text.draw(at: CGPoint(x: x, y: y), withAttributes: textAttributes)
+				x += stepX
 			}
 			y += stepY
 		}
 
 		restoreGState()
-
-		if watermark.angle < 45.0 {
-			let combinedText = "\(watermark.subtext) - \(watermark.text)"
-			let combinedTextAttributes: [NSAttributedString.Key: Any] = [
-				.font: watermark.subtitleFont,
-				.foregroundColor: watermark.subtitleTextColor
-			]
-			let combinedTextSize = combinedText.size(withAttributes: combinedTextAttributes)
-
-			var x = CGFloat(0)
-			let subtextY = rect.height - combinedTextSize.height - 2
-			while x < rect.width {
-				combinedText.draw(at: CGPoint(x: x, y: subtextY), withAttributes: combinedTextAttributes)
-				x += combinedTextSize.width + watermark.columnSpacing
-			}
-		}
 
 		UIGraphicsPopContext()
 	}
@@ -215,7 +190,21 @@ public extension UIView {
 	func secureView(core: OCCore?, useLayer: Bool = false) {
 		if !ConfidentialManager.shared.markConfidentialViews { return }
 
-		let watermark = Watermark(text: core?.bookmark.user?.emailAddress ?? "Confidential View", subtext: core?.bookmark.userName ?? "Confidential View", angle: (frame.height <= 200) ? 10 : 45)
+		var texts: [String] = []
+		if ConfidentialManager.shared.showUserEmail, let email = core?.bookmark.user?.emailAddress {
+			texts.append(email)
+		}
+		if ConfidentialManager.shared.showUserID, let userID = core?.bookmark.user?.userIdentifier {
+			texts.append(userID)
+		}
+		if let text = ConfidentialManager.shared.customText as? String {
+			texts.append(text)
+		}
+		if ConfidentialManager.shared.showTimestamp {
+			texts.append(Date().formatted(.dateTime))
+		}
+		
+		let watermark = Watermark(texts: texts, angle: (frame.height <= 200) ? -10 : -45)
 
 		if useLayer {
 			let overlayLayer = ConfidentialContentLayer(watermark: watermark)

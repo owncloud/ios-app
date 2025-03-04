@@ -29,6 +29,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property (assign, readonly) BOOL markConfidentialViews;
 @property (assign, readonly) BOOL allowOverwriteConfidentialMDMSettings;
 @property (assign, readonly) BOOL confidentialSettingsEnabled;
+
+@property (assign, readonly) CGFloat textOpacity;
+@property (assign, readonly, nullable) NSString *textColor;
+@property (assign, readonly) CGFloat lineSpacing;
+@property (assign, readonly) BOOL showUserEmail;
+@property (assign, readonly) BOOL showUserID;
+@property (assign, readonly) BOOL showTimestamp;
+@property (assign, readonly, nullable) NSString *customText;
+@property (assign, readonly) NSInteger visibleRedactedCharacters;
 @property (nonatomic, readonly, nullable) NSArray<OCExtensionIdentifier> *disallowedActions;
 
 @end
@@ -40,5 +49,13 @@ extern OCClassSettingsIdentifier OCClassSettingsIdentifierConfidential;
 extern OCClassSettingsKey OCClassSettingsKeyAllowScreenshots;
 extern OCClassSettingsKey OCClassSettingsKeyMarkConfidentialViews;
 extern OCClassSettingsKey OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings;
+extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextOpacity;
+extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextColor;
+extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextLineSpacing;
+extern OCClassSettingsKey OCClassSettingsKeyConfidentialVisibleRedactedCharacters;
+extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextShowUserEmail;
+extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextShowUserID;
+extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextShowTimestamp;
+extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextCustomText;
 
 NS_ASSUME_NONNULL_END
