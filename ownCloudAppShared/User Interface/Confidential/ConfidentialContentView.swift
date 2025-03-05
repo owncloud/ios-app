@@ -172,7 +172,6 @@ public extension CGContext {
 		var y = startY
 		while y <= endY {
 			var x = startX
-			var col = 0
 			while x <= endX {
 				text.draw(at: CGPoint(x: x, y: y), withAttributes: textAttributes)
 				x += stepX
@@ -189,6 +188,22 @@ public extension CGContext {
 public extension UIView {
 	func secureView(core: OCCore?, useLayer: Bool = false) {
 		if !ConfidentialManager.shared.markConfidentialViews { return }
+		
+		func removeConfidentialContentLayerIfNeeded() {
+			layer.sublayers?.forEach { sublayer in
+				if sublayer is ConfidentialContentLayer {
+					sublayer.removeFromSuperlayer()
+				}
+			}
+		}
+		
+		func removeConfidentialContentViewIfNeeded() {
+			for subview in self.subviews {
+				if subview is ConfidentialContentView {
+					subview.removeFromSuperview()
+				}
+			}
+		}
 
 		var texts: [String] = []
 		if ConfidentialManager.shared.showUserEmail, let email = core?.bookmark.user?.emailAddress {
@@ -197,20 +212,28 @@ public extension UIView {
 		if ConfidentialManager.shared.showUserID, let userID = core?.bookmark.user?.userIdentifier {
 			texts.append(userID)
 		}
-		if let text = ConfidentialManager.shared.customText as? String {
+		if let text = ConfidentialManager.shared.customText as? String, text.isEmpty == false {
 			texts.append(text)
 		}
 		if ConfidentialManager.shared.showTimestamp {
+			texts.append(Date().formatted(.dateTime))
+		}
+		if texts.isEmpty {
+			texts.append(core?.bookmark.user?.emailAddress ?? "Confidential Content")
 			texts.append(Date().formatted(.dateTime))
 		}
 		
 		let watermark = Watermark(texts: texts, angle: (frame.height <= 200) ? -10 : -45)
 
 		if useLayer {
+			removeConfidentialContentLayerIfNeeded()
+			
 			let overlayLayer = ConfidentialContentLayer(watermark: watermark)
 			overlayLayer.frame = layer.bounds
 			layer.addSublayer(overlayLayer)
 		} else {
+			removeConfidentialContentViewIfNeeded()
+			
 			let overlayView = ConfidentialContentView()
 			overlayView.watermark = watermark
 			overlayView.backgroundColor = .clear

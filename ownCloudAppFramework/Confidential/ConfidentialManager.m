@@ -164,7 +164,7 @@
 		},
 		OCClassSettingsKeyConfidentialTextOpacity : @{
 			@"type" : OCClassSettingsMetadataTypeFloat,
-			@"description" : @"Controls the opacity of the watermark text.",
+			@"description" : @"Controls the opacity of the watermark text. Possible values: 0.0 - 1.0",
 			@"status" : OCClassSettingsKeyStatusAdvanced,
 			@"category" : @"Confidential"
 		},
