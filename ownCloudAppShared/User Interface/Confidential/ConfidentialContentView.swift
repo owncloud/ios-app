@@ -218,10 +218,6 @@ public extension UIView {
 		if ConfidentialManager.shared.showTimestamp {
 			texts.append(Date().formatted(.dateTime))
 		}
-		if texts.isEmpty {
-			texts.append(core?.bookmark.user?.emailAddress ?? "Confidential Content")
-			texts.append(Date().formatted(.dateTime))
-		}
 		
 		let watermark = Watermark(texts: texts, angle: (frame.height <= 200) ? -10 : -45)
 

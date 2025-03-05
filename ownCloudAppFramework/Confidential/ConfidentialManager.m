@@ -51,8 +51,7 @@
 }
 
 - (BOOL)markConfidentialViews {
-	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyMarkConfidentialViews];
-	return (value != nil) ? value.boolValue : YES;
+	return ([self showUserEmail] || [self showUserID] || [self showTimestamp] || ([[self customText] length] > 0));
 }
 
 - (BOOL)allowOverwriteConfidentialMDMSettings {
