@@ -6261,8 +6261,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/pocketsvg/PocketSVG.git";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.7.0;
+				kind = exactVersion;
+				version = 2.7.3;
 			};
 		};
 		DCEAF066280767BC00980B6D /* XCRemoteSwiftPackageReference "OpenSSL" */ = {
