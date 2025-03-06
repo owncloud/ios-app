@@ -56,7 +56,7 @@
 
 - (BOOL)allowOverwriteConfidentialMDMSettings {
 	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings];
-	return self.confidentialSettingsEnabled && ((value != nil) ? value.boolValue : YES);
+	return self.confidentialSettingsEnabled && ((value != nil) ? value.boolValue : NO);
 }
 
 - (CGFloat)textOpacity {
@@ -76,17 +76,17 @@
 
 - (BOOL)showUserEmail {
 	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextShowUserEmail];
-	return (value != nil) ? value.boolValue : YES;
+	return (value != nil) ? value.boolValue : NO;
 }
 
 - (BOOL)showUserID {
 	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextShowUserID];
-	return (value != nil) ? value.boolValue : YES;
+	return (value != nil) ? value.boolValue : NO;
 }
 
 - (BOOL)showTimestamp {
 	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextShowTimestamp];
-	return (value != nil) ? value.boolValue : YES;
+	return (value != nil) ? value.boolValue : NO;
 }
 
 - (NSString *)customText {
@@ -96,7 +96,7 @@
 
 - (NSInteger)visibleRedactedCharacters {
 	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialVisibleRedactedCharacters];
-	return (value != nil) ? value.integerValue : 3;
+	return (value != nil) ? value.integerValue : -1;
 }
 
 - (BOOL)confidentialSettingsEnabled {
@@ -125,17 +125,6 @@
 
 + (NSDictionary<OCClassSettingsKey,id> *)defaultSettingsForIdentifier:(OCClassSettingsIdentifier)identifier
 {
-	if ([identifier isEqual:OCClassSettingsIdentifierConfidential]) {
-		return @{
-			OCClassSettingsKeyAllowScreenshots : @YES,
-			OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings : @NO,
-			OCClassSettingsKeyConfidentialTextOpacity: @(0.6),
-			OCClassSettingsKeyConfidentialVisibleRedactedCharacters: @(3),
-			OCClassSettingsKeyConfidentialTextShowUserEmail : @NO,
-			OCClassSettingsKeyConfidentialTextShowUserID : @NO,
-			OCClassSettingsKeyConfidentialTextShowTimestamp : @NO
-		};
-	}
 	return nil;
 }
 
