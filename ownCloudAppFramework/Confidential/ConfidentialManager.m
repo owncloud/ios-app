@@ -128,13 +128,12 @@
 	if ([identifier isEqual:OCClassSettingsIdentifierConfidential]) {
 		return @{
 			OCClassSettingsKeyAllowScreenshots : @YES,
-			OCClassSettingsKeyMarkConfidentialViews : @NO,
 			OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings : @NO,
 			OCClassSettingsKeyConfidentialTextOpacity: @(0.6),
 			OCClassSettingsKeyConfidentialVisibleRedactedCharacters: @(3),
-			OCClassSettingsKeyConfidentialTextShowUserEmail : @YES,
-			OCClassSettingsKeyConfidentialTextShowUserID : @YES,
-			OCClassSettingsKeyConfidentialTextShowTimestamp : @YES
+			OCClassSettingsKeyConfidentialTextShowUserEmail : @NO,
+			OCClassSettingsKeyConfidentialTextShowUserID : @NO,
+			OCClassSettingsKeyConfidentialTextShowTimestamp : @NO
 		};
 	}
 	return nil;
@@ -146,12 +145,6 @@
 		OCClassSettingsKeyAllowScreenshots : @{
 			@"type" : OCClassSettingsMetadataTypeBoolean,
 			@"description" : @"Controls whether screenshots are allowed or not. If not allowed confidential views will be marked as sensitive and are not visible in screenshots.",
-			@"status" : OCClassSettingsKeyStatusAdvanced,
-			@"category" : @"Confidential"
-		},
-		OCClassSettingsKeyMarkConfidentialViews : @{
-			@"type" : OCClassSettingsMetadataTypeBoolean,
-			@"description" : @"Controls if views which contains sensitive content contains a watermark or not.",
 			@"status" : OCClassSettingsKeyStatusAdvanced,
 			@"category" : @"Confidential"
 		},
@@ -250,7 +243,6 @@ OCClassSettingsSourceIdentifier OCClassSettingsSourceIdentifierConfidentialManag
 OCClassSettingsIdentifier OCClassSettingsIdentifierConfidential = @"confidential";
 
 OCClassSettingsKey OCClassSettingsKeyAllowScreenshots = @"allow-screenshots";
-OCClassSettingsKey OCClassSettingsKeyMarkConfidentialViews = @"mark-confidential-views";
 OCClassSettingsKey OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings = @"allow-overwrite-confidential-mdm-settings";
 OCClassSettingsKey OCClassSettingsKeyConfidentialTextOpacity = @"text-opacity";
 OCClassSettingsKey OCClassSettingsKeyConfidentialTextColor = @"text-color";
