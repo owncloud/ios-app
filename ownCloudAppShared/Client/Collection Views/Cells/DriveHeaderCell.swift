@@ -38,6 +38,34 @@ class DriveHeaderCell: DriveListCell {
 		coverObservation?.invalidate()
 	}
 
+	override init(frame: CGRect) {
+		super.init(frame: frame)
+		setupHighContrastMode()
+		updateForContrastMode()
+	}
+	
+	@MainActor required init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
+	var contrastObservation: NSObjectProtocol?
+
+	func setupHighContrastMode() {
+		contrastObservation = NotificationCenter.default.addObserver(forName: UIAccessibility.darkerSystemColorsStatusDidChangeNotification, object: nil, queue: .main, using: { [weak self] _ in
+			self?.updateForContrastMode()
+		})
+	}
+
+	func updateForContrastMode() {
+		if UIAccessibility.isDarkerSystemColorsEnabled {
+			titleLabel.backgroundColor = UIColor(white: 0, alpha: 0.8)
+			subtitleLabel.backgroundColor = UIColor(white: 0, alpha: 0.8)
+		} else {
+			titleLabel.backgroundColor = .clear
+			subtitleLabel.backgroundColor = .clear
+		}
+	}
+
 	override func configure() {
 		cssSelectors = [.header, .drive]
 

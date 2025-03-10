@@ -47,6 +47,7 @@ class DriveListCell: ThemeableCollectionViewListCell {
 	var subtitle : String? {
 		didSet {
 			subtitleLabel.text = subtitle?.redacted()
+			subtitleLabel.isHidden = (subtitle == nil) || (subtitle?.count == 0)
 		}
 	}
 
@@ -139,7 +140,7 @@ extension DriveListCell {
 			if let coverImageRequest = coverImageRequest {
 				resourceManager?.start(coverImageRequest)
 			}
-			
+
 			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
 
 			cell.accessories = [ .disclosureIndicator() ]

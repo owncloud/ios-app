@@ -317,7 +317,6 @@ public class ThemeCollection : NSObject {
 				lightBrandSet.secondaryLabelColor = .white
 				lightBrandSet.iconColor = .white
 
-				accountCellSet = lightBrandSet
 				sidebarAccountCellSet = ThemeColorSet.from(backgroundColor: .init(hex: 0, alpha: 0.5), tintColor: lightBrandColor, for: interfaceStyle)
 				accountCellSet = sidebarAccountCellSet
 
