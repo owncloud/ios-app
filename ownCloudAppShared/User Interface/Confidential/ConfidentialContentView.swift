@@ -45,7 +45,7 @@ public struct Watermark {
 		self.texts = texts
 		self.font = UIFont.systemFont(ofSize: 14)
 		self.angle = angle
-		self.columnSpacing = 10
+		self.columnSpacing = ConfidentialManager.shared.columnSpacing
 		self.lineSpacing = ConfidentialManager.shared.lineSpacing
 		self.marginY = 10
 	}

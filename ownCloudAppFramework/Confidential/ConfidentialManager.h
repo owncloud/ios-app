@@ -32,6 +32,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (assign, readonly) CGFloat textOpacity;
 @property (assign, readonly, nullable) NSString *textColor;
+@property (assign, readonly) CGFloat columnSpacing;
 @property (assign, readonly) CGFloat lineSpacing;
 @property (assign, readonly) BOOL showUserEmail;
 @property (assign, readonly) BOOL showUserID;
@@ -50,6 +51,7 @@ extern OCClassSettingsKey OCClassSettingsKeyAllowScreenshots;
 extern OCClassSettingsKey OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings;
 extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextOpacity;
 extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextColor;
+extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextColumnSpacing;
 extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextLineSpacing;
 extern OCClassSettingsKey OCClassSettingsKeyConfidentialVisibleRedactedCharacters;
 extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextShowUserEmail;

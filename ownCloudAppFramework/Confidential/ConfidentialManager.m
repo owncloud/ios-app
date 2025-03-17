@@ -61,12 +61,17 @@
 
 - (CGFloat)textOpacity {
 	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextOpacity];
-	return (value != nil) ? value.floatValue : 0.6;
+	return (value != nil) ? (value.intValue / 100.0) : 0.6;
 }
 
 - (NSString *)textColor {
 	NSString *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextColor];
 	return value;
+}
+
+- (CGFloat)columnSpacing {
+	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextColumnSpacing];
+	return (value != nil) ? value.floatValue : 40.0;
 }
 
 - (CGFloat)lineSpacing {
@@ -144,8 +149,20 @@
 			@"category" : @"Confidential"
 		},
 		OCClassSettingsKeyConfidentialTextOpacity : @{
-			@"type" : OCClassSettingsMetadataTypeFloat,
-			@"description" : @"Controls the opacity of the watermark text. Possible values: 0.0 - 1.0",
+			@"type" : OCClassSettingsMetadataTypeInteger,
+			@"description" : @"Controls the opacity of the watermark text. Possible values: 0 - 100",
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
+		},
+		OCClassSettingsKeyConfidentialTextColumnSpacing : @{
+			@"type" : OCClassSettingsMetadataTypeInteger,
+			@"description" : @"Controls the column spacing of the watermark text in pixel.",
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
+		},
+		OCClassSettingsKeyConfidentialTextLineSpacing : @{
+			@"type" : OCClassSettingsMetadataTypeInteger,
+			@"description" : @"Controls the line spacing of the watermark text in pixel.",
 			@"status" : OCClassSettingsKeyStatusAdvanced,
 			@"category" : @"Confidential"
 		},
@@ -235,6 +252,7 @@ OCClassSettingsKey OCClassSettingsKeyAllowScreenshots = @"allow-screenshots";
 OCClassSettingsKey OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings = @"allow-overwrite-confidential-mdm-settings";
 OCClassSettingsKey OCClassSettingsKeyConfidentialTextOpacity = @"text-opacity";
 OCClassSettingsKey OCClassSettingsKeyConfidentialTextColor = @"text-color";
+OCClassSettingsKey OCClassSettingsKeyConfidentialTextColumnSpacing = @"text-column-spacing";
 OCClassSettingsKey OCClassSettingsKeyConfidentialTextLineSpacing = @"text-line-spacing";
 OCClassSettingsKey OCClassSettingsKeyConfidentialVisibleRedactedCharacters = @"visible-redacted-characters";
 OCClassSettingsKey OCClassSettingsKeyConfidentialTextShowUserEmail = @"text-show-user-email";
