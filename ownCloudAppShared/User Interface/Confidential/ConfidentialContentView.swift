@@ -209,7 +209,7 @@ public extension UIView {
 		if ConfidentialManager.shared.showUserEmail, let email = core?.bookmark.user?.emailAddress {
 			texts.append(email)
 		}
-		if ConfidentialManager.shared.showUserID, let userID = core?.bookmark.user?.userIdentifier {
+		if ConfidentialManager.shared.showUserID, let userID = core?.bookmark.user?.userName {
 			texts.append(userID)
 		}
 		if let text = ConfidentialManager.shared.customText as? String, text.isEmpty == false {
