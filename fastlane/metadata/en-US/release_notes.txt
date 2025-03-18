@@ -1,6 +1,3 @@
 • Confidential Protection
-Watermarking, screenshot protection and more are now available via MDM and branding.
-
-• File Provider Memory Efficiency
-The File Provider is now more stable thanks to improved memory efficiency.
+Watermarking: New MDM Parameters for Customizing Watermark Behavior
 
