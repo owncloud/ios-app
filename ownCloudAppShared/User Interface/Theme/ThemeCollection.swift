@@ -323,7 +323,7 @@ public class ThemeCollection : NSObject {
 				navigationBarSet = darkBrandSet
 				toolbarSet = darkBrandSet
 
-				cellSet = ThemeColorSet.from(backgroundColor: UIColor(hex: 0), tintColor: lightBrandColor, for: interfaceStyle)
+				cellSet = ThemeColorSet.from(backgroundColor: UIColor(hex: 0), tintColor: lightBrandColor.withHighContrastAlternative(lightBrandColor.lighter(0.3)), for: interfaceStyle)
 				cellStateSet = ThemeColorStateSet.from(colorSet: cellSet, for: interfaceStyle)
 				collectionBackgroundColor = darkBrandColor.darker(0.1)
 
@@ -381,7 +381,7 @@ public class ThemeCollection : NSObject {
 				navigationBarSet = ThemeColorSet.from(backgroundColor: .systemBackground.resolvedColor(with: styleTraitCollection), tintColor: lightBrandColor, for: interfaceStyle)
 				toolbarSet = navigationBarSet
 
-				cellSet = ThemeColorSet.from(backgroundColor: .systemBackground.resolvedColor(with: styleTraitCollection), tintColor: lightBrandColor, for: interfaceStyle)
+				cellSet = ThemeColorSet.from(backgroundColor: .systemBackground.resolvedColor(with: styleTraitCollection), tintColor: lightBrandColor.withHighContrastAlternative(lightBrandColor.darker(0.3)), for: interfaceStyle)
 				cellStateSet = ThemeColorStateSet.from(colorSet: cellSet, for: interfaceStyle)
 				collectionBackgroundColor = cellSet.backgroundColor
 
