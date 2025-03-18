@@ -145,4 +145,14 @@ extension UIColor {
 
 		return highestContrastColor
 	}
+
+	public func withHighContrastAlternative(_ highContrastColor: UIColor) -> UIColor {
+		return UIColor(dynamicProvider: { _ in
+			if UIAccessibility.isDarkerSystemColorsEnabled {
+				return highContrastColor
+			} else {
+				return self
+			}
+		})
+	}
 }
