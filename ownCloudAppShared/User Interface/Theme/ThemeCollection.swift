@@ -30,13 +30,13 @@ private struct ThemeColorSet {
 	var backgroundColor: UIColor
 
 	static func from(backgroundColor: UIColor, tintColor: UIColor, for style: UIUserInterfaceStyle) -> ThemeColorSet {
-		let preferredtTraitCollection = UITraitCollection(userInterfaceStyle: (style == .light) ? .light : .dark)
-		let preferredPrimaryLabelColor = UIColor.label.resolvedColor(with: preferredtTraitCollection)
-		let preferredSecondaryLabelColor = UIColor.secondaryLabel.resolvedColor(with: preferredtTraitCollection)
+		let preferredTraitCollection = UITraitCollection(userInterfaceStyle: (style == .light) ? .light : .dark)
+		let preferredPrimaryLabelColor = UIColor.label.resolvedColor(with: preferredTraitCollection)
+		let preferredSecondaryLabelColor = UIColor.secondaryLabel.resolvedColor(with: preferredTraitCollection).withHighContrastAlternative(.label.resolvedColor(with: preferredTraitCollection))
 
 		let alternateTraitCollection = UITraitCollection(userInterfaceStyle: (style == .light) ? .dark : .light)
 		let alternatePrimaryLabelColor = UIColor.label.resolvedColor(with: alternateTraitCollection)
-		let alternateSecondaryLabelColor = UIColor.secondaryLabel.resolvedColor(with: alternateTraitCollection)
+		let alternateSecondaryLabelColor = UIColor.secondaryLabel.resolvedColor(with: alternateTraitCollection).withHighContrastAlternative(.label.resolvedColor(with: alternateTraitCollection))
 
 		let labelColor = backgroundColor.preferredContrastColor(from: [preferredPrimaryLabelColor, alternatePrimaryLabelColor]) ?? preferredPrimaryLabelColor
 		let secondaryLabelColor = backgroundColor.preferredContrastColor(from: [preferredSecondaryLabelColor, alternateSecondaryLabelColor]) ?? preferredSecondaryLabelColor
@@ -403,9 +403,9 @@ public class ThemeCollection : NSObject {
 				iconSymbolColor = darkBrandColor
 
 				sectionHeaderColor = .label.resolvedColor(with: styleTraitCollection)
-				sectionFooterColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
-				groupedSectionHeaderColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
-				groupedSectionFooterColor = .secondaryLabel.resolvedColor(with: styleTraitCollection)
+				sectionFooterColor = .secondaryLabel.resolvedColor(with: styleTraitCollection).withHighContrastAlternative(sectionHeaderColor) // aka "resolved system .label color" in this case
+				groupedSectionHeaderColor = .secondaryLabel.resolvedColor(with: styleTraitCollection).withHighContrastAlternative(sectionHeaderColor)
+				groupedSectionFooterColor = .secondaryLabel.resolvedColor(with: styleTraitCollection).withHighContrastAlternative(sectionHeaderColor)
 
 				moreHeaderBackgroundColor = cellSet.backgroundColor
 
@@ -618,7 +618,7 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.label, .warning],			property: .stroke, value: UIColor(hex: 0xF2994A)),
 			ThemeCSSRecord(selectors: [.label, .error],			property: .stroke, value: UIColor(hex: 0xEB5757)),
 			ThemeCSSRecord(selectors: [.label, .success],			property: .stroke, value: UIColor(hex: 0x27AE60)),
-			
+
 			// - Confidential
 			ThemeCSSRecord(selectors: [.confidentialLabel],		property: .stroke, value: tintColor.withAlphaComponent(0.8)),
 			ThemeCSSRecord(selectors: [.confidentialSecondaryLabel],		property: .stroke, value: tintColor.withAlphaComponent(0.4))
