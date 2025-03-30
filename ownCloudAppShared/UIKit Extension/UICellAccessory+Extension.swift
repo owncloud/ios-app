@@ -59,16 +59,21 @@ public extension UICellAccessory {
 			button.menu = menu
 		}
 
+		button.cssSelectors = cssSelectors
+
 		if image != nil, (title != nil || menu != nil) {
-			var configuration = UIButton.Configuration.borderedTinted()
+			var configuration = UIAccessibility.isDarkerSystemColorsEnabled ? UIButton.Configuration.bordered() : UIButton.Configuration.borderedTinted()
 			configuration.buttonSize = .small
 			configuration.imagePadding = 5
 			configuration.cornerStyle = .large
 
+			if UIAccessibility.isDarkerSystemColorsEnabled {
+				configuration.background.backgroundColor = .clear
+				configuration.background.strokeColor = button.getThemeCSSColor(.stroke)
+			}
+
 			button.configuration = configuration.updated(for: button)
 		}
-
-		button.cssSelectors = cssSelectors
 
 		button.applyThemeCollection(Theme.shared.activeCollection)
 
