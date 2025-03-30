@@ -32,6 +32,8 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 
 	var spacesDataSource: OCDataSourceComposition = OCDataSourceComposition(sources: [])
 
+	var accountStatusConsumer: AccountConnectionConsumer?
+
 	init(with context: ClientContext) {
 		let gridContext = ClientContext(with: context)
 
@@ -61,6 +63,30 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 			spacesDataSource.addSources([ projectDrivesDataSource ])
 		}
 
+		// Start observing connection state to update space management options dynamically
+		accountStatusConsumer = AccountConnectionConsumer(owner: self, statusObserver: self)
+		if let accountStatusConsumer {
+			context.accountConnection?.add(consumer: accountStatusConsumer)
+		}
+
+		updateSpaceManagementOptions() // initial update of space management options
+
+		// Disable dragging of items, so keyboard control does
+		// not include "Drag Item" in the accessibility actions
+		// invoked with Tab + Z
+		defer { // needed so dragInteractionEnabled.didSet is called despite being set in the initializer
+			dragInteractionEnabled = false
+		}
+	}
+
+	deinit {
+		// Add observer of connection state
+		if let accountStatusConsumer {
+			clientContext?.accountConnection?.remove(consumer: accountStatusConsumer)
+		}
+	}
+
+	func updateSpaceManagementOptions() {
 		if canManageSpaces {
 			let spaceActionsButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: nil, action: nil)
 			spaceActionsButton.accessibilityIdentifier = "client.space-actions"
@@ -85,13 +111,9 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 				})
 			])
 			navigationItem.rightBarButtonItem = spaceActionsButton
-		}
+		} else {
+			navigationItem.rightBarButtonItem = nil
 
-		// Disable dragging of items, so keyboard control does
-		// not include "Drag Item" in the accessibility actions
-		// invoked with Tab + Z
-		defer { // needed so dragInteractionEnabled.didSet is called despite being set in the initializer
-			dragInteractionEnabled = false
 		}
 	}
 
@@ -138,6 +160,14 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 					spacesDataSource.removeSources([disabledDrivesDataSource])
 				}
 			}
+		}
+	}
+}
+
+extension AccountControllerSpacesGridViewController: AccountConnectionStatusObserver {
+	func account(connection: AccountConnection, changedStatusTo: AccountConnection.Status, initial: Bool) {
+		OnMainThread {
+			self.updateSpaceManagementOptions()
 		}
 	}
 }
