@@ -67761,7 +67761,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Extensão de compartilhamento desabilitada"
+            "value" : "Extensão de Compartilhamento desabilitada"
           }
         },
         "pt-PT" : {
@@ -67867,7 +67867,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Share Extension unavailable"
+            "value" : "Extensão de Compartilhamento indisponível"
           }
         },
         "pt-PT" : {
@@ -74543,7 +74543,7 @@
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The {{app.name}} share extension is not available on this system."
+            "value" : "A Extensão de Compartilhamento de {{app.name}} não está disponível em seu sistema."
           }
         },
         "pt-PT" : {
