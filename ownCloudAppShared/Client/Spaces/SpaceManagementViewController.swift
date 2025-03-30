@@ -166,7 +166,7 @@ public class SpaceManagementViewController: CollectionViewController {
 			}
 		}
 
-		super.init(context: spaceControllerContext, sections: sections, useStackViewRoot: true)
+		super.init(context: spaceControllerContext, sections: sections, useStackViewRoot: true, compressForKeyboard: true)
 
 		if let actionsDataSource, let core = spaceControllerContext.core, let rootItem {
 			let actionsLocation = OCExtensionLocation(ofType: .action, identifier: .spaceAction)
