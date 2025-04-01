@@ -124,6 +124,6 @@ class EditSpaceDescriptionAction: Action {
 	}
 
 	override open class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
-		return UIImage(systemName: "text.page")?.withRenderingMode(.alwaysTemplate)
+		return UIImage(systemName: "doc.plaintext")?.withRenderingMode(.alwaysTemplate)
 	}
 }

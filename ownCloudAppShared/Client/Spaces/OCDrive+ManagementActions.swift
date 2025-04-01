@@ -55,9 +55,9 @@ extension OCDrive {
 
 					clientContext?.present(alertController, animated: true)
 				}
-
-				completionHandler?(error)
 			}
+
+			completionHandler?(error)
 		})
 	}
 
