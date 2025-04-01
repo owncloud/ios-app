@@ -114,6 +114,7 @@ open class ByteCountEditView: UIView {
 
 		textField = ThemeCSSTextField.formField(withPlaceholder: "")
 		textField.textAlignment = .right
+		textField.clearButtonMode = .never
 		unitPopupButton = PopupButtonController(with: choices)
 
 		super.init(frame: .zero)

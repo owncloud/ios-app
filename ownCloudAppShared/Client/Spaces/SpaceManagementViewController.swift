@@ -304,6 +304,20 @@ public class SpaceManagementViewController: CollectionViewController {
 
 		let quotaTotalBytes: UInt64? = quotaBytes
 
+		if let quotaTotalBytes, quotaTotalBytes > ByteCountUnit.petaBytes.byteCount {
+			OnMainThread {
+				let alertController = ThemedAlertController(
+					with: OCLocalizedString("Quota too high", nil),
+					message: OCLocalizedString("Please enter a quota equal or less than 1 PB.", nil),
+					okLabel: OCLocalizedString("OK", nil),
+					preferredStyle: .alert,
+					action: nil)
+
+				self.clientContext?.present(alertController, animated: true)
+			}
+			return
+		}
+
 		switch mode {
 			case .create:
 				core.createDrive(withName: name, description: subtitle, quota: NSNumber(value: quotaTotalBytes ?? 0), template: .default) { [weak self] error, drive in
