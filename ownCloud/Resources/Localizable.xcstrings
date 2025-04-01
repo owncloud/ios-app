@@ -54116,6 +54116,9 @@
         }
       }
     },
+    "Please enter a quota equal or less than 1 PB." : {
+
+    },
     "Please note: Folders can only be pasted into the %@ app and the same account." : {
       "localizations" : {
         "ar" : {
@@ -57560,6 +57563,9 @@
       }
     },
     "Quota" : {
+
+    },
+    "Quota too high" : {
 
     },
     "Read" : {
