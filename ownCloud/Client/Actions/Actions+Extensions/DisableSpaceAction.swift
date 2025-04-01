@@ -49,6 +49,12 @@ public class DisableSpaceAction : Action {
 		}
 
 		drive.disable(with: clientContext, completionHandler: { [weak self] error in
+			if viewController is SpaceManagementViewController {
+				// Dismiss SpaceManagementViewController if the action was triggered from there
+				OnMainThread {
+					viewController.dismiss(animated: true)
+				}
+			}
 			self?.completed(with: error)
 		})
 	}
