@@ -45,6 +45,8 @@ open class SharingViewController: CollectionViewController {
 	public var itemIsDriveRoot: Bool
 
 	var itemSharesQuery: OCShareQuery?
+	private var driveManagerCountSubscription: OCDataSourceSubscription?
+	private var driveManagerCount: Int = 0
 
 	public init(clientContext: ClientContext, item: OCItem) {
 		var sections: [CollectionViewSection] = []
@@ -232,6 +234,22 @@ open class SharingViewController: CollectionViewController {
 			if dataItemRecord?.type == .share, let self {
 				switch checkInteraction {
 					case .selection, .contextMenu, .leadingSwipe, .trailingSwipe:
+						// Detect and block editing of last manager member, showing an alert
+						if self.canUpdate, self.itemIsDriveRoot {
+							let driveRole = (dataItemRecord?.item as? OCShare)?.sharePermissions?.first(where: { permission in
+								permission.driveRole != .none
+							})?.driveRole
+
+							if driveRole == .manager, self.driveManagerCount <= 1 {
+								let alert = ThemedAlertController(title: OCLocalizedString("Can't edit only manager", nil), message: OCLocalizedString("If only one member is a manager, that member's permissions can't be edited.", nil), preferredStyle: .alert)
+
+								alert.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
+								context?.present(alert, animated: true)
+
+								return false
+							}
+						}
+
 						// Only allow selection and contextmenu (editing), leading and trailing swipes (delete) if user has update permission
 						return self.canUpdate
 
@@ -242,6 +260,22 @@ open class SharingViewController: CollectionViewController {
 			return true
 		})
 
+		if itemIsDriveRoot {
+			driveManagerCountSubscription = itemSharesQuery?.dataSource.subscribe(updateHandler: { [weak self] subscription in
+				let snapshot = subscription.snapshotResettingChangeTracking(true)
+				var managerCount = 0
+				for itemRef in snapshot.items {
+					if let itemRecord = try? subscription.source?.record(forItemRef: itemRef), itemRecord.type == .share,
+					   let share = itemRecord.item as? OCShare,
+					   let driveRole = share.sharePermissions?.first(where: { permission in permission.driveRole != .none })?.driveRole,
+					   driveRole == .manager {
+						managerCount += 1
+					}
+				}
+				self?.driveManagerCount = managerCount
+			}, on: .main, trackDifferences: true, performInitialUpdate: true)
+		}
+
 		// Disable dragging of items, so keyboard control does
 		// not include "Drag Item" in the accessibility actions
 		// invoked with Tab + Z
@@ -250,7 +284,13 @@ open class SharingViewController: CollectionViewController {
 		}
 	}
 
+	required public init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
 	deinit {
+		driveManagerCountSubscription?.terminate()
+
 		if let core = clientContext?.core, let itemSharesQuery {
 			core.stop(itemSharesQuery)
 		}
@@ -297,10 +337,6 @@ open class SharingViewController: CollectionViewController {
 			recipientsSection?.cellStyle = managementCellStyle
 			linksSection?.cellStyle = managementCellStyle
 		}
-	}
-
-	required public init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
 	}
 }
 
