@@ -2033,6 +2033,23 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>12.4.1</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Startup Crash</string>
+					<key>Subtitle</key>
+					<string>Resolved a rare crash issue</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>ladybug</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
