@@ -27,7 +27,7 @@ extension ThemeCSSTextField {
 		textField.placeholder = withPlaceholder
 		textField.text = text
 		textField.accessibilityLabel = accessibilityLabel
-		textField.clearButtonMode = .always
+		textField.clearButtonMode = .whileEditing
 		return textField
 	}
 }
