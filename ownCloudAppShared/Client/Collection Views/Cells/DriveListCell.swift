@@ -171,7 +171,7 @@ extension DriveListCell {
 
 			cell.collectionItemRef = collectionItemRef
 			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
-			
+
 			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
 
 			if let coverImageRequest = coverImageRequest {
@@ -184,6 +184,7 @@ extension DriveListCell {
 			var resourceManager : OCResourceManager?
 			var title : String?
 			var subtitle : String?
+			var isDisabled : Bool?
 
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, driveItem, cellConfiguration in
 				if let presentable = OCDataRenderer.default.renderItem(driveItem, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
@@ -196,29 +197,47 @@ extension DriveListCell {
 
 					// More item button action
 					if let clientContext = cellConfiguration.clientContext, let moreItemHandling = clientContext.moreItemHandler, let drive = driveItem as? OCDrive {
-						cell.moreAction = OCAction(title: OCLocalizedString("Actions", nil), icon: nil, action: { [weak moreItemHandling] (action, options, completion) in
-							clientContext.core?.cachedItem(at: drive.rootLocation, resultHandler: { error, item in
-								if let item {
-									OnMainThread {
-										moreItemHandling?.moreOptions(for: item, at: .moreFolder, context: clientContext, sender: action)
+						isDisabled = drive.isDisabled
+
+						if drive.isDisabled {
+							// Disabled space => show space manage UI
+							cell.moreAction = nil
+							cell.moreMenu = UIMenu(title: "", children: [
+								UIAction(title: OCLocalizedString("Enable", nil), image: OCSymbol.icon(forSymbolName: "play.circle"), handler: { [weak clientContext] _ in
+									drive.restore(with: clientContext)
+								}),
+								UIAction(title: OCLocalizedString("Delete", nil), image: OCSymbol.icon(forSymbolName: "trash"), handler: { [weak clientContext] _ in
+									drive.delete(with: clientContext)
+								})
+							])
+						} else {
+							// Enabled space = show available actions
+							cell.moreMenu = nil
+							cell.moreAction = OCAction(title: OCLocalizedString("Actions", nil), icon: nil, action: { [weak moreItemHandling] (action, options, completion) in
+								clientContext.core?.cachedItem(at: drive.rootLocation, resultHandler: { error, item in
+									if let item {
+										OnMainThread {
+											moreItemHandling?.moreOptions(for: item, at: .moreFolder, context: clientContext, sender: action)
+										}
 									}
-								}
-								completion(error)
+									completion(error)
+								})
 							})
-						})
+						}
 					}
 				}
 			})
 
 			cell.title = title
 			cell.subtitle = subtitle
+			cell.isDisabled = isDisabled ?? false
 
 			cell.coverImageResourceView.request = coverImageRequest
 			cell.isRequestingCoverImage = (coverImageRequest != nil)
 
 			cell.collectionItemRef = collectionItemRef
 			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
-			
+
 			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
 
 			if let coverImageRequest = coverImageRequest {
@@ -256,7 +275,7 @@ extension DriveListCell {
 
 			content.text = title?.redacted()
 			content.image = icon
-			
+
 			cell.backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
 			cell.contentConfiguration = content
 			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)

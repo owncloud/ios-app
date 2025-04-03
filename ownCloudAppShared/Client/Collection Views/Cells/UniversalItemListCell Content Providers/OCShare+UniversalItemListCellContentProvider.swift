@@ -50,6 +50,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 		// Details
 		var detailText: String?
+		var detailToken: String?
 		var detailExtraItems: [SegmentViewItem]?
 
 		switch category {
@@ -60,15 +61,19 @@ extension OCShare: UniversalItemListCellContentProvider {
 			case .byMe:
 				if showManagementView {
 					// Management view
-					var roleDescription: String?
+					var roleName: String?
 					var matchingRole: OCShareRole?
 
 					if let core = context?.core {
-						matchingRole = core.matchingShareRole(for: self)
+						matchingRole = core.matching(for: self, from: context?.sharingRoles)
 
 						if let matchingRole {
-							// Name and description for determined role
-							roleDescription = "\(matchingRole.localizedName) (\(matchingRole.localizedDescription))"
+							// Name of determined role
+							roleName = matchingRole.localizedName
+						}
+
+						if itemLocation.isDriveRoot {
+							detailToken = self.sharePermissions?.first?.localizedDriveRoleName
 						}
 					}
 
@@ -78,20 +83,20 @@ extension OCShare: UniversalItemListCellContentProvider {
 							if let displayName = user.displayName {
 	 							content.title = .text(displayName)
 							}
-							detailText = user.userName
+							detailText = user.userName ?? OCLocalizedString("User", nil)
 						} else if let displayName = recipient?.displayName {
 							content.title = .text(displayName)
 						}
 
-						if let roleDescription {
-							detailText = roleDescription
+						if let roleName {
+							detailText = roleName
 						}
 					} else {
 						// Link shares
-						content.title = .text(name ?? token ??  OCLocalizedString("Link", nil))
+						content.title = .text(((name?.count ?? 0 > 0) ? name : nil) ?? token ?? OCLocalizedString("Link", nil))
 
 						if let urlString = url?.absoluteString, urlString.count > 0 {
-							if let roleName = matchingRole?.localizedName {
+							if let roleName {
 								detailText = "\(roleName) | \(urlString)"
 							} else {
 								detailText = urlString
@@ -145,19 +150,21 @@ extension OCShare: UniversalItemListCellContentProvider {
 			default: break
 		}
 
-		if let detailText {
-			var detailSegments: [SegmentViewItem] = [
-				.detailText(detailText)
-			]
+		var detailSegments: [SegmentViewItem] = []
 
-			if let detailExtraItems {
-				detailSegments.append(contentsOf: detailExtraItems)
-			}
-
-			content.details = detailSegments
-		} else {
-			content.details = detailExtraItems
+		if let detailToken {
+			detailSegments.append(.token(detailToken))
 		}
+
+		if let detailText {
+			detailSegments.append(.detailText(detailText))
+		}
+
+		if let detailExtraItems {
+			detailSegments.append(contentsOf: detailExtraItems)
+		}
+
+		content.details = detailSegments
 
 		if showManagementView {
 			// Management view
