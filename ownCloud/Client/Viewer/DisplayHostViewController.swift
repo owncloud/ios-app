@@ -151,6 +151,19 @@ class DisplayHostViewController: UIPageViewController {
 
 		addKeyCommand(UIKeyCommand.ported(input: UIKeyCommand.inputLeftArrow, modifierFlags: .shift, action: #selector(keyCommandPreviousItem), discoverabilityTitle: OCLocalizedString("Previous item", nil)))
 		addKeyCommand(UIKeyCommand.ported(input: UIKeyCommand.inputRightArrow, modifierFlags: .shift, action: #selector(keyCommandNextItem), discoverabilityTitle: OCLocalizedString("Next item", nil)))
+
+		let hoverRecognizer = UIHoverGestureRecognizer(target: self, action: #selector(handleHover(_:)))
+		view.addGestureRecognizer(hoverRecognizer)
+
+		view.addSubview(previousButton)
+		view.addSubview(nextButton)
+
+		NSLayoutConstraint.activate([
+			previousButton.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 10),
+			previousButton.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+			nextButton.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -10),
+			nextButton.centerYAnchor.constraint(equalTo: view.centerYAnchor)
+		])
 	}
 
 	private var registered = false
@@ -379,6 +392,19 @@ class DisplayHostViewController: UIPageViewController {
 		self.activeDisplayViewController = nextViewController
 	}
 
+	var hasPreviousItem: Bool {
+		if let activeDisplayViewController {
+			return (adjacentViewController(relativeTo: activeDisplayViewController, .before, includeOnlyMediaItems: false) as? DisplayViewController) != nil
+		}
+		return false
+	}
+	var hasNextItem: Bool {
+		if let activeDisplayViewController {
+			return (adjacentViewController(relativeTo: activeDisplayViewController, .after, includeOnlyMediaItems: false) as? DisplayViewController) != nil
+		}
+		return false
+	}
+
 	// MARK: - Keyboard support
 	@objc func keyCommandPreviousItem() {
 		showPreviousItem(animated: false)
@@ -390,6 +416,56 @@ class DisplayHostViewController: UIPageViewController {
 
 	override var canBecomeFirstResponder: Bool {
 		return true
+	}
+
+	// MARK: - Pointer Hover (accessibility)
+	private func buildButton(symbolName: String, selectors: [ThemeCSSSelector], action: @escaping () -> Void) -> UIButton {
+		var buttonConfig = UIButton.Configuration.bordered()
+		buttonConfig.image = OCSymbol.icon(forSymbolName: symbolName)
+		buttonConfig.contentInsets = .zero
+
+		let button = ThemeButton(withSelectors: selectors, configuration: buttonConfig)
+		button.translatesAutoresizingMaskIntoConstraints = false
+		button.isHidden = true
+		button.addAction(UIAction(handler: { _ in
+			action()
+		}), for: .primaryActionTriggered)
+		return button
+	}
+
+	lazy var previousButton: UIButton = {
+		return buildButton(symbolName: "chevron.left", selectors: [.buttonPrevious], action: { [weak self] in
+			self?.showPreviousItem(animated: true)
+		})
+	}()
+	lazy var nextButton: UIButton = {
+		return buildButton(symbolName: "chevron.right", selectors: [.buttonNext], action: { [weak self] in
+			self?.showNextItem(animated: true)
+		})
+	}()
+
+	@objc func handleHover(_ recognizer: UIHoverGestureRecognizer) {
+		switch recognizer.state {
+
+			case .began, .changed:
+				showButtons = true
+
+			case .ended, .cancelled, .failed:
+				showButtons = false
+
+			default: break
+		}
+	}
+	var showButtons: Bool = false {
+		didSet {
+			updateButtonsVisibility()
+		}
+	}
+	func updateButtonsVisibility() {
+		if UIDevice.current.userInterfaceIdiom == .pad { // Save unnecessary overhead on devices without pointer interface
+			previousButton.isHidden = !showButtons || !hasPreviousItem
+			nextButton.isHidden = !showButtons || !hasNextItem
+		}
 	}
 }
 
@@ -407,6 +483,7 @@ extension DisplayHostViewController: UIPageViewControllerDelegate {
 	func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
 		if completed, let newActiveDisplayViewController = self.viewControllers?.first as? DisplayViewController {
 			activeDisplayViewController = newActiveDisplayViewController
+			updateButtonsVisibility()
 		}
 	}
 }
@@ -445,4 +522,9 @@ extension DisplayHostViewController {
 	private func autoEnablePageScrolling() {
 		self.scrollView?.isScrollEnabled = (self.items?.count ?? 0 < 2) ? false : true
 	}
+}
+
+public extension ThemeCSSSelector {
+	static let buttonPrevious = ThemeCSSSelector(rawValue: "buttonPrevious")
+	static let buttonNext = ThemeCSSSelector(rawValue: "buttonNext")
 }
