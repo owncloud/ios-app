@@ -114,8 +114,9 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	public typealias CompletionHandler = (_ share: OCShare?) -> Void
 
 	var completionHandler: CompletionHandler?
+	var identityFilter: RecipientSearchScope.RecipientFilter?
 
-	public init(type: ShareType = .share, mode: Mode, share: OCShare? = nil, item: OCItem? = nil, clientContext: ClientContext, completion: @escaping CompletionHandler) {
+	public init(type: ShareType = .share, mode: Mode, share: OCShare? = nil, item: OCItem? = nil, clientContext: ClientContext, identityFilter: RecipientSearchScope.RecipientFilter? = nil, completion: @escaping CompletionHandler) {
 		var sections: [CollectionViewSection] = []
 
 		self.share = share
@@ -126,6 +127,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		self.item = (item != nil) ? item! : ((location != nil) ? try? clientContext.core?.cachedItem(at: location!) : nil)
 		self.mode = mode
 		self.completionHandler = completion
+		self.identityFilter = identityFilter
 
 		// Item section
 		if let item = item {
@@ -524,7 +526,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 				// Create and install SearchViewController
 				searchViewController = SearchViewController(with: clientContext, scopes: [
-					.recipientSearch(with: clientContext, cellStyle: cellStyle, item: item, localizedName: "Share with")
+					.recipientSearch(with: clientContext, cellStyle: cellStyle, item: item, localizedName: "Share with", filter: identityFilter)
 				], suggestionContent: suggestionsContent, noResultContent: noResultContent, delegate: self)
 
 				if let searchViewController = searchViewController {
@@ -566,19 +568,8 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 	public override func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath, clientContext: ClientContext) -> Bool {
 		if let identity = record.item as? OCIdentity, searchActive {
-			collectionView.deselectItem(at: indexPath, animated: true)
-
-			if let recipientIdentifier = identity.user?.identifier,
-			   let loggedInUserIdentifier = clientContext.core?.connection.loggedInUser?.identifier,
-			   recipientIdentifier == loggedInUserIdentifier {
-			   	// User tries to share with him-/herself, which is not allowed
-				let invalidUserAlert = ThemedAlertController(with: OCLocalizedString("You can't share with yourself", nil), message: OCLocalizedString("Please select a different recipient to share with.", nil), okLabel: OCLocalizedString("OK", nil))
-				clientContext.present(invalidUserAlert, animated: true, completion: nil)
-
-				return true
-			}
-
 			recipient = identity
+			collectionView.deselectItem(at: indexPath, animated: true)
 
 			return true
 		}

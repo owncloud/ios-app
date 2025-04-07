@@ -48,6 +48,9 @@ open class SharingViewController: CollectionViewController {
 	private var driveManagerCountSubscription: OCDataSourceSubscription?
 	private var driveManagerCount: Int = 0
 
+	private var recipientsSubscription: OCDataSourceSubscription?
+	private var recipientsIdentifiers: [String]?
+
 	public init(clientContext: ClientContext, item: OCItem) {
 		var sections: [CollectionViewSection] = []
 
@@ -226,6 +229,37 @@ open class SharingViewController: CollectionViewController {
 			self?.allowedPermissionActions = query.allowedPermissionActions
 		}
 
+		if let itemSharesQueryDataSource = itemSharesQuery?.dataSource {
+			// Subscribe to shares query data source to compile list of identity identifiers for existing recipients
+			recipientsSubscription = itemSharesQueryDataSource.subscribe(updateHandler: { [weak self] subscription in
+				let snapshot = subscription.snapshotResettingChangeTracking(true)
+				var identityIdentifiers: [String] = []
+
+				// Add recipients of existing shares
+				for itemRef in snapshot.items {
+					if let itemRecord = try? subscription.source?.record(forItemRef: itemRef),
+					   let share = itemRecord.item as? OCShare,
+					   let identity = share.recipient {
+					   	if let identifier = identity.identifier {
+						   	identityIdentifiers.append(identifier)
+						}
+					}
+				}
+
+				// Add currently logged in user
+				if let loggedInUser = self?.clientContext?.core?.connection.loggedInUser,
+				   let loggedInUserIdentifier = loggedInUser.identifier {
+					identityIdentifiers.append(loggedInUserIdentifier)
+				}
+
+				if let self {
+					OCSynchronized(self) {
+						self.recipientsIdentifiers = identityIdentifiers
+					}
+				}
+			}, on: .main, trackDifferences: true, performInitialUpdate: true)
+		}
+
 		if let core = clientContext.core, let itemSharesQuery {
 			core.start(itemSharesQuery)
 		}
@@ -290,6 +324,7 @@ open class SharingViewController: CollectionViewController {
 
 	deinit {
 		driveManagerCountSubscription?.terminate()
+		recipientsSubscription?.terminate()
 
 		if let core = clientContext?.core, let itemSharesQuery {
 			core.stop(itemSharesQuery)
@@ -308,8 +343,24 @@ open class SharingViewController: CollectionViewController {
 	func createShare(type: ShareViewController.ShareType) {
 		guard let clientContext else { return }
 
-		let shareViewController = ShareViewController(type: type, mode: .create, item: item, clientContext: clientContext, completion: { _ in
+		let shareViewController = ShareViewController(type: type, mode: .create, item: item, clientContext: clientContext, identityFilter: { [weak self] identity in
+			// Filter out all users that have already been added
+			guard let self else { return false }
+
+			if let identityIdentifier = identity.identifier {
+				var includeIdentity: Bool = true
+
+				OCSynchronized(self) {
+					includeIdentity = self.recipientsIdentifiers?.contains(identityIdentifier) != true
+				}
+
+				return includeIdentity
+			}
+
+			return true
+		}, completion: { _ in
 		})
+
 		let navigationController = ThemeNavigationController(rootViewController: shareViewController)
 		self.present(navigationController, animated: true)
 	}

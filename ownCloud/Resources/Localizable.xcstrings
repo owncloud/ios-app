@@ -54455,9 +54455,6 @@
         }
       }
     },
-    "Please select a different recipient." : {
-
-    },
     "Please try again in %@" : {
       "localizations" : {
         "ar" : {
@@ -83966,9 +83963,6 @@
           }
         }
       }
-    },
-    "You can't share with yourself" : {
-
     },
     "You need to configure an email account first to be able to send emails." : {
       "localizations" : {
