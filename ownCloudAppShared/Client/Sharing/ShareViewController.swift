@@ -557,7 +557,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	}
 
 	public override func allowSelection(of record: OCDataItemRecord, at indexPath: IndexPath, clientContext: ClientContext) -> Bool {
-		if record.item as? OCIdentity != nil {
+		if record.item is OCIdentity {
 			return searchActive
 		}
 
@@ -566,8 +566,19 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 	public override func handleSelection(of record: OCDataItemRecord, at indexPath: IndexPath, clientContext: ClientContext) -> Bool {
 		if let identity = record.item as? OCIdentity, searchActive {
-			recipient = identity
 			collectionView.deselectItem(at: indexPath, animated: true)
+
+			if let recipientIdentifier = identity.user?.identifier,
+			   let loggedInUserIdentifier = clientContext.core?.connection.loggedInUser?.identifier,
+			   recipientIdentifier == loggedInUserIdentifier {
+			   	// User tries to share with him-/herself, which is not allowed
+				let invalidUserAlert = ThemedAlertController(with: OCLocalizedString("You can't share with yourself", nil), message: OCLocalizedString("Please select a different recipient to share with.", nil), okLabel: OCLocalizedString("OK", nil))
+				clientContext.present(invalidUserAlert, animated: true, completion: nil)
+
+				return true
+			}
+
+			recipient = identity
 
 			return true
 		}
