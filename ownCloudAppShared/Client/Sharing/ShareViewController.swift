@@ -182,14 +182,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 		// - Name
 		if self.type == .link {
-			let textField : UITextField = ThemeCSSTextField()
-			textField.translatesAutoresizingMaskIntoConstraints = false
-			textField.setContentHuggingPriority(.required, for: .vertical)
-			textField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-			textField.placeholder = share?.token ?? OCLocalizedString("Link", nil)
-			textField.text = share?.name
-			textField.accessibilityLabel = OCLocalizedString("Name", nil)
-
+			let textField: UITextField = ThemeCSSTextField.formField(withPlaceholder: share?.token ?? OCLocalizedString("Link", nil), text: share?.name, accessibilityLabel: OCLocalizedString("Name", nil))
 			nameTextField = textField
 
 			let spacerView = UIView()
