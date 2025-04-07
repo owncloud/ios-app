@@ -74,4 +74,14 @@ open class ThemeableCollectionViewListCell: UICollectionViewListCell, Themeable 
 
 		self.applyThemeCollectionToCellContents(theme: theme, collection: collection, state: ThemeItemState(selected: self.isSelected))
 	}
+
+	var hostingCollectionView: UICollectionView? {
+		var superView: UIView? = self.superview
+
+		while superView != nil && !(superView is UICollectionView) {
+			superView = superView?.superview
+		}
+
+		return superView as? UICollectionView
+	}
 }
