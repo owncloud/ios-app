@@ -769,6 +769,28 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 		}
 	}
 
+	// MARK: Accessibility trait customization
+	// - fixes https://github.com/owncloud/ios-app/issues/1332
+	open override var accessibilityTraits: UIAccessibilityTraits {
+		set {
+			super.accessibilityTraits = newValue
+		}
+		get {
+			var accessibilityTraits = super.accessibilityTraits
+
+			if #available(iOS 17, *) {
+				if let hostingCollectionView {
+					if hostingCollectionView.isEditing {
+						accessibilityTraits.remove(.button)
+						accessibilityTraits.insert(.toggleButton)
+					}
+				}
+			}
+
+			return accessibilityTraits
+		}
+	}
+
 	// MARK: - Accessories
 	// - More ...
 	open var moreButton: UIButton?
