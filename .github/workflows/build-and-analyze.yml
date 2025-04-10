@@ -17,7 +17,7 @@ jobs:
         with:
           submodules: true
       - name: mxcl/Xcodebuild
-        uses: mxcl/xcodebuild@v3.4.0
+        uses: mxcl/xcodebuild@v3.5.1
         with:
           scheme: ownCloud
           action: build
