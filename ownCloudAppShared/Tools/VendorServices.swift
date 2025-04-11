@@ -103,6 +103,14 @@ public class VendorServices : NSObject {
 		return false
 	}
 
+	public var allowAIFeatures: Bool {
+		if let allowAIFeatures = self.classSetting(forOCClassSettingsKey: .allowAIFeatures) as? Bool {
+			return allowAIFeatures
+		}
+
+		return false
+	}
+
 	static public var shared : VendorServices = {
 		return VendorServices()
 	}()
@@ -149,6 +157,8 @@ public extension OCClassSettingsKey {
 	static let isBetaBuild = OCClassSettingsKey("is-beta-build")
 	static let enableUIAnimations = OCClassSettingsKey("enable-ui-animations")
 
+	static let allowAIFeatures = OCClassSettingsKey("allow-ai-features")
+
 	static let appStoreLink = OCClassSettingsKey("app-store-link")
 	static let recommendToFriendEnabled = OCClassSettingsKey("recommend-to-friend-enabled")
 }
@@ -163,6 +173,8 @@ extension VendorServices : OCClassSettingsSupport {
 				.showBetaWarning : false,
 				.enableUIAnimations: true,
 				.enableReviewPrompt: VendorServices.shared.enableReviewPrompt,
+
+				.allowAIFeatures: true,
 
 				.appStoreLink : "https://itunes.apple.com/app/id1359583808?mt=8",
 				.recommendToFriendEnabled: !VendorServices.shared.isBranded
@@ -198,6 +210,13 @@ extension VendorServices : OCClassSettingsSupport {
 			.enableReviewPrompt : [
 				.type 		: OCClassSettingsMetadataType.boolean,
 				.description	: "Enable/disable review prompt.",
+				.category	: "App",
+				.status		: OCClassSettingsKeyStatus.advanced
+			],
+
+			.allowAIFeatures : [
+				.type 		: OCClassSettingsMetadataType.boolean,
+				.description	: "Enable/disable AI features.",
 				.category	: "App",
 				.status		: OCClassSettingsKeyStatus.advanced
 			],

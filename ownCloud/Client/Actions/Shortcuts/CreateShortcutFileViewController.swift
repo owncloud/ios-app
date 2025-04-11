@@ -284,10 +284,12 @@ class CreateShortcutFileViewController: CollectionViewController {
 		guard let core = clientContext?.core else { return }
 
 		if let urlFileData = INIFile.URLFile(with: url).data {
-			if let temporaryFolderURL = core.vault.temporaryDownloadURL?.appendingPathComponent(UUID().uuidString) {
+			if let temporaryFolderURL = core.vault.temporaryUploadURL?.appendingPathComponent(UUID().uuidString) {
 				let temporaryFileURL = temporaryFolderURL.appendingPathComponent("\(name).url")
 
-				try? FileManager.default.createDirectory(at: temporaryFolderURL, withIntermediateDirectories: true)
+				try? FileManager.default.createDirectory(at: temporaryFolderURL, withIntermediateDirectories: true, attributes: [
+					.protectionKey : FileProtectionType.completeUntilFirstUserAuthentication
+				])
 				try? urlFileData.write(to: temporaryFileURL)
 
 				core.importFileNamed("\(name).url", at: parentItem, from: temporaryFileURL, isSecurityScoped: false, placeholderCompletionHandler: { [weak self] error, item in

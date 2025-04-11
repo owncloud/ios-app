@@ -114,8 +114,9 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	public typealias CompletionHandler = (_ share: OCShare?) -> Void
 
 	var completionHandler: CompletionHandler?
+	var identityFilter: RecipientSearchScope.RecipientFilter?
 
-	public init(type: ShareType = .share, mode: Mode, share: OCShare? = nil, item: OCItem? = nil, clientContext: ClientContext, completion: @escaping CompletionHandler) {
+	public init(type: ShareType = .share, mode: Mode, share: OCShare? = nil, item: OCItem? = nil, clientContext: ClientContext, identityFilter: RecipientSearchScope.RecipientFilter? = nil, completion: @escaping CompletionHandler) {
 		var sections: [CollectionViewSection] = []
 
 		self.share = share
@@ -126,6 +127,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		self.item = (item != nil) ? item! : ((location != nil) ? try? clientContext.core?.cachedItem(at: location!) : nil)
 		self.mode = mode
 		self.completionHandler = completion
+		self.identityFilter = identityFilter
 
 		// Item section
 		if let item = item {
@@ -180,14 +182,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 		// - Name
 		if self.type == .link {
-			let textField : UITextField = ThemeCSSTextField()
-			textField.translatesAutoresizingMaskIntoConstraints = false
-			textField.setContentHuggingPriority(.required, for: .vertical)
-			textField.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-			textField.placeholder = share?.token ?? OCLocalizedString("Link", nil)
-			textField.text = share?.name
-			textField.accessibilityLabel = OCLocalizedString("Name", nil)
-
+			let textField: UITextField = ThemeCSSTextField.formField(withPlaceholder: share?.token ?? OCLocalizedString("Link", nil), text: share?.name, accessibilityLabel: OCLocalizedString("Name", nil))
 			nameTextField = textField
 
 			let spacerView = UIView()
@@ -319,7 +314,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 		// Set up view
 		if let share, let core = clientContext?.core {
-			role = core.matchingShareRole(for: share)
+			role = core.matching(for: share, from: nil)
 		}
 
 		if let share, let recipient = share.recipient {
@@ -380,23 +375,50 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		}
 
 		if let location, let clientContext, let shareType {
-			if let shareRoles = clientContext.core?.availableShareRoles(for: shareType, location: location) {
-				let roleOptions: [OptionItem] = shareRoles.map({ shareRole in
-					OptionItem(kind: .multipleChoice, contentFrom: shareRole, state: (shareRole == role))
+			if let shareRoles = clientContext.sharingRoles {
+				self.shareRoles = shareRoles
+			} else {
+				clientContext.core?.availableShareRoles(for: shareType, location: location, completionHandler: { [weak self] error, shareRoles in
+					if let shareRoles {
+						OnMainThread {
+							self?.shareRoles = shareRoles
+						}
+					}
 				})
-
-				rolesSectionOptionGroup = OptionGroup()
-				rolesSectionOptionGroup?.items = roleOptions
-				rolesSectionOptionGroup?.changeAction = { [weak self] (group, selectedItem) in
-					self?.role = selectedItem.value as? OCShareRole
-				}
-				if let role {
-					rolesSectionOptionGroup?.chosenValues = [ role ]
-				}
-
-				rolesSectionDatasource?.setVersionedItems(roleOptions)
-				rolesSection?.hidden = false
 			}
+		} else {
+			rolesSection?.hidden = true
+		}
+	}
+
+	var shareRoles: [OCShareRole]? {
+		didSet {
+			_updateRoles(with: shareRoles)
+		}
+	}
+
+	private func _updateRoles(with shareRoles: [OCShareRole]?) {
+		if let shareRoles {
+			let roleOptions: [OptionItem] = shareRoles.map({ shareRole in
+				OptionItem(kind: .multipleChoice, contentFrom: shareRole, state: shareRole == role)
+			})
+
+			rolesSectionOptionGroup = OptionGroup()
+			rolesSectionOptionGroup?.items = roleOptions
+			rolesSectionOptionGroup?.changeAction = { [weak self] (group, selectedItem) in
+				self?.role = selectedItem.value as? OCShareRole
+			}
+			if let role {
+				rolesSectionOptionGroup?.chosenValues = [ role ]
+			}
+
+			rolesSectionDatasource?.setVersionedItems(roleOptions)
+			rolesSection?.hidden = false
+
+			if role == nil, let share, let core = clientContext?.core {
+				role = core.matching(for: share, from: shareRoles)
+			}
+
 		} else {
 			rolesSection?.hidden = true
 		}
@@ -497,7 +519,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 				// Create and install SearchViewController
 				searchViewController = SearchViewController(with: clientContext, scopes: [
-					.recipientSearch(with: clientContext, cellStyle: cellStyle, item: item, localizedName: "Share with")
+					.recipientSearch(with: clientContext, cellStyle: cellStyle, item: item, localizedName: "Share with", filter: identityFilter)
 				], suggestionContent: suggestionsContent, noResultContent: noResultContent, delegate: self)
 
 				if let searchViewController = searchViewController {
@@ -530,7 +552,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 	}
 
 	public override func allowSelection(of record: OCDataItemRecord, at indexPath: IndexPath, clientContext: ClientContext) -> Bool {
-		if record.item as? OCIdentity != nil {
+		if record.item is OCIdentity {
 			return searchActive
 		}
 
@@ -643,7 +665,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		return false
 	}
 	var hasExpirationOption: Bool {
-		return (type == .link)
+		return (type == .link) || (clientContext?.core?.connection.useDriveAPI == true)
 	}
 	var expirationDateRequired: Bool {
 		return type == .link ? (clientContext?.core?.connection.capabilities?.publicSharingExpireDateEnforceDateAndDaysDeterminesLastAllowedDate == true) : false
@@ -869,6 +891,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		let passwordViewController = PasswordComposerViewController(password: password ?? "", policy: passwordPolicy, saveButtonTitle: OCLocalizedString("Set", nil), resultHandler: { [weak self] password, cancelled in
 			if !cancelled, let password {
 				self?.password = password
+				self?.removePassword = false
 				self?.updateOptions()
 			}
 		})
@@ -889,6 +912,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		}
 		if let generatedPassword {
 			self.password = generatedPassword
+			self.removePassword = false
 			self.updateOptions()
 		}
 	}
@@ -900,16 +924,23 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 		switch mode {
 			case .create:
 				var newShare: OCShare?
+				var sharePermission: OCSharePermission?
+
+				if clientContext?.core?.useDrives == true, let role {
+					sharePermission = OCSharePermission(role: role)
+				} else if let permissions {
+					sharePermission = OCSharePermission(permissionsMask: permissions)
+				}
 
 				switch type {
 					case .share:
-						if let recipient, let permissions, let location {
-							newShare = OCShare(recipient: recipient, location: location, permissions: permissions, expiration: nil)
+						if let recipient, let sharePermission, let location {
+							newShare = OCShare(recipient: recipient, location: location, permissions: [sharePermission], expiration: nil)
 						}
 
 					case .link:
-						if let location, let permissions {
-							newShare = OCShare(publicLinkTo: location, linkName: name, permissions: permissions, password: nil, expiration: nil)
+						if let location, let sharePermission {
+							newShare = OCShare(publicLinkTo: location, linkName: name, permissions: [sharePermission], password: nil, expiration: nil)
 						}
 				}
 
@@ -1014,7 +1045,11 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 								bottomButtonBar?.modalActionRunning = true
 
 								core.update(share, afterPerformingChanges: { [weak self] share in
-									share.permissions = permissions
+									if share.firstRoleID != nil, let role = self?.role {
+										share.sharePermissions = [ OCSharePermission(role: role) ]
+									} else {
+										share.permissions = permissions
+									}
 
 									if let removePassword = self?.removePassword, removePassword {
 										share.password = nil
