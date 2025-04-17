@@ -1,0 +1,5 @@
+Bugfix: Enabling Markup Mode on iOS 18.x
+
+A fix has been implemented for enabling the markup mode on iOS 18.x automatically.
+
+https://github.com/owncloud/ios-app/issue/1455
