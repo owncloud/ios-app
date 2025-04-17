@@ -139,6 +139,12 @@
             "value" : "%@ unlocked for QA."
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ unlocked for QA."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -163,6 +169,30 @@
             "value" : "%@ unlocked for QA."
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ unlocked for QA."
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ unlocked for QA."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ unlocked for QA."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ unlocked for QA."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -170,6 +200,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ unlocked for QA."
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ unlocked for QA."
@@ -1154,6 +1190,12 @@
             "value" : "> %d months ago"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d months ago"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1178,6 +1220,30 @@
             "value" : "> %d months ago"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d months ago"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d months ago"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d months ago"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d months ago"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1185,6 +1251,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d months ago"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "> %d months ago"
@@ -1225,6 +1297,12 @@
             "value" : "> %d years ago"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d years ago"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1249,6 +1327,30 @@
             "value" : "> %d years ago"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d years ago"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d years ago"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d years ago"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d years ago"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1256,6 +1358,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d years ago"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "> %d years ago"
@@ -1296,6 +1404,12 @@
             "value" : ">%d days ago"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d days ago"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1320,6 +1434,30 @@
             "value" : ">%d days ago"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d days ago"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d days ago"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d days ago"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d days ago"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1327,6 +1465,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d days ago"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : ">%d days ago"
@@ -1367,6 +1511,12 @@
             "value" : ">%d weeks ago"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d weeks ago"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1391,6 +1541,30 @@
             "value" : ">%d weeks ago"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d weeks ago"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d weeks ago"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d weeks ago"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d weeks ago"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1398,6 +1572,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d weeks ago"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : ">%d weeks ago"
@@ -1438,6 +1618,12 @@
             "value" : "After"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1462,6 +1648,30 @@
             "value" : "After"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1469,6 +1679,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "After"
@@ -1628,6 +1844,12 @@
             "value" : "Audio"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1652,6 +1874,30 @@
             "value" : "Audio"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1659,6 +1905,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Audio"
@@ -1699,6 +1951,12 @@
             "value" : "Before"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1723,6 +1981,30 @@
             "value" : "Before"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1730,6 +2012,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before"
@@ -1770,6 +2058,12 @@
             "value" : "Before last month"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last month"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1794,6 +2088,30 @@
             "value" : "Before last month"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last month"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last month"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last month"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last month"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1801,6 +2119,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last month"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before last month"
@@ -1841,6 +2165,12 @@
             "value" : "Before last week"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last week"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1865,6 +2195,30 @@
             "value" : "Before last week"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last week"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last week"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last week"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last week"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1872,6 +2226,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last week"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before last week"
@@ -1912,6 +2272,12 @@
             "value" : "Before last year"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last year"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1936,6 +2302,30 @@
             "value" : "Before last year"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last year"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last year"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last year"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last year"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1943,6 +2333,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last year"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before last year"
@@ -1983,6 +2379,12 @@
             "value" : "Before this month"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this month"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2007,6 +2409,30 @@
             "value" : "Before this month"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this month"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this month"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this month"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this month"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2014,6 +2440,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this month"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before this month"
@@ -2054,6 +2486,12 @@
             "value" : "Before this week"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this week"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2078,6 +2516,30 @@
             "value" : "Before this week"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this week"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this week"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this week"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this week"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2085,6 +2547,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this week"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before this week"
@@ -2125,6 +2593,12 @@
             "value" : "Before this year"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this year"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2149,6 +2623,30 @@
             "value" : "Before this year"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this year"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this year"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this year"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this year"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2156,6 +2654,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this year"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before this year"
@@ -2196,6 +2700,12 @@
             "value" : "Before today"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before today"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2220,6 +2730,30 @@
             "value" : "Before today"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before today"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before today"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before today"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before today"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2227,6 +2761,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before today"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before today"
@@ -2267,6 +2807,12 @@
             "value" : "Before yesterday"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before yesterday"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2291,6 +2837,30 @@
             "value" : "Before yesterday"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before yesterday"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before yesterday"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before yesterday"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before yesterday"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2298,6 +2868,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before yesterday"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before yesterday"
@@ -2692,6 +3268,12 @@
             "value" : "Document"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2716,6 +3298,30 @@
             "value" : "Document"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2723,6 +3329,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Document"
@@ -2762,6 +3374,12 @@
             "value" : "EMM"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EMM"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2786,6 +3404,30 @@
             "value" : "EMM"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EMM"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EMM"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EMM"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EMM"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2793,6 +3435,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EMM"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "EMM"
@@ -2950,6 +3598,12 @@
             "value" : "Enterprise"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enterprise"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2974,6 +3628,30 @@
             "value" : "Enterprise"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enterprise"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enterprise"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enterprise"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enterprise"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2981,6 +3659,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enterprise"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enterprise"
@@ -3021,6 +3705,12 @@
             "value" : "File"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3045,6 +3735,30 @@
             "value" : "File"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3052,6 +3766,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "File"
@@ -3092,6 +3812,12 @@
             "value" : "Folder"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3116,6 +3842,30 @@
             "value" : "Folder"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3123,6 +3873,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Folder"
@@ -3162,6 +3918,12 @@
             "value" : "Free"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3186,6 +3948,30 @@
             "value" : "Free"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3193,6 +3979,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Free"
@@ -3233,6 +4025,12 @@
             "value" : "Image"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3257,6 +4055,30 @@
             "value" : "Image"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3264,6 +4086,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Image"
@@ -3303,6 +4131,12 @@
             "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3327,6 +4161,30 @@
             "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3334,6 +4192,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
@@ -3374,6 +4238,12 @@
             "value" : "after"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "after"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3398,6 +4268,30 @@
             "value" : "after"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "after"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "after"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "after"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "after"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3405,6 +4299,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "after"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "after"
@@ -3445,6 +4345,12 @@
             "value" : "audio"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "audio"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3469,6 +4375,30 @@
             "value" : "audio"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "audio"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "audio"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "audio"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "audio"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3476,6 +4406,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "audio"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "audio"
@@ -3516,6 +4452,12 @@
             "value" : "before"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "before"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3540,6 +4482,30 @@
             "value" : "before"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "before"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "before"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "before"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "before"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3547,6 +4513,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "before"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "before"
@@ -3588,6 +4560,12 @@
             "value" : "d"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "d"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3612,6 +4590,30 @@
             "value" : "d"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "d"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "d"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "d"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "d"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3619,6 +4621,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "d"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "d"
@@ -3659,6 +4667,12 @@
             "value" : "document"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "document"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3683,6 +4697,30 @@
             "value" : "document"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "document"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "document"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "document"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "document"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3690,6 +4728,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "document"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "document"
@@ -3730,6 +4774,12 @@
             "value" : "file"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "file"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3754,6 +4804,30 @@
             "value" : "file"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "file"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "file"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "file"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "file"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3761,6 +4835,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "file"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "file"
@@ -3801,6 +4881,12 @@
             "value" : "folder"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3825,6 +4911,30 @@
             "value" : "folder"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3832,6 +4942,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "folder"
@@ -3872,6 +4988,12 @@
             "value" : "greater"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "greater"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3896,6 +5018,30 @@
             "value" : "greater"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "greater"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "greater"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "greater"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "greater"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3903,6 +5049,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "greater"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "greater"
@@ -3943,6 +5095,12 @@
             "value" : "image"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3967,6 +5125,30 @@
             "value" : "image"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3974,6 +5156,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "image"
@@ -4015,6 +5203,12 @@
             "value" : "m"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4039,6 +5233,30 @@
             "value" : "m"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4046,6 +5264,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "m"
@@ -4086,6 +5310,12 @@
             "value" : "month"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4110,6 +5340,30 @@
             "value" : "month"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4117,6 +5371,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "month"
@@ -4157,6 +5417,12 @@
             "value" : "on"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "on"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4181,6 +5447,30 @@
             "value" : "on"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "on"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "on"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "on"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "on"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4188,6 +5478,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "on"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "on"
@@ -4228,6 +5524,12 @@
             "value" : "owner"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "owner"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4252,6 +5554,30 @@
             "value" : "owner"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "owner"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "owner"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "owner"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "owner"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4259,6 +5585,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "owner"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "owner"
@@ -4299,6 +5631,12 @@
             "value" : "pdf"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pdf"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4323,6 +5661,30 @@
             "value" : "pdf"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pdf"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pdf"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pdf"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pdf"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4330,6 +5692,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pdf"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "pdf"
@@ -4370,6 +5738,12 @@
             "value" : "presentation"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "presentation"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4394,6 +5768,30 @@
             "value" : "presentation"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "presentation"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "presentation"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "presentation"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "presentation"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4401,6 +5799,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "presentation"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "presentation"
@@ -4441,6 +5845,12 @@
             "value" : "recent"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "recent"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4465,6 +5875,30 @@
             "value" : "recent"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "recent"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "recent"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "recent"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "recent"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4472,6 +5906,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "recent"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "recent"
@@ -4512,6 +5952,12 @@
             "value" : "smaller"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smaller"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4536,6 +5982,30 @@
             "value" : "smaller"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smaller"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smaller"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smaller"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smaller"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4543,6 +6013,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smaller"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "smaller"
@@ -4583,6 +6059,12 @@
             "value" : "spreadsheet"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "spreadsheet"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4607,6 +6089,30 @@
             "value" : "spreadsheet"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "spreadsheet"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "spreadsheet"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "spreadsheet"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "spreadsheet"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4614,6 +6120,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "spreadsheet"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "spreadsheet"
@@ -4654,6 +6166,12 @@
             "value" : "today"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "today"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4678,6 +6196,30 @@
             "value" : "today"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "today"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "today"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "today"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "today"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4685,6 +6227,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "today"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "today"
@@ -4726,6 +6274,12 @@
             "value" : "type"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "type"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4750,6 +6304,30 @@
             "value" : "type"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "type"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "type"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "type"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "type"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4757,6 +6335,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "type"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "type"
@@ -4797,6 +6381,12 @@
             "value" : "video"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "video"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4821,6 +6411,30 @@
             "value" : "video"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "video"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "video"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "video"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "video"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4828,6 +6442,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "video"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "video"
@@ -4869,6 +6489,12 @@
             "value" : "w"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "w"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4893,6 +6519,30 @@
             "value" : "w"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "w"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "w"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "w"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "w"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4900,6 +6550,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "w"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "w"
@@ -4940,6 +6596,12 @@
             "value" : "week"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4964,6 +6626,30 @@
             "value" : "week"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4971,6 +6657,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "week"
@@ -5012,6 +6704,12 @@
             "value" : "y"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "y"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5036,6 +6734,30 @@
             "value" : "y"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "y"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "y"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "y"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "y"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5043,6 +6765,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "y"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "y"
@@ -5083,6 +6811,12 @@
             "value" : "year"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5107,6 +6841,30 @@
             "value" : "year"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5114,6 +6872,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "year"
@@ -5154,6 +6918,12 @@
             "value" : "Last %d days"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d days"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5178,6 +6948,30 @@
             "value" : "Last %d days"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d days"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d days"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d days"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d days"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5185,6 +6979,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d days"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last %d days"
@@ -5225,6 +7025,12 @@
             "value" : "Last %d months"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d months"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5249,6 +7055,30 @@
             "value" : "Last %d months"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d months"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d months"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d months"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d months"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5256,6 +7086,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d months"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last %d months"
@@ -5296,6 +7132,12 @@
             "value" : "Last %d weeks"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d weeks"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5320,6 +7162,30 @@
             "value" : "Last %d weeks"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d weeks"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d weeks"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d weeks"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d weeks"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5327,6 +7193,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d weeks"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last %d weeks"
@@ -5367,6 +7239,12 @@
             "value" : "Last %d years"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d years"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5391,6 +7269,30 @@
             "value" : "Last %d years"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d years"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d years"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d years"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d years"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5398,6 +7300,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d years"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last %d years"
@@ -5674,6 +7582,12 @@
             "value" : "No audio"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No audio"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5698,6 +7612,30 @@
             "value" : "No audio"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No audio"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No audio"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No audio"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No audio"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5705,6 +7643,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No audio"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No audio"
@@ -5745,6 +7689,12 @@
             "value" : "No Document"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Document"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5769,6 +7719,30 @@
             "value" : "No Document"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Document"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Document"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Document"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Document"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5776,6 +7750,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Document"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Document"
@@ -5816,6 +7796,12 @@
             "value" : "No file"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No file"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5840,6 +7826,30 @@
             "value" : "No file"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No file"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No file"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No file"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No file"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5847,6 +7857,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No file"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No file"
@@ -5888,6 +7904,12 @@
             "value" : "No folder"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No folder"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5912,6 +7934,30 @@
             "value" : "No folder"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No folder"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No folder"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No folder"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No folder"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5919,6 +7965,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No folder"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No folder"
@@ -5959,6 +8011,12 @@
             "value" : "No image"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No image"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5983,6 +8041,30 @@
             "value" : "No image"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No image"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No image"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No image"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No image"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5990,6 +8072,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No image"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No image"
@@ -6030,6 +8118,12 @@
             "value" : "No PDF"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No PDF"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6054,6 +8148,30 @@
             "value" : "No PDF"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No PDF"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No PDF"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No PDF"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No PDF"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6061,6 +8179,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No PDF"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No PDF"
@@ -6101,6 +8225,12 @@
             "value" : "No presentation"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No presentation"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6125,6 +8255,30 @@
             "value" : "No presentation"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No presentation"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No presentation"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No presentation"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No presentation"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6132,6 +8286,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No presentation"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No presentation"
@@ -6172,6 +8332,12 @@
             "value" : "No spreadsheet"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No spreadsheet"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6196,6 +8362,30 @@
             "value" : "No spreadsheet"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No spreadsheet"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No spreadsheet"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No spreadsheet"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No spreadsheet"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6203,6 +8393,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No spreadsheet"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No spreadsheet"
@@ -6243,6 +8439,12 @@
             "value" : "No video"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6267,6 +8469,30 @@
             "value" : "No video"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6274,6 +8500,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No video"
@@ -6433,6 +8665,12 @@
             "value" : "Not"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6457,6 +8695,30 @@
             "value" : "Not"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6464,6 +8726,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not"
@@ -6504,6 +8772,12 @@
             "value" : "Not on"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not on"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6528,6 +8802,30 @@
             "value" : "Not on"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not on"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not on"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not on"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not on"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6535,6 +8833,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not on"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not on"
@@ -6575,6 +8879,12 @@
             "value" : "Not recently used"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recently used"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6599,6 +8909,30 @@
             "value" : "Not recently used"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recently used"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recently used"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recently used"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recently used"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6606,6 +8940,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recently used"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not recently used"
@@ -6646,6 +8986,12 @@
             "value" : "On"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6670,6 +9016,30 @@
             "value" : "On"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6677,6 +9047,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "On"
@@ -6717,6 +9093,12 @@
             "value" : "PDF"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6741,6 +9123,30 @@
             "value" : "PDF"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6748,6 +9154,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "PDF"
@@ -6788,6 +9200,12 @@
             "value" : "Presentation"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6812,6 +9230,30 @@
             "value" : "Presentation"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6819,6 +9261,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Presentation"
@@ -7568,6 +10016,12 @@
             "value" : "Recently used"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently used"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7592,6 +10046,30 @@
             "value" : "Recently used"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently used"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently used"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently used"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently used"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7599,6 +10077,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently used"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recently used"
@@ -7639,6 +10123,12 @@
             "value" : "Since last month"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last month"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7663,6 +10153,30 @@
             "value" : "Since last month"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last month"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last month"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last month"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last month"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7670,6 +10184,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last month"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since last month"
@@ -7710,6 +10230,12 @@
             "value" : "Since last week"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last week"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7734,6 +10260,30 @@
             "value" : "Since last week"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last week"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last week"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last week"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last week"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7741,6 +10291,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last week"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since last week"
@@ -7781,6 +10337,12 @@
             "value" : "Since last year"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last year"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7805,6 +10367,30 @@
             "value" : "Since last year"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last year"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last year"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last year"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last year"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7812,6 +10398,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last year"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since last year"
@@ -7852,6 +10444,12 @@
             "value" : "Since yesterday"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since yesterday"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7876,6 +10474,30 @@
             "value" : "Since yesterday"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since yesterday"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since yesterday"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since yesterday"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since yesterday"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7883,6 +10505,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since yesterday"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since yesterday"
@@ -7923,6 +10551,12 @@
             "value" : "Spreadsheet"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spreadsheet"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7947,6 +10581,30 @@
             "value" : "Spreadsheet"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spreadsheet"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spreadsheet"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spreadsheet"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spreadsheet"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7954,6 +10612,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spreadsheet"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spreadsheet"
@@ -8113,6 +10777,12 @@
             "value" : "This month"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This month"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8137,6 +10807,30 @@
             "value" : "This month"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This month"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This month"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This month"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This month"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8144,6 +10838,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This month"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This month"
@@ -8184,6 +10884,12 @@
             "value" : "This week"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This week"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8208,6 +10914,30 @@
             "value" : "This week"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This week"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This week"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This week"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This week"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8215,6 +10945,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This week"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This week"
@@ -8255,6 +10991,12 @@
             "value" : "This year"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This year"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8279,6 +11021,30 @@
             "value" : "This year"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This year"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This year"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This year"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This year"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8286,6 +11052,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This year"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This year"
@@ -8326,6 +11098,12 @@
             "value" : "Today"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8350,6 +11128,30 @@
             "value" : "Today"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8357,6 +11159,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Today"
@@ -8634,6 +11442,12 @@
             "value" : "Video"
           }
         },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8658,6 +11472,30 @@
             "value" : "Video"
           }
         },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
         "ru" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8665,6 +11503,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
+        "th-TH" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Video"

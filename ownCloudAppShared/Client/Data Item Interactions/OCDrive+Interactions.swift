@@ -39,3 +39,27 @@ extension OCDrive: DataItemSelectionInteraction {
 		return rootLocation.openItem(from: viewController, with: context, animated: animated, pushViewController: pushViewController, completion: completion)
 	}
 }
+
+// MARK: - Context Menu
+//extension OCDrive : DataItemContextMenuInteraction {
+//	public func composeContextMenuItems(in viewController: UIViewController?, location: OCExtensionLocationIdentifier, with context: ClientContext?) -> [UIMenuElement]? {
+//		guard let core = context?.core, let viewController else {
+//			return nil
+//		}
+//		let drive = self
+//		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: location)
+//		let actionContext = ActionContext(viewController: viewController, clientContext: context, core: core, drives: [drive], location: actionsLocation, sender: nil)
+//		let actions = Action.sortedApplicableActions(for: actionContext)
+//		var actionMenuActions : [UIAction] = []
+//
+//		for action in actions {
+//			action.progressHandler = context?.actionProgressHandlerProvider?.makeActionProgressHandler()
+//
+//			if let menuAction = action.provideUIMenuAction() {
+//				actionMenuActions.append(menuAction)
+//			}
+//		}
+//
+//		return actionMenuActions
+//	}
+//}

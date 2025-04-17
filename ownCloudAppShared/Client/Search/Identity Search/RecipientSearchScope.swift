@@ -23,7 +23,9 @@ open class RecipientSearchScope: SearchScope {
 	var recipientSearchController: OCRecipientSearchController?
 	var item: OCItem
 
-	public init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, item: OCItem, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
+	public typealias RecipientFilter = (OCIdentity) -> Bool
+
+	public init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, item: OCItem, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil, filter: RecipientFilter? = nil) {
 		if let core = context.core {
 			recipientSearchController = core.recipientSearchController(for: item)
 			recipientSearchController?.minimumSearchTermLength = core.connection.capabilities?.sharingSearchMinLength?.uintValue ?? UInt(OCCapabilities.defaultSharingSearchMinLength)
@@ -34,7 +36,23 @@ open class RecipientSearchScope: SearchScope {
 		super.init(with: context, cellStyle: cellStyle, localizedName: name, localizedPlaceholder: placeholder, icon: icon)
 
 		tokenizer = SearchTokenizer(scope: self, clientContext: clientContext)
-		results = recipientSearchController?.recipientsDataSource
+
+		if let recipientsDataSource = recipientSearchController?.recipientsDataSource {
+			if let filter {
+				let filteringDatasource = OCDataSourceComposition(sources: [])
+				filteringDatasource.addSources([recipientsDataSource])
+				filteringDatasource.setFilter({ source, itemRef in
+					if let itemRecord = try? source.record(forItemRef: itemRef),
+					   let identity = itemRecord.item as? OCIdentity {
+						return filter(identity)
+					}
+					return true
+				}, for: recipientsDataSource)
+				results = filteringDatasource
+			} else {
+				results = recipientsDataSource
+			}
+		}
 	}
 
 	open override func updateFor(_ searchElements: [SearchElement]) {

@@ -150,6 +150,20 @@ open class CustomQuerySearchScope : ItemSearchScope {
 
 // Subclasses
 open class AccountSearchScope : CustomQuerySearchScope {
+	open override class var descriptor: SearchScopeDescriptor {
+		return SearchScopeDescriptor(identifier: "account", localizedName: OCLocalizedString("Account", nil), localizedDescription: OCLocalizedString("Searches the personal folder and all spaces.", nil), icon: OCSymbol.icon(forSymbolName: "person"), searchableContent: .itemName, scopeCreator: { (clientContext, cellStyle, descriptor) in
+			if let cellStyle {
+				let pathAndRevealCellStyle = CollectionViewCellStyle(from: cellStyle, changing: { cellStyle in
+					cellStyle.showRevealButton = true
+					cellStyle.showPathDetails = true
+				})
+
+				return AccountSearchScope(with: clientContext, cellStyle: pathAndRevealCellStyle, localizedName: descriptor.localizedName, localizedPlaceholder: OCLocalizedString("Search account", nil), icon: descriptor.icon)
+			}
+			return nil
+		})
+	}
+
 	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
 		var revealCellStyle : CollectionViewCellStyle?
 
@@ -172,6 +186,19 @@ open class AccountSearchScope : CustomQuerySearchScope {
 }
 
 open class DriveSearchScope : AccountSearchScope {
+	open override class var descriptor: SearchScopeDescriptor {
+		return SearchScopeDescriptor(identifier: "drive", localizedName: OCLocalizedString("Space", nil), localizedDescription: OCLocalizedString("Searches in the current space ONLY.", nil), icon: OCSymbol.icon(forSymbolName: "square.grid.2x2"), searchableContent: .itemName, scopeCreator: { (clientContext, cellStyle, descriptor) in
+			if let cellStyle, clientContext.query?.queryLocation != nil {
+				var placeholder = OCLocalizedString("Search space", nil)
+				if let driveName = clientContext.drive?.name, driveName.count > 0 {
+					placeholder = OCLocalizedFormat("Search {{space.name}}", ["space.name" : driveName])
+				}
+				return DriveSearchScope(with: clientContext, cellStyle: cellStyle, localizedName: descriptor.localizedName, localizedPlaceholder: placeholder, icon: descriptor.icon)
+			}
+			return nil
+		})
+	}
+
 	private var driveID : String?
 
 	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
@@ -203,6 +230,19 @@ open class DriveSearchScope : AccountSearchScope {
 }
 
 open class ContainerSearchScope: AccountSearchScope {
+	open override class var descriptor: SearchScopeDescriptor {
+		return SearchScopeDescriptor(identifier: "tree", localizedName: OCLocalizedString("Tree", nil), localizedDescription: OCLocalizedString("Searches the current folder and its subfolders.", nil), icon: OCSymbol.icon(forSymbolName: "square.stack.3d.up"), searchableContent: .itemName, scopeCreator: { (clientContext, cellStyle, descriptor) in
+			if let cellStyle, clientContext.query?.queryLocation != nil {
+				var placeholder = OCLocalizedString("Search tree", nil)
+				if let path = clientContext.query?.queryLocation?.lastPathComponent, path.count > 0 {
+					placeholder = OCLocalizedFormat("Search from {{folder.name}}", ["folder.name" : path])
+				}
+				return ContainerSearchScope(with: clientContext, cellStyle: cellStyle, localizedName: descriptor.localizedName, localizedPlaceholder: placeholder, icon: descriptor.icon)
+			}
+			return nil
+		})
+	}
+
 	private var location : OCLocation?
 
 	public override init(with context: ClientContext, cellStyle: CollectionViewCellStyle?, localizedName name: String, localizedPlaceholder placeholder: String? = nil, icon: UIImage? = nil) {
@@ -245,4 +285,10 @@ open class ContainerSearchScope: AccountSearchScope {
 		return nil
 	}
 
+}
+
+public extension SearchScopeDescriptor {
+	static var tree = ContainerSearchScope.descriptor
+	static var drive = DriveSearchScope.descriptor
+	static var account = AccountSearchScope.descriptor
 }
