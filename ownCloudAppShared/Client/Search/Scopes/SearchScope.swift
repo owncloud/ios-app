@@ -92,7 +92,7 @@ open class SearchScope: NSObject, SearchElementUpdating {
 
 // MARK: - Convenience methods
 extension SearchScope {
-	static public func recipientSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, item: OCItem, localizedName: String) -> SearchScope {
-		return RecipientSearchScope(with: context, cellStyle: cellStyle, item: item, localizedName: localizedName, localizedPlaceholder: OCLocalizedString("Search for users or groups", nil), icon: OCSymbol.icon(forSymbolName: "person.circle"))
+	static public func recipientSearch(with context: ClientContext, cellStyle: CollectionViewCellStyle, item: OCItem, localizedName: String, filter: RecipientSearchScope.RecipientFilter? = nil) -> SearchScope {
+		return RecipientSearchScope(with: context, cellStyle: cellStyle, item: item, localizedName: localizedName, localizedPlaceholder: OCLocalizedString("Search for users or groups", nil), icon: OCSymbol.icon(forSymbolName: "person.circle"), filter: filter)
 	}
 }
