@@ -1,0 +1,6 @@
+Bugfix: Missing Framework
+
+There was an issue with PocketSVG 2.8.0 that causes all ownBrander builds / clean Xcode builds to fail due to a missing PocketSVG framework, resulting in a crash on startup.
+
+https://github.com/owncloud/ios-app/issues/1448
+
