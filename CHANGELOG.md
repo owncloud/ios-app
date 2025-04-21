@@ -1,5 +1,6 @@
 # Table of Contents
 
+* [Changelog for 12.4.1](#changelog-for-owncloud-ios-client-1241-2025-03-06)
 * [Changelog for 12.4.0](#changelog-for-owncloud-ios-client-1240-2025-02-03)
 * [Changelog for 12.3.0](#changelog-for-owncloud-ios-client-1230-2024-09-23)
 * [Changelog for 12.2.1](#changelog-for-owncloud-ios-client-1221-2024-04-30)
@@ -26,6 +27,37 @@
 * [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
 * [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
 * [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
+# Changelog for ownCloud iOS Client [12.4.1] (2025-03-06)
+The following sections list the changes in ownCloud iOS Client 12.4.1 relevant to
+ownCloud admins and users.
+
+[12.4.1]: https://github.com/owncloud/ios-app/compare/milestone/12.4.0...milestone/12.4.1
+
+## Summary
+
+* Bugfix - Missing Framework: [#1448](https://github.com/owncloud/ios-app/issues/1448)
+* Enhancement - Content Protection: [#1446](https://github.com/owncloud/ios-app/pull/1446)
+
+## Details
+
+* Bugfix - Missing Framework: [#1448](https://github.com/owncloud/ios-app/issues/1448)
+
+   There was an issue with PocketSVG 2.8.0 that causes all ownBrander builds /
+   clean Xcode builds to fail due to a missing PocketSVG framework, resulting in a
+   crash on startup.
+
+   https://github.com/owncloud/ios-app/issues/1448
+
+* Enhancement - Content Protection: [#1446](https://github.com/owncloud/ios-app/pull/1446)
+
+   Watermarking: New MDM Parameters for Customizing Watermark Behavior
+   confidential.text-color, confidential.text-opacity,
+   confidential.text-line-spacing, confidential.visible-redacted-characters,
+   confidential.text-show-user-email, confidential.text-show-user-id,
+   confidential.text-show-timestamp, confidential.text-custom-text
+
+   https://github.com/owncloud/ios-app/pull/1446
+
 # Changelog for ownCloud iOS Client [12.4.0] (2025-02-03)
 The following sections list the changes in ownCloud iOS Client 12.4.0 relevant to
 ownCloud admins and users.
