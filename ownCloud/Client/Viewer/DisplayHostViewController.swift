@@ -30,7 +30,7 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	// MARK: - Constants
-	let mediaFilterRegexp: String = "\\A(((image|audio|video)/*))" // Filters all the mime types that are images (incluiding gif and svg)
+	let mediaFilterRegexp: String = "\\A(((image|audio|video)/*))" // Filters all the mime types that are images (including gif and svg)
 
 	// MARK: - Instance Variables
 	public var clientContext : ClientContext?
@@ -367,9 +367,19 @@ class DisplayHostViewController: UIPageViewController {
 	}
 
 	// MARK: - Filters
+	private func filtersMatch(item: OCItem?) -> Bool {
+		if let mimeType = item?.mimeType,
+		   !mimeType.hasPrefix("image/svg"),
+		   mimeType.matches(regExp: mediaFilterRegexp) {
+			return true
+		}
+
+		return false
+	}
+
 	private func applyMediaFilesFilter(items: [OCItem]) -> [OCItem] {
-		if initialItem.mimeType?.matches(regExp: mediaFilterRegexp) ?? false {
-			let filteredItems = items.filter({$0.type != .collection && $0.mimeType?.matches(regExp: self.mediaFilterRegexp) ?? false})
+		if filtersMatch(item: initialItem) {
+			let filteredItems = items.filter({$0.type != .collection && filtersMatch(item: $0)})
 			return filteredItems
 		} else {
 			let filteredItems = items.filter({$0.type != .collection && $0.fileID == self.initialItem.fileID})
