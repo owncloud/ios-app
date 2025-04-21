@@ -84,10 +84,10 @@ extension String {
 	/// Redacts the string with a specified character.
 	/// - Parameter replacement: The character to use for redaction (default is `•`).
 	/// - Returns: A new string where each character is replaced with the redaction character.
-	public func redacted(after visibleCount: Int = 3, with replacement: Character = "•") -> String {
+	public func redacted(after visibleCount: Int = ConfidentialManager.shared.visibleRedactedCharacters, with replacement: Character = "•") -> String {
 		guard ConfidentialManager.shared.markConfidentialViews else { return self }
 		
-		guard self.count > visibleCount else { return self }
+		guard visibleCount >= 0, self.count > visibleCount else { return self }
 		let visiblePart = self.prefix(visibleCount) // First `visibleCount` characters
 		let redactedPart = String(repeating: replacement, count: self.count - visibleCount)
 		return visiblePart + redactedPart

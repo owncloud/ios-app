@@ -1,0 +1,7 @@
+Enhancement: Content Protection
+
+Watermarking: New MDM Parameters for Customizing Watermark Behavior
+confidential.text-color, confidential.text-opacity, confidential.text-line-spacing, confidential.visible-redacted-characters, confidential.text-show-user-email, confidential.text-show-user-id, confidential.text-show-timestamp, confidential.text-custom-text
+
+https://github.com/owncloud/ios-app/pull/1446
+
