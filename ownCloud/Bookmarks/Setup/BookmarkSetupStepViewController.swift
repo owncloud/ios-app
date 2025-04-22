@@ -112,6 +112,7 @@ class BookmarkSetupStepViewController: UIViewController, UITextFieldDelegate {
 		var views: [UIView] = topViews ?? []
 
 		let contentView = UIView()
+		contentView.translatesAutoresizingMaskIntoConstraints = false
 		contentView.cssSelectors = [.step, step.cssSelector]
 
 		// Title & message
@@ -181,8 +182,21 @@ class BookmarkSetupStepViewController: UIViewController, UITextFieldDelegate {
 		self.backgroundView.layer.masksToBounds = true
 		contentView.embed(toFillWith: backgroundView)
 
-		// Layout views vertically in background view
-		contentView.embedVertically(views: views, insets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20), spacingProvider: { leadingView, trailingView in
+		// Create scrollview
+		let scrollView = UIScrollView(frame: .zero)
+		scrollView.translatesAutoresizingMaskIntoConstraints = false
+		scrollView.setContentHuggingPriority(.required, for: .horizontal)
+		scrollView.setContentHuggingPriority(.required, for: .vertical)
+		contentView.embed(toFillWith: scrollView)
+
+		// Layout views vertically on top of background view
+		let scrollContainerView = UIView()
+		scrollContainerView.translatesAutoresizingMaskIntoConstraints = false
+		scrollContainerView.setContentCompressionResistancePriority(.required, for: .horizontal)
+		scrollContainerView.setContentCompressionResistancePriority(.required, for: .vertical)
+		scrollContainerView.setContentHuggingPriority(.required, for: .vertical)
+
+		scrollContainerView.embedVertically(views: views, insets: NSDirectionalEdgeInsets(top: 20, leading: 20, bottom: 20, trailing: 20), spacingProvider: { leadingView, trailingView in
 			if leadingView == self.topViews?.last {
 				return self.topViewsSpacing
 			}
@@ -197,6 +211,14 @@ class BookmarkSetupStepViewController: UIViewController, UITextFieldDelegate {
 			}
 			return 5
 		}, centered: false)
+
+		let guide = scrollView.contentLayoutGuide
+
+		scrollView.embed(toFillWith: scrollContainerView, enclosingAnchors: UIView.AnchorSet(leadingAnchor: contentView.leadingAnchor, trailingAnchor: contentView.trailingAnchor, topAnchor: guide.topAnchor, bottomAnchor: guide.bottomAnchor, centerXAnchor: contentView.centerXAnchor, centerYAnchor: guide.centerYAnchor))
+
+		NSLayoutConstraint.activate([
+			scrollView.heightAnchor.constraint(equalTo: scrollContainerView.heightAnchor).with(priority: UILayoutPriority(rawValue: 700))
+		])
 
 		// Set view controller's view
 		self.view = contentView
