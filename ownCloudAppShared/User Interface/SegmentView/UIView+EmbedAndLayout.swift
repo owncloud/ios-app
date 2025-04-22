@@ -36,6 +36,15 @@ public extension UIView {
 
 		public var centerXAnchor: NSLayoutXAxisAnchor
 		public var centerYAnchor: NSLayoutYAxisAnchor
+
+		public init(leadingAnchor: NSLayoutXAxisAnchor, trailingAnchor: NSLayoutXAxisAnchor, topAnchor: NSLayoutYAxisAnchor, bottomAnchor: NSLayoutYAxisAnchor, centerXAnchor: NSLayoutXAxisAnchor, centerYAnchor: NSLayoutYAxisAnchor) {
+			self.leadingAnchor = leadingAnchor
+			self.trailingAnchor = trailingAnchor
+			self.topAnchor = topAnchor
+			self.bottomAnchor = bottomAnchor
+			self.centerXAnchor = centerXAnchor
+			self.centerYAnchor = centerYAnchor
+		}
 	}
 
 	var defaultAnchorSet : AnchorSet {
