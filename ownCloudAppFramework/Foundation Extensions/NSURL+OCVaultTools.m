@@ -31,6 +31,11 @@
 	NSString *vaultRootPath = OCVault.storageRootURL.path;
 	NSString *path = self.path;
 
+	if (vaultRootPath == nil)
+	{
+		return (NO);
+	}
+
 	if (![vaultRootPath hasSuffix:@"/"])
 	{
 		vaultRootPath = [vaultRootPath stringByAppendingString:@"/"];
