@@ -144,6 +144,16 @@ extension OCItem {
 		return OCItem.byteCounterFormatter.string(fromByteCount: Int64(self.size))
 	}
 
+	public func driveQuotaLocalized(core: OCCore?) -> String {
+		if let driveID, let drive = core?.drive(withIdentifier: driveID, attachedOnly: true), let quota = drive.quota, let quotaBytesRemaining = quota.remaining, let quotaBytesTotal = quota.total {
+			return OCLocalizedFormat("{{freeSpace}} of {{totalSpace}} available", [
+				"freeSpace" : OCItem.byteCounterFormatter.string(fromByteCount: quotaBytesRemaining.int64Value),
+				"totalSpace" : OCItem.byteCounterFormatter.string(fromByteCount: quotaBytesTotal.int64Value)
+			])
+		}
+		return sizeLocalized
+	}
+
 	public var lastModifiedLocalized: String {
 		guard let lastModified = self.lastModified else { return "" }
 

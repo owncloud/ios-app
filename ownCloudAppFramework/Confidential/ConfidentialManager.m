@@ -51,13 +51,57 @@
 }
 
 - (BOOL)markConfidentialViews {
-	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyMarkConfidentialViews];
-	return (value != nil) ? value.boolValue : YES;
+	return ([self showUserEmail] || [self showUserID] || [self showTimestamp] || ([[self customText] length] > 0));
 }
 
 - (BOOL)allowOverwriteConfidentialMDMSettings {
 	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings];
-	return self.confidentialSettingsEnabled && ((value != nil) ? value.boolValue : YES);
+	return self.confidentialSettingsEnabled && ((value != nil) ? value.boolValue : NO);
+}
+
+- (CGFloat)textOpacity {
+	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextOpacity];
+	return (value != nil) ? (value.intValue / 100.0) : 0.6;
+}
+
+- (NSString *)textColor {
+	NSString *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextColor];
+	return value;
+}
+
+- (CGFloat)columnSpacing {
+	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextColumnSpacing];
+	return (value != nil) ? value.floatValue : 40.0;
+}
+
+- (CGFloat)lineSpacing {
+	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextLineSpacing];
+	return (value != nil) ? value.floatValue : 40.0;
+}
+
+- (BOOL)showUserEmail {
+	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextShowUserEmail];
+	return (value != nil) ? value.boolValue : NO;
+}
+
+- (BOOL)showUserID {
+	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextShowUserID];
+	return (value != nil) ? value.boolValue : NO;
+}
+
+- (BOOL)showTimestamp {
+	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextShowTimestamp];
+	return (value != nil) ? value.boolValue : NO;
+}
+
+- (NSString *)customText {
+	NSString *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialTextCustomText];
+	return value;
+}
+
+- (NSInteger)visibleRedactedCharacters {
+	NSNumber *value = [ConfidentialManager classSettingForOCClassSettingsKey:OCClassSettingsKeyConfidentialVisibleRedactedCharacters];
+	return (value != nil) ? value.integerValue : -1;
 }
 
 - (BOOL)confidentialSettingsEnabled {
@@ -86,13 +130,6 @@
 
 + (NSDictionary<OCClassSettingsKey,id> *)defaultSettingsForIdentifier:(OCClassSettingsIdentifier)identifier
 {
-	if ([identifier isEqual:OCClassSettingsIdentifierConfidential]) {
-		return @{
-			OCClassSettingsKeyAllowScreenshots : @YES,
-			OCClassSettingsKeyMarkConfidentialViews : @NO,
-			OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings : @NO
-		};
-	}
 	return nil;
 }
 
@@ -105,15 +142,63 @@
 			@"status" : OCClassSettingsKeyStatusAdvanced,
 			@"category" : @"Confidential"
 		},
-		OCClassSettingsKeyMarkConfidentialViews : @{
-			@"type" : OCClassSettingsMetadataTypeBoolean,
-			@"description" : @"Controls if views which contains sensitive content contains a watermark or not.",
-			@"status" : OCClassSettingsKeyStatusAdvanced,
-			@"category" : @"Confidential"
-		},
 		OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings : @{
 			@"type" : OCClassSettingsMetadataTypeBoolean,
 			@"description" : @"Controls if confidential related MDM settings can be overwritten.",
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
+		},
+		OCClassSettingsKeyConfidentialTextOpacity : @{
+			@"type" : OCClassSettingsMetadataTypeInteger,
+			@"description" : @"Controls the opacity of the watermark text. Possible values: 0 - 100",
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
+		},
+		OCClassSettingsKeyConfidentialTextColumnSpacing : @{
+			@"type" : OCClassSettingsMetadataTypeInteger,
+			@"description" : @"Controls the column spacing of the watermark text in pixel.",
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
+		},
+		OCClassSettingsKeyConfidentialTextLineSpacing : @{
+			@"type" : OCClassSettingsMetadataTypeInteger,
+			@"description" : @"Controls the line spacing of the watermark text in pixel.",
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
+		},
+		OCClassSettingsKeyConfidentialTextColor : @{
+			@"type" : OCClassSettingsMetadataTypeString,
+			@"description" : @"Controls the color as hex value of the watermark text.",
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
+		},
+		OCClassSettingsKeyConfidentialVisibleRedactedCharacters : @{
+			@"type" : OCClassSettingsMetadataTypeInteger,
+			@"description" : @"Controls the number or visible characters in redacted text. Choose value -1 to do not redact text.",
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
+		},
+		OCClassSettingsKeyConfidentialTextShowUserEmail : @{
+			@"type" : OCClassSettingsMetadataTypeBoolean,
+			@"description" : @"Controls if the user email should be shown as watermark text.",
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
+		},
+		OCClassSettingsKeyConfidentialTextShowUserID : @{
+			@"type" : OCClassSettingsMetadataTypeBoolean,
+			@"description" : @"Controls if the user ID should be shown as watermark text.",
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
+		},
+		OCClassSettingsKeyConfidentialTextShowTimestamp : @{
+			@"type" : OCClassSettingsMetadataTypeBoolean,
+			@"description" : @"Controls if the current timestamp should be shown as watermark text.",
+			@"status" : OCClassSettingsKeyStatusAdvanced,
+			@"category" : @"Confidential"
+		},
+		OCClassSettingsKeyConfidentialTextCustomText : @{
+			@"type" : OCClassSettingsMetadataTypeString,
+			@"description" : @"Controls if the given custom text should be shown as watermark text.",
 			@"status" : OCClassSettingsKeyStatusAdvanced,
 			@"category" : @"Confidential"
 		}
@@ -164,5 +249,13 @@ OCClassSettingsSourceIdentifier OCClassSettingsSourceIdentifierConfidentialManag
 OCClassSettingsIdentifier OCClassSettingsIdentifierConfidential = @"confidential";
 
 OCClassSettingsKey OCClassSettingsKeyAllowScreenshots = @"allow-screenshots";
-OCClassSettingsKey OCClassSettingsKeyMarkConfidentialViews = @"mark-confidential-views";
 OCClassSettingsKey OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings = @"allow-overwrite-confidential-mdm-settings";
+OCClassSettingsKey OCClassSettingsKeyConfidentialTextOpacity = @"text-opacity";
+OCClassSettingsKey OCClassSettingsKeyConfidentialTextColor = @"text-color";
+OCClassSettingsKey OCClassSettingsKeyConfidentialTextColumnSpacing = @"text-column-spacing";
+OCClassSettingsKey OCClassSettingsKeyConfidentialTextLineSpacing = @"text-line-spacing";
+OCClassSettingsKey OCClassSettingsKeyConfidentialVisibleRedactedCharacters = @"visible-redacted-characters";
+OCClassSettingsKey OCClassSettingsKeyConfidentialTextShowUserEmail = @"text-show-user-email";
+OCClassSettingsKey OCClassSettingsKeyConfidentialTextShowUserID = @"text-show-user-id";
+OCClassSettingsKey OCClassSettingsKeyConfidentialTextShowTimestamp = @"text-show-timestamp";
+OCClassSettingsKey OCClassSettingsKeyConfidentialTextCustomText = @"text-custom-text";
