@@ -1024,10 +1024,11 @@ public extension UICellAccessory {
 public extension CollectionViewCellStyle.StyleOptionKey {
 	static let showRevealButton = CollectionViewCellStyle.StyleOptionKey(rawValue: "showRevealButton")
 	static let showMoreButton = CollectionViewCellStyle.StyleOptionKey(rawValue: "showMoreButton")
+	static let showPathDetails = CollectionViewCellStyle.StyleOptionKey(rawValue: "showPathDetails")
 }
 
 public extension CollectionViewCellStyle {
-	var showRevealButton : Bool {
+	var showRevealButton: Bool {
 		get {
 			return options[.showRevealButton] as? Bool ?? false
 		}
@@ -1037,7 +1038,7 @@ public extension CollectionViewCellStyle {
 		}
 	}
 
-	var showMoreButton : Bool {
+	var showMoreButton: Bool {
 		get {
 			return options[.showMoreButton] as? Bool ?? true
 		}
@@ -1046,12 +1047,28 @@ public extension CollectionViewCellStyle {
 			options[.showMoreButton] = newValue
 		}
 	}
+
+	var showPathDetails: Bool {
+		get {
+			return options[.showPathDetails] as? Bool ?? false
+		}
+
+		set {
+			options[.showPathDetails] = newValue
+		}
+	}
 }
 
 extension SegmentViewItem {
 	static public func detailText(_ detailText: String, linebreakMode: NSLineBreakMode? = nil) -> SegmentViewItem {
 		let item = SegmentViewItem(with: nil, title: detailText, style: .plain, titleTextStyle: .footnote, linebreakMode: linebreakMode)
 		item.insets = .zero
+		return item
+	}
+
+	static public func token(_ tokenText: String, linebreakMode: NSLineBreakMode? = nil) -> SegmentViewItem {
+		let item = SegmentViewItem(with: nil, title: tokenText, style: .token, titleTextStyle: .footnote, linebreakMode: linebreakMode)
+		item.insets = NSDirectionalEdgeInsets(top: 0, leading: 3, bottom: 0, trailing: 3)
 		return item
 	}
 }

@@ -23,6 +23,7 @@ import ownCloudAppShared
 
 class UserInterfaceSettingsSection: SettingsSection {
 	var themeRow : StaticTableViewRow?
+	var searchSettingsRow : StaticTableViewRow?
 	var loggingRow : StaticTableViewRow?
 	var loggingNotificationObserverToken : Any?
 
@@ -39,6 +40,12 @@ class UserInterfaceSettingsSection: SettingsSection {
 		if Branding.shared.allowThemeSelection {
 			self.add(row: themeRow!)
 		}
+
+		searchSettingsRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
+			self?.pushSearchSettings()
+		}, title: OCLocalizedString("Search Settings", nil), value: "", accessoryType: .disclosureIndicator, identifier: "search")
+
+		self.add(row: searchSettingsRow!)
 
 		loggingRow = StaticTableViewRow(valueRowWithAction: { [weak self] (_, _) in
 			self?.pushLogSettings()
@@ -99,5 +106,9 @@ class UserInterfaceSettingsSection: SettingsSection {
 
 	func pushLogSettings() {
 		self.viewController?.navigationController?.pushViewController(LogSettingsViewController(style: .insetGrouped), animated: true)
+	}
+
+	func pushSearchSettings() {
+		self.viewController?.navigationController?.pushViewController(SearchSettingsViewController(style: .insetGrouped), animated: true)
 	}
 }
