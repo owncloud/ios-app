@@ -2040,13 +2040,13 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 			<array>
 				<dict>
 					<key>Title</key>
-					<string>Confidential Protection</string>
+					<string>Startup Crash</string>
 					<key>Subtitle</key>
-					<string>Watermarking: New MDM Parameters for Customizing Watermark Behavior</string>
+					<string>Resolved a rare crash issue</string>
 					<key>Type</key>
-					<string>New</string>
+					<string>Fix</string>
 					<key>ImageName</key>
-					<string>slider.horizontal.3</string>
+					<string>ladybug</string>
 				</dict>
 			</array>
 		</dict>
