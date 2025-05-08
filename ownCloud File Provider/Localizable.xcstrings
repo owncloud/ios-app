@@ -4,6 +4,12 @@
     "Authorization failed" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Authorization failed"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -74,6 +80,12 @@
     },
     "File Provider access has been disabled by the administrator. Please use the app to create new folders." : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File Provider access has been disabled by the administrator. Please use the app to create new folders."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -144,6 +156,12 @@
     },
     "File Provider access has been disabled by the administrator. Please use the share extension to import files." : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File Provider access has been disabled by the administrator. Please use the share extension to import files."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -214,6 +232,12 @@
     },
     "Importing files through the File Provider is not allowed on this device." : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importing files through the File Provider is not allowed on this device."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -285,6 +309,12 @@
     "Log into your account %@ in the app for more details." : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log into your account %@ in the app for more details."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -355,6 +385,12 @@
     },
     "Log into your account in the app for more details." : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Log into your account in the app for more details."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -426,6 +462,12 @@
     "The destination folder couldn't be found on this server. Moving items across servers is currently not supported." : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",

@@ -9,6 +9,12 @@
             "value" : "%@ already unlocked for %@."
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ already unlocked for %@."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -121,6 +127,12 @@
     },
     "%@ unlocked for QA." : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ unlocked for QA."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -228,6 +240,12 @@
     "%lu day" : {
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu day"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu day"
@@ -351,6 +369,12 @@
             "value" : "%lu days"
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu days"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -464,6 +488,12 @@
     "%lu month" : {
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu month"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu month"
@@ -587,6 +617,12 @@
             "value" : "%lu months"
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu months"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -700,6 +736,12 @@
     "%lu week" : {
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu week"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu week"
@@ -823,6 +865,12 @@
             "value" : "%lu weeks"
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu weeks"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -936,6 +984,12 @@
     "%lu year" : {
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu year"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu year"
@@ -1059,6 +1113,12 @@
             "value" : "%lu years"
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu years"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1172,6 +1232,12 @@
     "> %d months ago" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d months ago"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1279,6 +1345,12 @@
     "> %d years ago" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d years ago"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1386,6 +1458,12 @@
     ">%d days ago" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d days ago"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1493,6 +1571,12 @@
     ">%d weeks ago" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d weeks ago"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1600,6 +1684,12 @@
     "After" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1708,6 +1798,12 @@
       "comment" : "Localizable.strings\n  ownCloud\n\n  Created by Felix Schwarz on 31.01.20.\n  Copyright © 2020 ownCloud GmbH. All rights reserved.",
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "App Store"
@@ -1826,6 +1922,12 @@
     "Audio" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1933,6 +2035,12 @@
     "Before" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2040,6 +2148,12 @@
     "Before last month" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last month"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2147,6 +2261,12 @@
     "Before last week" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last week"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2254,6 +2374,12 @@
     "Before last year" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last year"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2361,6 +2487,12 @@
     "Before this month" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this month"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2468,6 +2600,12 @@
     "Before this week" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this week"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2575,6 +2713,12 @@
     "Before this year" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this year"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2682,6 +2826,12 @@
     "Before today" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before today"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2789,6 +2939,12 @@
     "Before yesterday" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before yesterday"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2896,6 +3052,12 @@
     "Cancelled" : {
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelled"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancelled"
@@ -3019,6 +3181,12 @@
             "value" : "Date"
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3137,6 +3305,12 @@
             "value" : "day"
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "day"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3250,6 +3424,12 @@
     "Document" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3356,6 +3536,12 @@
     },
     "EMM" : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EMM"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3463,6 +3649,12 @@
     "Ends" : {
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ends"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ends"
@@ -3580,6 +3772,12 @@
     },
     "Enterprise" : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enterprise"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3687,6 +3885,12 @@
     "File" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3794,6 +3998,12 @@
     "Folder" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3900,6 +4110,12 @@
     },
     "Free" : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4007,6 +4223,12 @@
     "Image" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4113,6 +4335,12 @@
     },
     "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version." : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4220,6 +4448,12 @@
     "keyword_after" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "after"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4327,6 +4561,12 @@
     "keyword_audio" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "audio"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4434,6 +4674,12 @@
     "keyword_before" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "before"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4542,6 +4788,12 @@
       "comment" : "short-form for \"day\"",
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "d"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4649,6 +4901,12 @@
     "keyword_document" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "document"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4756,6 +5014,12 @@
     "keyword_file" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "file"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4863,6 +5127,12 @@
     "keyword_folder" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4970,6 +5240,12 @@
     "keyword_greater" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "greater"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5077,6 +5353,12 @@
     "keyword_image" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5185,6 +5467,12 @@
       "comment" : "short-form for \"month\"",
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5292,6 +5580,12 @@
     "keyword_month" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5399,6 +5693,12 @@
     "keyword_on" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "on"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5506,6 +5806,12 @@
     "keyword_owner" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "owner"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5613,6 +5919,12 @@
     "keyword_pdf" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pdf"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5720,6 +6032,12 @@
     "keyword_presentation" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "presentation"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5827,6 +6145,12 @@
     "keyword_recent" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "recent"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5934,6 +6258,12 @@
     "keyword_smaller" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smaller"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6041,6 +6371,12 @@
     "keyword_spreadsheet" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "spreadsheet"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6148,6 +6484,12 @@
     "keyword_today" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "today"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6256,6 +6598,12 @@
       "comment" : "Search keywords",
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "type"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6363,6 +6711,12 @@
     "keyword_video" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "video"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6471,6 +6825,12 @@
       "comment" : "short-form for \"week\"",
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "w"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6578,6 +6938,12 @@
     "keyword_week" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6686,6 +7052,12 @@
       "comment" : "short-form for \"year\"",
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "y"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6793,6 +7165,12 @@
     "keyword_year" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6900,6 +7278,12 @@
     "Last %d days" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d days"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7007,6 +7391,12 @@
     "Last %d months" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d months"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7114,6 +7504,12 @@
     "Last %d weeks" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d weeks"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7221,6 +7617,12 @@
     "Last %d years" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d years"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7328,6 +7730,12 @@
     "Manage subscription" : {
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage subscription"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Manage subscription"
@@ -7451,6 +7859,12 @@
             "value" : "month"
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7564,6 +7978,12 @@
     "No audio" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No audio"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7671,6 +8091,12 @@
     "No Document" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Document"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7778,6 +8204,12 @@
     "No file" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No file"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7886,6 +8318,12 @@
       "comment" : "Search token labels",
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No folder"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7993,6 +8431,12 @@
     "No image" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No image"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8100,6 +8544,12 @@
     "No PDF" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No PDF"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8207,6 +8657,12 @@
     "No presentation" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No presentation"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8314,6 +8770,12 @@
     "No spreadsheet" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No spreadsheet"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8421,6 +8883,12 @@
     "No video" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8529,6 +8997,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "none"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "none"
@@ -8647,6 +9121,12 @@
     "Not" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8754,6 +9234,12 @@
     "Not on" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not on"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8861,6 +9347,12 @@
     "Not recently used" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recently used"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -8968,6 +9460,12 @@
     "On" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9075,6 +9573,12 @@
     "PDF" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9182,6 +9686,12 @@
     "Presentation" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9289,6 +9799,12 @@
     "Product" : {
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Product"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Product"
@@ -9413,6 +9929,12 @@
             "value" : "purchase"
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "purchase"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9526,6 +10048,12 @@
     "Purchased App Version" : {
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Purchased App Version"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Purchased App Version"
@@ -9649,6 +10177,12 @@
             "value" : "Purchases are not allowed on this device."
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Purchases are not allowed on this device."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9762,6 +10296,12 @@
     "Quantity" : {
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quantity"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quantity"
@@ -9885,6 +10425,12 @@
             "value" : "Receipt Date"
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receipt Date"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -9998,6 +10544,12 @@
     "Recently used" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently used"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10105,6 +10657,12 @@
     "Since last month" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last month"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10212,6 +10770,12 @@
     "Since last week" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last week"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10319,6 +10883,12 @@
     "Since last year" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last year"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10426,6 +10996,12 @@
     "Since yesterday" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since yesterday"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10533,6 +11109,12 @@
     "Spreadsheet" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spreadsheet"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10641,6 +11223,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "subscription"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "subscription"
@@ -10759,6 +11347,12 @@
     "This month" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This month"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10866,6 +11460,12 @@
     "This week" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This week"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -10973,6 +11573,12 @@
     "This year" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This year"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11080,6 +11686,12 @@
     "Today" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11188,6 +11800,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "trial"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "trial"
@@ -11311,6 +11929,12 @@
             "value" : "Type"
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11424,6 +12048,12 @@
     "Video" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -11531,6 +12161,12 @@
     "week" : {
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "week"
@@ -11649,6 +12285,12 @@
     "year" : {
       "localizations" : {
         "ar" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
+        "ca" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "year"

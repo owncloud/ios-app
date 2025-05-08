@@ -4,6 +4,12 @@
     "CFBundleDisplayName" : {
       "comment" : "Bundle display name",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desa a ownCloud"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -75,6 +81,12 @@
     "CFBundleName" : {
       "comment" : "Bundle name",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Extensió Acció ownCloud"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -146,6 +158,12 @@
     "NSHumanReadableCopyright" : {
       "comment" : "Copyright (human-readable)",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Copyright © 2023 ownCloud GmbH. Tots els drets reservats."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -217,6 +235,12 @@
     "Share Extension unavailable" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'extensió Compartir no disponible"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -288,6 +312,12 @@
     "The Share Extension is not available on this system." : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'extensió Compartir no està disponible en aquest sistema."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
