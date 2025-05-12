@@ -2059,7 +2059,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Spaces and Sharing</string>
 					<key>Subtitle</key>
-					<string>Support for new ocis spaces and sharing capabilities.</string>
+					<string>Support for new spaces and sharing capabilities.</string>
 					<key>Type</key>
 					<string>New</string>
 					<key>ImageName</key>
@@ -2079,7 +2079,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 					<key>Title</key>
 					<string>Markup Mode</string>
 					<key>Subtitle</key>
-					<string>Markup mode was not enabled automatically on iOS 19.</string>
+					<string>Markup mode was not enabled automatically on iOS 18.</string>
 					<key>Type</key>
 					<string>Fix</string>
 					<key>ImageName</key>
