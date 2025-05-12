@@ -1,0 +1,5 @@
+Bugfix: [a11y] Screen Reader
+
+If multiple selection has been activated, it was not possible with the screen reader to focus on the checkboxes themselves.
+
+https://github.com/owncloud/ios-app/issues/1332
