@@ -10,6 +10,12 @@
             "value" : "Share to ownCloud"
           }
         },
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share to ownCloud"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -123,6 +129,12 @@
     "CFBundleName" : {
       "comment" : "Bundle name",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ownCloud Share Extension"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -230,6 +242,12 @@
     "Share Extension unavailable" : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Share Extension unavailable"
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
@@ -337,6 +355,12 @@
     "The Share Extension is not available on this system." : {
       "extractionState" : "manual",
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The Share Extension is not available on this system."
+          }
+        },
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
