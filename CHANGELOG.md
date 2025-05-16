@@ -1,5 +1,6 @@
 # Table of Contents
 
+* [Changelog for 12.5.0](#changelog-for-owncloud-ios-client-1250-2025-05-12)
 * [Changelog for 12.4.1](#changelog-for-owncloud-ios-client-1241-2025-03-06)
 * [Changelog for 12.4.0](#changelog-for-owncloud-ios-client-1240-2025-02-03)
 * [Changelog for 12.3.0](#changelog-for-owncloud-ios-client-1230-2024-09-23)
@@ -27,6 +28,94 @@
 * [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
 * [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
 * [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
+# Changelog for ownCloud iOS Client [12.5.0] (2025-05-12)
+The following sections list the changes in ownCloud iOS Client 12.5.0 relevant to
+ownCloud admins and users.
+
+[12.5.0]: https://github.com/owncloud/ios-app/compare/milestone/12.4.1...milestone/12.5.0
+
+## Summary
+
+* Bugfix - [a11y] Collection View Header: [#1331](https://github.com/owncloud/ios-app/issues/1331)
+* Bugfix - [a11y] Screen Reader: [#1332](https://github.com/owncloud/ios-app/issues/1332)
+* Bugfix - [a11y] Contrast: [#1334](https://github.com/owncloud/ios-app/issues/1334)
+* Bugfix - [a11y] Add previous/next buttons to image viewer carousel: [#1339](https://github.com/owncloud/ios-app/issues/1339)
+* Bugfix - [a11y] Fix Setup Wizard issue with largest Dynamic Type setting: [#1364](https://github.com/owncloud/ios-app/issues/1364)
+* Bugfix - KQL syntax: [#1452](https://github.com/owncloud/ios-app/pull/1452)
+* Bugfix - Enabling Markup Mode on iOS 18.x: [#1455](https://github.com/owncloud/ios-app/issues/1455)
+* Bugfix - File drop crash on macOS: [#1461](https://github.com/owncloud/ios-app/pull/1461)
+* Enhancement - Server-side search support: [#1419](https://github.com/owncloud/ios-app/pull/1419)
+* Enhancement - Support for new ocis spaces/sharing capabilities: [#1421](https://github.com/owncloud/ios-app/issues/1421)
+
+## Details
+
+* Bugfix - [a11y] Collection View Header: [#1331](https://github.com/owncloud/ios-app/issues/1331)
+
+   Added header trait to collection view section header
+
+   https://github.com/owncloud/ios-app/issues/1331
+
+* Bugfix - [a11y] Screen Reader: [#1332](https://github.com/owncloud/ios-app/issues/1332)
+
+   If multiple selection has been activated, it was not possible with the screen
+   reader to focus on the checkboxes themselves.
+
+   https://github.com/owncloud/ios-app/issues/1332
+
+* Bugfix - [a11y] Contrast: [#1334](https://github.com/owncloud/ios-app/issues/1334)
+
+   Add Spaces text background color if Increase Contrast is on #1451
+
+   https://github.com/owncloud/ios-app/issues/1334
+
+* Bugfix - [a11y] Add previous/next buttons to image viewer carousel: [#1339](https://github.com/owncloud/ios-app/issues/1339)
+
+   Adds previous/next buttons to the image viewer / carousel to provide an simpler
+   pointer alternative to swipe gestures (both with a finger on the display - or
+   two fingers on the trackpad).
+
+   https://github.com/owncloud/ios-app/issues/1339
+
+* Bugfix - [a11y] Fix Setup Wizard issue with largest Dynamic Type setting: [#1364](https://github.com/owncloud/ios-app/issues/1364)
+
+   Make layout of setup wizard also usable when using the largest Dynamic Type text
+   size by moving the content into a scrollview that comes into effect if the
+   content of a step doesn't fit in the available vertical space.
+
+   https://github.com/owncloud/ios-app/issues/1364
+
+* Bugfix - KQL syntax: [#1452](https://github.com/owncloud/ios-app/pull/1452)
+
+   Fixes generated KQL syntax
+
+   https://github.com/owncloud/ios-app/pull/1452
+
+* Bugfix - Enabling Markup Mode on iOS 18.x: [#1455](https://github.com/owncloud/ios-app/issues/1455)
+
+   A fix has been implemented for enabling the markup mode on iOS 18.x
+   automatically.
+
+   https://github.com/owncloud/ios-app/issues/1455
+
+* Bugfix - File drop crash on macOS: [#1461](https://github.com/owncloud/ios-app/pull/1461)
+
+   Fixes a crash when using the iOS app on macOS and dropping a file onto the app's
+   window to upload a file.
+
+   https://github.com/owncloud/ios-app/pull/1461
+
+* Enhancement - Server-side search support: [#1419](https://github.com/owncloud/ios-app/pull/1419)
+
+   Adds server-side search support.
+
+   https://github.com/owncloud/ios-app/pull/1419
+
+* Enhancement - Support for new ocis spaces/sharing capabilities: [#1421](https://github.com/owncloud/ios-app/issues/1421)
+
+   App support for new spaces and sharing APIs.
+
+   https://github.com/owncloud/ios-app/issues/1421
+
 # Changelog for ownCloud iOS Client [12.4.1] (2025-03-06)
 The following sections list the changes in ownCloud iOS Client 12.4.1 relevant to
 ownCloud admins and users.
