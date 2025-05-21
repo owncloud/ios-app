@@ -202,7 +202,8 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 						}
 
 						if var type = attachment.registeredTypeIdentifiers.first, attachment.hasItemConformingToTypeIdentifier(UTType.item.identifier) {
-							if type == "public.plain-text" || type == "public.url" || attachment.registeredTypeIdentifiers.contains("public.file-url") {
+							if type == "public.plain-text" || type == "public.url" || attachment.registeredTypeIdentifiers.contains("public.file-url") ||
+							   type == "public.image" {
 								asyncQueue.async({ (jobDone) in
 									if self.progressViewController?.cancelled == true {
 										jobDone()
@@ -218,7 +219,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 
 									let suggestedTextFileName = attachment.suggestedName ?? OCLocalizedString("Text", nil)
 
-									attachment.loadItem(forTypeIdentifier: type, options: nil, completionHandler: { (item, error) -> Void in
+									attachment.loadItem(forTypeIdentifier: type, options: nil, completionHandler: { (item, error) in
 										if error == nil {
 											var data : Data?
 											var tempFilePath : String?
@@ -242,9 +243,13 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 														jobDone()
 													}
 												}
+											} else if let image = item as? UIImage { // Encode image as PNG
+												let ext = "png"
+												tempFilePath = NSTemporaryDirectory() + suggestedTextFileName + "." + ext
+												data = image.pngData()
 											}
 
-											if tempFileURL == nil, let data = data, let tempFilePath {
+											if tempFileURL == nil, let data, let tempFilePath {
 												FileManager.default.createFile(atPath: tempFilePath, contents:data, attributes:nil)
 												tempFileURL = URL(fileURLWithPath: tempFilePath)
 											}
@@ -491,7 +496,7 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 			AppLockManager.shared.appDidEnterBackground()
 
 			AccountConnectionPool.shared.disconnectAll { [weak self] in
-				if let error = error {
+				if let error {
 					self?.extensionContext?.cancelRequest(withError: error)
 				} else {
 					self?.extensionContext?.completeRequest(returningItems: [])
