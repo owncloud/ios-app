@@ -698,6 +698,9 @@
         }
       }
     },
+    "{{freeSpace}} of {{totalSpace}} available" : {
+
+    },
     "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)" : {
       "localizations" : {
         "ar" : {
@@ -5849,6 +5852,7 @@
       }
     },
     "Albums" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -6091,6 +6095,7 @@
       }
     },
     "All Photos" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -7895,6 +7900,9 @@
           }
         }
       }
+    },
+    "Are you sure you want to delete this space? This action cannot be undone." : {
+
     },
     "Are you sure you want to unshare these items?" : {
       "localizations" : {
@@ -10648,6 +10656,9 @@
         }
       }
     },
+    "Available space" : {
+
+    },
     "Average" : {
       "localizations" : {
         "ar" : {
@@ -11968,6 +11979,9 @@
         }
       }
     },
+    "Bytes" : {
+
+    },
     "Camera details" : {
       "localizations" : {
         "ar" : {
@@ -12085,6 +12099,9 @@
           }
         }
       }
+    },
+    "Can't edit only manager" : {
+
     },
     "Cancel" : {
       "comment" : "Server List",
@@ -13901,6 +13918,9 @@
         }
       }
     },
+    "Choose an image for the space" : {
+
+    },
     "Choose destination directory…" : {
       "localizations" : {
         "ar" : {
@@ -14354,6 +14374,9 @@
           }
         }
       }
+    },
+    "Close" : {
+
     },
     "Close actions menu" : {
       "localizations" : {
@@ -18595,6 +18618,9 @@
         }
       }
     },
+    "Create image" : {
+
+    },
     "Create link" : {
       "localizations" : {
         "ar" : {
@@ -18948,6 +18974,9 @@
           }
         }
       }
+    },
+    "Create space" : {
+
     },
     "Creating %ld folders…" : {
       "comment" : "Progress summarizer",
@@ -21509,6 +21538,9 @@
         }
       }
     },
+    "Delete space \"{{driveName}}\"?" : {
+
+    },
     "Delete unused local copies" : {
       "localizations" : {
         "ar" : {
@@ -22347,6 +22379,9 @@
         }
       }
     },
+    "Details" : {
+
+    },
     "Diagnostic Overview" : {
       "comment" : "Diagnostic",
       "localizations" : {
@@ -23055,6 +23090,12 @@
           }
         }
       }
+    },
+    "Disable space" : {
+
+    },
+    "Disabled" : {
+
     },
     "Discard changes" : {
       "localizations" : {
@@ -25248,6 +25289,18 @@
         }
       }
     },
+    "Edit description" : {
+
+    },
+    "Edit image" : {
+
+    },
+    "Edit space" : {
+
+    },
+    "Emoji or text" : {
+
+    },
     "Enable" : {
       "localizations" : {
         "ar" : {
@@ -26080,6 +26133,9 @@
           }
         }
       }
+    },
+    "Enter a emoji or text" : {
+
     },
     "Enter a new code with %ld digits" : {
       "localizations" : {
@@ -26926,6 +26982,18 @@
           }
         }
       }
+    },
+    "Error creating space" : {
+
+    },
+    "Error deleting {{driveName}}" : {
+
+    },
+    "Error disabling {{driveName}}" : {
+
+    },
+    "Error enabling {{driveName}}" : {
+
     },
     "Error fetching transactions" : {
       "localizations" : {
@@ -32812,6 +32880,9 @@
         }
       }
     },
+    "GB" : {
+
+    },
     "General" : {
       "localizations" : {
         "ar" : {
@@ -34220,6 +34291,9 @@
         }
       }
     },
+    "Hide disabled spaces" : {
+
+    },
     "Histogram" : {
       "localizations" : {
         "ar" : {
@@ -34588,6 +34662,9 @@
           }
         }
       }
+    },
+    "If only one member is a manager, that member's permissions can't be edited." : {
+
     },
     "If you 'Continue', you will be prompted to allow the '{{app.name}}' app to open the {{authmethodName}} login page where you can enter your credentials." : {
       "localizations" : {
@@ -35999,6 +36076,9 @@
           }
         }
       }
+    },
+    "Image Playground" : {
+
     },
     "Images" : {
       "localizations" : {
@@ -38775,6 +38855,9 @@
         }
       }
     },
+    "KB" : {
+
+    },
     "Keywords" : {
       "localizations" : {
         "ar" : {
@@ -40086,6 +40169,9 @@
         }
       }
     },
+    "Limit space" : {
+
+    },
     "Limited Photo Access" : {
       "comment" : "Limited photo library access",
       "localizations" : {
@@ -40578,6 +40664,7 @@
       }
     },
     "Links" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -42857,6 +42944,9 @@
         }
       }
     },
+    "Markdown" : {
+
+    },
     "Markup" : {
       "localizations" : {
         "ar" : {
@@ -43353,6 +43443,9 @@
         }
       }
     },
+    "MB" : {
+
+    },
     "Media Export" : {
       "localizations" : {
         "ar" : {
@@ -43844,6 +43937,9 @@
           }
         }
       }
+    },
+    "Members" : {
+
     },
     "Messages" : {
       "localizations" : {
@@ -54831,6 +54927,9 @@
         }
       }
     },
+    "PB" : {
+
+    },
     "PDF Documents" : {
       "localizations" : {
         "ar" : {
@@ -56267,6 +56366,9 @@
         }
       }
     },
+    "Pick a photo" : {
+
+    },
     "Pick file or folder" : {
       "localizations" : {
         "ca" : {
@@ -56857,6 +56959,9 @@
           }
         }
       }
+    },
+    "Please enter a quota equal or less than 1 PB." : {
+
     },
     "Please note: Folders can only be pasted into the %@ app and the same account." : {
       "localizations" : {
@@ -58652,6 +58757,9 @@
         }
       }
     },
+    "Preview" : {
+
+    },
     "Previous" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -59990,6 +60098,9 @@
         }
       }
     },
+    "Public Links" : {
+
+    },
     "Purchase" : {
       "localizations" : {
         "ar" : {
@@ -60475,6 +60586,12 @@
         }
       }
     },
+    "Quota" : {
+
+    },
+    "Quota too high" : {
+
+    },
     "Read" : {
       "localizations" : {
         "ar" : {
@@ -60846,6 +60963,9 @@
           }
         }
       }
+    },
+    "Recent locations" : {
+
     },
     "Recents" : {
       "localizations" : {
@@ -73734,6 +73854,9 @@
         }
       }
     },
+    "Show disabled spaces" : {
+
+    },
     "Show folders on top" : {
       "localizations" : {
         "ar" : {
@@ -75756,6 +75879,9 @@
         }
       }
     },
+    "space" : {
+
+    },
     "Space" : {
       "localizations" : {
         "ca" : {
@@ -75867,6 +75993,9 @@
           }
         }
       }
+    },
+    "Space Actions" : {
+
     },
     "Spaces" : {
       "localizations" : {
@@ -76942,6 +77071,9 @@
         }
       }
     },
+    "Subtitle" : {
+
+    },
     "Switch Theme Style" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -77906,6 +78038,9 @@
         }
       }
     },
+    "TB" : {
+
+    },
     "Terms Of Use" : {
       "localizations" : {
         "ar" : {
@@ -78153,6 +78288,9 @@
           }
         }
       }
+    },
+    "Text/Emoji" : {
+
     },
     "Thank you for using %@.\n" : {
       "localizations" : {
@@ -85482,6 +85620,9 @@
           }
         }
       }
+    },
+    "User" : {
+
     },
     "User Interface" : {
       "localizations" : {

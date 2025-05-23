@@ -342,6 +342,11 @@
 		DC59087D2AA8B82200BFF393 /* BookmarkSetupStepPrepopulateViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC59087C2AA8B82200BFF393 /* BookmarkSetupStepPrepopulateViewController.swift */; };
 		DC59087F2AA8D25400BFF393 /* CertificateSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC59087E2AA8D25400BFF393 /* CertificateSummaryView.swift */; };
 		DC5C48A32918FB7400EBC053 /* CollectionSidebarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5C48A22918FB7400EBC053 /* CollectionSidebarViewController.swift */; };
+		DC5D397F2DDC649700EEDFE7 /* RecentLocationStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5D397D2DDC649700EEDFE7 /* RecentLocationStore.swift */; };
+		DC5D39812DDC64A400EEDFE7 /* RecentLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5D39802DDC64A400EEDFE7 /* RecentLocation.swift */; };
+		DC5D39862DDE6D4E00EEDFE7 /* RecentLocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5D39852DDE6D4E00EEDFE7 /* RecentLocationCell.swift */; };
+		DC5D398B2DDE743300EEDFE7 /* RecentLocation+Interactions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5D398A2DDE743300EEDFE7 /* RecentLocation+Interactions.swift */; };
+		DC5D398D2DE06B2600EEDFE7 /* RecentLocation+UniversalItemListCellContentProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5D398C2DE06B2600EEDFE7 /* RecentLocation+UniversalItemListCellContentProvider.swift */; };
 		DC5D58FF2A7166A300BFF393 /* ThemeCSS+SystemColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC5D58FE2A7166A300BFF393 /* ThemeCSS+SystemColors.swift */; };
 		DC60F2A629802ABE00905EC8 /* UINavigationItem+NavigationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC60F2A529802ABE00905EC8 /* UINavigationItem+NavigationContent.swift */; };
 		DC60F2A829802B0900905EC8 /* NavigationContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC60F2A729802B0900905EC8 /* NavigationContent.swift */; };
@@ -1335,6 +1340,11 @@
 		DC59087C2AA8B82200BFF393 /* BookmarkSetupStepPrepopulateViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkSetupStepPrepopulateViewController.swift; sourceTree = "<group>"; };
 		DC59087E2AA8D25400BFF393 /* CertificateSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CertificateSummaryView.swift; sourceTree = "<group>"; };
 		DC5C48A22918FB7400EBC053 /* CollectionSidebarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionSidebarViewController.swift; sourceTree = "<group>"; };
+		DC5D397D2DDC649700EEDFE7 /* RecentLocationStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentLocationStore.swift; sourceTree = "<group>"; };
+		DC5D39802DDC64A400EEDFE7 /* RecentLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentLocation.swift; sourceTree = "<group>"; };
+		DC5D39852DDE6D4E00EEDFE7 /* RecentLocationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentLocationCell.swift; sourceTree = "<group>"; };
+		DC5D398A2DDE743300EEDFE7 /* RecentLocation+Interactions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecentLocation+Interactions.swift"; sourceTree = "<group>"; };
+		DC5D398C2DE06B2600EEDFE7 /* RecentLocation+UniversalItemListCellContentProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RecentLocation+UniversalItemListCellContentProvider.swift"; sourceTree = "<group>"; };
 		DC5D58FE2A7166A300BFF393 /* ThemeCSS+SystemColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeCSS+SystemColors.swift"; sourceTree = "<group>"; };
 		DC5D9E742496512400BFFE8E /* MessageQueueExample.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageQueueExample.swift; sourceTree = "<group>"; };
 		DC60F2A529802ABE00905EC8 /* UINavigationItem+NavigationContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationItem+NavigationContent.swift"; sourceTree = "<group>"; };
@@ -2536,6 +2546,7 @@
 		DC298CAA29362534009FA87F /* Location Picker */ = {
 			isa = PBXGroup;
 			children = (
+				DC5D397E2DDC649700EEDFE7 /* Recent Location */,
 				DC298CA829362523009FA87F /* ClientLocationPicker.swift */,
 				DC298CAB29362710009FA87F /* ClientLocationPickerViewController.swift */,
 			);
@@ -2649,6 +2660,18 @@
 				DC9219FB2966179600F538EE /* OCShare+Interactions.swift */,
 			);
 			path = "Data Item Interactions";
+			sourceTree = "<group>";
+		};
+		DC5D397E2DDC649700EEDFE7 /* Recent Location */ = {
+			isa = PBXGroup;
+			children = (
+				DC5D39802DDC64A400EEDFE7 /* RecentLocation.swift */,
+				DC5D397D2DDC649700EEDFE7 /* RecentLocationStore.swift */,
+				DC5D39852DDE6D4E00EEDFE7 /* RecentLocationCell.swift */,
+				DC5D398C2DE06B2600EEDFE7 /* RecentLocation+UniversalItemListCellContentProvider.swift */,
+				DC5D398A2DDE743300EEDFE7 /* RecentLocation+Interactions.swift */,
+			);
+			path = "Recent Location";
 			sourceTree = "<group>";
 		};
 		DC60F2A429802A7500905EC8 /* Navigation Content */ = {
@@ -4725,6 +4748,7 @@
 				DC298CAE2936598B009FA87F /* DriveGridCell.swift in Sources */,
 				DC46F3D5284563BD00038880 /* OCAction+Interactions.swift in Sources */,
 				DC8E99E5297EEB2800594697 /* ClientLocationBarController.swift in Sources */,
+				DC5D39862DDE6D4E00EEDFE7 /* RecentLocationCell.swift in Sources */,
 				DCFC9ECC28002303005D9144 /* CollectionViewSection.swift in Sources */,
 				DC89EA602993AC4F00BFF393 /* NSUserActivity+SaveRestore.swift in Sources */,
 				DC62F567292504060095BB5D /* AccountConnection.swift in Sources */,
@@ -4796,6 +4820,7 @@
 				DC60F2AA29802D5800905EC8 /* NavigationContentItem.swift in Sources */,
 				DC16213E2B8FF06800EB17F8 /* OCSidebarItem+Interactions.swift in Sources */,
 				DC0A356F24C0E42700FB58FC /* StaticTableViewController.swift in Sources */,
+				DC5D398B2DDE743300EEDFE7 /* RecentLocation+Interactions.swift in Sources */,
 				DC62F569292504510095BB5D /* AccountConnectionPool.swift in Sources */,
 				DC0A358F24C0E46000FB58FC /* PointerEffect.swift in Sources */,
 				DC921A022966D5F800F538EE /* OCShare+UniversalItemListCellContentProvider.swift in Sources */,
@@ -4824,6 +4849,7 @@
 				DCB6B1FD292CF2DB00D27573 /* NavigationRevocationManager.swift in Sources */,
 				DCB1B8C229C8A6E500BFF393 /* ThemeCSSView.swift in Sources */,
 				DC0A357724C0E43200FB58FC /* ProgressSummarizer.swift in Sources */,
+				DC5D397F2DDC649700EEDFE7 /* RecentLocationStore.swift in Sources */,
 				DCB6B205292D859B00D27573 /* UIViewController+NavigationRevocation.swift in Sources */,
 				392CFEB72705831700631D2B /* LAContext+Extension.swift in Sources */,
 				DCE4E48724C1F9F50051722F /* CreateFolderAction.swift in Sources */,
@@ -4841,6 +4867,7 @@
 				DC99154C28E636A500DA0AB8 /* SegmentView.swift in Sources */,
 				DCD864122811FC5700CA6631 /* GradientView.swift in Sources */,
 				DC99154E28E6371500DA0AB8 /* SegmentViewItem.swift in Sources */,
+				DC5D39812DDC64A400EEDFE7 /* RecentLocation.swift in Sources */,
 				DCFC9ED528002F33005D9144 /* CollectionViewCellConfiguration.swift in Sources */,
 				DC0074112D52685000C1C6F7 /* OCDrive+ManagementActions.swift in Sources */,
 				DCBAEADB29A3674700BFF393 /* OCItemPolicy+UniversalItemListCellContentProvider.swift in Sources */,
@@ -4857,6 +4884,7 @@
 				DC298CAC29362710009FA87F /* ClientLocationPickerViewController.swift in Sources */,
 				DC081C89299B8E5800BFF393 /* AppStateActionRevealItem.swift in Sources */,
 				DCB6B1EF292B979600D27573 /* MessageGroup.swift in Sources */,
+				DC5D398D2DE06B2600EEDFE7 /* RecentLocation+UniversalItemListCellContentProvider.swift in Sources */,
 				DC5C48A32918FB7400EBC053 /* CollectionSidebarViewController.swift in Sources */,
 				DC6C0A542923FFF30045FF2A /* AccountControllerSection.swift in Sources */,
 				DCFA56432975734A0092C89F /* BrowserNavigationViewController.swift in Sources */,
