@@ -519,6 +519,9 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.insetGrouped, .collection, .sectionHeader], 	property: .fill,   value: groupedCollectionBackgroundColor),
 			ThemeCSSRecord(selectors: [.insetGrouped, .collection, .cell, .action], 	property: .fill,   value: cellStateSet.regular.backgroundColor),
 
+			ThemeCSSRecord(selectors: [.collection, .cell, .recentLocation],	property: .fill,   value: groupedCollectionBackgroundColor),
+			ThemeCSSRecord(selectors: [.collection, .cell, .recentLocation],	property: .fill,   value: groupedCollectionBackgroundColor),
+
 			// - Table View
 			ThemeCSSRecord(selectors: [.table],     	    	   	property: .fill,   value: cellStateSet.regular.backgroundColor),
 			ThemeCSSRecord(selectors: [.grouped, .table],  	    	   	property: .fill,   value: groupedCollectionBackgroundColor),
