@@ -46,12 +46,12 @@ class RecentLocationStore: NSObject {
 		vault.keyValueStore?.removeObserver(forOwner: self, forKey: .recentLocations)
 	}
 
-	func add(location: OCLocation) {
+	func add(location: OCLocation, from core: OCCore) {
 		if location.bookmarkUUID == nil {
 			location.bookmarkUUID = bookmark.uuid
 		}
 
-		let recentLocation = RecentLocation(location: location)
+		let recentLocation = RecentLocation(location: location, from: core)
 		var newLocations = [
 			recentLocation
 		]
