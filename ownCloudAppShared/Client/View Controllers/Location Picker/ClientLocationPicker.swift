@@ -350,14 +350,27 @@ public class ClientLocationPicker : NSObject {
 			}
 
 			// Do not include locations that aren't allowed
-			if self?.allowedLocationFilter != nil {
+			if self?.allowedLocationFilter != nil ||
+			   self?.navigationLocationFilter != nil {
 				compositionSource.filter = { [weak self] source, itemRef in
-					guard let self, let allowedLocationFilter = self.allowedLocationFilter,
+					guard let self,
 					      let itemRec = try? source.record(forItemRef: itemRef),
 					      let recentLocation = itemRec.item as? RecentLocation,
 					      let location = recentLocation.location else { return false }
 
-					return allowedLocationFilter(location, (location.bookmarkUUID == self.rootContext?.core?.bookmark.uuid) ? self.rootContext : nil)
+					let context = (location.bookmarkUUID == self.rootContext?.core?.bookmark.uuid) ? self.rootContext : nil
+
+					if let allowedLocationFilter = self.allowedLocationFilter,
+					   !allowedLocationFilter(location, context) {
+						return false
+					}
+
+					if let navigationLocationFilter = self.navigationLocationFilter,
+					   !navigationLocationFilter(location, context) {
+						return false
+					}
+
+					return true
 				}
 			}
 		})
@@ -384,7 +397,7 @@ public class ClientLocationPicker : NSObject {
 
 	func addRecent(location: OCLocation, from core: OCCore) {
 		if let bookmarkUUID = location.bookmarkUUID {
-			recentLocationStore(for: bookmarkUUID)?.add(location: location)
+			recentLocationStore(for: bookmarkUUID)?.add(location: location, from: core)
 		}
 	}
 
@@ -426,7 +439,7 @@ public class ClientLocationPicker : NSObject {
 		// Set up recent locations
 		if showRecentLocations, let recentLocationsDatasource {
 			// Add recents section on top
-			let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(64), heightDimension: .estimated(64))
+			let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(164), heightDimension: .estimated(140))
 			let item = NSCollectionLayoutItem(layoutSize: itemSize)
 			let recentsSection = CollectionViewSection(identifier: "recents", dataSource: recentLocationsDatasource, cellStyle: .init(with: .gridCell), cellLayout: .sideways(item: item, groupSize: itemSize, edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(10), top: .fixed(0), trailing: .fixed(10), bottom: .fixed(0)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0), orthogonalScrollingBehaviour: .continuous), clientContext: baseContext)
 			recentsSection.hideIfEmptyDataSource = recentLocationsDatasource
@@ -441,7 +454,7 @@ public class ClientLocationPicker : NSObject {
 		}
 
 		// Compose view controller
-		if let rootContext = rootContext {
+		if let rootContext {
 			rootViewController = provideViewController(for: startLocation, extraSections: extraSections, maximumLevel: maximumLevel, context: rootContext)
 			if let rootViewController {
 				navigationController.pushViewController(rootViewController, animated: false)
@@ -456,6 +469,14 @@ public class ClientLocationPicker : NSObject {
 		}
 
 		return nil
+	}
+
+	public func navigate(to location: OCLocation) {
+		if let rootContext,
+		   let rootNavigationController,
+		   let locationViewController = provideViewController(for: location, maximumLevel: maximumLevel, context: rootContext) {
+			rootNavigationController.pushViewController(locationViewController, animated: true)
+		}
 	}
 
 	public func present(in clientContext: ClientContext, baseContext: ClientContext? = nil) {

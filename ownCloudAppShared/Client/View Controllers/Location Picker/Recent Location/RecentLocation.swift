@@ -23,9 +23,18 @@ import ownCloudSDK
 	var location: OCLocation?
 	var timestamp: Date?
 
-	init(location: OCLocation, timestamp: Date = .now) {
+	var displayName: String?
+	var driveName: String?
+
+	init(location: OCLocation, timestamp: Date = .now, from core: OCCore) {
 		self.location = location
 		self.timestamp = timestamp
+
+		self.displayName = location.displayName(with: core)
+
+		if let driveID = location.driveID {
+			self.driveName = core.drive(withIdentifier: driveID, attachedOnly: true)?.name
+		}
 	}
 
 	// MARK: - NSSecureCoding
@@ -34,11 +43,15 @@ import ownCloudSDK
 	func encode(with coder: NSCoder) {
 		coder.encode(location, forKey: "location")
 		coder.encode(timestamp, forKey: "timestamp")
+		coder.encode(displayName, forKey: "displayName")
+		coder.encode(driveName, forKey: "driveName")
 	}
 
 	required init?(coder: NSCoder) {
 		location = coder.decodeObject(of: OCLocation.self, forKey: "location")
 		timestamp = coder.decodeObject(of: NSDate.self, forKey: "timestamp") as? Date
+		displayName = coder.decodeObject(of: NSString.self, forKey: "displayName") as? String
+		driveName = coder.decodeObject(of: NSString.self, forKey: "driveName") as? String
 	}
 
 	// MARK: - OCDataItem + Versioning

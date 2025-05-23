@@ -37,6 +37,7 @@ public extension CollectionViewCellProvider {
 		OCItemPolicy.registerUniversalCellProvider()	// Cell providers for .itemPolicy
 		OCIdentity.registerUniversalCellProvider()	// Cell providers for .identity
 		OptionItem.registerUniversalCellProvider()	// Cell providers for .optionItem
+		RecentLocation.registerUniversalCellProvider()	// Cell providers for .recentLocation
 
 		// Other cell providers
 		OCSidebarItem.registerCellProvider()		// Cell provider for .sidebarItem
