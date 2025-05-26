@@ -7,18 +7,19 @@
 //
 
 /*
-* Copyright (C) 2018, ownCloud GmbH.
-*
-* This code is covered by the GNU Public License Version 3.
-*
-* For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
-* You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
-*
-*/
+ * Copyright (C) 2018, ownCloud GmbH.
+ *
+ * This code is covered by the GNU Public License Version 3.
+ *
+ * For distribution utilizing Apple mechanisms please see https://owncloud.org/contribute/iOS-license-exception/
+ * You should have received a copy of this license along with this program. If not, see <http://www.gnu.org/licenses/gpl-3.0.en.html>.
+ *
+ */
 
 import UIKit
 import ownCloudSDK
 import QuickLook
+import ownCloudApp
 import ownCloudAppShared
 
 class GestureView : UIView {
@@ -147,9 +148,14 @@ extension PreviewViewController: UIGestureRecognizerDelegate {
 
 // MARK: - Display Extension.
 extension PreviewViewController: DisplayExtension {
-	private static let supportedFormatsRegex = try? NSRegularExpression(pattern: "\\A((text/)|(image/svg)|(model/(vnd|usd))|(application/(rtf|x-rtf|doc))|(application/x-iwork*)|(application/(vnd.|ms))(?!(oasis|android))(ms|openxmlformats)?)", options: .caseInsensitive)
+	static let supportedFormatsRegex = try? NSRegularExpression(pattern: "\\A((text/)|(image/svg)|(model/(vnd|usd))|(application/(rtf|x-rtf|doc))|(application/x-iwork*)|(application/(vnd.|ms))(?!(oasis|android))(ms|openxmlformats)?)", options: .caseInsensitive)
 
 	static var customMatcher: OCExtensionCustomContextMatcher? = { (context, defaultPriority) in
+		guard !ConfidentialManager.shared.markConfidentialViews else {
+			// If watermark/confidential overlays are used, QLPreviewController no longer reacts to scroll and zoom events,
+			// so use WebKit's support for QuickLook formats instead in that case.
+			return .noMatch
+		}
 
 		guard let regex = supportedFormatsRegex else { return .noMatch }
 
