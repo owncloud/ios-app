@@ -45,7 +45,7 @@ extension OCIdentity: UniversalItemListCellContentProvider {
 			if let displayName = user.displayName {
 				content.title = .text(displayName)
 			}
-			detailText = user.userName
+			detailText = user.userName ?? OCLocalizedString("User", nil)
 		}
 
 		if group != nil {

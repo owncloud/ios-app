@@ -3,11 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>authentication-oauth2.oa2-client-id</key>
-	<string></string>
+	<string>3d2bf4ba-a82d-5be6-bf4b-31900687991b</string>
 	<key>authentication-oauth2.oa2-client-secret</key>
-	<string></string>
+	<string>#arl1lywxLol</string>
 	<key>authentication-oauth2.oidc-redirect-uri</key>
-	<string>oc://ios.owncloud.com/</string>
+	<string>oc://ios.owncloud.com/path</string>
 	<key>authentication-oauth2.oidc-scope</key>
 	<string></string>
 	<key>authentication-oauth2.post-client-id-and-secret</key>
@@ -25,7 +25,7 @@
 	<key>branding.profile-bookmark-name</key>
 	<string>Kiteworks</string>
 	<key>branding.profile-url</key>
-	<string>https://mobile.kiteworks.com/</string>
+	<string>https://loudoncountypov.kiteworks.com/</string>
 	<key>branding.send-feedback-address</key>
 	<string></string>
 	<key>branding.send-feedback-url</key>
@@ -50,28 +50,6 @@
 	<string>https://www.accellion.com/privacy-policy/</string>
 	<key>branding.url-terms-of-use</key>
 	<string></string>
-	<key>connection.drives</key>
-	<string>kwdav/graph/v1.0/drives</string>
-	<key>connection.endpoint-capabilities</key>
-	<string>kwdav/ocs/v2.php/cloud/capabilities</string>
-	<key>connection.endpoint-recipients</key>
-	<string>kwdav/ocs/v2.php/apps/files_sharing/api/v1/sharees</string>
-	<key>connection.endpoint-remote-shares</key>
-	<string>kwdav/ocs/v2.php/apps/files_sharing/api/v1/remote_shares</string>
-	<key>connection.endpoint-shares</key>
-	<string>kwdav/ocs/v2.php/apps/files_sharing/api/v1/shares
-
-</string>
-	<key>connection.endpoint-status</key>
-	<string>kwdav/status.php</string>
-	<key>connection.endpoint-user</key>
-	<string>kwdav/ocs/v2.php/cloud/user</string>
-	<key>connection.endpoint-webdav</key>
-	<string>kwdav/remote.php/dav/files</string>
-	<key>connection.endpoint-webdav-meta</key>
-	<string>kwdav/remote.php/dav/meta</string>
-	<key>connection.meDrives</key>
-	<string>kwdav/graph/v1.0/me/drives</string>
 	<key>connection.well-known</key>
 	<string>.well-known</string>
 </dict>

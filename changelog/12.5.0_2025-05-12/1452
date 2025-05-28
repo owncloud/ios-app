@@ -1,0 +1,5 @@
+Bugfix: KQL syntax
+
+Fixes generated KQL syntax
+
+https://github.com/owncloud/ios-app/pull/1452

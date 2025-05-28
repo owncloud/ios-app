@@ -135,7 +135,7 @@ extension OCItem : DataItemContextMenuInteraction {
 			return nil
 		}
 		let item = self
-		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: location) // .contextMenuItem)
+		let actionsLocation = OCExtensionLocation(ofType: .action, identifier: location)
 		let actionContext = ActionContext(viewController: viewController, clientContext: context, core: core, items: [item], location: actionsLocation, sender: nil)
 		let actions = Action.sortedApplicableActions(for: actionContext)
 		var actionMenuActions : [UIAction] = []

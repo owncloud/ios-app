@@ -2006,6 +2006,97 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>12.4.0</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Confidential Protection</string>
+					<key>Subtitle</key>
+					<string>Watermarking, screenshot protection and more are now available via MDM and branding.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>slider.horizontal.3</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>File Provider Memory Efficiency</string>
+					<key>Subtitle</key>
+					<string>The File Provider is now more stable thanks to improved memory efficiency.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>memorychip</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Version</key>
+			<string>12.4.1</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Confidential Protection</string>
+					<key>Subtitle</key>
+					<string>Watermarking: New MDM Parameters for Customizing Watermark Behavior</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>slider.horizontal.3</string>
+				</dict>
+			</array>
+		</dict>
+		<dict>
+			<key>Version</key>
+			<string>12.5.0</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>Spaces and Sharing</string>
+					<key>Subtitle</key>
+					<string>Support for new spaces and sharing capabilities.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>person.2</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Accessiblity</string>
+					<key>Subtitle</key>
+					<string>Improved overall accessibility across the app.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>accessibility</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Markup Mode</string>
+					<key>Subtitle</key>
+					<string>Markup mode was not enabled automatically on iOS 18.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>wrench</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>General Improvements</string>
+					<key>Subtitle</key>
+					<string>We made some internal improvements to make everything smoother.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>bandage</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>

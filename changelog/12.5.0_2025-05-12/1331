@@ -1,0 +1,5 @@
+Bugfix: [a11y] Collection View Header
+
+Added header trait to collection view section header
+
+https://github.com/owncloud/ios-app/issues/1331

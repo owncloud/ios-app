@@ -121,7 +121,7 @@ class CopyAction : Action {
 		if items.count > 1 {
 			titleText = OCLocalizedFormat("Copy {{itemCount}} items", ["itemCount" : "\(items.count)"])
 		} else {
-			titleText = OCLocalizedFormat("Copy \"{{itemName}}\"", ["itemName" : items.first?.name ?? "?"])
+			titleText = OCLocalizedFormat("Copy \"{{itemName}}\"", ["itemName" : items.first?.name?.redacted() ?? "?"])
 		}
 
 		let locationPicker = ClientLocationPicker(location: startLocation, selectButtonTitle: OCLocalizedString("Copy here", nil), headerTitle: titleText, headerSubTitle: OCLocalizedString("Select target.", nil), avoidConflictsWith: items, choiceHandler: { (selectedDirectoryItem, location, _, cancelled) in

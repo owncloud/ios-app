@@ -1,0 +1,5 @@
+Bugfix: [a11y] Contrast
+
+Add Spaces text background color if Increase Contrast is on #1451
+
+https://github.com/owncloud/ios-app/issues/1334

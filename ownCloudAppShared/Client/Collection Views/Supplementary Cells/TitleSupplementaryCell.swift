@@ -85,6 +85,7 @@ class TitleSupplementaryCell: UICollectionReusableView, Themeable {
 	func configure() {
 		label = UILabel()
 		label?.translatesAutoresizingMaskIntoConstraints = false
+		label?.accessibilityTraits = .header
 
 		label?.setContentHuggingPriority(.required, for: .vertical)
 		label?.setContentCompressionResistancePriority(.required, for: .vertical)

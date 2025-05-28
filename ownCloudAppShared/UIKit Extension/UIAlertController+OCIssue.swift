@@ -61,8 +61,8 @@ public extension UIAlertController {
 		self.addAction(cancelAction)
 	}
 
-	convenience init(with title: String, message: String, okLabel: String = OCLocalizedString("OK", nil), action: (() -> Void)? = nil) {
-		self.init(title: title, message: message, preferredStyle: UIDevice.current.isIpad ? .alert : .actionSheet)
+	convenience init(with title: String, message: String, okLabel: String = OCLocalizedString("OK", nil), preferredStyle: UIAlertController.Style? = nil, action: (() -> Void)? = nil) {
+		self.init(title: title, message: message, preferredStyle: (preferredStyle != nil) ? preferredStyle! : (UIDevice.current.isIpad ? .alert : .actionSheet))
 
 		let okAction: UIAlertAction = UIAlertAction(title: okLabel, style: .default, handler: { (_) in
 			action?()

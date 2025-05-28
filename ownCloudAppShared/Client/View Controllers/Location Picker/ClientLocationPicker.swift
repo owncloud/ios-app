@@ -294,6 +294,8 @@ public class ClientLocationPicker : NSObject {
 			}
 		}
 
+		headerView?.secureView(core: context.core)
+
 		return viewController
 	}
 

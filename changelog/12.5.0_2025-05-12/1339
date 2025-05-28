@@ -1,0 +1,5 @@
+Bugfix: [a11y] Add previous/next buttons to image viewer carousel
+
+Adds previous/next buttons to the image viewer / carousel to provide an simpler pointer alternative to swipe gestures (both with a finger on the display - or two fingers on the trackpad).
+
+https://github.com/owncloud/ios-app/issues/1339

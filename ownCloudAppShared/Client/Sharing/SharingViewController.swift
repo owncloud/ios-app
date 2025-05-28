@@ -23,6 +23,8 @@ public typealias ItemProvider = () -> OCItem?
 
 open class SharingViewController: CollectionViewController {
 
+	var managementClientContext: ClientContext
+
 	var itemSection: CollectionViewSection
 	var itemSectionDatasource: OCDataSourceArray
 
@@ -40,13 +42,20 @@ open class SharingViewController: CollectionViewController {
 			itemSectionDatasource.setVersionedItems([item])
 		}
 	}
+	public var itemIsDriveRoot: Bool
 
 	var itemSharesQuery: OCShareQuery?
+	private var driveManagerCountSubscription: OCDataSourceSubscription?
+	private var driveManagerCount: Int = 0
+
+	private var recipientsSubscription: OCDataSourceSubscription?
+	private var recipientsIdentifiers: [String]?
 
 	public init(clientContext: ClientContext, item: OCItem) {
 		var sections: [CollectionViewSection] = []
 
 		self.item = item
+		self.itemIsDriveRoot = item.isRoot && item.driveID != nil && clientContext.core?.drive(withIdentifier: item.driveID!, attachedOnly: true)?.specialType == .space
 
 		// Item section
 		let itemSectionContext = ClientContext(with: clientContext, modifier: { context in
@@ -57,13 +66,10 @@ open class SharingViewController: CollectionViewController {
 		itemSection = CollectionViewSection(identifier: "item", dataSource: itemSectionDatasource, cellStyle: .init(with: .header), cellLayout: .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0)), clientContext: itemSectionContext)
 		sections.append(itemSection)
 
-		// Managament section cell style
-		let managementCellStyle: CollectionViewCellStyle = .init(with: .tableCell)
-		managementCellStyle.options = [
-			.showManagementView : true
-		]
+		// Management section cell style
+		let managementCellStyle = SharingViewController.composeManagementCellStyle(allowEditing: canUpdate)
 
-		let managementClientContext = ClientContext(with: clientContext)
+		managementClientContext = ClientContext(with: clientContext)
 		managementClientContext.postInitializationModifier = { (owner, context) in
 			context.originatingViewController = owner as? UIViewController
 		}
@@ -108,7 +114,7 @@ open class SharingViewController: CollectionViewController {
 
 			recipientsSection = CollectionViewSection(identifier: "recipients", dataSource: recipientsSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: managementClientContext)
 			recipientsSection?.boundarySupplementaryItems = [
-				.mediumTitle(OCLocalizedString("Shared with", nil))
+				.mediumTitle(itemIsDriveRoot ? OCLocalizedString("Members", nil) : OCLocalizedString("Shared with", nil))
 			]
 			sections.append(recipientsSection!)
 		}
@@ -150,15 +156,16 @@ open class SharingViewController: CollectionViewController {
 
 				linksSection = CollectionViewSection(identifier: "links", dataSource: linksSectionDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: managementClientContext)
 				linksSection?.boundarySupplementaryItems = [
-					.mediumTitle(OCLocalizedString("Links", nil))
+					.mediumTitle(OCLocalizedString("Public Links", nil))
 				]
+				linksSection?.hideIfEmptyDataSource = linksSectionDatasource
 				sections.append(linksSection!)
 			}
 		}
 
 		// Init
 		super.init(context: managementClientContext, sections: sections, useStackViewRoot: true)
-		navigationItem.titleLabelText = OCLocalizedString("Sharing", nil)
+		navigationItem.titleLabelText = itemIsDriveRoot ? OCLocalizedString("Members", nil) : OCLocalizedString("Sharing", nil)
 		navigationItem.rightBarButtonItem = UIBarButtonItem(systemItem: .done, primaryAction: UIAction(handler: { [weak self] action in
 			self?.dismiss(animated: true)
 		}))
@@ -217,8 +224,90 @@ open class SharingViewController: CollectionViewController {
 
 		revoke(in: clientContext, when: [ .connectionClosed, .connectionOffline ])
 
+		itemSharesQuery?.changesAvailableNotificationHandler = { [weak self] query in
+			// Called when populated the first time - query.allowedPermissionActions should now be available
+			self?.allowedPermissionActions = query.allowedPermissionActions
+		}
+
+		if let itemSharesQueryDataSource = itemSharesQuery?.dataSource {
+			// Subscribe to shares query data source to compile list of identity identifiers for existing recipients
+			recipientsSubscription = itemSharesQueryDataSource.subscribe(updateHandler: { [weak self] subscription in
+				let snapshot = subscription.snapshotResettingChangeTracking(true)
+				var identityIdentifiers: [String] = []
+
+				// Add recipients of existing shares
+				for itemRef in snapshot.items {
+					if let itemRecord = try? subscription.source?.record(forItemRef: itemRef),
+					   let share = itemRecord.item as? OCShare,
+					   let identity = share.recipient {
+					   	if let identifier = identity.identifier {
+						   	identityIdentifiers.append(identifier)
+						}
+					}
+				}
+
+				// Add currently logged in user
+				if let loggedInUser = self?.clientContext?.core?.connection.loggedInUser,
+				   let loggedInUserIdentifier = loggedInUser.identifier {
+					identityIdentifiers.append(loggedInUserIdentifier)
+				}
+
+				if let self {
+					OCSynchronized(self) {
+						self.recipientsIdentifiers = identityIdentifiers
+					}
+				}
+			}, on: .main, trackDifferences: true, performInitialUpdate: true)
+		}
+
 		if let core = clientContext.core, let itemSharesQuery {
 			core.start(itemSharesQuery)
+		}
+
+		managementClientContext.add(permissionHandler: { [weak self] context, dataItemRecord, checkInteraction, inViewController in
+			if dataItemRecord?.type == .share, let self {
+				switch checkInteraction {
+					case .selection, .contextMenu, .leadingSwipe, .trailingSwipe:
+						// Detect and block editing of last manager member, showing an alert
+						if self.canUpdate, self.itemIsDriveRoot {
+							let driveRole = (dataItemRecord?.item as? OCShare)?.sharePermissions?.first(where: { permission in
+								permission.driveRole != .none
+							})?.driveRole
+
+							if driveRole == .manager, self.driveManagerCount <= 1 {
+								let alert = ThemedAlertController(title: OCLocalizedString("Can't edit only manager", nil), message: OCLocalizedString("If only one member is a manager, that member's permissions can't be edited.", nil), preferredStyle: .alert)
+
+								alert.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
+								context?.present(alert, animated: true)
+
+								return false
+							}
+						}
+
+						// Only allow selection and contextmenu (editing), leading and trailing swipes (delete) if user has update permission
+						return self.canUpdate
+
+					default: break
+				}
+			}
+
+			return true
+		})
+
+		if itemIsDriveRoot {
+			driveManagerCountSubscription = itemSharesQuery?.dataSource.subscribe(updateHandler: { [weak self] subscription in
+				let snapshot = subscription.snapshotResettingChangeTracking(true)
+				var managerCount = 0
+				for itemRef in snapshot.items {
+					if let itemRecord = try? subscription.source?.record(forItemRef: itemRef), itemRecord.type == .share,
+					   let share = itemRecord.item as? OCShare,
+					   let driveRole = share.sharePermissions?.first(where: { permission in permission.driveRole != .none })?.driveRole,
+					   driveRole == .manager {
+						managerCount += 1
+					}
+				}
+				self?.driveManagerCount = managerCount
+			}, on: .main, trackDifferences: true, performInitialUpdate: true)
 		}
 
 		// Disable dragging of items, so keyboard control does
@@ -229,23 +318,76 @@ open class SharingViewController: CollectionViewController {
 		}
 	}
 
+	required public init?(coder: NSCoder) {
+		fatalError("init(coder:) has not been implemented")
+	}
+
 	deinit {
+		driveManagerCountSubscription?.terminate()
+		recipientsSubscription?.terminate()
+
 		if let core = clientContext?.core, let itemSharesQuery {
 			core.stop(itemSharesQuery)
 		}
 	}
 
+	static func composeManagementCellStyle(allowEditing: Bool) -> CollectionViewCellStyle {
+		let managementCellStyle: CollectionViewCellStyle = .init(with: .tableCell)
+		managementCellStyle.options = [
+			.showManagementView : true,
+			.withoutDisclosure : !allowEditing
+		]
+		return managementCellStyle
+	}
+
 	func createShare(type: ShareViewController.ShareType) {
 		guard let clientContext else { return }
 
-		let shareViewController = ShareViewController(type: type, mode: .create, item: item, clientContext: clientContext, completion: { _ in
+		let shareViewController = ShareViewController(type: type, mode: .create, item: item, clientContext: clientContext, identityFilter: { [weak self] identity in
+			// Filter out all users that have already been added
+			guard let self else { return false }
+
+			if let identityIdentifier = identity.identifier {
+				var includeIdentity: Bool = true
+
+				OCSynchronized(self) {
+					includeIdentity = self.recipientsIdentifiers?.contains(identityIdentifier) != true
+				}
+
+				return includeIdentity
+			}
+
+			return true
+		}, completion: { _ in
 		})
+
 		let navigationController = ThemeNavigationController(rootViewController: shareViewController)
 		self.present(navigationController, animated: true)
 	}
 
-	required public init?(coder: NSCoder) {
-		fatalError("init(coder:) has not been implemented")
+	var allowedPermissionActions: [OCShareActionID]? {
+		didSet {
+			if let allowedPermissionActions {
+				canCreate = allowedPermissionActions.contains(.createPermissions)
+				canUpdate = allowedPermissionActions.contains(.updatePermissions)
+			}
+		}
+	}
+
+	var canCreate: Bool = true {
+		didSet {
+			if let addLinkDataSource, let addRecipientDataSource {
+				linksSectionDatasource?.setInclude(canCreate, for: addLinkDataSource)
+				recipientsSectionDatasource?.setInclude(canCreate, for: addRecipientDataSource)
+			}
+		}
+	}
+	var canUpdate: Bool = true {
+		didSet {
+			let managementCellStyle = SharingViewController.composeManagementCellStyle(allowEditing: canUpdate)
+			recipientsSection?.cellStyle = managementCellStyle
+			linksSection?.cellStyle = managementCellStyle
+		}
 	}
 }
 

@@ -121,7 +121,9 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 		}
 	}
 
-	init(with clientContext: ClientContext, scopes: [SearchScope]?, targetNavigationItem: UINavigationItem? = nil, suggestionContent: Content? = nil, noResultContent: Content? = nil, delegate: SearchViewControllerDelegate?) {
+	private var _defaultScope: SearchScope?
+
+	init(with clientContext: ClientContext, scopes: [SearchScope]?, defaultScope: SearchScope? = nil, targetNavigationItem: UINavigationItem? = nil, suggestionContent: Content? = nil, noResultContent: Content? = nil, delegate: SearchViewControllerDelegate?) {
 		self.clientContext = clientContext
 
 		super.init(nibName: nil, bundle: nil)
@@ -134,6 +136,7 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 		self.delegate = delegate
 
 		self.scopes = scopes
+		self._defaultScope = defaultScope
 
 		updateCurrentContent()
 	}
@@ -207,6 +210,15 @@ open class SearchViewController: UIViewController, UITextFieldDelegate, Themeabl
 
 		if activeScope == nil {
 			activeScope = scopes?.first
+		}
+	}
+
+	open override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+
+		if let _defaultScope {
+			activeScope = _defaultScope
+			self._defaultScope = nil // Set default scope only once
 		}
 	}
 

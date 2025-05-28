@@ -41,12 +41,13 @@ class DriveListCell: ThemeableCollectionViewListCell {
 
 	var title : String? {
 		didSet {
-			titleLabel.text = title
+			titleLabel.text = title?.redacted()
 		}
 	}
 	var subtitle : String? {
 		didSet {
-			subtitleLabel.text = subtitle
+			subtitleLabel.text = subtitle?.redacted()
+			subtitleLabel.isHidden = (subtitle == nil) || (subtitle?.count == 0)
 		}
 	}
 
@@ -140,6 +141,8 @@ extension DriveListCell {
 				resourceManager?.start(coverImageRequest)
 			}
 
+			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
+
 			cell.accessories = [ .disclosureIndicator() ]
 		}
 
@@ -151,8 +154,8 @@ extension DriveListCell {
 
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
 				if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
-					title = presentable.title
-					subtitle = presentable.subtitle
+					title = presentable.title?.redacted()
+					subtitle = presentable.subtitle?.redacted()
 
 					resourceManager = cellConfiguration.core?.vault.resourceManager
 
@@ -169,6 +172,8 @@ extension DriveListCell {
 			cell.collectionItemRef = collectionItemRef
 			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
 
+			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
+
 			if let coverImageRequest = coverImageRequest {
 				resourceManager?.start(coverImageRequest)
 			}
@@ -179,6 +184,7 @@ extension DriveListCell {
 			var resourceManager : OCResourceManager?
 			var title : String?
 			var subtitle : String?
+			var isDisabled : Bool?
 
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, driveItem, cellConfiguration in
 				if let presentable = OCDataRenderer.default.renderItem(driveItem, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
@@ -191,28 +197,48 @@ extension DriveListCell {
 
 					// More item button action
 					if let clientContext = cellConfiguration.clientContext, let moreItemHandling = clientContext.moreItemHandler, let drive = driveItem as? OCDrive {
-						cell.moreAction = OCAction(title: OCLocalizedString("Actions", nil), icon: nil, action: { [weak moreItemHandling] (action, options, completion) in
-							clientContext.core?.cachedItem(at: drive.rootLocation, resultHandler: { error, item in
-								if let item {
-									OnMainThread {
-										moreItemHandling?.moreOptions(for: item, at: .moreFolder, context: clientContext, sender: action)
+						isDisabled = drive.isDisabled
+
+						if drive.isDisabled {
+							// Disabled space => show space manage UI
+							cell.moreAction = nil
+							cell.moreMenu = UIMenu(title: "", children: [
+								UIAction(title: OCLocalizedString("Enable", nil), image: OCSymbol.icon(forSymbolName: "play.circle"), handler: { [weak clientContext] _ in
+									drive.restore(with: clientContext)
+								}),
+								UIAction(title: OCLocalizedString("Delete", nil), image: OCSymbol.icon(forSymbolName: "trash"), handler: { [weak clientContext] _ in
+									drive.delete(with: clientContext)
+								})
+							])
+						} else {
+							// Enabled space = show available actions
+							cell.moreMenu = nil
+							cell.moreAction = OCAction(title: OCLocalizedString("Actions", nil), icon: nil, action: { [weak moreItemHandling] (action, options, completion) in
+								clientContext.core?.cachedItem(at: drive.rootLocation, resultHandler: { error, item in
+									if let item {
+										OnMainThread {
+											moreItemHandling?.moreOptions(for: item, at: .moreFolder, context: clientContext, sender: action)
+										}
 									}
-								}
-								completion(error)
+									completion(error)
+								})
 							})
-						})
+						}
 					}
 				}
 			})
 
 			cell.title = title
 			cell.subtitle = subtitle
+			cell.isDisabled = isDisabled ?? false
 
 			cell.coverImageResourceView.request = coverImageRequest
 			cell.isRequestingCoverImage = (coverImageRequest != nil)
 
 			cell.collectionItemRef = collectionItemRef
 			cell.collectionViewController = collectionItemRef.ocCellConfiguration?.hostViewController
+
+			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
 
 			if let coverImageRequest = coverImageRequest {
 				resourceManager?.start(coverImageRequest)
@@ -247,13 +273,12 @@ extension DriveListCell {
 
 			var content = cell.defaultContentConfiguration()
 
-			content.text = title
+			content.text = title?.redacted()
 			content.image = icon
 
 			cell.backgroundConfiguration = UIBackgroundConfiguration.listSidebarCell()
 			cell.contentConfiguration = content
 			cell.applyThemeCollection(theme: Theme.shared, collection: Theme.shared.activeCollection, event: .initial)
-
 			cell.accessibilityTraits = .button
 		}
 

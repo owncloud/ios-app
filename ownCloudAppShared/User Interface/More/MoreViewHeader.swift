@@ -87,6 +87,12 @@ open class MoreViewHeader: UIView {
 	private func render() {
 		cssSelectors = [.more, .header]
 
+		let contentContainerView = UIView()
+		contentContainerView.translatesAutoresizingMaskIntoConstraints = false
+
+		let wrappedContentContainerView = contentContainerView.withScreenshotProtection
+		self.addSubview(wrappedContentContainerView)
+
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		detailLabel.translatesAutoresizingMaskIntoConstraints = false
 		iconView.translatesAutoresizingMaskIntoConstraints = false
@@ -106,6 +112,11 @@ open class MoreViewHeader: UIView {
 		labelContainerView.setContentCompressionResistancePriority(.required, for: .vertical)
 
 		NSLayoutConstraint.activate([
+			wrappedContentContainerView.topAnchor.constraint(equalTo: self.topAnchor),
+			wrappedContentContainerView.bottomAnchor.constraint(equalTo: self.bottomAnchor),
+			wrappedContentContainerView.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+			wrappedContentContainerView.trailingAnchor.constraint(equalTo: self.trailingAnchor),
+
 			titleLabel.leadingAnchor.constraint(equalTo: labelContainerView.leadingAnchor),
 			titleLabel.trailingAnchor.constraint(equalTo: labelContainerView.trailingAnchor),
 			titleLabel.topAnchor.constraint(equalTo: labelContainerView.topAnchor),
@@ -116,8 +127,8 @@ open class MoreViewHeader: UIView {
 			detailLabel.bottomAnchor.constraint(equalTo: labelContainerView.bottomAnchor)
 		])
 
-		self.addSubview(iconView)
-		self.addSubview(labelContainerView)
+		contentContainerView.addSubview(iconView)
+		contentContainerView.addSubview(labelContainerView)
 
 		NSLayoutConstraint.activate([
 			iconView.widthAnchor.constraint(equalToConstant: thumbnailSize.width),
@@ -136,7 +147,7 @@ open class MoreViewHeader: UIView {
 		if showFavoriteButton {
 			updateFavoriteButtonImage()
 			favoriteButton.addTarget(self, action: #selector(toogleFavoriteState), for: UIControl.Event.touchUpInside)
-			self.addSubview(favoriteButton)
+			contentContainerView.addSubview(favoriteButton)
 			favoriteButton.isPointerInteractionEnabled = true
 
 			NSLayoutConstraint.activate([
@@ -147,7 +158,7 @@ open class MoreViewHeader: UIView {
 				favoriteButton.leadingAnchor.constraint(equalTo: labelContainerView.trailingAnchor, constant: 10)
 				])
 		} else if showActivityIndicator {
-			self.addSubview(activityIndicator)
+			contentContainerView.addSubview(activityIndicator)
 
 			NSLayoutConstraint.activate([
 				activityIndicator.centerYAnchor.constraint(equalTo: self.centerYAnchor),
@@ -189,7 +200,7 @@ open class MoreViewHeader: UIView {
 				}
 			}
 
-			titleLabel.attributedText = NSAttributedString(string: itemName ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
+			titleLabel.attributedText = NSAttributedString(string: itemName?.redacted() ?? "", attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 17, weight: .semibold)])
 
 			let byteCountFormatter = ByteCountFormatter()
 			byteCountFormatter.countStyle = .file
@@ -211,11 +222,13 @@ open class MoreViewHeader: UIView {
 		core?.vault.resourceManager?.start(iconRequest)
 
 		titleLabel.numberOfLines = 0
+
+		self.secureView(core: core)
 	}
 
 	public func updateHeader(title: String, subtitle: String) {
-		titleLabel.text = title
-		detailLabel.text = subtitle
+		titleLabel.text = title.redacted()
+		detailLabel.text = subtitle.redacted()
 	}
 
 	public required init?(coder aDecoder: NSCoder) {

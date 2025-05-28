@@ -1,6 +1,11 @@
-• iOS 18
-The app is now compatible with iOS 18.
+• Spaces and Sharing
+Support for new spaces and sharing capabilities.
+
+• Accessiblity
+Improved overall accessibility across the app.
+
+• Markup Mode
+Markup mode was not enabled automatically on iOS 18.
 
 • General Improvements
-General app improvements and internal fixes to enhance performance, synchronization, and stability.
-
+We made some internal improvements to make everything smoother.

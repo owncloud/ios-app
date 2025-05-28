@@ -170,12 +170,26 @@ extension OCItem: UniversalItemListCellContentProvider {
 		content.iconDisabled = isPlaceholder
 
 		// Title
-		if let name = self.name {
-			content.title = isFile ? .file(name: name) : .folder(name: name)
+		if let name {
+			let isHeader = configuration?.style.type == .header
+			if !isFile, isRoot, let driveID, let core = context?.core, let drive = core.drive(withIdentifier: driveID, attachedOnly: true), let driveName = drive.name {
+				content.title = .drive(name: isHeader ? driveName.redacted() : driveName)
+			} else {
+				let displayName = isHeader ? name.redacted() : name
+				content.title = isFile ? .file(name: displayName) : .folder(name: displayName)
+			}
 		}
 
 		// Details
 		var detailItems: [SegmentViewItem] = []
+
+		if configuration?.style.showPathDetails == true {
+			// - path breadcrumbs for style.showPathDetails == true
+			if let context, let parentLocation = location?.parent {
+				detailItems = OCLocation.composeSegments(breadcrumbs: parentLocation.breadcrumbs(in: context, includeServerName: false), in: context)
+				detailItems.append(SegmentViewItem(with: nil, title: "|", style: .plain))
+			}
+		}
 
 		// - Cloud status
 		let (cloudStatusIcon, cloudStatusIconAlpha, accessibilityLabel) = cloudStatus(in: context?.core)
@@ -202,6 +216,16 @@ extension OCItem: UniversalItemListCellContentProvider {
 
 		// - Description
 		var detailString: String = sizeLocalized
+		
+		if type == .collection {
+			if let core = context?.core, core.connection.isKiteworksServer {
+				detailString = ""
+			}
+		}
+
+		if location?.type == .drive, let core = context?.core {
+			detailString = driveQuotaLocalized(core: core)
+		}
 
 		if size < 0 {
 			detailString = OCLocalizedString("Pending", nil)
@@ -220,7 +244,7 @@ extension OCItem: UniversalItemListCellContentProvider {
 
 		var detailStringAccessible = detailString
 
-		detailString += " - " + lastModifiedLocalized
+		detailString += (detailString.count > 0 ? " - " : "") + lastModifiedLocalized
 		detailStringAccessible += " " + lastModifiedLocalizedAccessible
 
 		let detailSegment = SegmentViewItem(with: nil, title: detailString, style: .plain, titleTextStyle: .footnote, lines: [.singleLine], accessibilityLabel: detailStringAccessible)

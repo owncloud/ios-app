@@ -1,0 +1,5 @@
+Bugfix: [a11y] Fix Setup Wizard issue with largest Dynamic Type setting
+
+Make layout of setup wizard also usable when using the largest Dynamic Type text size by moving the content into a scrollview that comes into effect if the content of a step doesn't fit in the available vertical space.
+
+https://github.com/owncloud/ios-app/issues/1364

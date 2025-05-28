@@ -49,7 +49,7 @@ extension OCResourceText : ownCloudSDK.OCViewProvider {
 	public func provideView(for size: CGSize, in context: OCViewProviderContext?, completion completionHandler: @escaping (UIView?) -> Void) {
 		var attributedText : NSAttributedString?
 
-		if let mimeType = mimeType {
+		if let mimeType {
 			switch mimeType {
 				case "text/markdown":
 					// Render mark down
@@ -73,9 +73,9 @@ extension OCResourceText : ownCloudSDK.OCViewProvider {
 		textView.isEditable = false
 		textView.isScrollEnabled = false
 
-		if let attributedText = attributedText {
+		if let attributedText {
 			textView.attributedText = attributedText
-		} else if let text = text {
+		} else if let text {
 			textView.text = text
 			textView.font = UIFont.preferredFont(forTextStyle: .body)
 		}

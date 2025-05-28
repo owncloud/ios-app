@@ -103,6 +103,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(ScanAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DocumentEditingAction.actionExtension)
 
+		OCExtensionManager.shared.addExtension(ManageSpaceAction.actionExtension)
+		OCExtensionManager.shared.addExtension(MembersSpaceAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DisableSpaceAction.actionExtension)
+		OCExtensionManager.shared.addExtension(EditSpaceDescriptionAction.actionExtension)
+		OCExtensionManager.shared.addExtension(EditSpaceImageAction.actionExtension)
+		OCExtensionManager.shared.addExtension(DetailsSpaceAction.actionExtension)
+
 		// Register class settings for extensions added on a per-connection basis
 		OnMainThread {
 			OpenInWebAppAction.registerSettings()
@@ -119,7 +126,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		Theme.shared.activeCollection = ThemeCollection(with: ThemeStyle.preferredStyle)
 
 		// Licenses
-		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.libzip", bundleOf: AppDelegate.self, title: "libzip", resourceName: "libzip", fileExtension: "LICENSE"))
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.plcrashreporter", bundleOf: AppDelegate.self, title: "PLCrashReporter", resourceName: "PLCrashReporter", fileExtension: "LICENSE"))
 
 		// Initially apply theme based on light / dark mode

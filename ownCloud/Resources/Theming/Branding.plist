@@ -1,5 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<dict/>
+<dict>
+	<key>authentication-oauth2.oa2-client-id</key>
+	<string>3d2bf4ba-a82d-5be6-bf4b-31900687991b</string>
+	<key>authentication-oauth2.oa2-client-secret</key>
+	<string>#arl1lywxLol</string>
+	<key>authentication-oauth2.oidc-redirect-uri</key>
+	<string>oc://ios.owncloud.com/path</string>
+	<key>authentication-oauth2.oidc-scope</key>
+	<string></string>
+	<key>authentication-oauth2.post-client-id-and-secret</key>
+	<true/>
+	<key>authentication.skip-www-authenticate-checks</key>
+	<true/>
+	<key>branding.can-add-account</key>
+	<true/>
+	<key>branding.can-edit-account</key>
+	<false/>
+	<key>branding.organization-name</key>
+	<string>Kiteworks</string>
+	<key>branding.profile-allow-url-configuration</key>
+	<false/>
+	<key>branding.profile-bookmark-name</key>
+	<string>Kiteworks</string>
+	<key>branding.profile-url</key>
+	<string>https://loudoncountypov.kiteworks.com/</string>
+	<key>branding.send-feedback-address</key>
+	<string></string>
+	<key>branding.send-feedback-url</key>
+	<string></string>
+	<key>branding.theme-colors</key>
+	<dict>
+		<key>setup-status-bar-style</key>
+		<string>black</string>
+	</dict>
+	<key>branding.theme-definitions$[0].cssRecords</key>
+	<array>
+		<string>all.modal.welcome.message.infoBox.background.fill: #ffffff</string>
+		<string>all.modal.bookmarkEditor.grouped.table.welcome.message.background.fill: #ffffff</string>
+	</array>
+	<key>branding.theme-definitions$[0].darkBrandColor</key>
+	<string>#f4b223</string>
+	<key>branding.theme-definitions$[0].lightBrandColor</key>
+	<string>#425cc7</string>
+	<key>branding.url-help</key>
+	<string>https://www.kiteworks.com/support</string>
+	<key>branding.url-privacy</key>
+	<string>https://www.accellion.com/privacy-policy/</string>
+	<key>branding.url-terms-of-use</key>
+	<string></string>
+	<key>connection.well-known</key>
+	<string>.well-known</string>
+</dict>
 </plist>

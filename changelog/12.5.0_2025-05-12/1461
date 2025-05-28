@@ -1,0 +1,5 @@
+Bugfix: File drop crash on macOS
+
+Fixes a crash when using the iOS app on macOS and dropping a file onto the app's window to upload a file.
+
+https://github.com/owncloud/ios-app/pull/1461

@@ -66,7 +66,7 @@ class MoveAction : Action {
 		if items.count > 1 {
 			titleText = OCLocalizedFormat("Move {{itemCount}} items", ["itemCount" : "\(items.count)"])
 		} else {
-			titleText = OCLocalizedFormat("Move \"{{itemName}}\"", ["itemName" : items.first?.name ?? "?"])
+			titleText = OCLocalizedFormat("Move \"{{itemName}}\"", ["itemName" : items.first?.name?.redacted() ?? "?"])
 		}
 
 		let locationPicker = ClientLocationPicker(location: startLocation, selectButtonTitle: OCLocalizedString("Move here", nil), headerTitle: titleText, headerSubTitle: OCLocalizedString("Select target.", nil), avoidConflictsWith: items, choiceHandler: { (selectedDirectoryItem, location, _, cancelled) in
