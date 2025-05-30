@@ -33,7 +33,7 @@ class RecentLocationStore: NSObject {
 
 		super.init()
 
-		self.vault.keyValueStore?.registerClasses(NSSet(array: [NSArray.self, RecentLocation.self]) as! Set<AnyHashable>, forKey: .recentLocations)
+		self.vault.keyValueStore?.registerClasses(NSSet(array: [NSArray.self, RecentLocation.self]) as! Set<AnyHashable>, forKey: .recentLocations) // force cast can't be avoided here, unfortunately
 		self.vault.keyValueStore?.addObserver({ store, owner, key, newValue in
 			if let recentLocations = newValue as? [RecentLocation],
 			    let store = owner as? RecentLocationStore {
