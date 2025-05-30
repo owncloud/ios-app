@@ -472,9 +472,49 @@ public class ClientLocationPicker : NSObject {
 	}
 
 	public func navigate(to location: OCLocation) {
-		if let rootContext,
+		var useContext = rootContext
+
+		// If the rootContext is for a different (or no) bookmark than the location,
+		// identify section & client context belonging to the location's bookmark
+		if rootContext?.core?.connection.bookmark?.uuid != location.bookmarkUUID {
+			useContext = nil // Avoid navigation if no correct client context can be found
+
+			if let sections = rootViewController?.sections {
+				for section in sections {
+					if section is AccountControllerSection {
+						if section.clientContext?.accountConnection?.bookmark.uuid == location.bookmarkUUID {
+							// This section belongs to the location's bookmark
+							useContext = section.clientContext
+							break
+						}
+					}
+				}
+			}
+
+			// If there's no core for the connection yet, initiate the connection
+			if let useContext, useContext.core == nil, let accountConnection = useContext.accountConnection {
+				accountConnection.connect { error in
+					if error == nil {
+						OnMainThread {
+							// .. and navigate when it is available
+							self.navigate(to: location, with: useContext)
+						}
+					}
+				}
+
+				// Return at this point in order not to navigate with a core-less context
+				return
+			}
+		}
+
+		// Navigate to the location
+		self.navigate(to: location, with: useContext)
+	}
+
+	private func navigate(to location: OCLocation, with context: ClientContext?) {
+		if let context,
 		   let rootNavigationController,
-		   let locationViewController = provideViewController(for: location, maximumLevel: maximumLevel, context: rootContext) {
+		   let locationViewController = provideViewController(for: location, maximumLevel: maximumLevel, context: context) {
 			rootNavigationController.pushViewController(locationViewController, animated: true)
 		}
 	}
