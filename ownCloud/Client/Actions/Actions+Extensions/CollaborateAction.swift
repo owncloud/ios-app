@@ -24,13 +24,29 @@ class CollaborateAction: Action {
 	override class var identifier : OCExtensionIdentifier? { return OCExtensionIdentifier("com.owncloud.action.collaborate") }
 	override class var category : ActionCategory? { return .normal }
 	override class var name : String { return OCLocalizedString("Sharing", nil) }
-	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut, .contextMenuSharingItem, .moreItem, .moreDetailItem, .accessibilityCustomAction] }
+	override class var locations : [OCExtensionLocationIdentifier]? { return [.keyboardShortcut, .contextMenuSharingItem, .moreItem, .moreFolder, .moreDetailItem, .accessibilityCustomAction] }
 	override class var keyCommand : String? { return "S" }
 	override class var keyModifierFlags: UIKeyModifierFlags? { return [.command] }
 
 	// MARK: - Extension matching
 	override class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if forContext.items.count == 1, let core = forContext.core, core.connectionStatus == .online, core.connection.capabilities?.sharingAPIEnabled == 1, let item = forContext.items.first, item.isShareable {
+			// For .moreFolder location: Check special cases at root level
+			if forContext.location?.identifier == .moreFolder && forContext.containsRoot {
+				// Check if we're using drives (oCIS) or not (OC10)
+				if let core = forContext.core, !core.useDrives {
+					// OC10: Don't allow sharing at root
+					return .none
+				} else if let drive = forContext.drive {
+					// oCIS: Check drive type
+					// Don't allow sharing for virtual drives (like Shares) or personal spaces at root
+					if drive.type == .virtual || drive.type == .personal {
+						return .none
+					}
+					// For project spaces and others, rely on isShareable from server
+				}
+			}
+			
 			if let driveID = item.driveID, driveID == OCDriveIDSharesJail {
 				// Disable re-sharing by not allowing to share items located in the Shares Jail (https://github.com/owncloud/ios-app/issues/1353)
 				return .none
