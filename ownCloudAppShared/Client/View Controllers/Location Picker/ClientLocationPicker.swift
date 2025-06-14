@@ -370,6 +370,22 @@ public class ClientLocationPicker : NSObject {
 						return false
 					}
 
+					switch self.startLocation.clientLocationLevel {
+						case .drive:
+							// If picker is limited to a drive, don't show recents from other drives
+							if location.driveID != self.startLocation.driveID {
+								return false
+							}
+
+						case .account:
+							// If picker is limited to an account, don't show recents from other accounts
+							if location.bookmarkUUID != self.startLocation.bookmarkUUID {
+								return false
+							}
+
+						default: break
+					}
+
 					return true
 				}
 			}
