@@ -25,6 +25,22 @@ class RecentLocationCell: UniversalItemListCell {
 		cssSelectors = [.recentLocation]
 	}
 
+	override func updateLayoutConstraints() {
+		super.updateLayoutConstraints()
+
+		// Limit title label to one line
+		titleLabel.numberOfLines = 1
+
+		// Add constraint to limit width
+		let maxWidthConstraint = self.widthAnchor.constraint(lessThanOrEqualToConstant: 240)
+		maxWidthConstraint.isActive = true // .. activate it ..
+
+		// .. and add it to self.cellConstraints
+		var constraints = cellConstraints ?? []
+		constraints.append(maxWidthConstraint)
+		cellConstraints = constraints
+	}
+
 	override func updateConfiguration(using state: UICellConfigurationState) {
 		super.updateConfiguration(using: state)
 
