@@ -73,7 +73,7 @@ public class ClientLocationPicker : NSObject {
 
 	// MARK: - Options
 	public var showFavorites: Bool
-	public var recentLocations: [OCLocation]?
+	public var showRecentLocations: Bool
 
 	public var startLocation: OCLocation
 	public var maximumLevel: LocationLevel
@@ -109,6 +109,7 @@ public class ClientLocationPicker : NSObject {
 	public init(location: OCLocation, maximumLevel: LocationLevel = .folder, showFavorites: Bool = true, showRecents: Bool = true, selectButtonTitle: String?, selectPrompt: String? = nil, headerTitle: String? = nil, headerSubTitle: String? = nil, headerView: UIView? = nil, requiredPermissions: OCItemPermissions? = [.createFile], avoidConflictsWith conflictItems: [OCItem]?, choiceHandler: @escaping ChoiceHandler) {
 		self.startLocation = location
 		self.showFavorites = showFavorites
+		self.showRecentLocations = showRecents
 		self.selectButtonTitle = selectButtonTitle ?? OCLocalizedString("Select folder", nil)
 		self.selectPrompt = selectPrompt
 		self.headerTitle = headerTitle
@@ -254,15 +255,28 @@ public class ClientLocationPicker : NSObject {
 		return sectionDataSource
 	}
 
-	func provideViewController(for location: OCLocation, maximumLevel: LocationLevel, context: ClientContext) -> CollectionViewController? {
-		let sectionDataSource = provideDataSource(for: location, maximumLevel: maximumLevel, context: context)
+	func provideViewController(for location: OCLocation, extraSections: [CollectionViewSection]? = nil, maximumLevel: LocationLevel, context: ClientContext) -> CollectionViewController? {
+		let sectionsDataSource = provideDataSource(for: location, maximumLevel: maximumLevel, context: context)
 		var viewController: CollectionViewController?
 
-		if let sectionDataSource = sectionDataSource {
+		if let sectionsDataSource {
+			var effectiveSectionsDataSource: OCDataSource? = sectionsDataSource
+
+			if let extraSections {
+				effectiveSectionsDataSource = OCDataSourceComposition(sources: [
+					OCDataSourceArray(items: extraSections),
+					sectionsDataSource
+				])
+			}
+
 			viewController = CollectionViewController(context: context, sections: nil, useStackViewRoot: true, hierarchic: true)
-			viewController?.sectionsDataSource = sectionDataSource
+			viewController?.sectionsDataSource = effectiveSectionsDataSource
 		} else {
 			viewController = location.openItem(from: nil, with: context, animated: true, pushViewController: false, completion: nil) as? CollectionViewController
+
+			if let extraSections, let viewController {
+				viewController.insert(sections: extraSections, at: 0)
+			}
 		}
 
 		if let viewController {
@@ -299,6 +313,110 @@ public class ClientLocationPicker : NSObject {
 		return viewController
 	}
 
+	// MARK: - Recent locations
+	lazy var recentLocationsDatasource: OCDataSource? = {
+		var datasources: [OCDataSource] = []
+
+		switch startLocation.clientLocationLevel {
+			case .accounts:
+				for bookmark in OCBookmarkManager.shared.bookmarks {
+					if let accountDatasource = recentLocationStore(for: bookmark.uuid)?.dataSource {
+						datasources.append(accountDatasource)
+					}
+				}
+
+			case .account, .drive, .folder:
+				if let accountDatasource = recentLocationStore(for: startLocation.bookmarkUUID)?.dataSource {
+					datasources.append(accountDatasource)
+				}
+		}
+
+		let datasource = OCDataSourceComposition(sources: datasources, applyCustomizations: { [weak self] compositionSource in
+			// Sort by date (more recent first)
+			compositionSource.sortComparator = { (src1, ref1, src2, ref2) -> ComparisonResult in
+				if let record1 = try? src1.record(forItemRef: ref1),
+				   let record2 = try? src2.record(forItemRef: ref2),
+				   let location1 = record1.item as? RecentLocation,
+				   let location2 = record2.item as? RecentLocation,
+				   let timestamp1 = location1.timestamp,
+				   let timestamp2 = location2.timestamp {
+				   	if timestamp1.timeIntervalSinceReferenceDate > timestamp2.timeIntervalSinceReferenceDate {
+						return .orderedAscending
+					} else if timestamp1.timeIntervalSinceReferenceDate < timestamp2.timeIntervalSinceReferenceDate {
+						return .orderedDescending
+					}
+				}
+				return .orderedSame
+			}
+
+			// Do not include locations that aren't allowed
+			if self?.allowedLocationFilter != nil ||
+			   self?.navigationLocationFilter != nil {
+				compositionSource.filter = { [weak self] source, itemRef in
+					guard let self,
+					      let itemRec = try? source.record(forItemRef: itemRef),
+					      let recentLocation = itemRec.item as? RecentLocation,
+					      let location = recentLocation.location else { return false }
+
+					let context = (location.bookmarkUUID == self.rootContext?.core?.bookmark.uuid) ? self.rootContext : nil
+
+					if let allowedLocationFilter = self.allowedLocationFilter,
+					   !allowedLocationFilter(location, context) {
+						return false
+					}
+
+					if let navigationLocationFilter = self.navigationLocationFilter,
+					   !navigationLocationFilter(location, context) {
+						return false
+					}
+
+					switch self.startLocation.clientLocationLevel {
+						case .drive:
+							// If picker is limited to a drive, don't show recents from other drives
+							if location.driveID != self.startLocation.driveID {
+								return false
+							}
+
+						case .account:
+							// If picker is limited to an account, don't show recents from other accounts
+							if location.bookmarkUUID != self.startLocation.bookmarkUUID {
+								return false
+							}
+
+						default: break
+					}
+
+					return true
+				}
+			}
+		})
+
+		return datasource
+	}()
+
+	var recentLocationsStores: [UUID : RecentLocationStore] = [:] // store stores strongly and at the picker level, so they get retained for the lifetime of the picker and deallocated once the picker is dismissed
+	func recentLocationStore(for bookmarkUUID: UUID?) -> RecentLocationStore? {
+		guard let bookmarkUUID else { return nil }
+
+		if let recentLocationStore = recentLocationsStores[bookmarkUUID] {
+			return recentLocationStore
+		}
+
+		if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
+			let recentLocationStore = RecentLocationStore(for: bookmark)
+			recentLocationsStores[bookmark.uuid] = recentLocationStore
+			return recentLocationStore
+		}
+
+		return nil
+	}
+
+	func addRecent(location: OCLocation, from core: OCCore) {
+		if let bookmarkUUID = location.bookmarkUUID {
+			recentLocationStore(for: bookmarkUUID)?.add(location: location, from: core)
+		}
+	}
+
 	// MARK: - Presentation & Choice
 	var rootNavigationController: UINavigationController?
 	var rootViewController: CollectionViewController?
@@ -306,6 +424,7 @@ public class ClientLocationPicker : NSObject {
 
 	public func pickerViewControllerForPresentation(with baseContext: ClientContext? = nil) -> UIViewController? {
 		let navigationController = ThemeNavigationController()
+		var extraSections: [CollectionViewSection]?
 
 		// Set up navigation controller and context
 		rootNavigationController = navigationController
@@ -333,9 +452,26 @@ public class ClientLocationPicker : NSObject {
 			}
 		})
 
+		// Set up recent locations
+		if showRecentLocations, let recentLocationsDatasource {
+			// Add recents section on top
+			let itemSize = NSCollectionLayoutSize(widthDimension: .estimated(164), heightDimension: .estimated(140))
+			let item = NSCollectionLayoutItem(layoutSize: itemSize)
+			let recentsSection = CollectionViewSection(identifier: "recents", dataSource: recentLocationsDatasource, cellStyle: .init(with: .gridCell), cellLayout: .sideways(item: item, groupSize: itemSize, edgeSpacing: NSCollectionLayoutEdgeSpacing(leading: .fixed(10), top: .fixed(0), trailing: .fixed(10), bottom: .fixed(0)), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 0, bottom: 10, trailing: 0), orthogonalScrollingBehaviour: .continuous), clientContext: baseContext)
+			recentsSection.hideIfEmptyDataSource = recentLocationsDatasource
+
+			recentsSection.boundarySupplementaryItems = [
+				.mediumTitle(OCLocalizedString("Recent locations",nil), pinned: true)
+			]
+
+			extraSections = [
+				recentsSection
+			]
+		}
+
 		// Compose view controller
-		if let rootContext = rootContext {
-			rootViewController = provideViewController(for: startLocation, maximumLevel: maximumLevel, context: rootContext)
+		if let rootContext {
+			rootViewController = provideViewController(for: startLocation, extraSections: extraSections, maximumLevel: maximumLevel, context: rootContext)
 			if let rootViewController {
 				navigationController.pushViewController(rootViewController, animated: false)
 
@@ -349,6 +485,54 @@ public class ClientLocationPicker : NSObject {
 		}
 
 		return nil
+	}
+
+	public func navigate(to location: OCLocation) {
+		var useContext = rootContext
+
+		// If the rootContext is for a different (or no) bookmark than the location,
+		// identify section & client context belonging to the location's bookmark
+		if rootContext?.core?.connection.bookmark?.uuid != location.bookmarkUUID {
+			useContext = nil // Avoid navigation if no correct client context can be found
+
+			if let sections = rootViewController?.sections {
+				for section in sections {
+					if section is AccountControllerSection {
+						if section.clientContext?.accountConnection?.bookmark.uuid == location.bookmarkUUID {
+							// This section belongs to the location's bookmark
+							useContext = section.clientContext
+							break
+						}
+					}
+				}
+			}
+
+			// If there's no core for the connection yet, initiate the connection
+			if let useContext, useContext.core == nil, let accountConnection = useContext.accountConnection {
+				accountConnection.connect { error in
+					if error == nil {
+						OnMainThread {
+							// .. and navigate when it is available
+							self.navigate(to: location, with: useContext)
+						}
+					}
+				}
+
+				// Return at this point in order not to navigate with a core-less context
+				return
+			}
+		}
+
+		// Navigate to the location
+		self.navigate(to: location, with: useContext)
+	}
+
+	private func navigate(to location: OCLocation, with context: ClientContext?) {
+		if let context,
+		   let rootNavigationController,
+		   let locationViewController = provideViewController(for: location, maximumLevel: maximumLevel, context: context) {
+			rootNavigationController.pushViewController(locationViewController, animated: true)
+		}
 	}
 
 	public func present(in clientContext: ClientContext, baseContext: ClientContext? = nil) {
@@ -372,6 +556,7 @@ public class ClientLocationPicker : NSObject {
 								item?.bookmarkUUID = bookmarkUUID
 							}
 							OnMainThread {
+								self.addRecent(location: location, from: core)
 								choiceHandler(item, location, context, cancelled)
 							}
 						})
@@ -381,6 +566,9 @@ public class ClientLocationPicker : NSObject {
 					// Add missing location for item
 					if item.bookmarkUUID == nil, let bookmarkUUID = context?.core?.bookmark.uuid.uuidString {
 						item.bookmarkUUID = bookmarkUUID
+					}
+					if let itemLocation = item.location, let core = context?.core {
+						addRecent(location: itemLocation, from: core)
 					}
 					choiceHandler(item, item.location, context, cancelled)
 					return
