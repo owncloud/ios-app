@@ -35,6 +35,9 @@ class RecentLocationCell: UniversalItemListCell {
 		let maxWidthConstraint = self.widthAnchor.constraint(lessThanOrEqualToConstant: 240)
 		maxWidthConstraint.isActive = true // .. activate it ..
 
+		// Clip contents to avoid very long account names spilling out of the cell
+		clipsToBounds = true
+
 		// .. and add it to self.cellConstraints
 		var constraints = cellConstraints ?? []
 		constraints.append(maxWidthConstraint)
