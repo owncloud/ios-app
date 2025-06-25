@@ -35,13 +35,13 @@ extension RecentLocation: UniversalItemListCellContentProvider {
 		var detailsLine: [SegmentViewItem] = []
 
 		if let driveName, location?.type != .drive {
-			let driveDetailItem = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "square.grid.2x2.fill"), title: driveName, style: .plain, titleTextStyle: .footnote)
+			let driveDetailItem = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "square.grid.2x2.fill"), title: driveName, style: .plain, titleTextStyle: .footnote, linebreakMode: .byTruncatingMiddle)
 			driveDetailItem.lines = [ .primary, .singleLine ]
 			detailsLine.append(driveDetailItem)
 		}
 
 		if let bookmarkUUID = location?.bookmarkUUID, let bookmark = OCBookmarkManager.shared.bookmark(for: bookmarkUUID) {
-			let accountDetailItem = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "server.rack"), title: bookmark.displayName ?? bookmark.shortName, style: .plain, titleTextStyle: .footnote)
+			let accountDetailItem = SegmentViewItem(with: OCSymbol.icon(forSymbolName: "server.rack"), title: bookmark.displayName ?? bookmark.shortName, style: .plain, titleTextStyle: .footnote, linebreakMode: .byTruncatingMiddle)
 			accountDetailItem.lines = [ .secondary, .singleLine ]
 			detailsLine.append(accountDetailItem)
 		}
