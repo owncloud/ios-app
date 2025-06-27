@@ -18,6 +18,7 @@
 
 import UIKit
 import ownCloudSDK
+import ownCloudApp
 import ownCloudAppShared
 import WebKit
 
@@ -138,6 +139,15 @@ extension WebViewDisplayViewController: DisplayExtension {
 
 			if matches > 0 {
 				return .locationMatch
+			}
+
+			// If watermark/confidential overlays are used, QLPreviewController no longer reacts to scroll and zoom events,
+			// so use WebKit's support for QuickLook formats instead in that case.
+			if ConfidentialManager.shared.confidentialSettingsEnabled {
+				if let quickLookRegex = PreviewViewController.supportedFormatsRegex,
+				   quickLookRegex.numberOfMatches(in: mimeType, options: .reportCompletion, range: NSRange(location: 0, length: mimeType.count)) > 0 {
+					return .locationMatch
+				}
 			}
 		}
 
