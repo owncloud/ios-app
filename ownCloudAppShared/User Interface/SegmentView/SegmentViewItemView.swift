@@ -96,7 +96,7 @@ public class SegmentViewItemView: ThemeView, ThemeCSSAutoSelector {
 			titleView?.setContentHuggingPriority(titleViewHugging, for: .horizontal)
 			titleView?.setContentHuggingPriority(.required, for: .vertical)
 			titleView?.setContentCompressionResistancePriority(.required, for: .vertical)
-			titleView?.setContentCompressionResistancePriority(.required, for: .horizontal)
+			titleView?.setContentCompressionResistancePriority(.defaultHigh, for: .horizontal)
 
 			views.append(titleView!)
 		}
