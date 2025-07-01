@@ -8,6 +8,9 @@ on:
     - milestone/*
     - chore/*
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: macos-latest
