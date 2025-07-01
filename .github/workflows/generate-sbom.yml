@@ -26,9 +26,17 @@ jobs:
         run: xcodebuild -resolvePackageDependencies -project ownCloudSDK.xcodeproj
         working-directory: ./ios-sdk/
       - name: Build SBOM
-        run: FETCH_LICENSE=true cdxgen -o ./bom.json -t swift 
+        run: FETCH_LICENSE=true cdxgen -o ./sbom.json -t swift 
+      - name: Format JSON
+        shell: bash
+        run: |
+          beautifyJSON() {
+            jq . "$1" >"$1.tmp"
+            mv "$1.tmp" "$1"
+          }
+          beautifyJSON "sbom.json"
       - name: Commit files
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: SBOM updated
-          file_pattern: bom.json
+          file_pattern: sbom.json
