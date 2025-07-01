@@ -6,6 +6,7 @@ on:
     - fix/*
     - feature/*
     - milestone/*
+    - chore/*
 
 jobs:
   build:
