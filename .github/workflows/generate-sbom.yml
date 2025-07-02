@@ -3,10 +3,8 @@ name: Generate/Update SBOM
 on:
   push:
     branches:
-    - fix/*
-    - feature/*
-    - milestone/*
-    - chore/*
+    - master
+    - main
 
 permissions:
   contents: write
