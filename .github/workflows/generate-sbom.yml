@@ -29,11 +29,7 @@ jobs:
         run: xcodebuild -resolvePackageDependencies -project ownCloudSDK.xcodeproj
         working-directory: ./ios-sdk/
       - name: Build SBOM
-        shell: bash
-        run: |
-          export FETCH_LICENSE=true
-          export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
-          cdxgen -o ./sbom.json -t swift .
+        run: FETCH_LICENSE=true GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }} cdxgen -o ./sbom.json -t swift .
       - name: Format JSON
         shell: bash
         run: |
