@@ -5,6 +5,7 @@ on:
     branches:
     - master
     - main
+    - chore/*
 
 permissions:
   contents: write
@@ -37,7 +38,9 @@ jobs:
           }
           beautifyJSON "sbom.json"
       - name: Commit files
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: GuillaumeFalourd/git-commit-push@v1.3
         with:
+          email: devops@owncloud.com
+          name: ownClouders
           commit_message: SBOM updated
-          file_pattern: sbom.json
+          files: sbom.json
