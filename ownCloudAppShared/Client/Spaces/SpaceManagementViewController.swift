@@ -318,6 +318,9 @@ public class SpaceManagementViewController: CollectionViewController {
 			return
 		}
 
+		// Disable select button to prevent triggering creation multiple times (fixes KOKO-1383)
+		bottomButtonBar?.selectButton.isEnabled = false
+
 		switch mode {
 			case .create:
 				core.createDrive(withName: name, description: subtitle, quota: NSNumber(value: quotaTotalBytes ?? 0), template: .default) { [weak self] error, drive in
