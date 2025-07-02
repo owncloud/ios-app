@@ -1,10 +1,8 @@
 {
   "bomFormat": "CycloneDX",
   "specVersion": "1.6",
-  "serialNumber": "urn:uuid:a276c382-eb9f-4615-b3f8-d7c5e795e109",
   "version": 1,
   "metadata": {
-    "timestamp": "2025-07-02T10:20:47Z",
     "tools": {
       "components": [
         {
@@ -264,7 +262,6 @@
           ]
         }
       },
-      "timestamp": "2025-07-02T10:20:48Z",
       "text": "This Software Bill-of-Materials (SBOM) document was created on Wednesday, July 2, 2025 with cdxgen. The data was captured during the build lifecycle phase. The document describes an application named 'swiftpm'. There are 4 components. The package type in this SBOM is swift with 4 purl namespaces described under components. The components were identified from the source files: ios-sdk/ownCloudSDK.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved, ownCloud.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved."
     }
   ]
