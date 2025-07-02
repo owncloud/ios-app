@@ -32,7 +32,8 @@ jobs:
         shell: bash
         run: |
           export FETCH_LICENSE=true
-          cdxgen -o ./sbom.json -t swift
+          export GITHUB_TOKEN=${{ secrets.GITHUB_TOKEN }}
+          cdxgen -o ./sbom.json -t swift .
       - name: Format JSON
         shell: bash
         run: |
