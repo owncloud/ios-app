@@ -261,8 +261,7 @@
             }
           ]
         }
-      },
-      "text": "This Software Bill-of-Materials (SBOM) document was created on Wednesday, July 2, 2025 with cdxgen. The data was captured during the build lifecycle phase. The document describes an application named 'swiftpm'. There are 4 components. The package type in this SBOM is swift with 4 purl namespaces described under components. The components were identified from the source files: ios-sdk/ownCloudSDK.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved, ownCloud.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved."
+      }
     }
   ]
 }
