@@ -43,5 +43,5 @@ jobs:
         with:
           email: devops@owncloud.com
           name: ownClouders
-          commit_message: [sbom] updated SBOM via cdxgen
+          commit_message: "[sbom] updated SBOM via cdxgen"
           files: sbom.json
