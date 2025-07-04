@@ -5,7 +5,6 @@ on:
     branches:
     - master
     - main
-    - chore/*
 
 permissions:
   contents: write
@@ -15,8 +14,9 @@ jobs:
     runs-on: macos-latest
     name: Generate/Update SBOM
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
         with:
+          ssh-key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
           submodules: true
       - name: Xcode version
         run: /usr/bin/xcodebuild -version
@@ -33,7 +33,7 @@ jobs:
         shell: bash
         run: |
           trimAndFormatJSON() {
-            jq 'del(.serialNumber, .metadata.timestamp, .annotations[].timestamp)' "$1" >"$1.tmp"
+            jq 'del(.serialNumber, .metadata.timestamp, .annotations[].timestamp, .annotations[].text)' "$1" >"$1.tmp"
             mv "$1.tmp" "$1"
           }
           trimAndFormatJSON "sbom.json"
@@ -42,5 +42,5 @@ jobs:
         with:
           email: devops@owncloud.com
           name: ownClouders
-          commit_message: SBOM updated
+          commit_message: "[sbom] updated SBOM via cdxgen"
           files: sbom.json
