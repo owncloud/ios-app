@@ -46,33 +46,29 @@ public extension OCBookmarkManager {
 		alertController.addAction(UIAlertAction(title: destructiveTitle, style: .destructive, handler: { (_) in
 			if !OCBookmarkManager.attemptLock(bookmark: bookmark, presentErrorOn: hostViewController, action: { bookmark, lockActionCompletion in
 				OCCoreManager.shared.scheduleOfflineOperation({ (bookmark, offlineOperationCompletion) in
-					let vault : OCVault = OCVault(bookmark: bookmark)
-
-					vault.erase(completionHandler: { (_, error) in
-						OnMainThread {
-							if error != nil {
-								// Inform user if vault couldn't be erased
-								let alertController = ThemedAlertController(title: NSString(format: failureTitle as NSString, bookmark.shortName as NSString) as String,
-																			message: error?.localizedDescription,
-																			preferredStyle: .alert)
-
-								alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
-
-								hostViewController.present(alertController, animated: true)
-							} else {
-								// Success! We can now remove the bookmark
-								OCMessageQueue.global.dequeueAllMessages(forBookmarkUUID: bookmark.uuid)
-
-								if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmark.uuid) {
-									OCBookmarkManager.shared.removeBookmark(bookmark)
-								}
-							}
-
-							completion?() // delete(withAlertOn:) completion Handler
-							offlineOperationCompletion() // OCCoreManager.scheduleOfflineOperation completion handler
-							lockActionCompletion() // OCBookmarkManager.attemptLock completion handler
-						}
-					})
+					// Attempt to logout/deauthenticate from the server before erasing local data
+					if let authMethod = bookmark.authenticationMethod {
+						let connection = OCConnection(bookmark: bookmark)
+						
+						authMethod.deauthenticateConnection(connection, withCompletionHandler: { (_, _) in
+							// Proceed with vault erasure regardless of deauthentication result
+							// This ensures users can always remove bookmarks even if logout fails
+							self.performVaultErasure(bookmark: bookmark,
+													 hostViewController: hostViewController,
+													 failureTitle: failureTitle,
+													 completion: completion,
+													 offlineOperationCompletion: offlineOperationCompletion,
+													 lockActionCompletion: lockActionCompletion)
+						})
+					} else {
+						// No authentication method, proceed directly with vault erasure
+						self.performVaultErasure(bookmark: bookmark,
+												 hostViewController: hostViewController,
+												 failureTitle: failureTitle,
+												 completion: completion,
+												 offlineOperationCompletion: offlineOperationCompletion,
+												 lockActionCompletion: lockActionCompletion)
+					}
 				}, for: bookmark)
 			}) {
 				completion?()
@@ -80,5 +76,40 @@ public extension OCBookmarkManager {
 		}))
 
 		hostViewController.present(alertController, animated: true, completion: nil)
+	}
+	
+	private func performVaultErasure(bookmark: OCBookmark,
+									  hostViewController: UIViewController,
+									  failureTitle: String,
+									  completion: (() -> Void)?,
+									  offlineOperationCompletion: @escaping () -> Void,
+									  lockActionCompletion: @escaping () -> Void) {
+		let vault = OCVault(bookmark: bookmark)
+		
+		vault.erase(completionHandler: { (_, error) in
+			OnMainThread {
+				if error != nil {
+					// Inform user if vault couldn't be erased
+					let alertController = ThemedAlertController(title: NSString(format: failureTitle as NSString, bookmark.shortName as NSString) as String,
+																message: error?.localizedDescription,
+																preferredStyle: .alert)
+					
+					alertController.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default, handler: nil))
+					
+					hostViewController.present(alertController, animated: true)
+				} else {
+					// Success! We can now remove the bookmark
+					OCMessageQueue.global.dequeueAllMessages(forBookmarkUUID: bookmark.uuid)
+					
+					if let bookmark = OCBookmarkManager.shared.bookmark(for: bookmark.uuid) {
+						OCBookmarkManager.shared.removeBookmark(bookmark)
+					}
+				}
+				
+				completion?() // delete(withAlertOn:) completion Handler
+				offlineOperationCompletion() // OCCoreManager.scheduleOfflineOperation completion handler
+				lockActionCompletion() // OCBookmarkManager.attemptLock completion handler
+			}
+		})
 	}
 }
