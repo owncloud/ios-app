@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Kiteworks</string>
+	<string>$(APP_PRODUCT_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,18 +13,18 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Kiteworks</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundlePackageType</key>
 	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
-	<key>CFBundleShortVersionString</key>
-	<string>$(APP_SHORT_VERSION)</string>
-	<key>CFBundleVersion</key>
-	<string>$(APP_VERSION)</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>CFBundleShortVersionString</key>
+	<string>$(APP_SHORT_VERSION)</string>
+	<key>CFBundleVersion</key>
+	<string>$(APP_VERSION)</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionFileProviderActions</key>
@@ -43,12 +43,12 @@
 		<key>NSExtensionPointIdentifier</key>
 		<string>com.apple.fileprovider-actionsui</string>
 	</dict>
-	<key>OCAppComponentIdentifier</key>
-	<string>fileProviderUIExtension</string>
 	<key>OCAppGroupIdentifier</key>
 	<string>group.com.owncloud.ios-app</string>
 	<key>OCAppIdentifierPrefix</key>
 	<string>$(AppIdentifierPrefix)</string>
+	<key>OCAppComponentIdentifier</key>
+	<string>fileProviderUIExtension</string>
 	<key>OCKeychainAccessGroupIdentifier</key>
 	<string>group.com.owncloud.ios-app</string>
 </dict>

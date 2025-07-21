@@ -2,8 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>CFBundleDisplayName</key>
-	<string>Save to Kiteworks</string>
+	<key>OCKeychainAccessGroupIdentifier</key>
+	<string>group.com.owncloud.ios-app</string>
 	<key>CFBundleIcons</key>
 	<dict>
 		<key>CFBundlePrimaryIcon</key>
@@ -14,15 +14,16 @@
 			</array>
 		</dict>
 	</dict>
-	<key>CFBundleIdentifier</key>
-	<string>com.owncloud.ios-app.ownCloud-Action-Extension</string>
-	<key>CFBundleName</key>
-	<string>Kiteworks</string>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
+	<key>OCHasFileProvider</key>
+	<true/>
+	<key>OCAppComponentIdentifier</key>
+	<string>shareExtension</string>
+	<key>CFBundleDisplayName</key>
+	<string>Save to $(APP_PRODUCT_NAME)</string>
+	<key>OCAppIdentifierPrefix</key>
+	<string>$(AppIdentifierPrefix)</string>
+	<key>OCAppGroupIdentifier</key>
+	<string>group.com.owncloud.ios-app</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionAttributes</key>
@@ -40,20 +41,15 @@
     ).@count == $extensionItem.attachments.@count
 ).@count &gt; 0</string>
 		</dict>
-		<key>NSExtensionPointIdentifier</key>
-		<string>com.apple.ui-services</string>
 		<key>NSExtensionPrincipalClass</key>
 		<string>ShareExtensionViewController</string>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.ui-services</string>
 	</dict>
-	<key>OCAppComponentIdentifier</key>
-	<string>shareExtension</string>
-	<key>OCAppGroupIdentifier</key>
-	<string>group.com.owncloud.ios-app</string>
-	<key>OCAppIdentifierPrefix</key>
-	<string>$(AppIdentifierPrefix)</string>
-	<key>OCHasFileProvider</key>
-	<true/>
-	<key>OCKeychainAccessGroupIdentifier</key>
-	<string>group.com.owncloud.ios-app</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<true/>
+	</dict>
 </dict>
 </plist>
