@@ -115,40 +115,30 @@ platform :ios do
         # Set options, which action should not performed, by default all actions will be performed
         # Disable all options: fastlane release_on_appstore create_release_notes:false create_screenshots:false deliver:false build_regular_app:false build_emm_app:false
 
-        create_screenshots = false
+        create_screenshots = true
         skip_screenshots = false
-        create_release_notes = false
-        if options[:create_screenshots]
+        if options[:create_screenshots] == false
           create_screenshots = options[:create_screenshots]
           skip_screenshots = true
         end
-        
-        if options[:create_release_notes]
-          create_release_notes = options[:create_release_notes]
-        end
 
-        deliver = false
-        if options[:deliver]
+        deliver = true
+        if options[:deliver] == false
           deliver = options[:deliver]
         end
 
-        build_regular_app = false
-        if options[:build_regular_app]
+        build_regular_app = true
+        if options[:build_regular_app] == false
           build_regular_app = options[:build_regular_app]
         end
-        
-        build_kiteworks_app = false
-        if options[:build_kiteworks_app]
-          build_kiteworks_app = options[:build_kiteworks_app]
-        end
 
-        build_emm_app = false
-        if options[:build_emm_app]
+        build_emm_app = true
+        if options[:build_emm_app] == false
           build_emm_app = options[:build_emm_app]
         end
 
-        build_owncloud_online_app = false
-        if options[:build_owncloud_online_app]
+        build_owncloud_online_app = true
+        if options[:build_owncloud_online_app] == false
           build_owncloud_online_app = options[:build_owncloud_online_app]
         end
 
@@ -157,8 +147,8 @@ platform :ios do
           puts("Prepare Metadata…")
           # Prepare Metadata
           prepare_metadata(
-          	create_release_notes: create_release_notes,
-          	create_screenshots: create_screenshots,
+          	create_release_notes: options[:create_release_notes],
+          	create_screenshots: options[:create_screenshots],
           	app_name: "ownCloud",
           	metadata_path: 'fastlane/metadata/en-US/release_notes.txt'
           )
@@ -189,8 +179,8 @@ platform :ios do
           puts("Prepare Metadata…")
           # Prepare Metadata
           prepare_metadata(
-          	create_release_notes: create_release_notes,
-          	create_screenshots: create_screenshots,
+          	create_release_notes: options[:create_release_notes],
+          	create_screenshots: options[:create_screenshots],
           	app_name: "ownCloud EMM",
           	metadata_path: 'fastlane/metadata-emm/en-US/release_notes.txt'
           )
@@ -218,50 +208,14 @@ platform :ios do
               ipa: "ownCloud-emm.ipa"
             )
           end
-          end
-          
-      if build_kiteworks_app
-          puts("Prepare Metadata…")
-          # Prepare Metadata
-          prepare_metadata(
-            create_release_notes: create_release_notes,
-            create_screenshots: create_screenshots,
-            app_name: "Kiteworks",
-            metadata_path: 'fastlane/metadata/en-US/release_notes.txt'
-          )
-          
-          puts("Build Kiteworks iOS App…")
-          # Moving all EMM resources to the correct place
-          sh "cp -R ../ownCloud/Resources/Theming/com.owncloud.ios-app.kiteworks/*.png ../ownCloud/Resources/Theming/branding-assets/"
-          sh "cp ../ownCloud/Resources/Theming/com.owncloud.ios-app.kiteworks/Branding.plist ../ownCloud/Resources/Theming/"
-          
-          # Build App
-          owncloud_kiteworks_build()
-          
-          # Deliver
-          if deliver
-          deliver(
-            skip_screenshots: skip_screenshots,
-            skip_metadata: false,
-            metadata_path: "./metadata",
-            submit_for_review: false,
-            ignore_language_directory_validation: true,
-            skip_binary_upload: false,
-            force: true,
-            overwrite_screenshots: create_screenshots,
-            app_identifier: "com.owncloud.ios-app",
-            skip_app_version_update: true,
-            ipa: "ownCloud-kiteworks.ipa"
-          )
-          end
       end
 
       if build_owncloud_online_app
           puts("Prepare Metadata…")
           # Prepare Metadata
           prepare_metadata(
-          	create_release_notes: create_release_notes,
-          	create_screenshots: create_screenshots,
+          	create_release_notes: options[:create_release_notes],
+          	create_screenshots: options[:create_screenshots],
           	app_name: "ownCloud Online",
           	metadata_path: 'fastlane/metadata-owncloud-online/en-US/release_notes.txt'
           )
@@ -319,36 +273,7 @@ platform :ios do
       URL_SCHEME: "owncloud-app",
       IPA_NAME: "ownCloud-regular"
     )
-end
-
-lane :owncloud_kiteworks_build do
-build_ipa_in_house(
-  ENTERPRISE_APP_ID: "com.kiteworks.ios-app",
-  ENTERPRISE_APP_PROFILE: "match AppStore com.kiteworks.ios-app",
-  ENTERPRISE_FP_ID: "com.kiteworks.ios-app.kiteworks-file-provider",
-  ENTERPRISE_FP_PROFILE: "match AppStore com.kiteworks.ios-app.kiteworks-file-provider",
-  ENTERPRISE_FP_UI_ID: "com.kiteworks.ios-app.kiteworks-file-provider-ui",
-  ENTERPRISE_FP_UI_PROFILE: "match AppStore com.kiteworks.ios-app.kiteworks-file-provider-ui",
-  ENTERPRISE_INTENT_ID: "com.kiteworks.ios-app.kiteworks-intents",
-  ENTERPRISE_INTENT_PROFILE: "match AppStore com.kiteworks.ios-app.kiteworks-intents",
-  ENTERPRISE_SHARE_EXTENSION_ID: "com.kiteworks.ios-app.kiteworks-share-extension",
-  ENTERPRISE_SHARE_EXTENSION_PROFILE: "match AppStore com.kiteworks.ios-app.kiteworks-share-extension",
-  ENTERPRISE_ACTION_EXTENSION_ID: "com.kiteworks.ios-app.kiteworks-action-extension",
-  ENTERPRISE_ACTION_EXTENSION_PROFILE: "match AppStore com.kiteworks.ios-app.kiteworks-action-extension",
-  ENTERPRISE_APP_FW_ID: "com.owncloud.ownCloudApp",
-  ENTERPRISE_TEAM: "4AP2STM4H5",
-  ENTERPRISE_IDENTITY: "Apple Distribution: ownCloud GmbH (4AP2STM4H5)",
-  APP_GROUP_IDENTIFIERS: "group.com.kiteworks.ios-app",
-  EXPORT_METHOD: "app-store",
-  CONFIGURATION: "Release",
-  BETA_APP_ICON: false,
-  APP_NAME: "Kiteworks",
-  URL_SCHEME: "kiteworks-app",
-  IPA_NAME: "kiteworks",
-  OAUTH_CLIENT_ID: ENV['KITEWORKS_OAUTH_CLIENT_ID'],
-  OAUTH_CLIENT_SECRET: ENV['KITEWORKS_OAUTH_CLIENT_SECRET']
-)
-end
+  end
 
   lane :owncloud_emm_build do
     build_ipa_in_house(
@@ -601,12 +526,7 @@ end
       set_info_plist_value(path: themePath, key: "GitHash", value: commit)
       set_info_plist_value(path: themePath, key: "SDKGitHash", value: sdkcommit)
       set_info_plist_value(path: themePath, key: "GitBranch", value: gitbranch)
-      if values[:OAUTH_CLIENT_ID]
-        set_info_plist_value(path: themePath, key: "authentication-oauth2.oa2-client-id", value: values[:OAUTH_CLIENT_ID])
-      end
-      if values[:OAUTH_CLIENT_SECRET]
-        set_info_plist_value(path: themePath, key: "authentication-oauth2.oa2-client-secret", value: values[:OAUTH_CLIENT_SECRET])
-      end
+      set_info_plist_value(path: themePath, key: "SDKGitBranch", value: sdkgitbranch)
     end
 
     puts "App Name: " + appName
