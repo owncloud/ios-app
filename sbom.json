@@ -8,10 +8,10 @@
         {
           "group": "@cyclonedx",
           "name": "cdxgen",
-          "version": "11.4.1",
-          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.4.1",
+          "version": "11.4.3",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.4.3",
           "type": "application",
-          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.4.1",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.4.3",
           "publisher": "OWASP Foundation",
           "authors": [
             {
@@ -250,10 +250,10 @@
         "component": {
           "group": "@cyclonedx",
           "name": "cdxgen",
-          "version": "11.4.1",
-          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.4.1",
+          "version": "11.4.3",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.4.3",
           "type": "application",
-          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.4.1",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.4.3",
           "publisher": "OWASP Foundation",
           "authors": [
             {
