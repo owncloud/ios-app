@@ -38,7 +38,6 @@ class BookmarkComposer: NSObject {
 	}
 
 	var configuration: BookmarkComposerConfiguration
-	var connection: OCConnection?
 	weak var delegate: BookmarkComposerDelegate?
 
 	init(configuration: BookmarkComposerConfiguration, removeAuthDataFromCopy: Bool = false, delegate: BookmarkComposerDelegate?) {
@@ -78,11 +77,7 @@ class BookmarkComposer: NSObject {
 	}
 
 	func instantiateConnection(for bmark: OCBookmark) -> OCConnection {
-		if let connection {
-			return connection
-		}
 		let connection = OCConnection(bookmark: bmark)
-		self.connection = connection
 
 		connection.hostSimulator = OCHostSimulatorManager.shared.hostSimulator(forLocation: .accountSetup, for: self)
 		connection.cookieStorage = self.cookieStorage // Share cookie storage across all relevant connections
