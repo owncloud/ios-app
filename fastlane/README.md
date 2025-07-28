@@ -71,6 +71,14 @@ Create Release Notes, Screenshots, Build, Upload of regular iOS App and EMM App
 
 
 
+### ios owncloud_kiteworks_build
+
+```sh
+[bundle exec] fastlane ios owncloud_kiteworks_build
+```
+
+
+
 ### ios owncloud_emm_build
 
 ```sh

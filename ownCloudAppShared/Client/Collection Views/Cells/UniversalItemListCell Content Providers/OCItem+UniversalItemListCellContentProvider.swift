@@ -216,6 +216,12 @@ extension OCItem: UniversalItemListCellContentProvider {
 
 		// - Description
 		var detailString: String = sizeLocalized
+		
+		if type == .collection {
+			if let core = context?.core, core.connection.isKiteworksServer {
+				detailString = ""
+			}
+		}
 
 		if location?.type == .drive, let core = context?.core {
 			detailString = driveQuotaLocalized(core: core)
@@ -238,7 +244,7 @@ extension OCItem: UniversalItemListCellContentProvider {
 
 		var detailStringAccessible = detailString
 
-		detailString += " - " + lastModifiedLocalized
+		detailString += (detailString.count > 0 ? " - " : "") + lastModifiedLocalized
 		detailStringAccessible += " " + lastModifiedLocalizedAccessible
 
 		let detailSegment = SegmentViewItem(with: nil, title: detailString, style: .plain, titleTextStyle: .footnote, lines: [.singleLine], accessibilityLabel: detailStringAccessible)
