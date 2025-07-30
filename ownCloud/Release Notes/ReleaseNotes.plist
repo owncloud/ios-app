@@ -2114,6 +2114,16 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 				<dict>
 					<key>Title</key>
+					<string>Kiteworks compatibility
+					<key>Subtitle</key>
+					<string>Compatible with Kiteworks starting version 9.1.1.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>server.rack</string>
+				</dict>
+				<dict>
+					<key>Title</key>
 					<string>Bugfixes</string>
 					<key>Subtitle</key>
 					<string>You reported them, we fixed them.</string>
