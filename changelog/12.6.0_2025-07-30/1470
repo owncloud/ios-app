@@ -1,0 +1,5 @@
+Bugfix: Add sharing action to folder navigation bar menu
+
+Adds the "Sharing" action to the folder navigation bar's more menu (•••) to ensure consistency with the action menu shown for folder items in the file list.
+
+https://github.com/owncloud/ios-app/pull/1470

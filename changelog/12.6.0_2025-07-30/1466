@@ -1,0 +1,5 @@
+Bugfix: Fix screenshot/image sharing via Share Extension
+
+Adds support for saving `NSExtensionItem.attachment` of type `public.image` as png (like when using the iOS-provided "Save to Files"(.app) extension) to `ShareExtensionViewController`.
+
+https://github.com/owncloud/ios-app/pull/1466
