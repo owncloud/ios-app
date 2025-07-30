@@ -2114,7 +2114,7 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 				<dict>
 					<key>Title</key>
-					<string>Kiteworks compatibility
+					<string>Kiteworks compatibility</string>
 					<key>Subtitle</key>
 					<string>Compatible with Kiteworks starting version 9.1.1.</string>
 					<key>Type</key>
