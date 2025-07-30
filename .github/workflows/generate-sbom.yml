@@ -33,10 +33,24 @@ jobs:
         shell: bash
         run: |
           trimAndFormatJSON() {
-            jq 'del(.serialNumber, .metadata.timestamp, .annotations[].timestamp, .annotations[].text)' "$1" >"$1.tmp"
+            jq 'del(.serialNumber, .metadata.timestamp, .annotations[].timestamp, .annotations[].text, .components[].tags)' "$1" >"$1.tmp"
+            mv "$1.tmp" "$1"
+          }
+          addSHA3IUFLicense() {
+            jq '.components[] |= 
+                (if .name == "SHA3IUF" 
+                 then . + {
+                   licenses: [{license: {id: "MIT", "url": "https://github.com/brainhub/SHA3IUF/blob/master/LICENSE"}}],
+                   externalReferences: ([.externalReferences[]?] + 
+                     [{type: "vcs", url: "https://github.com/brainhub/SHA3IUF.git"}]),
+                   type: "library",
+                   version: "fc8504750a5c2174a1874094dd05e6a0d8797753",
+                 } 
+                 else . end)' "$1" >"$1.tmp"
             mv "$1.tmp" "$1"
           }
           trimAndFormatJSON "sbom.json"
+          addSHA3IUFLicense "sbom.json"
       - name: Commit files
         uses: GuillaumeFalourd/git-commit-push@v1.3
         with:
