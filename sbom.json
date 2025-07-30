@@ -8,10 +8,10 @@
         {
           "group": "@cyclonedx",
           "name": "cdxgen",
-          "version": "11.4.3",
-          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.4.3",
+          "version": "11.4.4",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.4.4",
           "type": "application",
-          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.4.3",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.4.4",
           "publisher": "OWASP Foundation",
           "authors": [
             {
@@ -50,7 +50,7 @@
       },
       {
         "name": "cdx:bom:componentSrcFiles",
-        "value": "ios-sdk/ownCloudSDK.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved\\nownCloud.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
+        "value": "ios-sdk/ownCloudSDK.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved\\nios-sdk/ownCloudSDK/External/SHA3IUF/Package.swift\\nownCloud.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
       }
     ]
   },
@@ -145,10 +145,7 @@
             "concludedValue": "ios-sdk/ownCloudSDK.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
           }
         ]
-      },
-      "tags": [
-        "security"
-      ]
+      }
     },
     {
       "group": "github.com/microsoft",
@@ -237,9 +234,46 @@
           }
         ]
       }
+    },
+    {
+      "group": "",
+      "name": "SHA3IUF",
+      "version": "fc8504750a5c2174a1874094dd05e6a0d8797753",
+      "purl": "pkg:swift/SHA3IUF@unspecified",
+      "type": "library",
+      "bom-ref": "pkg:swift/SHA3IUF@unspecified",
+      "properties": [
+        {
+          "name": "SrcPath",
+          "value": "/Users/runner/work/ios-app/ios-app/ios-sdk/ownCloudSDK/External/SHA3IUF"
+        },
+        {
+          "name": "SrcFile",
+          "value": "ios-sdk/ownCloudSDK/External/SHA3IUF/Package.swift"
+        }
+      ],
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "url": "https://github.com/brainhub/SHA3IUF/blob/master/LICENSE"
+          }
+        }
+      ],
+      "externalReferences": [
+        {
+          "type": "vcs",
+          "url": "https://github.com/brainhub/SHA3IUF.git"
+        }
+      ]
     }
   ],
-  "dependencies": [],
+  "dependencies": [
+    {
+      "ref": "pkg:swift/SHA3IUF@unspecified",
+      "dependsOn": []
+    }
+  ],
   "annotations": [
     {
       "bom-ref": "metadata-annotations",
@@ -250,10 +284,10 @@
         "component": {
           "group": "@cyclonedx",
           "name": "cdxgen",
-          "version": "11.4.3",
-          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.4.3",
+          "version": "11.4.4",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.4.4",
           "type": "application",
-          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.4.3",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.4.4",
           "publisher": "OWASP Foundation",
           "authors": [
             {
