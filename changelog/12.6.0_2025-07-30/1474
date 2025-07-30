@@ -1,0 +1,10 @@
+New: auto-generated SBOM using CycloneDX
+
+Creates an auto-generated sbom.json based on the Swift packages
+
+Implementation in several steps:
+https://github.com/owncloud/ios-app/pull/1474
+https://github.com/owncloud/ios-app/pull/1475
+https://github.com/owncloud/ios-app/pull/1477
+https://github.com/owncloud/ios-app/pull/1480
+https://github.com/owncloud/ios-app/pull/1479

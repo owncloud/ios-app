@@ -1,0 +1,5 @@
+Bugfix: Fix pan/zoom issue when using confidential overlay options
+
+PreviewViewController/WebViewDisplayViewController: if watermark/confidential overlays are used, QLPreviewController no longer reacts to scroll and zoom events, so use WebKit's support for QuickLook formats instead in those cases.
+
+https://github.com/owncloud/ios-app/pull/1468

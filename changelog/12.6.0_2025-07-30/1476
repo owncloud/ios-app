@@ -1,0 +1,5 @@
+Bugfix: prevent multiple taps on Create/Save Space button
+
+SpaceManagementViewController: prevent multiple taps on "Create" or "Save" that could lead to triggering the creation / editing action multiple times.
+
+https://github.com/owncloud/ios-app/pull/1476

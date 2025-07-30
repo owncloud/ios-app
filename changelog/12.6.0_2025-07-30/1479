@@ -1,0 +1,10 @@
+New feature: Kiteworks Integration
+
+This PR adds Kiteworks integration to the iOS ownCloud app.
+The SDK was adopted to detect a Kiteworks server and proceed with the needed logic.
+
+The iOS app got some adoption regarding sidebar items and not to show folder sizes (as it is not available on Kiteworks server).
+
+Compatible with Kiteworks starting version 9.1.1.
+
+https://github.com/owncloud/ios-app/pull/1479

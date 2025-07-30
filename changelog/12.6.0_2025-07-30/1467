@@ -1,0 +1,5 @@
+New feature: Add Recent Locations to location picker
+
+Adds a row of recently picked locations to the Location Picker for quick access.
+
+https://github.com/owncloud/ios-app/pull/1467
