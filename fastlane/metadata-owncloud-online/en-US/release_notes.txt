@@ -1,11 +1,8 @@
-• Spaces and Sharing
-Support for new spaces and sharing capabilities.
+• Recent Locations
+Quick access to previously picked locations in the Location Picker
 
-• Accessiblity
-Improved overall accessibility across the app.
+• Kiteworks compatibility
+Compatible with Kiteworks starting version 9.1.1.
 
-• Markup Mode
-Markup mode was not enabled automatically on iOS 18.
-
-• General Improvements
+• Bugfixes and General Improvements
 We made some internal improvements to make everything smoother.

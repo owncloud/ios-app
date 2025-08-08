@@ -29,7 +29,7 @@ class ReleaseNotesTableViewController: StaticTableViewController {
     }
 
 	func prepareReleaseNotes() {
-		if let relevantReleaseNotes = ReleaseNotesDatasource.releaseNotes(for: VendorServices.shared.appVersion), ReleaseNotesDatasource.releaseNotes(for: VendorServices.shared.appVersion) != nil {
+		if let relevantReleaseNotes = ReleaseNotesDatasource.releaseNotes(for: VendorServices.shared.appVersion) {
 			let section = StaticTableViewSection()
 
 			for aDict in relevantReleaseNotes {
