@@ -1,5 +1,6 @@
 # Table of Contents
 
+* [Changelog for 12.6.0](#changelog-for-owncloud-ios-client-1260-2025-08-08)
 * [Changelog for 12.5.0](#changelog-for-owncloud-ios-client-1250-2025-05-12)
 * [Changelog for 12.4.1](#changelog-for-owncloud-ios-client-1241-2025-03-06)
 * [Changelog for 12.4.0](#changelog-for-owncloud-ios-client-1240-2025-02-03)
@@ -28,6 +29,87 @@
 * [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
 * [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
 * [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
+# Changelog for ownCloud iOS Client [12.6.0] (2025-08-08)
+The following sections list the changes in ownCloud iOS Client 12.6.0 relevant to
+ownCloud admins and users.
+
+[12.6.0]: https://github.com/owncloud/ios-app/compare/milestone/12.5.0...milestone/12.6.0
+
+## Summary
+
+* Bugfix - Fix screenshot/image sharing via Share Extension: [#1466](https://github.com/owncloud/ios-app/pull/1466)
+* Bugfix - Fix pan/zoom issue when using confidential overlay options: [#1468](https://github.com/owncloud/ios-app/pull/1468)
+* Bugfix - Add sharing action to folder navigation bar menu: [#1470](https://github.com/owncloud/ios-app/pull/1470)
+* Bugfix - Prevent multiple taps on Create/Save Space button: [#1476](https://github.com/owncloud/ios-app/pull/1476)
+* Change - Add Recent Locations to location picker: [#1467](https://github.com/owncloud/ios-app/pull/1467)
+* Change - Auto-generated SBOM using CycloneDX: [#1474](https://github.com/owncloud/ios-app/pull/1474)
+* Change - Kiteworks Integration: [#1479](https://github.com/owncloud/ios-app/pull/1479)
+
+## Details
+
+* Bugfix - Fix screenshot/image sharing via Share Extension: [#1466](https://github.com/owncloud/ios-app/pull/1466)
+
+   Adds support for saving `NSExtensionItem.attachment` of type `public.image` as
+   png (like when using the iOS-provided "Save to Files"(.app) extension) to
+   `ShareExtensionViewController`.
+
+   https://github.com/owncloud/ios-app/pull/1466
+
+* Bugfix - Fix pan/zoom issue when using confidential overlay options: [#1468](https://github.com/owncloud/ios-app/pull/1468)
+
+   PreviewViewController/WebViewDisplayViewController: if watermark/confidential
+   overlays are used, QLPreviewController no longer reacts to scroll and zoom
+   events, so use WebKit's support for QuickLook formats instead in those cases.
+
+   https://github.com/owncloud/ios-app/pull/1468
+
+* Bugfix - Add sharing action to folder navigation bar menu: [#1470](https://github.com/owncloud/ios-app/pull/1470)
+
+   Adds the "Sharing" action to the folder navigation bar's more menu (•••)
+   to ensure consistency with the action menu shown for folder items in the file
+   list.
+
+   https://github.com/owncloud/ios-app/pull/1470
+
+* Bugfix - Prevent multiple taps on Create/Save Space button: [#1476](https://github.com/owncloud/ios-app/pull/1476)
+
+   SpaceManagementViewController: prevent multiple taps on "Create" or "Save" that
+   could lead to triggering the creation / editing action multiple times.
+
+   https://github.com/owncloud/ios-app/pull/1476
+
+* Change - Add Recent Locations to location picker: [#1467](https://github.com/owncloud/ios-app/pull/1467)
+
+   Adds a row of recently picked locations to the Location Picker for quick access.
+
+   https://github.com/owncloud/ios-app/pull/1467
+
+* Change - Auto-generated SBOM using CycloneDX: [#1474](https://github.com/owncloud/ios-app/pull/1474)
+
+   Creates an auto-generated sbom.json based on the Swift packages
+
+   https://github.com/owncloud/ios-app/pull/1474
+   https://github.com/owncloud/ios-app/pull/1475
+   https://github.com/owncloud/ios-app/pull/1477
+   https://github.com/owncloud/ios-app/pull/1480
+   https://github.com/owncloud/ios-app/pull/1479
+   Implementation
+   in
+   several
+   steps:
+
+* Change - Kiteworks Integration: [#1479](https://github.com/owncloud/ios-app/pull/1479)
+
+   This PR adds Kiteworks integration to the iOS ownCloud app. The SDK was adopted
+   to detect a Kiteworks server and proceed with the needed logic.
+
+   The iOS app got some adoption regarding sidebar items and not to show folder
+   sizes (as it is not available on Kiteworks server).
+
+   Compatible with Kiteworks starting version 9.1.1.
+
+   https://github.com/owncloud/ios-app/pull/1479
+
 # Changelog for ownCloud iOS Client [12.5.0] (2025-05-12)
 The following sections list the changes in ownCloud iOS Client 12.5.0 relevant to
 ownCloud admins and users.
