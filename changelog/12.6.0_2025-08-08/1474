@@ -1,4 +1,4 @@
-New: auto-generated SBOM using CycloneDX
+Change: auto-generated SBOM using CycloneDX
 
 Creates an auto-generated sbom.json based on the Swift packages
 
