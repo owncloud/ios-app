@@ -39,7 +39,8 @@ class AcknowledgementsTableViewController: StaticTableViewController {
 								let textViewController = TextViewController()
 								let licenseText : NSMutableAttributedString = NSMutableAttributedString()
 								let textAttributes : [NSAttributedString.Key : Any] = [
-									.font : UIFont.systemFont(ofSize: UIFont.systemFontSize)
+									.font : UIFont.systemFont(ofSize: UIFont.systemFontSize),
+									.foregroundColor : UIColor.label
 								]
 
 								textViewController.title = "\(licenseTitle) \(OCLocalizedString("license", nil))"
