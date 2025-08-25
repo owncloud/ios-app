@@ -50,8 +50,24 @@
         "value" : "com.owncloud.action.delete"
       },
       {
+        "description" : "Details",
+        "value" : "com.owncloud.action.detailspace"
+      },
+      {
+        "description" : "Disable space",
+        "value" : "com.owncloud.action.disablespace"
+      },
+      {
         "description" : "Duplicate",
         "value" : "com.owncloud.action.duplicate"
+      },
+      {
+        "description" : "Edit description",
+        "value" : "com.owncloud.action.editspacedescription"
+      },
+      {
+        "description" : "Edit image",
+        "value" : "com.owncloud.action.editspaceimage"
       },
       {
         "description" : "Favorite item",
@@ -60,6 +76,10 @@
       {
         "description" : "Paste",
         "value" : "com.owncloud.action.importpasteboard"
+      },
+      {
+        "description" : "Edit space",
+        "value" : "com.owncloud.action.managespace"
       },
       {
         "description" : "Markup",
@@ -100,6 +120,10 @@
       {
         "description" : "Image metadata",
         "value" : "com.owncloud.action.show-exif"
+      },
+      {
+        "description" : "Members",
+        "value" : "com.owncloud.action.spacemembers"
       },
       {
         "description" : "Unfavorite item",
@@ -200,8 +224,24 @@
         "value" : "com.owncloud.action.delete"
       },
       {
+        "description" : "Details",
+        "value" : "com.owncloud.action.detailspace"
+      },
+      {
+        "description" : "Disable space",
+        "value" : "com.owncloud.action.disablespace"
+      },
+      {
         "description" : "Duplicate",
         "value" : "com.owncloud.action.duplicate"
+      },
+      {
+        "description" : "Edit description",
+        "value" : "com.owncloud.action.editspacedescription"
+      },
+      {
+        "description" : "Edit image",
+        "value" : "com.owncloud.action.editspaceimage"
       },
       {
         "description" : "Favorite item",
@@ -210,6 +250,10 @@
       {
         "description" : "Paste",
         "value" : "com.owncloud.action.importpasteboard"
+      },
+      {
+        "description" : "Edit space",
+        "value" : "com.owncloud.action.managespace"
       },
       {
         "description" : "Markup",
@@ -250,6 +294,10 @@
       {
         "description" : "Image metadata",
         "value" : "com.owncloud.action.show-exif"
+      },
+      {
+        "description" : "Members",
+        "value" : "com.owncloud.action.spacemembers"
       },
       {
         "description" : "Unfavorite item",
@@ -397,6 +445,20 @@
     ],
     "status" : "advanced",
     "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "App",
+    "categoryTag" : "app",
+    "classIdentifier" : "app",
+    "className" : "ownCloudAppShared.VendorServices",
+    "defaultValue" : true,
+    "description" : "Enable/disable AI features.",
+    "flatIdentifier" : "app.allow-ai-features",
+    "key" : "allow-ai-features",
+    "label" : "app.allow-ai-features",
+    "status" : "advanced",
+    "type" : "bool"
   },
   {
     "autoExpansion" : "none",
@@ -1260,7 +1322,6 @@
     "categoryTag" : "confidential",
     "classIdentifier" : "confidential",
     "className" : "ConfidentialManager",
-    "defaultValue" : false,
     "description" : "Controls if confidential related MDM settings can be overwritten.",
     "flatIdentifier" : "confidential.allow-overwrite-confidential-mdm-settings",
     "key" : "allow-overwrite-confidential-mdm-settings",
@@ -1274,7 +1335,6 @@
     "categoryTag" : "confidential",
     "classIdentifier" : "confidential",
     "className" : "ConfidentialManager",
-    "defaultValue" : true,
     "description" : "Controls whether screenshots are allowed or not. If not allowed confidential views will be marked as sensitive and are not visible in screenshots.",
     "flatIdentifier" : "confidential.allow-screenshots",
     "key" : "allow-screenshots",
@@ -1288,13 +1348,143 @@
     "categoryTag" : "confidential",
     "classIdentifier" : "confidential",
     "className" : "ConfidentialManager",
-    "defaultValue" : false,
-    "description" : "Controls if views which contains sensitive content contains a watermark or not.",
-    "flatIdentifier" : "confidential.mark-confidential-views",
-    "key" : "mark-confidential-views",
-    "label" : "confidential.mark-confidential-views",
+    "description" : "List of actions exempt from auto-disallow of particular actions when enabling confidential protections.",
+    "flatIdentifier" : "confidential.exempted-actions",
+    "key" : "exempted-actions",
+    "label" : "confidential.exempted-actions",
+    "possibleValues" : [
+      {
+        "description" : "Exempt com.owncloud.action.copy from list of auto-disallowed actions.",
+        "value" : "com.owncloud.action.copy"
+      },
+      {
+        "description" : "Exempt com.owncloud.action.markup from list of auto-disallowed actions.",
+        "value" : "com.owncloud.action.markup"
+      },
+      {
+        "description" : "Exempt com.owncloud.action.openin from list of auto-disallowed actions.",
+        "value" : "com.owncloud.action.openin"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "stringArray"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Confidential",
+    "categoryTag" : "confidential",
+    "classIdentifier" : "confidential",
+    "className" : "ConfidentialManager",
+    "description" : "Controls the color as hex value of the watermark text.",
+    "flatIdentifier" : "confidential.text-color",
+    "key" : "text-color",
+    "label" : "confidential.text-color",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Confidential",
+    "categoryTag" : "confidential",
+    "classIdentifier" : "confidential",
+    "className" : "ConfidentialManager",
+    "description" : "Controls the column spacing of the watermark text in pixel.",
+    "flatIdentifier" : "confidential.text-column-spacing",
+    "key" : "text-column-spacing",
+    "label" : "confidential.text-column-spacing",
+    "status" : "advanced",
+    "type" : "int"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Confidential",
+    "categoryTag" : "confidential",
+    "classIdentifier" : "confidential",
+    "className" : "ConfidentialManager",
+    "description" : "Controls if the given custom text should be shown as watermark text.",
+    "flatIdentifier" : "confidential.text-custom-text",
+    "key" : "text-custom-text",
+    "label" : "confidential.text-custom-text",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Confidential",
+    "categoryTag" : "confidential",
+    "classIdentifier" : "confidential",
+    "className" : "ConfidentialManager",
+    "description" : "Controls the line spacing of the watermark text in pixel.",
+    "flatIdentifier" : "confidential.text-line-spacing",
+    "key" : "text-line-spacing",
+    "label" : "confidential.text-line-spacing",
+    "status" : "advanced",
+    "type" : "int"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Confidential",
+    "categoryTag" : "confidential",
+    "classIdentifier" : "confidential",
+    "className" : "ConfidentialManager",
+    "description" : "Controls the opacity of the watermark text. Possible values: 0 - 100",
+    "flatIdentifier" : "confidential.text-opacity",
+    "key" : "text-opacity",
+    "label" : "confidential.text-opacity",
+    "status" : "advanced",
+    "type" : "int"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Confidential",
+    "categoryTag" : "confidential",
+    "classIdentifier" : "confidential",
+    "className" : "ConfidentialManager",
+    "description" : "Controls if the current timestamp should be shown as watermark text.",
+    "flatIdentifier" : "confidential.text-show-timestamp",
+    "key" : "text-show-timestamp",
+    "label" : "confidential.text-show-timestamp",
     "status" : "advanced",
     "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Confidential",
+    "categoryTag" : "confidential",
+    "classIdentifier" : "confidential",
+    "className" : "ConfidentialManager",
+    "description" : "Controls if the user email should be shown as watermark text.",
+    "flatIdentifier" : "confidential.text-show-user-email",
+    "key" : "text-show-user-email",
+    "label" : "confidential.text-show-user-email",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Confidential",
+    "categoryTag" : "confidential",
+    "classIdentifier" : "confidential",
+    "className" : "ConfidentialManager",
+    "description" : "Controls if the user ID should be shown as watermark text.",
+    "flatIdentifier" : "confidential.text-show-user-id",
+    "key" : "text-show-user-id",
+    "label" : "confidential.text-show-user-id",
+    "status" : "advanced",
+    "type" : "bool"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Confidential",
+    "categoryTag" : "confidential",
+    "classIdentifier" : "confidential",
+    "className" : "ConfidentialManager",
+    "description" : "Controls the number or visible characters in redacted text. Choose value -1 to do not redact text.",
+    "flatIdentifier" : "confidential.visible-redacted-characters",
+    "key" : "visible-redacted-characters",
+    "label" : "confidential.visible-redacted-characters",
+    "status" : "advanced",
+    "type" : "int"
   },
   {
     "autoExpansion" : "none",
@@ -1425,6 +1615,21 @@
     "flatIdentifier" : "connection.endpoint-capabilities",
     "key" : "endpoint-capabilities",
     "label" : "connection.endpoint-capabilities",
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Endpoints",
+    "categoryTag" : "endpoints",
+    "classIdentifier" : "connection",
+    "className" : "OCConnection",
+    "defaultValue" : "kwdav/status.php",
+    "description" : "Endpoint to retrieve basic status information and detect a Kiteworks installation.",
+    "flags" : 4,
+    "flatIdentifier" : "connection.endpoint-kiteworks-status",
+    "key" : "endpoint-kiteworks-status",
+    "label" : "connection.endpoint-kiteworks-status",
     "status" : "advanced",
     "type" : "string"
   },
@@ -1921,8 +2126,24 @@
         "value" : "com.owncloud.action.delete"
       },
       {
+        "description" : "Extension with the identifier com.owncloud.action.detailspace.",
+        "value" : "com.owncloud.action.detailspace"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.disablespace.",
+        "value" : "com.owncloud.action.disablespace"
+      },
+      {
         "description" : "Extension with the identifier com.owncloud.action.duplicate.",
         "value" : "com.owncloud.action.duplicate"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.editspacedescription.",
+        "value" : "com.owncloud.action.editspacedescription"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.editspaceimage.",
+        "value" : "com.owncloud.action.editspaceimage"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.favorite.",
@@ -1935,6 +2156,10 @@
       {
         "description" : "Extension with the identifier com.owncloud.action.instant_media_upload.",
         "value" : "com.owncloud.action.instant_media_upload"
+      },
+      {
+        "description" : "Extension with the identifier com.owncloud.action.managespace.",
+        "value" : "com.owncloud.action.managespace"
       },
       {
         "description" : "Extension with the identifier com.owncloud.action.markup.",
@@ -1981,6 +2206,10 @@
         "value" : "com.owncloud.action.show-exif"
       },
       {
+        "description" : "Extension with the identifier com.owncloud.action.spacemembers.",
+        "value" : "com.owncloud.action.spacemembers"
+      },
+      {
         "description" : "Extension with the identifier com.owncloud.action.unfavorite.",
         "value" : "com.owncloud.action.unfavorite"
       },
@@ -2023,6 +2252,10 @@
       {
         "description" : "Extension with the identifier license.PocketSVG.",
         "value" : "license.PocketSVG"
+      },
+      {
+        "description" : "Extension with the identifier license.SHA3-256.",
+        "value" : "license.SHA3-256"
       },
       {
         "description" : "Extension with the identifier license.openssl.",
