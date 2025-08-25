@@ -44,14 +44,29 @@ tag::actions[]
 ! `com.owncloud.action.delete`
 ! Delete
 
+! `com.owncloud.action.detailspace`
+! Details
+
+! `com.owncloud.action.disablespace`
+! Disable space
+
 ! `com.owncloud.action.duplicate`
 ! Duplicate
+
+! `com.owncloud.action.editspacedescription`
+! Edit description
+
+! `com.owncloud.action.editspaceimage`
+! Edit image
 
 ! `com.owncloud.action.favorite`
 ! Favorite item
 
 ! `com.owncloud.action.importpasteboard`
 ! Paste
+
+! `com.owncloud.action.managespace`
+! Edit space
 
 ! `com.owncloud.action.markup`
 ! Markup
@@ -82,6 +97,9 @@ tag::actions[]
 
 ! `com.owncloud.action.show-exif`
 ! Image metadata
+
+! `com.owncloud.action.spacemembers`
+! Members
 
 ! `com.owncloud.action.unfavorite`
 ! Unfavorite item
@@ -157,14 +175,29 @@ action.create-document-mode
 ! `com.owncloud.action.delete`
 ! Delete
 
+! `com.owncloud.action.detailspace`
+! Details
+
+! `com.owncloud.action.disablespace`
+! Disable space
+
 ! `com.owncloud.action.duplicate`
 ! Duplicate
+
+! `com.owncloud.action.editspacedescription`
+! Edit description
+
+! `com.owncloud.action.editspaceimage`
+! Edit image
 
 ! `com.owncloud.action.favorite`
 ! Favorite item
 
 ! `com.owncloud.action.importpasteboard`
 ! Paste
+
+! `com.owncloud.action.managespace`
+! Edit space
 
 ! `com.owncloud.action.markup`
 ! Markup
@@ -195,6 +228,9 @@ action.create-document-mode
 
 ! `com.owncloud.action.show-exif`
 ! Image metadata
+
+! `com.owncloud.action.spacemembers`
+! Members
 
 ! `com.owncloud.action.unfavorite`
 ! Unfavorite item
@@ -352,6 +388,12 @@ tag::app[]
 !===
 
 |supported `candidate`
+
+|app.allow-ai-features
+|bool
+|`true`
+|Enable/disable AI features.
+|advanced `candidate`
 
 |app.app-store-link
 |string
@@ -815,20 +857,89 @@ tag::confidential[]
 
 |confidential.allow-overwrite-confidential-mdm-settings
 |bool
-|`false`
+|
 |Controls if confidential related MDM settings can be overwritten.
 |advanced `candidate`
 
 |confidential.allow-screenshots
 |bool
-|`true`
+|
 |Controls whether screenshots are allowed or not. If not allowed confidential views will be marked as sensitive and are not visible in screenshots.
 |advanced `candidate`
 
-|confidential.mark-confidential-views
+|confidential.exempted-actions
+|stringArray
+|
+|List of actions exempt from auto-disallow of particular actions when enabling confidential protections.
+[cols="1,1"]
+!===
+! Value
+! Description
+! `com.owncloud.action.copy`
+! Exempt com.owncloud.action.copy from list of auto-disallowed actions.
+
+! `com.owncloud.action.markup`
+! Exempt com.owncloud.action.markup from list of auto-disallowed actions.
+
+! `com.owncloud.action.openin`
+! Exempt com.owncloud.action.openin from list of auto-disallowed actions.
+
+!===
+
+|advanced `candidate`
+
+|confidential.text-color
+|string
+|
+|Controls the color as hex value of the watermark text.
+|advanced `candidate`
+
+|confidential.text-column-spacing
+|int
+|
+|Controls the column spacing of the watermark text in pixel.
+|advanced `candidate`
+
+|confidential.text-custom-text
+|string
+|
+|Controls if the given custom text should be shown as watermark text.
+|advanced `candidate`
+
+|confidential.text-line-spacing
+|int
+|
+|Controls the line spacing of the watermark text in pixel.
+|advanced `candidate`
+
+|confidential.text-opacity
+|int
+|
+|Controls the opacity of the watermark text. Possible values: 0 - 100
+|advanced `candidate`
+
+|confidential.text-show-timestamp
 |bool
-|`false`
-|Controls if views which contains sensitive content contains a watermark or not.
+|
+|Controls if the current timestamp should be shown as watermark text.
+|advanced `candidate`
+
+|confidential.text-show-user-email
+|bool
+|
+|Controls if the user email should be shown as watermark text.
+|advanced `candidate`
+
+|confidential.text-show-user-id
+|bool
+|
+|Controls if the user ID should be shown as watermark text.
+|advanced `candidate`
+
+|confidential.visible-redacted-characters
+|int
+|
+|Controls the number or visible characters in redacted text. Choose value -1 to do not redact text.
 |advanced `candidate`
 
 |===
@@ -1107,6 +1218,12 @@ tag::endpoints[]
 |Endpoint to use for retrieving server capabilities.
 |advanced `candidate`
 
+|connection.endpoint-kiteworks-status
+|string
+|`kwdav/status.php`
+|Endpoint to retrieve basic status information and detect a Kiteworks installation.
+|advanced `candidate`
+
 |connection.endpoint-recipients
 |string
 |`ocs/v2.php/apps/files_sharing/api/v1/sharees`
@@ -1219,8 +1336,20 @@ tag::extensions[]
 ! `com.owncloud.action.delete`
 ! Extension with the identifier com.owncloud.action.delete.
 
+! `com.owncloud.action.detailspace`
+! Extension with the identifier com.owncloud.action.detailspace.
+
+! `com.owncloud.action.disablespace`
+! Extension with the identifier com.owncloud.action.disablespace.
+
 ! `com.owncloud.action.duplicate`
 ! Extension with the identifier com.owncloud.action.duplicate.
+
+! `com.owncloud.action.editspacedescription`
+! Extension with the identifier com.owncloud.action.editspacedescription.
+
+! `com.owncloud.action.editspaceimage`
+! Extension with the identifier com.owncloud.action.editspaceimage.
 
 ! `com.owncloud.action.favorite`
 ! Extension with the identifier com.owncloud.action.favorite.
@@ -1230,6 +1359,9 @@ tag::extensions[]
 
 ! `com.owncloud.action.instant_media_upload`
 ! Extension with the identifier com.owncloud.action.instant_media_upload.
+
+! `com.owncloud.action.managespace`
+! Extension with the identifier com.owncloud.action.managespace.
 
 ! `com.owncloud.action.markup`
 ! Extension with the identifier com.owncloud.action.markup.
@@ -1264,6 +1396,9 @@ tag::extensions[]
 ! `com.owncloud.action.show-exif`
 ! Extension with the identifier com.owncloud.action.show-exif.
 
+! `com.owncloud.action.spacemembers`
+! Extension with the identifier com.owncloud.action.spacemembers.
+
 ! `com.owncloud.action.unfavorite`
 ! Extension with the identifier com.owncloud.action.unfavorite.
 
@@ -1296,6 +1431,9 @@ tag::extensions[]
 
 ! `license.PocketSVG`
 ! Extension with the identifier license.PocketSVG.
+
+! `license.SHA3-256`
+! Extension with the identifier license.SHA3-256.
 
 ! `license.openssl`
 ! Extension with the identifier license.openssl.
