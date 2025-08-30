@@ -41571,6 +41571,9 @@
         }
       }
     },
+    "Item removed" : {
+
+    },
     "Item with same name already exists" : {
       "localizations" : {
         "ar" : {
@@ -85842,6 +85845,9 @@
           }
         }
       }
+    },
+    "This item no longer exists on the server." : {
+
     },
     "This permission is needed to upload photos and videos from your photo library." : {
       "localizations" : {

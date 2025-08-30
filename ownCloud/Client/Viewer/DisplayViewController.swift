@@ -123,10 +123,9 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 	@objc dynamic var item: OCItem? {
 		didSet {
 			if itemClaimIdentifier == nil, // No claim registered by the DisplayViewController for the item yet
-			let item = item, let core = core,
-			core.localCopy(of: item) != nil, // The item has a local copy
-			let viewClaim = generateClaim(for: item) { // Generate a claim for the item
-
+			   let item, let core,
+			   core.localCopy(of: item) != nil, // The item has a local copy
+			   let viewClaim = generateClaim(for: item) { // Generate a claim for the item
 			   	itemClaimIdentifier = viewClaim.identifier
 
 				// Add claim to keep file around for viewing
@@ -759,6 +758,42 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 		// user should be able to see it. Probably we won't provide much benefit by presenting such errors here.
 	}
 
+	private var itemRemovedView: UIView? {
+		willSet {
+			itemRemovedView?.removeFromSuperview()
+		}
+		didSet {
+			if let itemRemovedView {
+				view.embed(toFillWith: itemRemovedView, enclosingAnchors: self.view.defaultAnchorSet)
+			}
+		}
+	}
+	private var hasBeenRemoved = false {
+		didSet {
+			if oldValue != hasBeenRemoved {
+				let addView = hasBeenRemoved
+				OnMainThread {
+					if addView {
+						let messageView = ComposedMessageView(elements: [
+							.image(OCSymbol.icon(forSymbolName: "nosign")!, size: CGSize(width: 64, height: 48), alignment: .centered),
+							.title(OCLocalizedString("Item removed", nil), alignment: .centered),
+							.spacing(5),
+							.subtitle(OCLocalizedString("This item no longer exists on the server.", nil), alignment: .centered)
+						])
+
+						let backgroundView = ThemeCSSView(withSelectors: [.background])
+						backgroundView.translatesAutoresizingMaskIntoConstraints = false
+						backgroundView.embed(centered: messageView, minimumInsets: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10), enclosingAnchors: backgroundView.safeAreaAnchorSet)
+
+						self.itemRemovedView = backgroundView
+					} else {
+						self.itemRemovedView = nil
+					}
+				}
+			}
+		}
+	}
+
 	func queryHasChangesAvailable(_ query: OCQuery) {
 		query.requestChangeSet(withFlags: .onlyResults) { [weak self] (query, changeSet) in
 			OnMainThread {
@@ -768,13 +803,29 @@ class DisplayViewController: UIViewController, Themeable, OCQueryDelegate {
 					case .idle, .contentsFromCache, .waitingForServerReply:
 						if let firstItem = changeSet?.queryResult?.first {
 							self?.item = firstItem
+							self?.hasBeenRemoved = false
 						} else {
 							// No item available
 							Log.debug("Item \(String(describing: self?.item)) no longer available")
 							self?.item = nil
 						}
 
-					case .targetRemoved: break
+					case .targetRemoved:
+						if self?.hasBeenRemoved == false { // ensure removal actions are only triggered once
+							self?.hasBeenRemoved = true // install removal notice
+
+							OnMainThread {
+								if let hostViewController = self?.parent as? DisplayHostViewController,
+								   let items = hostViewController.items, items.count <= 1, // check that the host view controller shows just this item (otherwise it shows a carousel and shouldn't be removed from view)
+								   let browserNavigationViewController = hostViewController.browserNavigationViewController,
+								   let browserNavigationItem = browserNavigationViewController.history.currentItem,
+								   browserNavigationItem.viewControllerIfLoaded == hostViewController, // check that the item really belongs to the host view controller
+								   browserNavigationViewController.history.items.count > 1 { // only remove view if there are other views to fall back to
+								   	// Remove BrowserNavigationItem (and thereby the host view controller hosting this viewer) from history
+									browserNavigationViewController.history.remove(item: browserNavigationItem, completion: nil)
+								}
+							}
+						}
 
 					default: break
 				}
