@@ -1,5 +1,6 @@
 # Table of Contents
 
+* [Changelog for unreleased](#changelog-for-owncloud-ios-client-unreleased-unreleased)
 * [Changelog for 12.6.0](#changelog-for-owncloud-ios-client-1260-2025-08-08)
 * [Changelog for 12.5.0](#changelog-for-owncloud-ios-client-1250-2025-05-12)
 * [Changelog for 12.4.1](#changelog-for-owncloud-ios-client-1241-2025-03-06)
@@ -29,6 +30,24 @@
 * [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
 * [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
 * [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
+# Changelog for ownCloud iOS Client [unreleased] (UNRELEASED)
+The following sections list the changes in ownCloud iOS Client unreleased relevant to
+ownCloud admins and users.
+
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/12.6.0...master
+
+## Summary
+
+* Bugfix - Fix text visibility of acknowledgments in dark mode: [#1487](https://github.com/owncloud/ios-app/pull/1487)
+
+## Details
+
+* Bugfix - Fix text visibility of acknowledgments in dark mode: [#1487](https://github.com/owncloud/ios-app/pull/1487)
+
+   Ensures visibility of acknowledgment texts in dark mode.
+
+   https://github.com/owncloud/ios-app/pull/1487
+
 # Changelog for ownCloud iOS Client [12.6.0] (2025-08-08)
 The following sections list the changes in ownCloud iOS Client 12.6.0 relevant to
 ownCloud admins and users.
