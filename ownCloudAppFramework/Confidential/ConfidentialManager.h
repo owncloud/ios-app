@@ -25,20 +25,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property(class,strong,nonatomic,readonly) ConfidentialManager *sharedConfidentialManager;
 
-@property (assign, readonly) BOOL allowScreenshots;
-@property (assign, readonly) BOOL markConfidentialViews;
-@property (assign, readonly) BOOL allowOverwriteConfidentialMDMSettings;
-@property (assign, readonly) BOOL confidentialSettingsEnabled;
+@property(class,strong,nonatomic,readonly) NSArray<OCExtensionIdentifier> *autoDisallowedActions; //!< List of identifiers of action extensions that would be automatically disallowed when enabling confidential protections and not making use of any exemptions.
 
-@property (assign, readonly) CGFloat textOpacity;
-@property (assign, readonly, nullable) NSString *textColor;
-@property (assign, readonly) CGFloat columnSpacing;
-@property (assign, readonly) CGFloat lineSpacing;
-@property (assign, readonly) BOOL showUserEmail;
-@property (assign, readonly) BOOL showUserID;
-@property (assign, readonly) BOOL showTimestamp;
-@property (assign, readonly, nullable) NSString *customText;
-@property (assign, readonly) NSInteger visibleRedactedCharacters;
+@property (nonatomic, readonly) BOOL allowScreenshots;
+@property (nonatomic, readonly) BOOL markConfidentialViews;
+@property (nonatomic, readonly) BOOL allowOverwriteConfidentialMDMSettings;
+@property (nonatomic, readonly) BOOL confidentialSettingsEnabled;
+
+@property (nonatomic, readonly) CGFloat textOpacity;
+@property (nonatomic, readonly, nullable) NSString *textColor;
+@property (nonatomic, readonly) CGFloat columnSpacing;
+@property (nonatomic, readonly) CGFloat lineSpacing;
+@property (nonatomic, readonly) BOOL showUserEmail;
+@property (nonatomic, readonly) BOOL showUserID;
+@property (nonatomic, readonly) BOOL showTimestamp;
+@property (nonatomic, readonly, nullable) NSString *customText;
+@property (nonatomic, readonly) NSInteger visibleRedactedCharacters;
+@property (nonatomic, readonly, nullable) NSArray<OCExtensionIdentifier> *exemptActions; //!< Identifiers of action extensions exempt from automatically being disallowed when enabling confidential protections.
 @property (nonatomic, readonly, nullable) NSArray<OCExtensionIdentifier> *disallowedActions;
 
 @end
@@ -49,6 +52,7 @@ extern OCClassSettingsIdentifier OCClassSettingsIdentifierConfidential;
 
 extern OCClassSettingsKey OCClassSettingsKeyAllowScreenshots;
 extern OCClassSettingsKey OCClassSettingsKeyAllowOverwriteConfidentialMDMSettings;
+extern OCClassSettingsKey OCClassSettingsKeyConfidentialExemptedActions;
 extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextOpacity;
 extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextColor;
 extern OCClassSettingsKey OCClassSettingsKeyConfidentialTextColumnSpacing;
