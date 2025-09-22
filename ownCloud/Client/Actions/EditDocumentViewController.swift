@@ -128,25 +128,69 @@ class EditDocumentViewController: QLPreviewController, Themeable {
 		self.view.secureView(core: core)
 	}
 
-	@objc func enableEditingMode() {
-		// Activate editing mode by performing the action on pencil icon. Unfortunately that's the only way to do it apparently
-		if #available(iOS 16.0, *) {
-			var barButtonItems: [UIBarButtonItem]?
-			
-			if let rightBarButtonItems = navigationItem.rightBarButtonItems, rightBarButtonItems.count > 0 {
-				barButtonItems = rightBarButtonItems
-			} else if let toolbarItems = self.toolbarItems, toolbarItems.count > 0 {
-				barButtonItems = toolbarItems
-			}
-			
-			if let barButtonItems {
-				for markupButton in barButtonItems {
-					if (markupButton.debugDescription as NSString).contains("pencil.tip.crop.circle") {
-						_ = markupButton.target?.perform(markupButton.action, with: markupButton)
-						return
-					}
+	private func findAndTriggerBarItem(containing substring: String) -> Bool {
+		var barButtonItems: [UIBarButtonItem]?
+
+		if let rightBarButtonItems = navigationItem.rightBarButtonItems, rightBarButtonItems.count > 0 {
+			barButtonItems = rightBarButtonItems
+		} else if let toolbarItems = self.toolbarItems, toolbarItems.count > 0 {
+			barButtonItems = toolbarItems
+		}
+
+		if let barButtonItems {
+			for markupButton in barButtonItems {
+				if (markupButton.debugDescription as NSString).contains(substring) {
+					_ = markupButton.target?.perform(markupButton.action, with: markupButton)
+					return true
 				}
 			}
+		}
+
+		return false
+	}
+
+	private func findView(from view: UIView, containing substring: String) -> UIView? {
+		if (view.debugDescription as NSString).contains(substring) {
+			return view
+		}
+		for subview in view.subviews {
+			if let foundView = findView(from: subview, containing: substring) {
+				return foundView
+			}
+		}
+
+		return nil
+	}
+
+	private var enableRetries = 0
+
+	@objc func enableEditingMode() {
+		// Activate editing mode by performing the action on pencil icon. Unfortunately that's the only way to do it apparently
+		let pencilIconName = "pencil.tip.crop.circle"
+		if #available(iOS 26.0, *) {
+			if let navigationControllerView = navigationController?.view,
+			   let markupButton = findView(from: navigationControllerView, containing: pencilIconName) as? UIControl {
+				// On iOS 26, in narrow sizes (e.g. iPhone) the edit button is located in a floating bar on the bottom of the screen
+				markupButton.sendActions(for: .primaryActionTriggered)
+			} else if findAndTriggerBarItem(containing: pencilIconName) {
+				// On iOS 26, in wide sizes (e.g. iPad), the edit button continues to reside in the navigation bar
+				// If we arrive here, triggering it was successful
+			} else if enableRetries < 10 {
+				// If action fails, retry for up to 10 times
+				//
+				// This can be necessary because on iOS 26 the document and UI isn't shown right away, but an additional
+				// transition is shown by iOS. Hard to tell if this is a bug in a rough iOS 26.0 or intentional - we
+				// need to deal with it either way.
+				enableRetries += 1
+
+				Log.debug("Retry \(enableRetries) enabling editing mode")
+
+				OnMainThread(after: 0.2) { [weak self] in
+					self?.enableEditingMode()
+				}
+			}
+		} else if #available(iOS 16.0, *) {
+			_ = findAndTriggerBarItem(containing: pencilIconName)
 		} else if #available(iOS 15.0, *) {
 			if self.navigationItem.rightBarButtonItems?.count ?? 0 > 2 {
 				guard let markupButton = self.navigationItem.rightBarButtonItems?[1] else { return }
