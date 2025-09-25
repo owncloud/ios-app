@@ -8027,7 +8027,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to delete this space? This action cannot be undone."
+            "value" : "Möchten Sie diesen Space wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden."
           }
         },
         "en" : {
@@ -14480,7 +14480,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose an image for the space"
+            "value" : "Wählen Sie ein Bild für den Space aus"
           }
         },
         "en" : {
@@ -15046,7 +15046,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Close"
+            "value" : "Schließen"
           }
         },
         "en" : {
@@ -16966,7 +16966,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "contents"
+            "value" : "Inhalt"
           }
         },
         "en" : {
@@ -19398,7 +19398,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create image"
+            "value" : "Bild erstellen"
           }
         },
         "en" : {
@@ -24419,7 +24419,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Disabled"
+            "value" : "Deaktiviert"
           }
         },
         "en" : {
@@ -26723,7 +26723,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit description"
+            "value" : "Beschreibung bearbeiten"
           }
         },
         "en" : {
@@ -26835,7 +26835,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit image"
+            "value" : "Bild bearbeiten"
           }
         },
         "en" : {
@@ -26947,7 +26947,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit space"
+            "value" : "Space bearbeiten"
           }
         },
         "en" : {
@@ -27059,7 +27059,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Emoji or text"
+            "value" : "Emoji oder text"
           }
         },
         "en" : {
@@ -28004,7 +28004,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enter a emoji or text"
+            "value" : "Geben Sie ein Emoji oder Text ein"
           }
         },
         "en" : {
@@ -28962,7 +28962,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error creating space"
+            "value" : "Fehler beim erstellen des Space"
           }
         },
         "en" : {
@@ -29074,7 +29074,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error deleting {{driveName}}"
+            "value" : "Fehler beim löschen von {{driveName}}"
           }
         },
         "en" : {
@@ -29186,7 +29186,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error disabling {{driveName}}"
+            "value" : "Fehler beim deaktivieren von {{driveName}}"
           }
         },
         "en" : {
@@ -29298,7 +29298,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error enabling {{driveName}}"
+            "value" : "Fehler beim aktivieren von {{driveName}}"
           }
         },
         "en" : {
@@ -37296,7 +37296,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If only one member is a manager, that member's permissions can't be edited."
+            "value" : "Wenn nur ein Manager Mitglied ist, können Sie die Berechtigungen dieses Mitglieds nicht bearbeiten."
           }
         },
         "en" : {
@@ -41588,7 +41588,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Item removed"
+            "value" : "Element entfernt"
           }
         },
         "en" : {
@@ -43241,7 +43241,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Limit space"
+            "value" : "Begrenzter Speicherplatz"
           }
         },
         "en" : {
@@ -55569,7 +55569,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open login page"
+            "value" : "Anmeldeseite öffnen"
           }
         },
         "en" : {
@@ -59983,7 +59983,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pick a photo"
+            "value" : "Wählen Sie ein Foto aus"
           }
         },
         "en" : {
@@ -62592,7 +62592,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Preview"
+            "value" : "Vorschau"
           }
         },
         "en" : {
@@ -64042,7 +64042,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Public Links"
+            "value" : "Öffentliche Links"
           }
         },
         "en" : {
@@ -65235,7 +65235,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recent locations"
+            "value" : "Kürzlich verwendete Speicherorte"
           }
         },
         "en" : {
@@ -71500,7 +71500,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search on the server is unavailable while not connected. To search offline, switch to the Account scope."
+            "value" : "Die Serversuche ist nicht verfügbar, wenn keine Verbindung besteht. Um offline zu suchen, wechseln Sie zum Kontobereich."
           }
         },
         "en" : {
@@ -72432,7 +72432,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Searches in the current space ONLY."
+            "value" : "Sucht NUR im aktuellen Space."
           }
         },
         "en" : {
@@ -72544,7 +72544,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Searches the current folder and its subfolders."
+            "value" : "Sucht im aktuellen Ordner und in allen Unterordner."
           }
         },
         "en" : {
@@ -72656,7 +72656,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Searches the current folder ONLY."
+            "value" : "Sucht NUR im aktuellen Ordner."
           }
         },
         "en" : {
@@ -72768,7 +72768,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Searches the personal folder and all spaces."
+            "value" : "Sucht im persönlichen Ordner und in allen Spaces."
           }
         },
         "en" : {
@@ -72880,7 +72880,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Searches using the server."
+            "value" : "Verwendet die Serversuche."
           }
         },
         "en" : {
@@ -74803,7 +74803,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Server search requires a connection"
+            "value" : "Serversuche benötigt eine Verbindung"
           }
         },
         "en" : {
@@ -78234,7 +78234,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show disabled spaces"
+            "value" : "Zeige deaktivierte Spaces"
           }
         },
         "en" : {
@@ -84425,7 +84425,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The following steps will guide you through the setup process."
+            "value" : "Die folgenden Schritte führen Sie durch den Einrichtungsprozess."
           }
         },
         "en" : {
