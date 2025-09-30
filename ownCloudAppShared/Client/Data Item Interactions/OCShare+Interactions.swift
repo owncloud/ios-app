@@ -67,23 +67,23 @@ extension OCShare: DataItemSwipeInteraction {
 
 		if offerDeclineAction {
 			// Decline / Unshare
-			let title = (self.category == .byMe) ? OCLocalizedString("Unshare", nil) : OCLocalizedString("Decline", nil)
+			let title = label(for: .decline, in: context)
 			let action = UIContextualAction(style: .destructive, title: title, handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
 				uiCompletionHandler(false)
 				self?.decline(in: context)
 			})
-			action.image = OCSymbol.icon(forSymbolName: "minus.circle")
+			action.image = OCSymbol.icon(forSymbolName: iconName(for: .decline, in: context))
 
 			actions.append(action)
 		}
 
 		if offerAcceptAction {
 			// Accept
-			let action = UIContextualAction(style: .normal, title: OCLocalizedString("Accept", nil), handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
+			let action = UIContextualAction(style: .normal, title: label(for: .accept, in: context), handler: { [weak self] (_ action, _ view, _ uiCompletionHandler) in
 				uiCompletionHandler(false)
 				self?.accept(in: context)
 			})
-			action.image = OCSymbol.icon(forSymbolName: "checkmark.circle")
+			action.image = OCSymbol.icon(forSymbolName: iconName(for: .accept, in: context))
 
 			actions.append(action)
 		}
@@ -105,8 +105,8 @@ extension OCShare: DataItemContextMenuInteraction {
 			let action = UIAction(handler: { [weak self] action in
 				self?.accept(in: context)
 			})
-			action.title = OCLocalizedString("Accept", nil)
-			action.image = OCSymbol.icon(forSymbolName: "checkmark.circle")
+			action.title = label(for: .accept, in: context)
+			action.image = OCSymbol.icon(forSymbolName: iconName(for: .accept, in: context))
 
 			elements.append(action)
 		}
@@ -116,9 +116,9 @@ extension OCShare: DataItemContextMenuInteraction {
 			let action = UIAction(handler: { [weak self] action in
 				self?.decline(in: context)
 			})
-			let title = (self.category == .byMe) ? OCLocalizedString("Unshare", nil) : OCLocalizedString("Decline", nil)
+			let title = label(for: .decline, in: context)
 			action.title = title
-			action.image = OCSymbol.icon(forSymbolName: "minus.circle")
+			action.image = OCSymbol.icon(forSymbolName: iconName(for: .decline, in: context))
 			action.attributes = .destructive
 
 			elements.append(action)
@@ -169,5 +169,56 @@ extension OCShare: DataItemSelectionInteraction {
 
 		completion?(false)
 		return nil
+	}
+}
+
+// Extension to provide context-dependant labels and icons for shares (adapted to OC10/oCIS + type)
+extension OCShare {
+	enum Label {
+		case pending
+		case accepted
+		case declined
+	}
+
+	enum Element {
+		case accept
+		case decline
+	}
+
+	func iconName(for element: Element, in clientContext: ClientContext?) -> String {
+		switch element {
+			case .accept:
+				return "checkmark.circle"
+
+			case .decline:
+				return "minus.circle"
+		}
+	}
+
+	func label(for element: Element, in clientContext: ClientContext?) -> String {
+		let isOcis = clientContext?.core?.useDrives == true
+
+		switch element {
+			case .accept:
+				return isOcis ? OCLocalizedString("Enable", nil) : OCLocalizedString("Accept", nil)
+
+			case .decline:
+				return (category == .byMe) ? OCLocalizedString("Unshare", nil) : (isOcis ? OCLocalizedString("Disable", nil) : OCLocalizedString("Decline", nil))
+		}
+	}
+
+	static func label(for label: Label, in clientContext: ClientContext?) -> String {
+		let isOcis = clientContext?.core?.useDrives == true
+
+		switch label {
+			case .pending:
+				return OCLocalizedString("Pending", nil)
+
+			case .accepted:
+				return isOcis ? OCLocalizedString("Sync enabled", nil) : OCLocalizedString("Accepted", nil)
+
+			case .declined:
+				return isOcis ? OCLocalizedString("Sync disabled", nil) : OCLocalizedString("Declined", nil)
+		}
 	}
 }
