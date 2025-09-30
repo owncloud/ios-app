@@ -18,7 +18,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "\nThis is a BETA release that may - and likely will - still contain bugs.\n\nYOU SHOULD NOT USE THIS BETA VERSION WITH PRODUCTION SYSTEMS, PRODUCTION DATA OR DATA OF VALUE. YOU'RE USING THIS BETA AT YOUR OWN RISK."
+            "value" : "\nDies ist eine BETA-Version die Fehler enthalten kann - und wahrscheinlich enthält.\n\nSIE SOLLTEN DIESE BETA-VERSION NICHT MIT PRODUKTIONSSYSTEMEN, PRODUKTIONSDATEN ODER DATEN VON WERT VERWENDEN. SIE VERWENDEN DIESE BETA AUF EIGENES RISIKO."
           }
         },
         "en" : {
@@ -715,7 +715,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "{{freeSpace}} of {{totalSpace}} available"
+            "value" : "{{freeSpace}} von {{totalSpace}} verfügbar"
           }
         },
         "en" : {
@@ -3804,7 +3804,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Account setup complete"
+            "value" : "Konto fertig eingerichtet"
           }
         },
         "en" : {
@@ -8027,7 +8027,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to delete this space? This action cannot be undone."
+            "value" : "Sind Sie sicher, dass Sie diesen Space löschen möchten? Diese Aktion kann nicht widerrufen werden."
           }
         },
         "en" : {
@@ -10891,7 +10891,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Available space"
+            "value" : "Verfügbarer Speicher"
           }
         },
         "en" : {
@@ -12553,7 +12553,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Can't edit only manager"
+            "value" : "Einziger Manager kann nicht bearbeitet werden"
           }
         },
         "en" : {
@@ -14480,7 +14480,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose an image for the space"
+            "value" : "Bild für den Space wählen"
           }
         },
         "en" : {
@@ -15046,7 +15046,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Close"
+            "value" : "Schließen"
           }
         },
         "en" : {
@@ -16966,7 +16966,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "contents"
+            "value" : "Inhalt"
           }
         },
         "en" : {
@@ -19398,7 +19398,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create image"
+            "value" : "Bild erstellen"
           }
         },
         "en" : {
@@ -19864,7 +19864,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create space"
+            "value" : "Space erstellen"
           }
         },
         "en" : {
@@ -21680,7 +21680,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Default search scope"
+            "value" : "Standard Suchbereich"
           }
         },
         "en" : {
@@ -22536,7 +22536,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Delete space \"{{driveName}}\"?"
+            "value" : "Space \"{{driveName}}\" löschen?"
           }
         },
         "en" : {
@@ -24307,7 +24307,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Disable space"
+            "value" : "Space deaktivieren"
           }
         },
         "en" : {
@@ -24419,7 +24419,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Disabled"
+            "value" : "Deaktiviert"
           }
         },
         "en" : {
@@ -26723,7 +26723,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit description"
+            "value" : "Beschreibung bearbeiten"
           }
         },
         "en" : {
@@ -26835,7 +26835,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit image"
+            "value" : "Bild bearbeiten"
           }
         },
         "en" : {
@@ -26947,7 +26947,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Edit space"
+            "value" : "Space bearbeiten"
           }
         },
         "en" : {
@@ -27059,7 +27059,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Emoji or text"
+            "value" : "Emoji oder Text"
           }
         },
         "en" : {
@@ -28004,7 +28004,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enter a emoji or text"
+            "value" : "Emoji oder Text eingeben"
           }
         },
         "en" : {
@@ -28962,7 +28962,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error creating space"
+            "value" : "Fehler bei Space-Erstellung"
           }
         },
         "en" : {
@@ -29074,7 +29074,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error deleting {{driveName}}"
+            "value" : "Fehler beim Löschen von {{driveName}}"
           }
         },
         "en" : {
@@ -29186,7 +29186,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error disabling {{driveName}}"
+            "value" : "Fehler beim Deaktivieren von {{driveName}}"
           }
         },
         "en" : {
@@ -29298,7 +29298,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error enabling {{driveName}}"
+            "value" : "Fehler beim Aktivieren von {{driveName}}"
           }
         },
         "en" : {
@@ -36815,7 +36815,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Hide disabled spaces"
+            "value" : "Deaktivierte Spaces verstecken"
           }
         },
         "en" : {
@@ -37296,7 +37296,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "If only one member is a manager, that member's permissions can't be edited."
+            "value" : "Wenn nur ein Mitglied Manager ist können die Rechte dieses Mitglieds nicht bearbeitet werden."
           }
         },
         "en" : {
@@ -41588,7 +41588,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Item removed"
+            "value" : "Element entfernt"
           }
         },
         "en" : {
@@ -43241,7 +43241,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Limit space"
+            "value" : "Speicher begrenzen"
           }
         },
         "en" : {
@@ -47337,7 +47337,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Members"
+            "value" : "Mitglieder"
           }
         },
         "en" : {
@@ -49617,7 +49617,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "name + contents"
+            "value" : "Name + Inhalt"
           }
         },
         "en" : {
@@ -49965,7 +49965,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "names"
+            "value" : "Namen"
           }
         },
         "en" : {
@@ -54263,7 +54263,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Offline Dateien verwenden"
+            "value" : "Offline-Dateien verwenden"
           }
         },
         "en" : {
@@ -55569,7 +55569,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open login page"
+            "value" : "Anmeldeseite öffnen"
           }
         },
         "en" : {
@@ -59983,7 +59983,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pick a photo"
+            "value" : "Foto wählen "
           }
         },
         "en" : {
@@ -60686,7 +60686,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Please enter a quota equal or less than 1 PB."
+            "value" : "Bitte geben Sie eine Quota kleiner oder gleich 1 PB ein."
           }
         },
         "en" : {
@@ -62592,7 +62592,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Preview"
+            "value" : "Vorschau"
           }
         },
         "en" : {
@@ -64042,7 +64042,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Public Links"
+            "value" : "Öffentliche Links"
           }
         },
         "en" : {
@@ -64751,7 +64751,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quota too high"
+            "value" : "Quota zu hoch"
           }
         },
         "en" : {
@@ -65235,7 +65235,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recent locations"
+            "value" : "Letzte Auswahlen"
           }
         },
         "en" : {
@@ -71388,7 +71388,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search in"
+            "value" : "Suche in"
           }
         },
         "en" : {
@@ -71500,7 +71500,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search on the server is unavailable while not connected. To search offline, switch to the Account scope."
+            "value" : "Die Suche auf dem Server ist ohne Verbindung nicht verfügbar. Wählen Sie Konto als Suchbereich um offline zu suchen."
           }
         },
         "en" : {
@@ -71736,7 +71736,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search server"
+            "value" : "Server durchsuchen"
           }
         },
         "en" : {
@@ -71848,7 +71848,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Search Settings"
+            "value" : "Sucheinstellungen"
           }
         },
         "en" : {
@@ -72432,7 +72432,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Searches in the current space ONLY."
+            "value" : "Sucht NUR im aktuellen Space."
           }
         },
         "en" : {
@@ -72544,7 +72544,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Searches the current folder and its subfolders."
+            "value" : "Sucht im aktuellen Ordner und seinen Unterordnern."
           }
         },
         "en" : {
@@ -72656,7 +72656,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Searches the current folder ONLY."
+            "value" : "Sucht NUR im aktuellen Ordner."
           }
         },
         "en" : {
@@ -72768,7 +72768,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Searches the personal folder and all spaces."
+            "value" : "Durchsucht den persönlichen Ordner und alle Spaces."
           }
         },
         "en" : {
@@ -72880,7 +72880,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Searches using the server."
+            "value" : "Sucht mithilfe des Servers."
           }
         },
         "en" : {
@@ -74803,7 +74803,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Server search requires a connection"
+            "value" : "Serversuche erfordert Verbindung"
           }
         },
         "en" : {
@@ -78234,7 +78234,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Show disabled spaces"
+            "value" : "Deaktivierte Spaces zeigen"
           }
         },
         "en" : {
@@ -80368,7 +80368,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "space"
+            "value" : "Space"
           }
         },
         "en" : {
@@ -80592,7 +80592,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Space Actions"
+            "value" : "Space-Aktionen"
           }
         },
         "en" : {
@@ -81778,7 +81778,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Subtitle"
+            "value" : "Untertitel"
           }
         },
         "en" : {
@@ -84425,7 +84425,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The following steps will guide you through the setup process."
+            "value" : "Die folgenden Schritte führen Sie durch die Einrichtung."
           }
         },
         "en" : {
@@ -85972,7 +85972,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This item no longer exists on the server."
+            "value" : "Das Element existiert nicht mehr auf dem Server."
           }
         },
         "en" : {
@@ -90767,7 +90767,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "User"
+            "value" : "Benutzer"
           }
         },
         "en" : {
