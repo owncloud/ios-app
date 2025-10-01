@@ -74,9 +74,9 @@ class ClientSharedWithMeViewController: CollectionViewController {
 		if let pendingDataSource = clientContext?.core?.sharedWithMePendingDataSource,
 		   let acceptedDataSource = clientContext?.core?.sharedWithMeAcceptedDataSource,
 		   let declinedDataSource = clientContext?.core?.sharedWithMeDeclinedDataSource {
-			pendingSection = buildSection(identifier: "pending", titled: OCLocalizedString("Pending", nil), compositionDataSource: pendingSectionDataSource, contentDataSource: pendingDataSource)
-			acceptedSection = buildSection(identifier: "accepted", titled: OCLocalizedString("Accepted", nil), compositionDataSource: acceptedSectionDataSource, contentDataSource: acceptedDataSource, queryDataSource: clientContext?.core?.useDrives == true ? acceptedDataSource : nil)
-			declinedSection = buildSection(identifier: "declined", titled: OCLocalizedString("Declined", nil), compositionDataSource: declinedSectionDataSource, contentDataSource: declinedDataSource)
+			pendingSection = buildSection(identifier: "pending", titled: OCShare.label(for: .pending, in: clientContext), compositionDataSource: pendingSectionDataSource, contentDataSource: pendingDataSource)
+			acceptedSection = buildSection(identifier: "accepted", titled: OCShare.label(for: .accepted, in: clientContext), compositionDataSource: acceptedSectionDataSource, contentDataSource: acceptedDataSource, queryDataSource: clientContext?.core?.useDrives == true ? acceptedDataSource : nil)
+			declinedSection = buildSection(identifier: "declined", titled: OCShare.label(for: .declined, in: clientContext), compositionDataSource: declinedSectionDataSource, contentDataSource: declinedDataSource)
 
 			add(sections: [
 				pendingSection!,
