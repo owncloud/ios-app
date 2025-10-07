@@ -263,7 +263,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 			}
 
 			if !omitLongActions, offerAcceptAction {
-				let (_, accessory) = cell.makeAccessoryButton(accessibilityLabel: OCLocalizedString("Accept share", nil), cssSelectors: [.accessory, .accept], provideAccessibilityCustomAction: false, action: OCAction(title: OCLocalizedString("Accept", nil), icon: OCSymbol.icon(forSymbolName: "checkmark.circle"), action: { _, _, done in
+				let (_, accessory) = cell.makeAccessoryButton(accessibilityLabel: OCLocalizedString("Accept share", nil), cssSelectors: [.accessory, .accept], provideAccessibilityCustomAction: false, action: OCAction(title: label(for: .accept, in: context), icon: OCSymbol.icon(forSymbolName: iconName(for: .accept, in: context)), action: { _, _, done in
 					makeDecisionAction(true)
 					done(nil)
 				}))
@@ -272,7 +272,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 			}
 
 			if !omitLongActions, offerDeclineAction {
-				let (_, accessory) = cell.makeAccessoryButton(accessibilityLabel: OCLocalizedString("Decline share", nil), cssSelectors: [.accessory, .decline], provideAccessibilityCustomAction: false, action: OCAction(title: OCLocalizedString("Decline", nil), icon: OCSymbol.icon(forSymbolName: "minus.circle"), action: { _, _, done in
+				let (_, accessory) = cell.makeAccessoryButton(accessibilityLabel: OCLocalizedString("Decline share", nil), cssSelectors: [.accessory, .decline], provideAccessibilityCustomAction: false, action: OCAction(title: label(for: .decline, in: context), icon: OCSymbol.icon(forSymbolName: iconName(for: .decline, in: context)), action: { _, _, done in
 					makeDecisionAction(false)
 					done(nil)
 				}))
