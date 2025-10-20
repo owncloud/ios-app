@@ -39,13 +39,6 @@ The ownCloud Community is active on Stack Overflow, you can post your questions 
   * Here are some tips for [about how to ask good questions](http://stackoverflow.com/help/how-to-ask).
   * Don't forget to check to see [what's on topic](http://stackoverflow.com/help/on-topic).
 
-### Real-time Chat
-
-* [Rocketchat](https://talk.owncloud.com):
-  
-  * The `#mobile` channel is the right place to ask for support for the ownCloud iOS App.
-  * Also you can check other [channels](https://talk.owncloud.com/directory) for support.
-
 
 ### General ownCloud help
 
