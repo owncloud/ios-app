@@ -1,6 +1,7 @@
 name: "Push source language to Transifex"
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - master
