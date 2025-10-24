@@ -4508,6 +4508,7 @@
       }
     },
     "Add" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4863,6 +4864,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add item"
+          }
+        }
+      }
+    },
+    "Add members" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mitglieder hinzufügen"
           }
         }
       }
@@ -18283,6 +18294,16 @@
         }
       }
     },
+    "Copy Permanent Link" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permanenter Link"
+          }
+        }
+      }
+    },
     "Copy Private Link" : {
       "localizations" : {
         "ar" : {
@@ -19516,7 +19537,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Link erstellen"
+            "value" : "Link hinzufügen"
           }
         },
         "en" : {
@@ -24307,7 +24328,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Space deaktivieren"
+            "value" : "Deaktivieren"
           }
         },
         "en" : {
@@ -41122,7 +41143,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Einladung"
+            "value" : "Freigaben"
           }
         },
         "en" : {
@@ -58778,6 +58799,16 @@
         }
       }
     },
+    "Permanent Link" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permanenter Link"
+          }
+        }
+      }
+    },
     "Permissions" : {
       "localizations" : {
         "ar" : {
@@ -75990,7 +76021,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Teilen mit"
+            "value" : "Mit Personen teilen"
           }
         },
         "en" : {
@@ -76081,38 +76112,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Share with"
-          }
-        }
-      }
-    },
-    "share-add" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Setzen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add"
-          }
-        }
-      }
-    },
-    "share-invite" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Teilen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invite"
           }
         }
       }
