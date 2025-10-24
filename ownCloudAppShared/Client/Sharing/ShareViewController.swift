@@ -279,7 +279,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 
 		// Add bottom button bar
 		let isLinkCreation = (mode == .create) && (type == .link)
- 		let title = (mode == .create) ? ((type == .link) ? OCLocalizedString("Share", nil) : OCLocalizedString("Invite", nil)) : OCLocalizedString("Save changes", nil)
+ 		let title = (mode == .create) ? ((type == .link) ? OCLocalizedString("Share", nil) : OCLocalizedString("share-invite", nil)) : OCLocalizedString("Save changes", nil)
 		let altTitle = isLinkCreation ? OCLocalizedString("Create", nil) : nil
 
 		bottomButtonBar = BottomButtonBar(selectButtonTitle: title, alternativeButtonTitle: altTitle, cancelButtonTitle: OCLocalizedString("Cancel", nil), hasAlternativeButton: isLinkCreation, hasCancelButton: true, selectAction: UIAction(handler: { [weak self] _ in
@@ -836,7 +836,7 @@ open class ShareViewController: CollectionViewController, SearchViewControllerDe
 				}))
 			} else {
 				var buttonConfig = UIButton.Configuration.plain()
-				buttonConfig.title = OCLocalizedString("Add", nil)
+				buttonConfig.title = OCLocalizedString("share-add", nil)
 				buttonConfig.contentInsets = .zero
 
 				let button = ThemeCSSButton()
