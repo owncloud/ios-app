@@ -4508,6 +4508,7 @@
       }
     },
     "Add" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -4863,6 +4864,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Add item"
+          }
+        }
+      }
+    },
+    "Add members" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mitglieder hinzufügen"
           }
         }
       }
@@ -18279,6 +18290,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "复制到此处"
+          }
+        }
+      }
+    },
+    "Copy Permanent Link" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permanenter Link"
           }
         }
       }
@@ -58778,6 +58799,16 @@
         }
       }
     },
+    "Permanent Link" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Permanenter Link"
+          }
+        }
+      }
+    },
     "Permissions" : {
       "localizations" : {
         "ar" : {
@@ -76081,38 +76112,6 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Share with"
-          }
-        }
-      }
-    },
-    "share-add" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Setzen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Add"
-          }
-        }
-      }
-    },
-    "share-invite" : {
-      "localizations" : {
-        "de" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Teilen"
-          }
-        },
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Invite"
           }
         }
       }
