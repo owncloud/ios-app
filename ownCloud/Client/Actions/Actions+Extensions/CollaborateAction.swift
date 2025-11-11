@@ -35,6 +35,12 @@ class CollaborateAction: Action {
 				// Disable re-sharing by not allowing to share items located in the Shares Jail (https://github.com/owncloud/ios-app/issues/1353)
 				return .none
 			}
+
+			if let drive = forContext.drive, drive.specialType == .space {
+				// Do not show for space
+				return .none
+			}
+
 			return .first
 		}
 

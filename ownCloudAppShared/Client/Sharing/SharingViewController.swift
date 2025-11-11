@@ -163,6 +163,14 @@ open class SharingViewController: CollectionViewController {
 			}
 		}
 
+		// Public / Permanent Link section
+		let privateLinksDatasource = OCDataSourceArray(items: []);
+		if clientContext.core?.connection.capabilities?.supportsPrivateLinks == true {
+			let privateLinksSection = CollectionViewSection(identifier: "privateLinks", dataSource: privateLinksDatasource, cellStyle: managementCellStyle, cellLayout: .list(appearance: .insetGrouped, contentInsets: .insetGroupedSectionInsets), clientContext: managementClientContext)
+			privateLinksSection.hideIfEmptyDataSource = privateLinksDatasource
+			sections.append(privateLinksSection)
+		}
+
 		// Init
 		super.init(context: managementClientContext, sections: sections, useStackViewRoot: true)
 		navigationItem.titleLabelText = itemIsDriveRoot ? OCLocalizedString("Members", nil) : OCLocalizedString("Sharing", nil)
@@ -170,6 +178,7 @@ open class SharingViewController: CollectionViewController {
 			self?.dismiss(animated: true)
 		}))
 
+		let isOCIS = clientContext.core?.useDrives == true
 		let itemProvider: ItemProvider = { [weak self] in
 			return self?.item
 		}
@@ -186,22 +195,22 @@ open class SharingViewController: CollectionViewController {
 		}
 
 		addRecipientDataSource?.setVersionedItems([
-			OCAction(title: OCLocalizedString("Invite", nil), icon: OCSymbol.icon(forSymbolName: "plus.circle.fill"), action: { [weak self] action, options, completion in
+			OCAction(title: isOCIS ? OCLocalizedString("Add members", nil) : OCLocalizedString("Invite", nil), icon: OCSymbol.icon(forSymbolName: "plus.circle.fill"), action: { [weak self] action, options, completion in
 				self?.createShare(type: .share)
 				completion(nil)
 			})
 		])
 
-		var linkActions = [
+		addLinkDataSource?.setVersionedItems([
 			OCAction(title: OCLocalizedString("Create link", nil), icon: OCSymbol.icon(forSymbolName: "plus.circle.fill"), action: { [weak self] (action, options, completion) in
 				self?.createShare(type: .link)
 				completion(nil)
 			})
-		]
+		])
 
 		if managementClientContext.core?.connection.capabilities?.supportsPrivateLinks == true {
-			linkActions.append(
-				OCAction(title: OCLocalizedString("Copy Private Link", nil), icon: OCSymbol.icon(forSymbolName: "list.clipboard"), action: { [weak self] _, _, completion in
+			privateLinksDatasource.setVersionedItems([
+				OCAction(title: isOCIS ? OCLocalizedString("Copy Permanent Link", nil) : OCLocalizedString("Copy Private Link", nil), icon: OCSymbol.icon(forSymbolName: "list.clipboard"), action: { [weak self] _, _, completion in
 					if let item = self?.item, let core = self?.clientContext?.core {
 						core.retrievePrivateLink(for: item, completionHandler: { (error, url) in
 							guard let url = url else { return }
@@ -209,7 +218,7 @@ open class SharingViewController: CollectionViewController {
 								OnMainThread {
 									UIPasteboard.general.url = url
 
-									_ = NotificationHUDViewController(on: presentationViewController, title: OCLocalizedString("Private Link", nil), subtitle: OCLocalizedString("URL was copied to the clipboard", nil), completion: nil)
+									_ = NotificationHUDViewController(on: presentationViewController, title: isOCIS ? OCLocalizedString("Permanent Link", nil) : OCLocalizedString("Private Link", nil), subtitle: OCLocalizedString("URL was copied to the clipboard", nil), completion: nil)
 								}
 							}
 						})
@@ -217,10 +226,8 @@ open class SharingViewController: CollectionViewController {
 
 					completion(nil)
 				})
-			)
+			])
 		}
-
-		addLinkDataSource?.setVersionedItems(linkActions)
 
 		revoke(in: clientContext, when: [ .connectionClosed, .connectionOffline ])
 
