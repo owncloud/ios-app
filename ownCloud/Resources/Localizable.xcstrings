@@ -19516,7 +19516,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Link erstellen"
+            "value" : "Link hinzufügen"
           }
         },
         "en" : {
@@ -24307,7 +24307,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Space deaktivieren"
+            "value" : "Deaktivieren"
           }
         },
         "en" : {
@@ -25629,7 +25629,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Herunterladen / Ansehen"
+            "value" : "Herunterladen / Anzeigen"
           }
         },
         "en" : {
@@ -25754,7 +25754,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Herunterladen / Ansehen / Hochladen"
+            "value" : "Herunterladen / Anzeigen / Hochladen"
           }
         },
         "en" : {
@@ -41122,7 +41122,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Einladung"
+            "value" : "Freigaben"
           }
         },
         "en" : {
@@ -75990,7 +75990,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Teilen mit"
+            "value" : "Mit Personen teilen"
           }
         },
         "en" : {
