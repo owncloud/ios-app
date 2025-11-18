@@ -8,10 +8,10 @@
         {
           "group": "@cyclonedx",
           "name": "cdxgen",
-          "version": "11.7.0",
-          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.7.0",
+          "version": "11.11.0",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.11.0",
           "type": "application",
-          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.7.0",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.11.0",
           "publisher": "OWASP Foundation",
           "authors": [
             {
@@ -102,7 +102,7 @@
     {
       "group": "github.com/krzyzanowskim",
       "name": "OpenSSL",
-      "version": "3.3.3001",
+      "version": "3.6.1",
       "licenses": [
         {
           "license": {
@@ -111,7 +111,7 @@
           }
         }
       ],
-      "purl": "pkg:swift/github.com/krzyzanowskim/OpenSSL@3.3.3001",
+      "purl": "pkg:swift/github.com/krzyzanowskim/OpenSSL@3.6.1",
       "externalReferences": [
         {
           "type": "vcs",
@@ -119,7 +119,7 @@
         }
       ],
       "type": "library",
-      "bom-ref": "pkg:swift/github.com/krzyzanowskim/OpenSSL@3.3.3001",
+      "bom-ref": "pkg:swift/github.com/krzyzanowskim/OpenSSL@3.6.1",
       "properties": [
         {
           "name": "SrcFile",
@@ -284,10 +284,10 @@
         "component": {
           "group": "@cyclonedx",
           "name": "cdxgen",
-          "version": "11.7.0",
-          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.7.0",
+          "version": "11.11.0",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@11.11.0",
           "type": "application",
-          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.7.0",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@11.11.0",
           "publisher": "OWASP Foundation",
           "authors": [
             {

@@ -25650,7 +25650,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Herunterladen / Ansehen"
+            "value" : "Herunterladen / Anzeigen"
           }
         },
         "en" : {
@@ -25775,7 +25775,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Herunterladen / Ansehen / Hochladen"
+            "value" : "Herunterladen / Anzeigen / Hochladen"
           }
         },
         "en" : {

@@ -49,7 +49,7 @@ This can be done in [Transifex](https://www.transifex.com/signup/?join_project=o
 
 ## 💡 Found a bug or have some ideas for improvement?
 
-- 💬 Open a new issue on [Github](https://github.com/owncloud/ios-app/issues/new) or [chat](https://talk.owncloud.com/) with us
+- 💬 Open a new issue on [Github](https://github.com/owncloud/ios-app/issues/new)
 - 🐥 Don't forget to follow us on [Twitter](https://twitter.com/owncloud) 
 
 ## 📋 Start Contributing
