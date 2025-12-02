@@ -58,10 +58,22 @@
             "value" : "Cette autorisation est nécessaire pour télécharger des fichiers multimédias sur votre serveur."
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed for uploading media files to your server."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "서버에 미디어 파일을 업로드 하기 위해선 이 권한이 필요합니다."
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed for uploading media files to your server."
           }
         },
         "mk" : {
@@ -104,6 +116,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kjo leje është e domosdoshme për ngarkim kartelash media te shërbyesi juaj."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed for uploading media files to your server."
           }
         },
         "th-TH" : {
@@ -183,10 +201,22 @@
             "value" : "Déverrouillez l'application sans entrer le mot de passe"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock the app without entering the passcode."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "비밀번호를 사용하지 않고 앱을 잠금해제하세요."
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock the app without entering the passcode."
           }
         },
         "mk" : {
@@ -229,6 +259,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Shkyçeni aplikacionin pa dhënë kodkalimin."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unlock the app without entering the passcode."
           }
         },
         "th-TH" : {
@@ -302,10 +338,22 @@
             "value" : "Cette autorisation est nécessaire pour activer le téléchargement automatique de photos et de vidéos en arrière-plan."
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to enable auto-upload of photos and videos in the background."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "백그라운드에서 사진 및 동영상을 자동 업로드하려면 이 권한이 필요합니다."
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to enable auto-upload of photos and videos in the background."
           }
         },
         "mk" : {
@@ -348,6 +396,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kjo leje është e nevojshme për të aktivizuar vetëngarkim në prapaskenë fotosh dhe videosh."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to enable auto-upload of photos and videos in the background."
           }
         },
         "th-TH" : {
@@ -421,10 +475,22 @@
             "value" : "Cette autorisation est nécessaire pour activer le téléchargement automatique de photos et de vidéos en arrière-plan"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to enable auto-upload of photos and videos in background"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "백그라운드에서 사진 및 동영상을 자동 업로드하려면 이 권한이 필요합니다."
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to enable auto-upload of photos and videos in background"
           }
         },
         "mk" : {
@@ -467,6 +533,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kjo leje është e nevojshme për të aktivizuar vetëngarkim në prapaskenë fotosh dhe videosh"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to enable auto-upload of photos and videos in background"
           }
         },
         "th-TH" : {
@@ -540,10 +612,22 @@
             "value" : "Cette autorisation est nécessaire pour activer le téléchargement automatique de photos et de vidéos en arrière-plan"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to enable auto-upload of photos and videos in background"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "백그라운드에서 사진 및 동영상을 자동 업로드하려면 이 권한이 필요합니다."
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to enable auto-upload of photos and videos in background"
           }
         },
         "mk" : {
@@ -586,6 +670,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kjo leje është e nevojshme për të aktivizuar vetëngarkim në prapaskenë fotosh dhe videosh"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to enable auto-upload of photos and videos in background"
           }
         },
         "th-TH" : {
@@ -665,10 +755,22 @@
             "value" : "Cette autorisation est nécessaire pour enregistrer des vidéos"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to record videos"
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "동영상을 녹화하려면 권한 필요"
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to record videos"
           }
         },
         "mk" : {
@@ -711,6 +813,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kjo leje është e nevojshme për të regjistruar video"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to record videos"
           }
         },
         "th-TH" : {
@@ -790,10 +898,22 @@
             "value" : "Cette autorisation est nécessaire pour télécharger des photos et des vidéos à partir de votre photothèque."
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to upload photos and videos from your photo library."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "사진 보관함에서 사진 및 동영상을 업로드하려면 이 권한이 필요합니다."
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to upload photos and videos from your photo library."
           }
         },
         "mk" : {
@@ -836,6 +956,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kjo leje është e domosdoshme për të ngarkuar foto dhe video prej fototekës tuaj."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to upload photos and videos from your photo library."
           }
         },
         "th-TH" : {
@@ -915,10 +1041,22 @@
             "value" : "Cette autorisation est nécessaire pour télécharger des photos et des vidéos à partir de votre photothèque."
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to upload photos and videos from your photo library."
+          }
+        },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "사진 보관함에서 사진 및 동영상을 업로드하려면 이 권한이 필요합니다."
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to upload photos and videos from your photo library."
           }
         },
         "mk" : {
@@ -961,6 +1099,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kjo leje është e domosdoshme për të ngarkuar foto dhe video prej fototekës tuaj."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This permission is needed to upload photos and videos from your photo library."
           }
         },
         "th-TH" : {

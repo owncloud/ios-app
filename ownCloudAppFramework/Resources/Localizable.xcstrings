@@ -57,7 +57,19 @@
             "value" : "%@ already unlocked for %@."
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ already unlocked for %@."
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ already unlocked for %@."
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ already unlocked for %@."
@@ -100,6 +112,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ already unlocked for %@."
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ already unlocked for %@."
@@ -169,7 +187,19 @@
             "value" : "%@ unlocked for QA."
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ unlocked for QA."
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ unlocked for QA."
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ unlocked for QA."
@@ -212,6 +242,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ unlocked for QA."
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@ unlocked for QA."
@@ -293,7 +329,19 @@
             "value" : "%lu day"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu day"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu day"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu day"
@@ -336,6 +384,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu day"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu day"
@@ -417,7 +471,19 @@
             "value" : "%lu days"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu days"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu days"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu days"
@@ -460,6 +526,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu days"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu days"
@@ -541,7 +613,19 @@
             "value" : "%lu month"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu month"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu month"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu month"
@@ -584,6 +668,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu month"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu month"
@@ -665,7 +755,19 @@
             "value" : "%lu months"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu months"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu months"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu months"
@@ -708,6 +810,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu months"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu months"
@@ -789,7 +897,19 @@
             "value" : "%lu week"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu week"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu week"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu week"
@@ -832,6 +952,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu week"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu week"
@@ -913,7 +1039,19 @@
             "value" : "%lu weeks"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu weeks"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu weeks"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu weeks"
@@ -956,6 +1094,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu weeks"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu weeks"
@@ -1037,7 +1181,19 @@
             "value" : "%lu year"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu year"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu year"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu year"
@@ -1080,6 +1236,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu year"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu year"
@@ -1161,7 +1323,19 @@
             "value" : "%lu years"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu years"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu years"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu years"
@@ -1204,6 +1378,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lu years"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lu years"
@@ -1274,7 +1454,19 @@
             "value" : "> %d months ago"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d months ago"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d months ago"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "> %d months ago"
@@ -1317,6 +1509,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d months ago"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "> %d months ago"
@@ -1387,7 +1585,19 @@
             "value" : "> %d years ago"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d years ago"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d years ago"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "> %d years ago"
@@ -1430,6 +1640,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "> %d years ago"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "> %d years ago"
@@ -1500,7 +1716,19 @@
             "value" : ">%d days ago"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d days ago"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d days ago"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : ">%d days ago"
@@ -1543,6 +1771,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d days ago"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : ">%d days ago"
@@ -1613,7 +1847,19 @@
             "value" : ">%d weeks ago"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d weeks ago"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d weeks ago"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : ">%d weeks ago"
@@ -1656,6 +1902,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ">%d weeks ago"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : ">%d weeks ago"
@@ -1726,7 +1978,19 @@
             "value" : "After"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "After"
@@ -1769,6 +2033,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "After"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "After"
@@ -1851,7 +2121,19 @@
             "value" : "App Store"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "App Store"
@@ -1894,6 +2176,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "App Store"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "App Store"
@@ -1964,7 +2252,19 @@
             "value" : "Audio"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audio"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Audio"
@@ -2010,6 +2310,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Audio"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ljud"
           }
         },
         "th-TH" : {
@@ -2077,7 +2383,19 @@
             "value" : "Before"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before"
@@ -2120,6 +2438,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before"
@@ -2190,7 +2514,19 @@
             "value" : "Before last month"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last month"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last month"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before last month"
@@ -2233,6 +2569,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last month"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before last month"
@@ -2303,7 +2645,19 @@
             "value" : "Before last week"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last week"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last week"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before last week"
@@ -2346,6 +2700,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last week"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before last week"
@@ -2416,7 +2776,19 @@
             "value" : "Before last year"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last year"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last year"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before last year"
@@ -2459,6 +2831,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before last year"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before last year"
@@ -2529,7 +2907,19 @@
             "value" : "Before this month"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this month"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this month"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before this month"
@@ -2572,6 +2962,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this month"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before this month"
@@ -2642,7 +3038,19 @@
             "value" : "Before this week"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this week"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this week"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before this week"
@@ -2685,6 +3093,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this week"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before this week"
@@ -2755,7 +3169,19 @@
             "value" : "Before this year"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this year"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this year"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before this year"
@@ -2798,6 +3224,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before this year"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before this year"
@@ -2868,7 +3300,19 @@
             "value" : "Before today"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before today"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before today"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before today"
@@ -2911,6 +3355,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before today"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before today"
@@ -2981,7 +3431,19 @@
             "value" : "Before yesterday"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before yesterday"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before yesterday"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before yesterday"
@@ -3024,6 +3486,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Before yesterday"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Before yesterday"
@@ -3105,7 +3573,19 @@
             "value" : "Cancelled"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelled"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelled"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancelled"
@@ -3148,6 +3628,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelled"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cancelled"
@@ -3229,7 +3715,19 @@
             "value" : "Date"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Date"
@@ -3272,6 +3770,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Date"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Date"
@@ -3353,7 +3857,19 @@
             "value" : "day"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "day"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "day"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "day"
@@ -3396,6 +3912,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "day"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "day"
@@ -3466,7 +3988,19 @@
             "value" : "Document"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Document"
@@ -3509,6 +4043,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Document"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Document"
@@ -3578,7 +4118,19 @@
             "value" : "EMM"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EMM"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EMM"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "EMM"
@@ -3621,6 +4173,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "EMM"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "EMM"
@@ -3702,7 +4260,19 @@
             "value" : "Ends"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ends"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ends"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ends"
@@ -3745,6 +4315,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ends"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ends"
@@ -3814,7 +4390,19 @@
             "value" : "Enterprise"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enterprise"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enterprise"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enterprise"
@@ -3857,6 +4445,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enterprise"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Enterprise"
@@ -3927,7 +4521,19 @@
             "value" : "File"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "File"
@@ -3970,6 +4576,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "File"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "File"
@@ -4040,7 +4652,19 @@
             "value" : "Folder"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Folder"
@@ -4083,6 +4707,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Folder"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Folder"
@@ -4152,7 +4782,19 @@
             "value" : "Free"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Free"
@@ -4195,6 +4837,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Free"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Free"
@@ -4265,7 +4913,19 @@
             "value" : "Image"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Image"
@@ -4308,6 +4968,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Image"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Image"
@@ -4377,7 +5043,19 @@
             "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
@@ -4420,6 +5098,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
@@ -4490,7 +5174,19 @@
             "value" : "after"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "after"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "after"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "after"
@@ -4533,6 +5229,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "after"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "after"
@@ -4603,7 +5305,19 @@
             "value" : "audio"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "audio"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "audio"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "audio"
@@ -4646,6 +5360,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "audio"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "audio"
@@ -4716,7 +5436,19 @@
             "value" : "before"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "before"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "before"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "before"
@@ -4759,6 +5491,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "before"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "before"
@@ -4830,7 +5568,19 @@
             "value" : "d"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "d"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "d"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "d"
@@ -4873,6 +5623,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "d"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "d"
@@ -4943,7 +5699,19 @@
             "value" : "document"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "document"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "document"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "document"
@@ -4986,6 +5754,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "document"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "document"
@@ -5056,7 +5830,19 @@
             "value" : "file"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "file"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "file"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "file"
@@ -5099,6 +5885,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "file"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "file"
@@ -5169,7 +5961,19 @@
             "value" : "folder"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "folder"
@@ -5212,6 +6016,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "folder"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "folder"
@@ -5282,7 +6092,19 @@
             "value" : "greater"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "greater"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "greater"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "greater"
@@ -5325,6 +6147,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "greater"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "greater"
@@ -5395,7 +6223,19 @@
             "value" : "image"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "image"
@@ -5438,6 +6278,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "image"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "image"
@@ -5509,7 +6355,19 @@
             "value" : "m"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "m"
@@ -5552,6 +6410,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "m"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "m"
@@ -5622,7 +6486,19 @@
             "value" : "month"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "month"
@@ -5665,6 +6541,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "month"
@@ -5735,7 +6617,19 @@
             "value" : "on"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "on"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "on"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "on"
@@ -5778,6 +6672,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "on"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "on"
@@ -5848,7 +6748,19 @@
             "value" : "owner"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "owner"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "owner"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "owner"
@@ -5891,6 +6803,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "owner"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "owner"
@@ -5961,7 +6879,19 @@
             "value" : "pdf"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pdf"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pdf"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "pdf"
@@ -6004,6 +6934,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pdf"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "pdf"
@@ -6074,7 +7010,19 @@
             "value" : "presentation"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "presentation"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "presentation"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "presentation"
@@ -6117,6 +7065,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "presentation"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "presentation"
@@ -6187,7 +7141,19 @@
             "value" : "recent"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "recent"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "recent"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "recent"
@@ -6230,6 +7196,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "recent"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "recent"
@@ -6300,7 +7272,19 @@
             "value" : "smaller"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smaller"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smaller"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "smaller"
@@ -6343,6 +7327,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "smaller"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "smaller"
@@ -6413,7 +7403,19 @@
             "value" : "spreadsheet"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "spreadsheet"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "spreadsheet"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "spreadsheet"
@@ -6456,6 +7458,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "spreadsheet"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "spreadsheet"
@@ -6526,7 +7534,19 @@
             "value" : "today"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "today"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "today"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "today"
@@ -6569,6 +7589,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "today"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "today"
@@ -6640,7 +7666,19 @@
             "value" : "type"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "type"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "type"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "type"
@@ -6683,6 +7721,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "type"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "type"
@@ -6753,7 +7797,19 @@
             "value" : "video"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "video"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "video"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "video"
@@ -6796,6 +7852,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "video"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "video"
@@ -6867,7 +7929,19 @@
             "value" : "w"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "w"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "w"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "w"
@@ -6910,6 +7984,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "w"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "w"
@@ -6980,7 +8060,19 @@
             "value" : "week"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "week"
@@ -7023,6 +8115,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "week"
@@ -7094,7 +8192,19 @@
             "value" : "y"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "y"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "y"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "y"
@@ -7137,6 +8247,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "y"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "y"
@@ -7207,7 +8323,19 @@
             "value" : "year"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "year"
@@ -7250,6 +8378,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "year"
@@ -7320,7 +8454,19 @@
             "value" : "Last %d days"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d days"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d days"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last %d days"
@@ -7363,6 +8509,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d days"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last %d days"
@@ -7433,7 +8585,19 @@
             "value" : "Last %d months"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d months"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d months"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last %d months"
@@ -7476,6 +8640,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d months"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last %d months"
@@ -7546,7 +8716,19 @@
             "value" : "Last %d weeks"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d weeks"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d weeks"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last %d weeks"
@@ -7589,6 +8771,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d weeks"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last %d weeks"
@@ -7659,7 +8847,19 @@
             "value" : "Last %d years"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d years"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d years"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last %d years"
@@ -7702,6 +8902,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Last %d years"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Last %d years"
@@ -7783,7 +8989,19 @@
             "value" : "Manage subscription"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage subscription"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage subscription"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Manage subscription"
@@ -7826,6 +9044,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Manage subscription"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Manage subscription"
@@ -7907,7 +9131,19 @@
             "value" : "month"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "month"
@@ -7950,6 +9186,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "month"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "month"
@@ -8020,7 +9262,19 @@
             "value" : "No audio"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No audio"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No audio"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No audio"
@@ -8063,6 +9317,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No audio"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No audio"
@@ -8133,7 +9393,19 @@
             "value" : "No Document"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Document"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Document"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Document"
@@ -8176,6 +9448,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No Document"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No Document"
@@ -8246,7 +9524,19 @@
             "value" : "No file"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No file"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No file"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No file"
@@ -8289,6 +9579,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No file"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No file"
@@ -8360,7 +9656,19 @@
             "value" : "No folder"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No folder"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No folder"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No folder"
@@ -8403,6 +9711,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No folder"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No folder"
@@ -8473,7 +9787,19 @@
             "value" : "No image"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No image"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No image"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No image"
@@ -8516,6 +9842,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No image"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No image"
@@ -8586,7 +9918,19 @@
             "value" : "No PDF"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No PDF"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No PDF"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No PDF"
@@ -8629,6 +9973,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No PDF"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No PDF"
@@ -8699,7 +10049,19 @@
             "value" : "No presentation"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No presentation"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No presentation"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No presentation"
@@ -8742,6 +10104,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No presentation"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No presentation"
@@ -8812,7 +10180,19 @@
             "value" : "No spreadsheet"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No spreadsheet"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No spreadsheet"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No spreadsheet"
@@ -8855,6 +10235,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No spreadsheet"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No spreadsheet"
@@ -8925,7 +10311,19 @@
             "value" : "No video"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No video"
@@ -8968,6 +10366,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No video"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "No video"
@@ -9050,7 +10454,19 @@
             "value" : "none"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "none"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "none"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "none"
@@ -9093,6 +10509,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "none"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "none"
@@ -9163,7 +10585,19 @@
             "value" : "Not"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not"
@@ -9206,6 +10640,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not"
@@ -9276,7 +10716,19 @@
             "value" : "Not on"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not on"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not on"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not on"
@@ -9319,6 +10771,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not on"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not on"
@@ -9389,7 +10847,19 @@
             "value" : "Not recently used"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recently used"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recently used"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not recently used"
@@ -9432,6 +10902,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Not recently used"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Not recently used"
@@ -9502,7 +10978,19 @@
             "value" : "On"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "On"
@@ -9545,6 +11033,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "On"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "On"
@@ -9615,7 +11109,19 @@
             "value" : "PDF"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "PDF"
@@ -9658,6 +11164,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "PDF"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "PDF"
@@ -9728,7 +11240,19 @@
             "value" : "Presentation"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Presentation"
@@ -9771,6 +11295,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Presentation"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Presentation"
@@ -9852,7 +11382,19 @@
             "value" : "Product"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Product"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Product"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Product"
@@ -9895,6 +11437,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Product"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Product"
@@ -9977,7 +11525,19 @@
             "value" : "purchase"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "purchase"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "purchase"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "purchase"
@@ -10020,6 +11580,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "purchase"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "purchase"
@@ -10101,7 +11667,19 @@
             "value" : "Purchased App Version"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Purchased App Version"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Purchased App Version"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Purchased App Version"
@@ -10144,6 +11722,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Purchased App Version"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Purchased App Version"
@@ -10225,7 +11809,19 @@
             "value" : "Purchases are not allowed on this device."
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Purchases are not allowed on this device."
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Purchases are not allowed on this device."
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Purchases are not allowed on this device."
@@ -10268,6 +11864,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Purchases are not allowed on this device."
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Purchases are not allowed on this device."
@@ -10349,7 +11951,19 @@
             "value" : "Quantity"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quantity"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quantity"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quantity"
@@ -10392,6 +12006,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quantity"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Quantity"
@@ -10473,7 +12093,19 @@
             "value" : "Receipt Date"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receipt Date"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receipt Date"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Receipt Date"
@@ -10516,6 +12148,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Receipt Date"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Receipt Date"
@@ -10586,7 +12224,19 @@
             "value" : "Recently used"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently used"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently used"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recently used"
@@ -10629,6 +12279,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recently used"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recently used"
@@ -10699,7 +12355,19 @@
             "value" : "Since last month"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last month"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last month"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since last month"
@@ -10742,6 +12410,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last month"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since last month"
@@ -10812,7 +12486,19 @@
             "value" : "Since last week"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last week"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last week"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since last week"
@@ -10855,6 +12541,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last week"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since last week"
@@ -10925,7 +12617,19 @@
             "value" : "Since last year"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last year"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last year"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since last year"
@@ -10968,6 +12672,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since last year"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since last year"
@@ -11038,7 +12748,19 @@
             "value" : "Since yesterday"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since yesterday"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since yesterday"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since yesterday"
@@ -11081,6 +12803,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Since yesterday"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Since yesterday"
@@ -11151,7 +12879,19 @@
             "value" : "Spreadsheet"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spreadsheet"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spreadsheet"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spreadsheet"
@@ -11194,6 +12934,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spreadsheet"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spreadsheet"
@@ -11276,7 +13022,19 @@
             "value" : "subscription"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "subscription"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "subscription"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "subscription"
@@ -11319,6 +13077,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "subscription"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "subscription"
@@ -11389,7 +13153,19 @@
             "value" : "This month"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This month"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This month"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This month"
@@ -11432,6 +13208,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This month"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This month"
@@ -11502,7 +13284,19 @@
             "value" : "This week"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This week"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This week"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This week"
@@ -11545,6 +13339,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This week"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This week"
@@ -11615,7 +13415,19 @@
             "value" : "This year"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This year"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This year"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This year"
@@ -11658,6 +13470,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "This year"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "This year"
@@ -11728,7 +13546,19 @@
             "value" : "Today"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Today"
@@ -11771,6 +13601,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Today"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Today"
@@ -11853,7 +13689,19 @@
             "value" : "trial"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "trial"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "trial"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "trial"
@@ -11896,6 +13744,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "trial"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "trial"
@@ -11977,7 +13831,19 @@
             "value" : "Type"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Type"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Type"
@@ -12023,6 +13889,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Type"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Typ"
           }
         },
         "th-TH" : {
@@ -12090,7 +13962,19 @@
             "value" : "Video"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Video"
@@ -12133,6 +14017,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Video"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Video"
@@ -12214,7 +14104,19 @@
             "value" : "week"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "week"
@@ -12257,6 +14159,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "week"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "week"
@@ -12338,7 +14246,19 @@
             "value" : "year"
           }
         },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
         "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
+        "lo" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "year"
@@ -12381,6 +14301,12 @@
           }
         },
         "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "year"
+          }
+        },
+        "sv" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "year"
