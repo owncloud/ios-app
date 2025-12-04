@@ -137,7 +137,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "File Provider access has been disabled by the administrator. Please use the app to create new folders."
+            "value" : "L'accesso al gestore dei file è stato disabilitato dall'amministratore. Utilizzare l'app per creare nuove cartelle."
           }
         },
         "ko" : {
@@ -231,7 +231,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "File Provider access has been disabled by the administrator. Please use the share extension to import files."
+            "value" : "L'accesso al gestore dei file è stato disabilitato dall'amministratore. Utilizzare l'estensione di condivisione per importare file."
           }
         },
         "ko" : {
@@ -325,7 +325,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Importing files through the File Provider is not allowed on this device."
+            "value" : "L'importazione di file attraverso il gestore dei file non è consentita su questo dispositivo."
           }
         },
         "ko" : {
@@ -420,7 +420,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Log into your account %@ in the app for more details."
+            "value" : "Accedi al tuo profilo %@ nell'app per ulteriori dettagli."
           }
         },
         "ko" : {
@@ -514,7 +514,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Log into your account in the app for more details."
+            "value" : "Accedi al tuo profilo nell'app per ulteriori dettagli."
           }
         },
         "ko" : {
@@ -609,7 +609,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The destination folder couldn't be found on this server. Moving items across servers is currently not supported."
+            "value" : "Impossibile trovare la cartella di destinazione su questo server. Lo spostamento di oggetti tra server non è al momento supportata."
           }
         },
         "ko" : {

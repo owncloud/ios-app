@@ -63746,7 +63746,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open in"
+            "value" : "Öppna i"
           }
         },
         "th-TH" : {
@@ -63882,7 +63882,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open in {{appName}} (web)"
+            "value" : "Öppna i {{appName}} (webb)"
           }
         },
         "th-TH" : {
@@ -64024,7 +64024,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open in a new Window"
+            "value" : "Öppna i ett nytt fönster"
           }
         },
         "th-TH" : {
@@ -64154,7 +64154,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open link"
+            "value" : "Öppna länk"
           }
         },
         "th-TH" : {
@@ -64290,7 +64290,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open login page"
+            "value" : "Öppna inloggningssida"
           }
         },
         "th-TH" : {
@@ -64563,7 +64563,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Open shortcut"
+            "value" : "Öppna genväg"
           }
         },
         "th-TH" : {
@@ -65102,7 +65102,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Opening…"
+            "value" : "Öppnar…"
           }
         },
         "th-TH" : {
@@ -65374,7 +65374,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Options"
+            "value" : "Alternativ"
           }
         },
         "th-TH" : {
@@ -66072,7 +66072,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Owner"
+            "value" : "Ägare"
           }
         },
         "th-TH" : {
@@ -66214,7 +66214,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Page"
+            "value" : "Sida"
           }
         },
         "th-TH" : {
@@ -66350,7 +66350,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Partial"
+            "value" : "Delvis"
           }
         },
         "th-TH" : {
@@ -67186,7 +67186,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Password"
+            "value" : "Lösenord"
           }
         },
         "th-TH" : {
@@ -67322,7 +67322,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Paste"
+            "value" : "Klistra in"
           }
         },
         "th-TH" : {
@@ -67458,7 +67458,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pattern"
+            "value" : "Mönster"
           }
         },
         "th-TH" : {
@@ -67730,7 +67730,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "PDF Documents"
+            "value" : "PDF-dokument"
           }
         },
         "th-TH" : {
@@ -67872,7 +67872,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pending"
+            "value" : "Väntar"
           }
         },
         "th-TH" : {
@@ -68144,7 +68144,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permissions"
+            "value" : "Behörigheter"
           }
         },
         "th-TH" : {
@@ -69370,7 +69370,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pick a name"
+            "value" : "Välj ett namn"
           }
         },
         "th-TH" : {
@@ -69903,7 +69903,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Play/Pause"
+            "value" : "Spela upp/pausa"
           }
         },
         "th-TH" : {
@@ -70997,7 +70997,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Please wait…"
+            "value" : "Vänta…"
           }
         },
         "th-TH" : {
@@ -71955,7 +71955,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Preparing…"
+            "value" : "Förbereder…"
           }
         },
         "th-TH" : {
@@ -72091,7 +72091,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Presentation Mode"
+            "value" : "Presentationsläge"
           }
         },
         "th-TH" : {
@@ -72648,7 +72648,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Previous"
+            "value" : "Föregående"
           }
         },
         "th-TH" : {
@@ -72778,7 +72778,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Previous item"
+            "value" : "Föregående objekt"
           }
         },
         "th-TH" : {
@@ -72920,7 +72920,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Privacy"
+            "value" : "Integritet"
           }
         },
         "th-TH" : {
@@ -73062,7 +73062,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Privacy Policy"
+            "value" : "Integritetspolicy"
           }
         },
         "th-TH" : {
@@ -73204,7 +73204,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Private Link"
+            "value" : "Privat länk"
           }
         },
         "th-TH" : {
@@ -73490,7 +73490,7 @@
         "sv" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Proceed"
+            "value" : "Fortsätt"
           }
         },
         "th-TH" : {

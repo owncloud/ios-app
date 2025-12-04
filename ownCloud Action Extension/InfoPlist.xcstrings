@@ -43,7 +43,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Save to ownCloud"
+            "value" : "Salva su ownCloud"
           }
         },
         "ko" : {
@@ -138,7 +138,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ownCloud Action Extension"
+            "value" : "Estensione attività di ownCloud"
           }
         },
         "ko" : {
@@ -233,7 +233,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copyright © 2023 ownCloud GmbH. All rights reserved."
+            "value" : "Copyright © 2023 ownCloud GmbH. Tutti i diritti riservati."
           }
         },
         "ko" : {
@@ -328,7 +328,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Share Extension unavailable"
+            "value" : "Estensione di condivisione non disponibile"
           }
         },
         "ko" : {
@@ -423,7 +423,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "The Share Extension is not available on this system."
+            "value" : "L'estensione per la condivisione non è disponibile in questo sistema."
           }
         },
         "ko" : {
