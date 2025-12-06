@@ -36,6 +36,9 @@ public class ManageSpaceAction : Action {
 					return .first
 				}
 			}
+			if let userPermissions = core.connection.loggedInUser?.permissions, userPermissions.canEditSpaces {
+				return .first
+			}
 		}
 		return  .none
 	}

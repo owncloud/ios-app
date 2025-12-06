@@ -32,9 +32,12 @@ public class DisableSpaceAction : Action {
 	override open class func applicablePosition(forContext: ActionContext) -> ActionPosition {
 		if let core = forContext.core, core.connectionStatus == .online, let drive = forContext.drive, drive.specialType == .space {
 			if let shareActions = core.connection.shareActions(for: drive) {
-				if shareActions.contains(.updatePermissions) {
+				if shareActions.contains(.deletePermissions) {
 					return .last
 				}
+			}
+			if let userPermissions = core.connection.loggedInUser?.permissions, userPermissions.canDisableSpaces {
+				return .last
 			}
 		}
 
