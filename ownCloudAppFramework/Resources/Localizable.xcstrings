@@ -60,7 +60,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ already unlocked for %@."
+            "value" : "%@ già sbloccato per %@."
           }
         },
         "ko" : {
@@ -190,7 +190,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ unlocked for QA."
+            "value" : "%@ sbloccato per QA."
           }
         },
         "ko" : {
@@ -332,7 +332,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lu day"
+            "value" : "%lu giorno"
           }
         },
         "ko" : {
@@ -474,7 +474,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lu days"
+            "value" : "%lu giorni"
           }
         },
         "ko" : {
@@ -616,7 +616,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lu month"
+            "value" : "%lu mese"
           }
         },
         "ko" : {
@@ -758,7 +758,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lu months"
+            "value" : "%lu mesi"
           }
         },
         "ko" : {
@@ -900,7 +900,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lu week"
+            "value" : "%lu settimana"
           }
         },
         "ko" : {
@@ -1042,7 +1042,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lu weeks"
+            "value" : "%lu settimane"
           }
         },
         "ko" : {
@@ -1184,7 +1184,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lu year"
+            "value" : "%lu anno"
           }
         },
         "ko" : {
@@ -1326,7 +1326,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%lu years"
+            "value" : "%lu anni"
           }
         },
         "ko" : {
@@ -1457,7 +1457,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "> %d months ago"
+            "value" : "> %d mesi fa"
           }
         },
         "ko" : {
@@ -1588,7 +1588,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "> %d years ago"
+            "value" : "> %d anni fa"
           }
         },
         "ko" : {
@@ -1719,7 +1719,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : ">%d days ago"
+            "value" : ">%d giorni fa"
           }
         },
         "ko" : {
@@ -1850,7 +1850,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : ">%d weeks ago"
+            "value" : ">%d settimane fa"
           }
         },
         "ko" : {
@@ -1981,7 +1981,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "After"
+            "value" : "Dopo"
           }
         },
         "ko" : {
@@ -2386,7 +2386,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Before"
+            "value" : "Prima"
           }
         },
         "ko" : {
@@ -2517,7 +2517,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Before last month"
+            "value" : "Prima del mese scorso"
           }
         },
         "ko" : {
@@ -2648,7 +2648,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Before last week"
+            "value" : "Prima della scorsa settimana"
           }
         },
         "ko" : {
@@ -2779,7 +2779,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Before last year"
+            "value" : "Prima dell'anno scorso"
           }
         },
         "ko" : {
@@ -2910,7 +2910,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Before this month"
+            "value" : "Prima di questo mese"
           }
         },
         "ko" : {
@@ -3041,7 +3041,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Before this week"
+            "value" : "Prima di questa settimana"
           }
         },
         "ko" : {
@@ -3172,7 +3172,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Before this year"
+            "value" : "Prima di quest'anno"
           }
         },
         "ko" : {
@@ -3303,7 +3303,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Before today"
+            "value" : "Prima di oggi"
           }
         },
         "ko" : {
@@ -3434,7 +3434,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Before yesterday"
+            "value" : "Prima di ieri"
           }
         },
         "ko" : {
@@ -3576,7 +3576,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cancelled"
+            "value" : "Cancellato"
           }
         },
         "ko" : {
@@ -3718,7 +3718,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Date"
+            "value" : "Data"
           }
         },
         "ko" : {
@@ -3860,7 +3860,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "day"
+            "value" : "giorno"
           }
         },
         "ko" : {
@@ -3991,7 +3991,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Document"
+            "value" : "Documento"
           }
         },
         "ko" : {
@@ -4263,7 +4263,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ends"
+            "value" : "Finisce"
           }
         },
         "ko" : {
@@ -4393,7 +4393,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Enterprise"
+            "value" : "Aziendale"
           }
         },
         "ko" : {
@@ -4655,7 +4655,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Folder"
+            "value" : "Cartella"
           }
         },
         "ko" : {
@@ -4785,7 +4785,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Free"
+            "value" : "Gratis"
           }
         },
         "ko" : {
@@ -4916,7 +4916,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Image"
+            "value" : "Immagine"
           }
         },
         "ko" : {
@@ -5046,7 +5046,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "In-app purchases are not supported for copies purchased through the Volume Purchase Program. For access to additional features, please purchase the EMM version."
+            "value" : "Gli acquisti in-app non sono supportati per le copie acquistate tramite il Volume Purchase Program. Per accedere a funzionalità aggiuntive, si prega di acquistare la versione EMM."
           }
         },
         "ko" : {
@@ -5177,7 +5177,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "after"
+            "value" : "dopo"
           }
         },
         "ko" : {
@@ -5439,7 +5439,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "before"
+            "value" : "Prima"
           }
         },
         "ko" : {
@@ -5571,7 +5571,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "d"
+            "value" : "g"
           }
         },
         "ko" : {
@@ -5702,7 +5702,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "document"
+            "value" : "documento"
           }
         },
         "ko" : {
@@ -5964,7 +5964,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "folder"
+            "value" : "cartella"
           }
         },
         "ko" : {
@@ -6095,7 +6095,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "greater"
+            "value" : "Maggiore"
           }
         },
         "ko" : {
@@ -6226,7 +6226,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "image"
+            "value" : "immagine"
           }
         },
         "ko" : {
@@ -6489,7 +6489,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "month"
+            "value" : "mese"
           }
         },
         "ko" : {
@@ -6751,7 +6751,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "owner"
+            "value" : "proprietario"
           }
         },
         "ko" : {
@@ -7013,7 +7013,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "presentation"
+            "value" : "presentazione"
           }
         },
         "ko" : {
@@ -7144,7 +7144,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "recent"
+            "value" : "recente"
           }
         },
         "ko" : {
@@ -7275,7 +7275,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "smaller"
+            "value" : "più piccolo"
           }
         },
         "ko" : {
@@ -7406,7 +7406,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "spreadsheet"
+            "value" : "foglio di calcolo"
           }
         },
         "ko" : {
@@ -7537,7 +7537,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "today"
+            "value" : "oggi"
           }
         },
         "ko" : {
@@ -7669,7 +7669,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "type"
+            "value" : "tipo"
           }
         },
         "ko" : {
@@ -7932,7 +7932,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "w"
+            "value" : "s"
           }
         },
         "ko" : {
@@ -8063,7 +8063,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "week"
+            "value" : "settimana"
           }
         },
         "ko" : {
@@ -8195,7 +8195,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "y"
+            "value" : "a"
           }
         },
         "ko" : {
@@ -8326,7 +8326,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "year"
+            "value" : "anno"
           }
         },
         "ko" : {
@@ -8457,7 +8457,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Last %d days"
+            "value" : "Ultimi %d giorni"
           }
         },
         "ko" : {
@@ -8588,7 +8588,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Last %d months"
+            "value" : "Ultimi %d mesi"
           }
         },
         "ko" : {
@@ -8719,7 +8719,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Last %d weeks"
+            "value" : "Ultime %d settimane"
           }
         },
         "ko" : {
@@ -8850,7 +8850,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Last %d years"
+            "value" : "Ultimi %d anni"
           }
         },
         "ko" : {
@@ -8992,7 +8992,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Manage subscription"
+            "value" : "Gestisci l'iscrizione"
           }
         },
         "ko" : {
@@ -9134,7 +9134,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "month"
+            "value" : "mese"
           }
         },
         "ko" : {
@@ -9265,7 +9265,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No audio"
+            "value" : "Nessun audio"
           }
         },
         "ko" : {
@@ -9396,7 +9396,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No Document"
+            "value" : "Nessun documento"
           }
         },
         "ko" : {
@@ -9527,7 +9527,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No file"
+            "value" : "Nessun file"
           }
         },
         "ko" : {
@@ -9659,7 +9659,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No folder"
+            "value" : "Nessuna cartella"
           }
         },
         "ko" : {
@@ -9790,7 +9790,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No image"
+            "value" : "Nessuna immagine"
           }
         },
         "ko" : {
@@ -9921,7 +9921,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No PDF"
+            "value" : "Nessun PDF"
           }
         },
         "ko" : {
@@ -10052,7 +10052,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No presentation"
+            "value" : "Nessuna presentazione"
           }
         },
         "ko" : {
@@ -10183,7 +10183,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No spreadsheet"
+            "value" : "Nessun foglio di calcolo"
           }
         },
         "ko" : {
@@ -10314,7 +10314,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "No video"
+            "value" : "Nessun video"
           }
         },
         "ko" : {
@@ -10457,7 +10457,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "none"
+            "value" : "nessun"
           }
         },
         "ko" : {
@@ -10588,7 +10588,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not"
+            "value" : "Non"
           }
         },
         "ko" : {
@@ -10719,7 +10719,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not on"
+            "value" : "Non su"
           }
         },
         "ko" : {
@@ -10850,7 +10850,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Not recently used"
+            "value" : "Non usato recentemente"
           }
         },
         "ko" : {
@@ -10981,7 +10981,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "On"
+            "value" : "Su"
           }
         },
         "ko" : {
@@ -11243,7 +11243,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Presentation"
+            "value" : "Presentazione"
           }
         },
         "ko" : {
@@ -11385,7 +11385,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Product"
+            "value" : "Prodotto"
           }
         },
         "ko" : {
@@ -11528,7 +11528,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "purchase"
+            "value" : "acquisto"
           }
         },
         "ko" : {
@@ -11670,7 +11670,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Purchased App Version"
+            "value" : "Versione dell'app acquistata"
           }
         },
         "ko" : {
@@ -11812,7 +11812,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Purchases are not allowed on this device."
+            "value" : "Gli acquisti non sono consentiti su questo dispositivo."
           }
         },
         "ko" : {
@@ -11954,7 +11954,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Quantity"
+            "value" : "Quantità"
           }
         },
         "ko" : {
@@ -12096,7 +12096,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Receipt Date"
+            "value" : "Data di ricezione"
           }
         },
         "ko" : {
@@ -12227,7 +12227,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Recently used"
+            "value" : "Usanto recentemente"
           }
         },
         "ko" : {
@@ -12358,7 +12358,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Since last month"
+            "value" : "Dal mese scorso"
           }
         },
         "ko" : {
@@ -12489,7 +12489,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Since last week"
+            "value" : "Dalla scorsa settimana"
           }
         },
         "ko" : {
@@ -12620,7 +12620,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Since last year"
+            "value" : "Dallo scorso anno"
           }
         },
         "ko" : {
@@ -12751,7 +12751,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Since yesterday"
+            "value" : "Da ieri"
           }
         },
         "ko" : {
@@ -12882,7 +12882,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Spreadsheet"
+            "value" : "Foglio di calcolo"
           }
         },
         "ko" : {
@@ -13025,7 +13025,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "subscription"
+            "value" : "abbonamento"
           }
         },
         "ko" : {
@@ -13156,7 +13156,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This month"
+            "value" : "Questo mese"
           }
         },
         "ko" : {
@@ -13287,7 +13287,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This week"
+            "value" : "Questa settimana"
           }
         },
         "ko" : {
@@ -13418,7 +13418,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This year"
+            "value" : "Quest'anno"
           }
         },
         "ko" : {
@@ -13549,7 +13549,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Today"
+            "value" : "Oggi"
           }
         },
         "ko" : {
@@ -13692,7 +13692,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "trial"
+            "value" : "prova"
           }
         },
         "ko" : {
@@ -13834,7 +13834,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Type"
+            "value" : "Tipo"
           }
         },
         "ko" : {
@@ -14107,7 +14107,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "week"
+            "value" : "settimana"
           }
         },
         "ko" : {
@@ -14249,7 +14249,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "year"
+            "value" : "anno"
           }
         },
         "ko" : {

@@ -61,7 +61,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This permission is needed for uploading media files to your server."
+            "value" : "Questa autorizzazione è necessaria per caricare file multimediali sul tuo server."
           }
         },
         "ko" : {
@@ -204,7 +204,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Unlock the app without entering the passcode."
+            "value" : "Sblocca l'app senza inserire il codice di accesso."
           }
         },
         "ko" : {
@@ -341,7 +341,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This permission is needed to enable auto-upload of photos and videos in the background."
+            "value" : "Questa autorizzazione è necessaria per abilitare il caricamento automatico di foto e video in background."
           }
         },
         "ko" : {
@@ -478,7 +478,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This permission is needed to enable auto-upload of photos and videos in background"
+            "value" : "Questa autorizzazione è necessaria per abilitare il caricamento automatico di foto e video in background"
           }
         },
         "ko" : {
@@ -615,7 +615,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This permission is needed to enable auto-upload of photos and videos in background"
+            "value" : "Questa autorizzazione è necessaria per abilitare il caricamento automatico di foto e video in background"
           }
         },
         "ko" : {
@@ -758,7 +758,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This permission is needed to record videos"
+            "value" : "Questa autorizzazione è necessaria per registrare video"
           }
         },
         "ko" : {
@@ -901,7 +901,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This permission is needed to upload photos and videos from your photo library."
+            "value" : "Questa autorizzazione è necessaria per caricare foto e video dalla tua libreria di foto."
           }
         },
         "ko" : {
@@ -1044,7 +1044,7 @@
         "it" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This permission is needed to upload photos and videos from your photo library."
+            "value" : "Questa autorizzazione è necessaria per caricare foto e video dalla tua libreria di foto."
           }
         },
         "ko" : {
