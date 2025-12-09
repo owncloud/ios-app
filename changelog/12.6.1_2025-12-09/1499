@@ -1,0 +1,5 @@
+Bugfix: Auto-enable markup on iOS 26
+
+EditDocumentViewController: add code path for iOS 26+ to enable the editing mode
+
+https://github.com/owncloud/ios-app/pull/1499

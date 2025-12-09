@@ -1,0 +1,5 @@
+Change: "Close" viewer when viewed item is being deleted
+
+If an item is being deleted while being viewed, the viewer shows a "Item removed" message and - if it is the only file being viewed and the viewer is not the only item in the browser history - "closes" the viewer by removing it from history.
+
+https://github.com/owncloud/ios-app/pull/1495

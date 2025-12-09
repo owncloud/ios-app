@@ -1,0 +1,5 @@
+Change: Add support for space admin permissions
+
+Makes actions also consider a user's global permissions when deciding on whether or not an action should be shown and be available to the user.
+
+https://github.com/owncloud/ios-app/pull/1517
