@@ -1,0 +1,8 @@
+Change: Update sharing-related terms for oCIS
+
+- adds missing German translations (via synced Transifex)
+- changes text in "Shared with me" when connected to an oCIS server
+- adds icons for all sharing roles
+- fully localizes Space "context menu" and Space Management UI
+
+https://github.com/owncloud/ios-app/pull/1504

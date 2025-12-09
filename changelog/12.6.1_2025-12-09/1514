@@ -1,0 +1,6 @@
+Bugfix: Fix forced termination of Intents due to exceeded memory limit
+
+- ownCloud Intents/Info.plist: add app component identifier for intents extension
+- ios-sdk: update SDK to automatically pick the minimum memory configuration when loaded into the Intents extension
+
+https://github.com/owncloud/ios-app/pull/1514
