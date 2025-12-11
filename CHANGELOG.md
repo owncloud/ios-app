@@ -1,6 +1,7 @@
 # Table of Contents
 
 * [Changelog for unreleased](#changelog-for-owncloud-ios-client-unreleased-unreleased)
+* [Changelog for 12.6.1](#changelog-for-owncloud-ios-client-1261-2025-12-09)
 * [Changelog for 12.6.0](#changelog-for-owncloud-ios-client-1260-2025-08-08)
 * [Changelog for 12.5.0](#changelog-for-owncloud-ios-client-1250-2025-05-12)
 * [Changelog for 12.4.1](#changelog-for-owncloud-ios-client-1241-2025-03-06)
@@ -34,7 +35,7 @@
 The following sections list the changes in ownCloud iOS Client unreleased relevant to
 ownCloud admins and users.
 
-[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/12.6.0...master
+[unreleased]: https://github.com/owncloud/ios-app/compare/milestone/12.6.1...master
 
 ## Summary
 
@@ -47,6 +48,76 @@ ownCloud admins and users.
    Ensures visibility of acknowledgment texts in dark mode.
 
    https://github.com/owncloud/ios-app/pull/1487
+
+# Changelog for ownCloud iOS Client [12.6.1] (2025-12-09)
+The following sections list the changes in ownCloud iOS Client 12.6.1 relevant to
+ownCloud admins and users.
+
+[12.6.1]: https://github.com/owncloud/ios-app/compare/milestone/12.6.0...milestone/12.6.1
+
+## Summary
+
+* Bugfix - Fix text visibility of acknowledgments in dark mode: [#1487](https://github.com/owncloud/ios-app/pull/1487)
+* Bugfix - Auto-enable markup on iOS 26: [#1499](https://github.com/owncloud/ios-app/pull/1499)
+* Bugfix - Fix forced termination of Intents due to exceeded memory limit: [#1514](https://github.com/owncloud/ios-app/pull/1514)
+* Change - Option to exempt actions from auto-disallow: [#1489](https://github.com/owncloud/ios-app/pull/1489)
+* Change - "Close" viewer when viewed item is being deleted: [#1495](https://github.com/owncloud/ios-app/pull/1495)
+* Change - Update sharing-related terms for oCIS: [#1504](https://github.com/owncloud/ios-app/pull/1504)
+* Change - Add support for space admin permissions: [#1517](https://github.com/owncloud/ios-app/pull/1517)
+
+## Details
+
+* Bugfix - Fix text visibility of acknowledgments in dark mode: [#1487](https://github.com/owncloud/ios-app/pull/1487)
+
+   Ensures visibility of acknowledgment texts in dark mode.
+
+   https://github.com/owncloud/ios-app/pull/1487
+
+* Bugfix - Auto-enable markup on iOS 26: [#1499](https://github.com/owncloud/ios-app/pull/1499)
+
+   EditDocumentViewController: add code path for iOS 26+ to enable the editing mode
+
+   https://github.com/owncloud/ios-app/pull/1499
+
+* Bugfix - Fix forced termination of Intents due to exceeded memory limit: [#1514](https://github.com/owncloud/ios-app/pull/1514)
+
+   - ownCloud Intents/Info.plist: add app component identifier for intents
+   extension - ios-sdk: update SDK to automatically pick the minimum memory
+   configuration when loaded into the Intents extension
+
+   https://github.com/owncloud/ios-app/pull/1514
+
+* Change - Option to exempt actions from auto-disallow: [#1489](https://github.com/owncloud/ios-app/pull/1489)
+
+   Adds a new MDM option confidential.exempted-actions to exempt one or more
+   actions from being automatically disallowed when enabling Confidential
+   Protection.
+
+   https://github.com/owncloud/ios-app/pull/1489
+
+* Change - "Close" viewer when viewed item is being deleted: [#1495](https://github.com/owncloud/ios-app/pull/1495)
+
+   If an item is being deleted while being viewed, the viewer shows a "Item
+   removed" message and - if it is the only file being viewed and the viewer is not
+   the only item in the browser history - "closes" the viewer by removing it from
+   history.
+
+   https://github.com/owncloud/ios-app/pull/1495
+
+* Change - Update sharing-related terms for oCIS: [#1504](https://github.com/owncloud/ios-app/pull/1504)
+
+   - adds missing German translations (via synced Transifex) - changes text in
+   "Shared with me" when connected to an oCIS server - adds icons for all sharing
+   roles - fully localizes Space "context menu" and Space Management UI
+
+   https://github.com/owncloud/ios-app/pull/1504
+
+* Change - Add support for space admin permissions: [#1517](https://github.com/owncloud/ios-app/pull/1517)
+
+   Makes actions also consider a user's global permissions when deciding on whether
+   or not an action should be shown and be available to the user.
+
+   https://github.com/owncloud/ios-app/pull/1517
 
 # Changelog for ownCloud iOS Client [12.6.0] (2025-08-08)
 The following sections list the changes in ownCloud iOS Client 12.6.0 relevant to
