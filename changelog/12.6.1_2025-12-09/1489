@@ -1,13 +1,5 @@
 Change: Option to exempt actions from auto-disallow
 
-Adds a new MDM option `confidential.exempted-actions` to exempt one or more actions from being automatically disallowed when enabling Confidential Protection.
-
-Example to allow the open in action:
-```xml
-<key>confidential.exempted-actions</key>
-<array>
-	<string>com.owncloud.action.openin</string>
-</array>
-```
+Adds a new MDM option confidential.exempted-actions to exempt one or more actions from being automatically disallowed when enabling Confidential Protection.
 
 https://github.com/owncloud/ios-app/pull/1489
