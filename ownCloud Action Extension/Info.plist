@@ -8,10 +8,8 @@
 	<dict>
 		<key>CFBundlePrimaryIcon</key>
 		<dict>
-			<key>CFBundleIconFiles</key>
-			<array>
-				<string>branding-action-extension-icon</string>
-			</array>
+			<key>CFBundleSymbolName</key>
+			<string>cloud</string>
 		</dict>
 	</dict>
 	<key>OCHasFileProvider</key>
