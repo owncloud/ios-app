@@ -1255,6 +1255,14 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 	// MARK: - Events
 	private var _navigationBarWasHidden: Bool?
 
+	var animatedNavigationBarChange: Bool {
+		if #available(iOS 26, *) {
+			// Workaround: do not animate navigation bar hide/show on iOS 26 to avoid iOS 26 layout bug: https://github.com/owncloud/ios-app/issues/1512
+			return false
+		}
+		return true
+	}
+
 	private var _themeRegistered = false
 	open override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
@@ -1266,14 +1274,22 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 		if let hideNavigationBar, hideNavigationBar, navigationController?.isNavigationBarHidden != hideNavigationBar {
 			_navigationBarWasHidden = navigationController?.isNavigationBarHidden
-			navigationController?.setNavigationBarHidden(hideNavigationBar, animated: true)
+			navigationController?.setNavigationBarHidden(hideNavigationBar, animated: animated && animatedNavigationBarChange)
+			if #available(iOS 26, *) {
+				// Workaround: do not animate navigation bar hide/show on iOS 26 to avoid iOS 26 layout bug: https://github.com/owncloud/ios-app/issues/1512
+				navigationController?.navigationBar.layoutIfNeeded()
+			}
 		}
 	}
 
 	open override func viewWillDisappear(_ animated: Bool) {
 		super.viewWillDisappear(animated)
 		if let _navigationBarWasHidden, navigationController?.isNavigationBarHidden != _navigationBarWasHidden {
-			navigationController?.setNavigationBarHidden(_navigationBarWasHidden, animated: true)
+			navigationController?.setNavigationBarHidden(_navigationBarWasHidden, animated: animated && animatedNavigationBarChange)
+			if #available(iOS 26, *) {
+				// Workaround: do not animate navigation bar hide/show on iOS 26 to avoid iOS 26 layout bug: https://github.com/owncloud/ios-app/issues/1512
+				navigationController?.navigationBar.layoutIfNeeded()
+			}
 		}
 	}
 
