@@ -212,7 +212,7 @@ public extension UIView {
 		if ConfidentialManager.shared.showUserID, let userID = core?.bookmark.user?.userName {
 			texts.append(userID)
 		}
-		if let text = ConfidentialManager.shared.customText as? String, text.isEmpty == false {
+		if let text = ConfidentialManager.shared.customText, !text.isEmpty {
 			texts.append(text)
 		}
 		if ConfidentialManager.shared.showTimestamp {
