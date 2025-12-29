@@ -187,7 +187,7 @@ class PDFThumbnailsCollectionViewController: UICollectionViewController, UIColle
 
     fileprivate func fetchThumbnail(for page:PDFPage, indexPath:IndexPath, size:CGSize) {
         let blockOperation = BlockOperation()
-        weak var weakBlockOperation = blockOperation
+        weak let weakBlockOperation = blockOperation
 
         blockOperation.addExecutionBlock { [weak self] in
             let thumbnailImage = page.thumbnail(of: size, for: .cropBox)

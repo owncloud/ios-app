@@ -9,12 +9,6 @@ excluded:
 #  warning: 300
 #  ignores_function_declarations: true
 #  ignores_comments: true
-force_cast: warning
-
-identifier_name:
-    excluded:
-        - x
-        - y
 
 disabled_rules:
     - block_based_kvo
@@ -25,7 +19,7 @@ disabled_rules:
     - cyclomatic_complexity
     - file_length
     - for_where
-    - operator_whitespace
+    - function_name_whitespace
     - type_body_length
     - line_length
     - type_name
