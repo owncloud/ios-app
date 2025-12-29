@@ -687,9 +687,20 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	var navigationLocation: OCLocation? {
 		didSet {
 			if let clientContext, let navigationLocation, !navigationLocation.isRoot {
-				navigationItem.navigationContent.add(items: [NavigationContentItem(identifier: "navigation-location", area: .title, priority: .standard, position: .leading, titleView:
-					ClientLocationPopupButton(clientContext: clientContext, location: navigationLocation)
-				)])
+				var navigationPopupView: UIView = ClientLocationPopupButton(clientContext: clientContext, location: navigationLocation)
+
+				if #available(iOS 26, *) {
+					// Workaround for a bug (as of iOS 26.2) where the UIKit layout system locks up if the navigation items leave no space for the navigation location popup button.
+					// To reproduce, descend into a subfolder, then gradually resize the window, so it becomes smaller and smaller, until eventually the location popup button is entirely collapsed/hidden.
+					// By wrapping the popup button into a UIView, the bug no longer occurs.
+					let wrapperView = UIView()
+					wrapperView.translatesAutoresizingMaskIntoConstraints = false
+					wrapperView.embed(toFillWith: navigationPopupView)
+
+					navigationPopupView = wrapperView
+				}
+
+				navigationItem.navigationContent.add(items: [NavigationContentItem(identifier: "navigation-location", area: .title, priority: .standard, position: .leading, titleView: navigationPopupView)])
 			} else {
 				navigationItem.navigationContent.remove(itemsWithIdentifier: "navigation-location")
 			}

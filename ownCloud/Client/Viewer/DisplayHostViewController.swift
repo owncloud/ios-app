@@ -210,7 +210,19 @@ class DisplayHostViewController: UIPageViewController {
 			_navigationItemObservation = activeDisplayViewController?.observe(\DisplayViewController.item, options: .initial, changeHandler: { [weak self] (displayViewController, _) in
 				if let itemLocation = displayViewController.item?.location, let clientContext = displayViewController.clientContext {
 					OnMainThread(inline: true) {
-						self?.navigationItem.titleView = ClientLocationPopupButton(clientContext: clientContext, location: itemLocation)
+						var locationPopupButton: UIView = ClientLocationPopupButton(clientContext: clientContext, location: itemLocation)
+
+						if #available(iOS 26, *) {
+							// Workaround for a bug (as of iOS 26.2) where the UIKit layout system locks up if the navigation items leave no space for the navigation location popup button.
+							// => see comment above identical code in ClientItemViewController for details
+							let wrapperView = UIView()
+							wrapperView.translatesAutoresizingMaskIntoConstraints = false
+							wrapperView.embed(toFillWith: locationPopupButton)
+
+							locationPopupButton = wrapperView
+						}
+
+						self?.navigationItem.titleView = locationPopupButton
 					}
 				}
 			})
