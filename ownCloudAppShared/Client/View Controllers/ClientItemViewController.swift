@@ -1244,7 +1244,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			])
 		}
 
-		if let driveQuota = driveQuota, let remainingBytes = driveQuota.remaining {
+		if let driveQuota, let remainingBytes = driveQuota.remaining, driveQuota.total != 0 {
 			quotaInfoText = OCLocalizedFormat("{{remaining}} available", [
 				"remaining" : ByteCountFormatter.string(fromByteCount: remainingBytes.int64Value, countStyle: .file)
 			])
