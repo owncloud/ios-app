@@ -63,7 +63,23 @@ class ViewSupplementaryCell: UICollectionReusableView {
 
 public extension CollectionViewSupplementaryItem {
 	static func view(_ view: UIView, pinned: Bool = false, elementKind: CollectionViewSupplementaryItem.ElementKind = .view, alignment: NSRectAlignment = .top) -> CollectionViewSupplementaryItem {
-	        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(view.frame.size.height))
+		// Fix UIKit framework warning (logged as "Invalid estimated dimension, must be > 0. NOTE: This will be a hard-assert soon, please update your call site.")
+		var estimatedHeight = view.frame.size.height
+
+		if estimatedHeight == 0 {
+			// Force layout of view (hoping its height will be > 0 afterwards)
+			view.setNeedsLayout()
+			view.layoutIfNeeded()
+			estimatedHeight = view.frame.size.height
+		}
+
+		if estimatedHeight == 0 {
+			// If height is still 0, use a minimum height to avoid the warning / assert, but log a warning
+			estimatedHeight = 1
+			Log.warning("CollectionViewSupplementaryItem.view: estimatedHeight is still 0, using a default value of 1")
+		}
+
+	        let headerSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1.0), heightDimension: .estimated(estimatedHeight))
 		let supplementaryItem = NSCollectionLayoutBoundarySupplementaryItem(layoutSize: headerSize, elementKind: elementKind, alignment: alignment)
 
 		if pinned {
