@@ -32,6 +32,12 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		case searchNonItemContent
 	}
 
+	public enum TitleMode: CaseIterable {
+		case unknown // used as initial state only (to trigger initial layout / rendering)
+		case navigationBar
+		case bigTitleSection
+	}
+
 	public var query: OCQuery?
 	private var _itemsDatasource: OCDataSource? // stores the data source passed to init (if any)
 
@@ -43,6 +49,19 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	public var footerSection: CollectionViewSection?
 
 	public var driveSection: CollectionViewSection?
+
+	public var bigTitleSection: CollectionViewSection?
+	public var bigTitleSectionLabel: ThemeCSSLabel?
+	public var preferredTitleMode: TitleMode = .unknown {
+		didSet {
+			if preferredTitleMode != oldValue {
+				self.updateEffectiveTitleMode()
+			}
+		}
+	}
+	public var allowBigTitle: Bool {
+		return (location != nil) && (searchViewController == nil)
+	}
 
 	public var driveSectionDataSource: OCDataSourceComposition?
 	public var singleDriveDatasource: OCDataSourceComposition?
@@ -195,6 +214,25 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 
 			if let driveSection {
 				sections.append(driveSection)
+			} else {
+				let titleLabel = ThemeCSSLabel(withSelectors: [.title])
+				titleLabel.translatesAutoresizingMaskIntoConstraints = false
+				titleLabel.font = UIFont.preferredFont(forTextStyle: .title1, with: .bold)
+				titleLabel.setContentHuggingPriority(.required, for: .vertical)
+				titleLabel.setContentCompressionResistancePriority(.required, for: .vertical)
+				titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+				titleLabel.textAlignment = .left
+				titleLabel.lineBreakMode = .byTruncatingMiddle
+				titleLabel.numberOfLines = 0
+				titleLabel.text = "-"
+				bigTitleSectionLabel = titleLabel
+
+				let bigTitleSectionDataSource = OCDataSourceArray(items: [])
+				bigTitleSection = CollectionViewSection(identifier: "big-title", dataSource: bigTitleSectionDataSource, cellStyle: .init(with: .header), cellLayout: .fullWidth(itemHeightDimension: .estimated(34), groupHeightDimension: .estimated(44), contentInsets: NSDirectionalEdgeInsets(top: 10, leading: 15, bottom: 0, trailing: 15)))
+				if let bigTitleSection {
+					bigTitleSectionDataSource.setVersionedItems([titleLabel])
+					sections.append(bigTitleSection)
+				}
 			}
 
 			if let itemSection {
@@ -407,6 +445,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		if locationBarViewController == nil {
 			updateLocationBarViewController()
 		}
+
+		updateEffectiveTitleMode()
 	}
 
 	open override func viewWillDisappear(_ animated: Bool) {
@@ -612,6 +652,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				// More menu for folder
 				if clientContext?.moreItemHandler != nil, clientContext?.hasPermission(for: .moreOptions) == true {
 					let folderActionBarButton = UIBarButtonItem(image: UIImage(named: "more-dots")?.withInset(UIEdgeInsets(top: 0, left: leftInset, bottom: 0, right: rightInset)), style: .plain, target: self, action: #selector(moreBarButtonPressed))
+					folderActionBarButton.title = OCLocalizedString("Actions", nil)
 					folderActionBarButton.accessibilityIdentifier = "client.folder-action"
 					folderActionBarButton.accessibilityLabel = OCLocalizedString("Actions", nil)
 
@@ -645,6 +686,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				// Add search button
 				if clientContext?.hasPermission(for: .search) == true {
 					let searchButton = UIBarButtonItem(barButtonSystemItem: .search, target: self, action: #selector(startSearch))
+					searchButton.title = OCLocalizedString("Search", nil)
 					searchButton.accessibilityIdentifier = "client.search"
 					searchButton.accessibilityLabel = OCLocalizedString("Search", nil)
 					viewActionButtons.append(searchButton)
@@ -668,15 +710,20 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	}
 
 	// MARK: - Navigation title
+	private var _navigationTitle: String?
 	var navigationTitle: String? {
 		get {
-			return navigationItem.titleLabel?.text
+			return _navigationTitle
 		}
 
 		set {
+			_navigationTitle = newValue
+
 			navigationItem.navigationContent.remove(itemsWithIdentifier: "navigation-location")
 			navigationItem.titleLabelText = newValue
 			navigationItem.title = newValue
+
+			bigTitleSectionLabel?.text = newValue ?? ""
 		}
 	}
 
@@ -701,9 +748,13 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				}
 
 				navigationItem.navigationContent.add(items: [NavigationContentItem(identifier: "navigation-location", area: .title, priority: .standard, position: .leading, titleView: navigationPopupView)])
+
+				bigTitleSectionLabel?.text = navigationLocation.displayName(in: clientContext)
 			} else {
 				navigationItem.navigationContent.remove(itemsWithIdentifier: "navigation-location")
 			}
+
+			updateTitleViewsVisibility()
 		}
 	}
 
@@ -740,6 +791,53 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			} else {
 				self.navigationTitle = navigationItem.title?.redacted()
 			}
+		}
+	}
+
+	private var effectiveTitleMode: TitleMode = .unknown {
+		didSet {
+			if effectiveTitleMode != oldValue {
+				updateTitleViewsVisibility()
+			}
+		}
+	}
+
+	private func updateTitleViewsVisibility() {
+		let titleView = navigationItem.navigationContent.items(withIdentifier: "navigation-location").0.first?.titleView ?? navigationItem.titleView
+
+		switch effectiveTitleMode {
+			case .unknown, .navigationBar:
+				bigTitleSection?.hidden = true
+				titleView?.isHidden = false
+
+			case .bigTitleSection:
+				bigTitleSection?.hidden = false
+				titleView?.isHidden = true
+		}
+	}
+
+	private func updateEffectiveTitleMode() {
+		var computedMode = preferredTitleMode
+
+		switch preferredTitleMode {
+			case .unknown, .navigationBar: break
+
+			case .bigTitleSection:
+				if navigationController != nil || !allowBigTitle {
+					computedMode = .navigationBar
+				}
+		}
+
+		self.effectiveTitleMode = computedMode
+	}
+
+	open override func viewDidLayoutSubviews() {
+		super.viewDidLayoutSubviews()
+
+		if view.bounds.width < 500 {
+			preferredTitleMode = .bigTitleSection
+		} else {
+			preferredTitleMode = .navigationBar
 		}
 	}
 
@@ -1060,6 +1158,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				// Create and install SearchViewController
 				searchViewController = SearchViewController(with: clientContext, scopes: scopes, defaultScope: defaultScope, suggestionContent: suggestionsContent, noResultContent: noResultContent, delegate: self)
 
+				updateEffectiveTitleMode()
+
 				if let searchViewController = searchViewController {
 					self.addStacked(child: searchViewController, position: .top)
 				}
@@ -1130,6 +1230,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 		searchResultsContent = nil
 		searchViewController = nil
 		sortBar?.isHidden = false
+
+		updateEffectiveTitleMode()
 	}
 
 	// MARK: - SearchViewControllerDelegate

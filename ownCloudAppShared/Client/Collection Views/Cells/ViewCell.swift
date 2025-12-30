@@ -27,13 +27,13 @@ class ViewCell: ThemeableCollectionViewListCell {
 				_previousSeparatorLayoutGuideConstraints = nil
 			}
 
-			if hostedView != newValue {
+			if hostedView != newValue, hostedView?.superview == contentView {
 				hostedView?.removeFromSuperview()
 			}
 		}
 
 		didSet {
-			if let hostedView = hostedView, hostedView != oldValue {
+			if let hostedView, hostedView != oldValue || hostedView.superview != contentView {
 				hostedView.layoutIfNeeded()
 
 				contentView.addSubview(hostedView)
