@@ -163,8 +163,8 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 			if context.revealItemHandler == nil {
 				context.revealItemHandler = owner as? RevealItemAction
 			}
-			if context.dropTargetsProvider == nil {
-				context.dropTargetsProvider = owner as? DropTargetsProvider
+			if let dropTargetsProvider = owner as? DropTargetsProvider {
+				context.dropTargetsProvider = dropTargetsProvider
 			}
 
 			context.query = (owner as? ClientItemViewController)?.query
