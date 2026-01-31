@@ -1,5 +1,0 @@
-Bugfix: Fix text visibility of acknowledgments in dark mode
-
-Ensures visibility of acknowledgment texts in dark mode.
-
-https://github.com/owncloud/ios-app/pull/1487

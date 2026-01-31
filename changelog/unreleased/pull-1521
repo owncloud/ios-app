@@ -1,0 +1,13 @@
+Enhancement: iOS 26 compatibility and optimizations
+
+Adopts the iOS 26 "Liquid Glass" look and addresses the following issues:
+- less space for title in the navigation bar
+- non-transparent icon in the "Share with" menu
+- a visual glitch in the location picker 
+
+It also addresses how free space is displayed, if an oCIS space has no quota.
+
+https://github.com/owncloud/ios-app/issues/1497
+https://github.com/owncloud/ios-app/issues/1500
+https://github.com/owncloud/ios-app/issues/1512
+https://github.com/owncloud/ios-app/issues/1520
