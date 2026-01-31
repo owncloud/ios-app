@@ -2161,6 +2161,33 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>Version</key>
+			<string>12.7.0</string>
+			<key>ReleaseNotes</key>
+			<array>
+				<dict>
+					<key>Title</key>
+					<string>iOS 26 update</string>
+					<key>Subtitle</key>
+					<string>The app now adopts Liquid Glass throughout the user interface.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>drop</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Bugfixes</string>
+					<key>Subtitle</key>
+					<string>You reported them, we fixed them.</string>
+					<key>Type</key>
+					<string>Fix</string>
+					<key>ImageName</key>
+					<string>heart.text.square</string>
+				</dict>
+			</array>
+		</dict>
 	</array>
 </dict>
 </plist>
