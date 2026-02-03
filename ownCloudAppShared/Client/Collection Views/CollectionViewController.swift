@@ -1306,6 +1306,7 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 
 		collectionView.backgroundColor = collection.css.getColor(.fill, for: collectionView)
 		coverRootView?.backgroundColor = collection.css.getColor(.fill, for: collectionView)
+		viewIfLoaded?.backgroundColor = collection.css.getColor(.fill, for: collectionView)
 	}
 
 	open var cssAutoSelectors: [ThemeCSSSelector] {
