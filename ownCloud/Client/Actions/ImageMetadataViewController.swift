@@ -682,6 +682,7 @@ class ImageMetadataViewController: StaticTableViewController {
 					}
 
 					self.activityIndicatorView.stopAnimating()
+					self.navigationItem.leftBarButtonItem = nil
 				}
 
 				if let histogram = self.histogramImage(for: self.imageURL) {
