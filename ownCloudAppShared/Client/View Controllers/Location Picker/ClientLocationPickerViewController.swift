@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class ClientLocationPickerViewController: EmbeddingViewController, CustomViewControllerEmbedding, Themeable, UINavigationControllerDelegate {
+class ClientLocationPickerViewController: EmbeddingViewController, CustomViewControllerEmbedding, UINavigationControllerDelegate {
 	var locationPicker: ClientLocationPicker
 
 	init(with locationPicker: ClientLocationPicker) {
@@ -83,15 +83,6 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 		])
 
 		NSLayoutConstraint.activate(constraints)
-	}
-
-	private var registered = false
-	override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		if !registered {
-			registered = true
-			Theme.shared.register(client: self, applyImmediately: true)
-		}
 	}
 
 	// MARK: - UINavigationControllerDelegate
@@ -189,7 +180,8 @@ class ClientLocationPickerViewController: EmbeddingViewController, CustomViewCon
 	}
 
 	// MARK: - Themeable
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 		view.backgroundColor = collection.css.getColor(.fill, for:view)
 	}
 }

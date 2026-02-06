@@ -30,7 +30,7 @@ private let unitCountForImport: Int64 = 50
 private let unitCountForUpload: Int64 = 100
 
 @objc(ShareExtensionViewController)
-class ShareExtensionViewController: EmbeddingViewController, Themeable {
+class ShareExtensionViewController: EmbeddingViewController {
 	// MARK: - Initialization
 	override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
 		super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -362,15 +362,8 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 
 	// MARK: - Events
 	var willAppearDidInitialRun: Bool = false
-	private var _registered = false
 	override func viewWillAppear(_ animated: Bool) {
 		super.viewWillAppear(animated)
-
-		// Register for theme
-		if !_registered {
-			_registered = true
-			Theme.shared.register(client: self, applyImmediately: true)
-		}
 
 		// Check permission
 		if Branding.shared.isImportMethodAllowed(.shareExtension) {
@@ -506,7 +499,8 @@ class ShareExtensionViewController: EmbeddingViewController, Themeable {
 	}
 
 	// MARK: - Themeable
-	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 		view.backgroundColor = collection.css.getColor(.fill, for: view)
 	}
 

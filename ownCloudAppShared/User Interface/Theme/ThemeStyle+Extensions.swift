@@ -110,7 +110,7 @@ extension ThemeStyle {
 			}
 		}
 
-		if let applyStyle = applyStyle {
+		if let applyStyle {
 			let themeCollection = ThemeCollection(with: applyStyle)
 
 			if let themeWindowSubviews = rootView?.subviews {
