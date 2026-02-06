@@ -23,7 +23,7 @@ public protocol BrowserNavigationViewControllerDelegate: AnyObject {
 	func browserNavigation(viewController: BrowserNavigationViewController, contentViewControllerDidChange: UIViewController?)
 }
 
-open class BrowserNavigationViewController: EmbeddingViewController, Themeable, BrowserNavigationHistoryDelegate, ThemeCSSAutoSelector {
+open class BrowserNavigationViewController: EmbeddingViewController, BrowserNavigationHistoryDelegate, ThemeCSSAutoSelector {
 	var navigationView: UINavigationBar = UINavigationBar()
 	var contentContainerView: UIView = UIView()
 	var contentContainerLidView: UIView = UIView()
@@ -113,15 +113,6 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 
 		navigationView.items = [
 		]
-	}
-
-	private var _themeRegistered = false
-	open override func viewWillAppear(_ animated: Bool) {
-		super.viewWillAppear(animated)
-		if !_themeRegistered {
-			_themeRegistered = true
-			Theme.shared.register(client: self, applyImmediately: true)
-		}
 	}
 
 	open override func viewDidAppear(_ animated: Bool) {
@@ -526,7 +517,8 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 	}
 
 	// MARK: - Themeing
-	public func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+	public override func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		super.applyThemeCollection(theme: theme, collection: collection, event: event)
 		navigationView.applyThemeCollection(collection)
 		view.apply(css: collection.css, properties: [.fill])
 	}

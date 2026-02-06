@@ -22,7 +22,7 @@ public protocol CustomViewControllerEmbedding: EmbeddingViewController {
 	func constraintsForEmbedding(contentView: UIView) -> [NSLayoutConstraint]
 }
 
-open class EmbeddingViewController: UIViewController {
+open class EmbeddingViewController: UIViewController, Themeable {
 
 	// MARK: - Content View Controller handling
 	private var contentViewControllerConstraints : [NSLayoutConstraint]? {
@@ -67,5 +67,19 @@ open class EmbeddingViewController: UIViewController {
 				contentViewController.didMove(toParent: self)
 			}
 		}
+	}
+
+	// MARK: - Themeing
+	private var themeRegistered = false
+	open override func viewWillAppear(_ animated: Bool) {
+		super.viewWillAppear(animated)
+		if !themeRegistered {
+			Theme.shared.register(client: self, applyImmediately: true)
+			themeRegistered = true
+		}
+	}
+
+	open func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
+		overrideUserInterfaceStyle = collection.css.getUserInterfaceStyle()
 	}
 }

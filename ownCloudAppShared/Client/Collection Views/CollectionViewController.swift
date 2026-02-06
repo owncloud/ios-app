@@ -1304,6 +1304,8 @@ open class CollectionViewController: UIViewController, UICollectionViewDelegate,
 			updateCellLayout(animated: false)
 		}
 
+		overrideUserInterfaceStyle = collection.css.getUserInterfaceStyle()
+
 		collectionView.backgroundColor = collection.css.getColor(.fill, for: collectionView)
 		coverRootView?.backgroundColor = collection.css.getColor(.fill, for: collectionView)
 		viewIfLoaded?.backgroundColor = collection.css.getColor(.fill, for: collectionView)
