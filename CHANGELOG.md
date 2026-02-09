@@ -39,15 +39,22 @@ ownCloud admins and users.
 
 ## Summary
 
-* Bugfix - Fix text visibility of acknowledgments in dark mode: [#1487](https://github.com/owncloud/ios-app/pull/1487)
+* Enhancement - IOS 26 compatibility and optimizations: [#1497](https://github.com/owncloud/ios-app/issues/1497)
 
 ## Details
 
-* Bugfix - Fix text visibility of acknowledgments in dark mode: [#1487](https://github.com/owncloud/ios-app/pull/1487)
+* Enhancement - IOS 26 compatibility and optimizations: [#1497](https://github.com/owncloud/ios-app/issues/1497)
 
-   Ensures visibility of acknowledgment texts in dark mode.
+   Adopts the iOS 26 "Liquid Glass" look and addresses the following issues: - less
+   space for title in the navigation bar - non-transparent icon in the "Share with"
+   menu - a visual glitch in the location picker
 
-   https://github.com/owncloud/ios-app/pull/1487
+   It also addresses how free space is displayed, if an oCIS space has no quota.
+
+   https://github.com/owncloud/ios-app/issues/1497
+   https://github.com/owncloud/ios-app/issues/1500
+   https://github.com/owncloud/ios-app/issues/1512
+   https://github.com/owncloud/ios-app/issues/1520
 
 # Changelog for ownCloud iOS Client [12.6.1] (2025-12-09)
 The following sections list the changes in ownCloud iOS Client 12.6.1 relevant to
