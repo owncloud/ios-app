@@ -51529,7 +51529,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Umgebungen"
+            "value" : "Orte"
           }
         },
         "en" : {
@@ -100405,7 +100405,7 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Gemessene Zeit seit dem Hochladen, Bearbeiten, Herunterladen oder Anzeigen der jeweiligen Datei über dieses Gerät. Gilt nicht für Dateien, die über die Funktion offline verfügbar heruntergeladen wurden. Lokale Kopien können vor Ablauf des angegebenen Zeitraums gelöscht werden, z.B. weil es eine neuere Version einer Datei auf dem Server gibt - oder durch das manuelle Löschen von Offline-Kopien. Außerdem dürfen lokale Kopien nach Ablauf der angegebenen Zeit nicht gelöscht werden, z.B. wenn eine Aktion an ihr durchgeführt wird, die Datei noch in Gebrauch ist - oder das Konto, das die Datei enthält, nicht in der App verwendet wurde."
+            "value" : "Gemessene Zeit seit dem Hochladen, Bearbeiten, Herunterladen oder Anzeigen der jeweiligen Datei über dieses Gerät. Gilt nicht für Dateien, die über die Funktion offline verfügbar heruntergeladen wurden. Lokale Kopien können vor Ablauf des angegebenen Zeitraums gelöscht werden, z.B. weil es eine neuere Version einer Datei auf dem Server gibt - oder durch das manuelle Löschen von Offline-Kopien. Außerdem können lokale Kopien ggf. auch nach Ablauf der angegebenen Zeit nicht gelöscht werden, z.B. wenn eine Aktion an ihr durchgeführt wird, die Datei noch in Gebrauch ist - oder das Konto, das die Datei enthält, nicht in der App verwendet wurde."
           }
         },
         "en" : {
