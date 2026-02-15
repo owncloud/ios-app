@@ -29,10 +29,13 @@ public class TVGImageAttribute: NSObject {
 
 	var dict: [String: Any]?
 
-	init(name: Name, dict: [String: Any]) {
+	weak var image: TVGImage?
+
+	init(name: Name, dict: [String: Any], image: TVGImage? = nil) {
 		self.name = name
 		self.varName = dict["variable"] as? String
 		self.dict = dict
+		self.image = image
 	}
 
 	func color(forDark: Bool) -> UIColor? {
@@ -41,5 +44,14 @@ public class TVGImageAttribute: NSObject {
 		}
 
 		return UIColor(from: colorString)
+	}
+
+	func color(for themeCollection: ThemeCollection) -> UIColor? {
+		if let varName,
+		   let themeColor = themeCollection.css.getColor((name == .fill) ? .fill : .stroke, selectors: [ ThemeCSSSelector(rawValue: varName) ], for: image) {
+		   	return themeColor
+		}
+
+		return color(forDark: themeCollection.style == .dark)
 	}
 }
