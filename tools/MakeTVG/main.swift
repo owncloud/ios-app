@@ -139,7 +139,7 @@ func extractRootAttributes(from svgString: String) -> [String:String]? {
 if CommandLine.argc < 3 {
 	print("MakeTVG --makefile [make.json] [--icon-ts icon.ts] [--web-theme theme.json] [--file-filter only-matches] [--icon-map icon-map.json] [--legacy-input [old/app-specific icons folder]] --input [input folder] --output [output folder]")
 } else {
-	var jsonFileURL, iconMapURL, targetDirectoryURL: URL?
+	var iconMapURL, targetDirectoryURL: URL?
 	var sourceURLs : [URL] = []
 	var ocisIconTSFileURL, webThemeFileURL: URL?
 	var fileFilter: String?
@@ -242,7 +242,7 @@ if CommandLine.argc < 3 {
 		let iconTSContents = try? NSString(contentsOf: ocisIconTSFileURL, encoding: NSUTF8StringEncoding) as String
 		var fileIconTable: Any?
 		if let iconTSContents {
-			let fileIconMatch = /const fileIcon =\s*({[\s\S]+?})\s+export/
+			let fileIconMatch = #/const fileIcon =\s*({[\s\S]+?})\s+export/#
 			let fileIconJSON = iconTSContents.firstMatch(of: fileIconMatch)?.1
 
 			if let fileIconJSONData = fileIconJSON?.data(using: .utf8) {
@@ -344,7 +344,7 @@ if CommandLine.argc < 3 {
 
 			// Convert and save
 			let tvgDict = tvgBaseDict as NSDictionary
-			let tvgData : Data = try JSONSerialization.data(withJSONObject: tvgDict, options: JSONSerialization.WritingOptions(rawValue: 0))
+			let tvgData : Data = try JSONSerialization.data(withJSONObject: tvgDict, options: [.sortedKeys])
 			let tvgFileName = fileReplacements?[AlternativeFileName] as? String ?? (((sourceURL.lastPathComponent as NSString).deletingPathExtension) as NSString).appendingPathExtension("tvg")
 			let targetURL = targetDirectoryURL.appendingPathComponent(tvgFileName!, isDirectory: false)
 
@@ -379,7 +379,7 @@ if CommandLine.argc < 3 {
 		try? (try? JSONSerialization.data(withJSONObject: [
 			"by-type": fileTypeIconMap,
 			"by-suffix": suffixIconMap
-		]))?.write(to: iconMapURL)
+		], options: [.sortedKeys]))?.write(to: iconMapURL)
 	}
 
 	// try? (try? JSONSerialization.data(withJSONObject: makeDict))?.write(to: targetDirectoryURL.appendingPathComponent("_make.json", isDirectory: false))
