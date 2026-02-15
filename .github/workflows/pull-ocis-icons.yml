@@ -2,8 +2,8 @@ name: "Pull icons from ocis/web"
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 3 1 * *"
+  pull_request:
+    branches: ["release/*"]
 
 jobs:
   pull-icons:
