@@ -113,9 +113,49 @@ class DriveListCell: ThemeableCollectionViewListCell {
 	}
 }
 
+class DriveListRowCell: DriveListCell {
+	var labelContainer: UIView = UIView()
+	var coverImageSpacing : CGFloat = 5
+
+	override func configure() {
+		super.configure()
+
+		labelContainer.translatesAutoresizingMaskIntoConstraints = false
+		labelContainer.addSubview(titleLabel)
+		labelContainer.addSubview(subtitleLabel)
+		contentView.addSubview(labelContainer)
+	}
+
+	override func configureLayout() {
+		NSLayoutConstraint.activate([
+			coverImageResourceView.widthAnchor.constraint(equalToConstant: 48),
+			coverImageResourceView.heightAnchor.constraint(equalToConstant: 48),
+
+			coverImageResourceView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: textOuterSpacing),
+			coverImageResourceView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: coverImageSpacing),
+			coverImageResourceView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -coverImageSpacing),
+
+			labelContainer.leadingAnchor.constraint(equalTo: coverImageResourceView.trailingAnchor, constant: textOuterSpacing),
+			labelContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -textOuterSpacing),
+			labelContainer.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+
+			titleLabel.leadingAnchor.constraint(equalTo: labelContainer.leadingAnchor),
+			titleLabel.trailingAnchor.constraint(equalTo: labelContainer.trailingAnchor),
+			titleLabel.topAnchor.constraint(equalTo: labelContainer.topAnchor),
+			titleLabel.bottomAnchor.constraint(equalTo: subtitleLabel.topAnchor),
+
+			subtitleLabel.leadingAnchor.constraint(equalTo: labelContainer.leadingAnchor),
+			subtitleLabel.trailingAnchor.constraint(equalTo: labelContainer.trailingAnchor),
+			subtitleLabel.bottomAnchor.constraint(equalTo: labelContainer.bottomAnchor),
+
+			separatorLayoutGuide.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
+		])
+	}
+}
+
 extension DriveListCell {
 	static func registerCellProvider() {
-		let driveListCellRegistration = UICollectionView.CellRegistration<DriveListCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
+		let driveListCellRegistration = UICollectionView.CellRegistration<DriveListRowCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var coverImageRequest : OCResourceRequest?
 			var resourceManager : OCResourceManager?
 			var title : String?
