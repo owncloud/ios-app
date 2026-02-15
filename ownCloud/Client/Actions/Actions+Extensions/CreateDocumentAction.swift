@@ -147,7 +147,7 @@ class CreateDocumentAction: Action {
 				core.suggestUnusedNameBased(on: OCLocalizedString("New document", nil).appending((fileType.extension != nil) ? ".\(fileType.extension!)" : ""), at: itemLocation, isDirectory: false, using: .numbered, filteredBy: nil, resultHandler: { (suggestedName, _) in
 					guard let suggestedName = suggestedName else { return }
 
-					let fallbackIcon = (fileType.mimeType != nil) ? ResourceItemIcon.iconFor(mimeType: fileType.mimeType!) : .file
+					let fallbackIcon = (fileType.mimeType != nil) ? ResourceItemIcon.iconFor(mimeType: fileType.mimeType!, fileName: fileType.extension != nil ? "file.\(fileType.extension!)" : nil) : .file
 
 					OnMainThread {
 						let documentNameViewController = NamingViewController( with: self.core, defaultName: suggestedName, stringValidator: { name in
@@ -286,7 +286,7 @@ class CreateDocumentAction: Action {
 
 					if let docTypeIcon = documentType.icon {
 						docIcon = docTypeIcon
-					} else if let mimeType = documentType.mimeType, let tvgIconName = OCItem.iconName(for: mimeType) {
+					} else if let mimeType = documentType.mimeType, let tvgIconName = OCItem.iconName(for: mimeType, fileName: documentType.extension != nil ? "file.\(documentType.extension!)" : nil) {
 						docIcon = Theme.shared.image(for: tvgIconName, size: iconSize)
 					}
 

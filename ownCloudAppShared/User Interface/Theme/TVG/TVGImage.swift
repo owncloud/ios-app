@@ -20,8 +20,15 @@ import UIKit
 import PocketSVG
 
 public class TVGImage: NSObject {
+	static public let bundle = Bundle(for: TVGImage.self)
+	static public let tvgIconsFolderURL = TVGImage.bundle.url(forResource: "tvg-icons", withExtension: nil)
+	static public func URL(forResource: String? = nil, withExtension: String? = nil) -> URL? {
+		return Self.bundle.url(forResource: forResource, withExtension: withExtension, subdirectory: "tvg-icons")
+	}
+
 	var imageString : String?
 	var defaultValues : [String:String]?
+	var attributes: [TVGImageAttribute.Name:TVGImageAttribute] = [:]
 	var viewBox : CGRect?
 	var bezierPathsByIdentifier : [String:[SVGBezierPath]] = [:]
 	var bezierPathsBoundsByIdentifier : [String:CGRect] = [:]
@@ -35,6 +42,15 @@ public class TVGImage: NSObject {
 			if let tvgDict : Dictionary = tvgObject as? [String: Any] {
 				imageString = tvgDict["image"] as? String
 				defaultValues = tvgDict["defaults"] as? [String:String]
+
+				if let attributes = tvgDict["attributes"] as? [String:Any] {
+					for (key, value) in attributes {
+						if let attributeDict = value as? [String:String],
+						   let name = TVGImageAttribute.Name(rawValue: key) {
+							self.attributes[name] = TVGImageAttribute(name:name, dict:attributeDict)
+						}
+					}
+				}
 
 				if (tvgDict["viewBox"] as? String) != nil {
 					viewBox = NSCoder.cgRect(for: (tvgDict["viewBox"] as? String)!)
@@ -50,7 +66,11 @@ public class TVGImage: NSObject {
 	}
 
 	public convenience init?(named name: String) {
-		var resourceURL = Bundle.main.url(forResource: name, withExtension: "tvg")
+		var resourceURL = TVGImage.URL(forResource: name, withExtension: "tvg")
+
+		if let resourcePath = resourceURL?.path, !FileManager.default.fileExists(atPath: resourcePath) {
+			resourceURL = Bundle.main.url(forResource: name, withExtension: "tvg")
+		}
 
 		if let resourcePath = resourceURL?.path, !FileManager.default.fileExists(atPath: resourcePath) {
 			resourceURL = nil
@@ -60,12 +80,12 @@ public class TVGImage: NSObject {
 			resourceURL = Bundle.sharedAppBundle.url(forResource: name, withExtension: "tvg")
 		}
 
-		guard let loadURL = resourceURL else {
+		guard let resourceURL else {
 			Log.error("Error locating TVG image \(name)")
 			return nil
 		}
 
-		guard let data = try? Data(contentsOf: loadURL) else {
+		guard let data = try? Data(contentsOf: resourceURL) else {
 			Log.error("Error reading TVG image \(name)")
 			return nil
 		}
@@ -160,7 +180,11 @@ public class TVGImage: NSObject {
 		return (pathBoundingRect!, svgBezierPaths!)
 	}
 
-	public func image(fitInSize: CGSize, with variables: [String:String]? = nil, cacheFor identifier: String? = nil) -> UIImage? {
+	public func attribute(_ name: TVGImageAttribute.Name) -> TVGImageAttribute? {
+		return attributes[name]
+	}
+
+	public func image(fitInSize: CGSize, cacheFor identifier: String? = nil, themeCollection: ThemeCollection? = nil) -> UIImage? {
 		var image : UIImage?
 
 		if (fitInSize.width <= 0) || (fitInSize.height <= 0) {
@@ -168,11 +192,16 @@ public class TVGImage: NSObject {
 			return nil
 		}
 
+		let variables: [String:String]? = themeCollection?.iconColors
+
 		guard let (pathBoundingRect, bezierPaths) = svgBezierPaths(with: variables, cacheFor: identifier) else {
 			return nil
 		}
 
 		let fittingSize : CGSize = SVGAdjustCGRectForContentsGravity(CGRect(origin: CGPoint.zero, size: fitInSize), (viewBox != nil) ? viewBox!.size : pathBoundingRect.size, CALayerContentsGravity.resizeAspect.rawValue).size
+
+		let overwriteFillColor = (themeCollection != nil) ? attribute(.fill)?.color(forDark: themeCollection?.style == .dark)?.cgColor : nil
+		let overwriteStrokeColor = (themeCollection != nil) ? attribute(.stroke)?.color(forDark: themeCollection?.style == .dark)?.cgColor : nil
 
 		image = UIImage.imageWithSize(size: fittingSize, scale: UIScreen.main.scale) { (rect) in
 			if let graphicsContext = UIGraphicsGetCurrentContext() {
@@ -183,7 +212,24 @@ public class TVGImage: NSObject {
 					actualRect.size.height = pathBoundingRect.size.height * (fittingSize.height / viewBox.size.height)
 				}
 
-				SVGDrawPaths(bezierPaths, graphicsContext, actualRect, nil, nil)
+				// Draw SVG paths, overwriting fill and stroke colors if needed
+				SVGDrawPathsWithBlock(bezierPaths, graphicsContext, actualRect, { svgPath in
+					let svgFillColor = svgPath.svgAttributes["fill"] as! CGColor?
+					if let fillColor = overwriteFillColor ?? svgFillColor, fillColor.alpha > 0,
+					   svgFillColor != nil ? svgFillColor!.alpha > 0 : true { // prevent 'fill="none"' paths from being filled
+						graphicsContext.setFillColor(fillColor)
+						svgPath.fill()
+					}
+
+					let svgStrokeColor = svgPath.svgAttributes["stroke"] as! CGColor?
+					if let strokeColor = overwriteStrokeColor ?? svgStrokeColor, strokeColor.alpha > 0,
+					   svgStrokeColor != nil ? svgStrokeColor!.alpha > 0 : true { // prevent 'stroke="none"' paths from being drawn
+						graphicsContext.setStrokeColor(strokeColor)
+						svgPath.stroke()
+					}
+				})
+
+				// SVGDrawPaths(bezierPaths, graphicsContext, actualRect, fillCGColor, strokeCGColor) // uses fill and stroke colors only as a last fallback
 			}
 		}
 

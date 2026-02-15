@@ -148,6 +148,9 @@ public class ThemeCollection : NSObject {
 	// MARK: - ThemeCSS
 	public var css: ThemeCSS
 
+	// MARK: - Style
+	public var style: ThemeCollectionStyle
+
 	// MARK: - Default Collection
 	static public var defaultCollection : ThemeCollection = {
 		let collection = ThemeCollection()
@@ -167,6 +170,7 @@ public class ThemeCollection : NSObject {
 		return (collection)
 	}()
 
+	// MARK: - Pair generation
 	private static func generateColorPairs(with baseSelectors:[ThemeCSSSelector], foregroundColor: UIColor, backgroundColor: UIColor) -> [ThemeCSSRecord] {
 		var disabledSelectors = baseSelectors
 		disabledSelectors.append(.disabled)
@@ -207,11 +211,12 @@ public class ThemeCollection : NSObject {
 		return colorPairs
 	}
 
+	// MARK: - Init
 	init(darkBrandColor inDarkColor: UIColor, lightBrandColor inLightColor: UIColor, style: ThemeCollectionStyle = .dark, interfaceStyles: NSDictionary? = nil, useSystemColors: Bool = false, systemTintColor: UIColor? = nil) {
-		var logoFillColor : UIColor?
-
 		self.css = ThemeCSS()
+		self.style = style
 
+		var logoFillColor : UIColor?
 		var interfaceStyle : UIUserInterfaceStyle = .unspecified
 		var keyboardAppearance : UIKeyboardAppearance = .default
 		var backgroundBlurEffectStyle : UIBlurEffect.Style = .regular
