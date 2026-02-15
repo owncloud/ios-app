@@ -99,7 +99,7 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 			case file
 			case folder
 			case drive
-			case mime(type: String)
+			case mime(type: String, fileName: String?)
 			case resource(request: OCResourceRequest)
 			case icon(image: UIImage)
 		}
@@ -540,8 +540,8 @@ open class UniversalItemListCell: ThemeableCollectionViewListCell {
 						case .drive:
 							iconViewProvider = ResourceItemIcon.drive
 
-						case .mime(type: let type):
-							iconViewProvider = ResourceItemIcon.iconFor(mimeType: type)
+						case .mime(type: let type, fileName: let fileName):
+							iconViewProvider = ResourceItemIcon.iconFor(mimeType: type, fileName: fileName)
 
 						case .resource(request: let request):
 							iconRequest = request

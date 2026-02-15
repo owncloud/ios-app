@@ -57,6 +57,7 @@ public class Theme: NSObject {
 
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.PocketSVG", bundleOf: Theme.self, title: "PocketSVG", resourceName: "PocketSVG", fileExtension: "LICENSE"))
 		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.Down", bundleOf: Theme.self, title: "Down", resourceName: "Down", fileExtension: "LICENSE"))
+		OCExtensionManager.shared.addExtension(OCExtension.license(withIdentifier: "license.FontAwesome", bundleOf: Theme.self, title: "Font Awesome", resourceName: "FontAwesome", fileExtension: "LICENSE"))
 
 		return sharedInstance
 	}()
@@ -115,7 +116,7 @@ public class Theme: NSObject {
 				if themeResource.isKind(of: ThemeTVGResource.self) {
 					if size != nil {
 						if let tvgResource : ThemeTVGResource = themeResource as? ThemeTVGResource {
-							image = tvgResource.vectorImage(for: self)?.rasteredImage(fitInSize: size!, with: activeCollection.iconColors, cacheFor: self.activeCollection.identifier)
+							image = tvgResource.vectorImage(for: self)?.rasteredImage(fitInSize: size!, themeCollection: activeCollection)
 						}
 					}
 				}
