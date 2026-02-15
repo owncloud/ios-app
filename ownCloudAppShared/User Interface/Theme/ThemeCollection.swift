@@ -789,6 +789,10 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar],					property: .fill,   value: contentToolbarSet.backgroundColor)
 		])
 
+		// TVG branding example for changing the fill color variable "icon-folder" for the TVG icon
+		// -> the CSS path is "tvgIcon.[iconName].[tvgColorVariable].[fill|stroke]", so f.ex. tvgIcon.folder.icon-folder.fill for the folder icon's "icon-folder" variable fill color
+		// css.add(record: ThemeCSSRecord(selectors: [.tvgIcon, ThemeCSSSelector(rawValue: "folder")], property: .fill, value: UIColor.systemYellow))
+
 		// System colors
 		css.addSystemColors()
 

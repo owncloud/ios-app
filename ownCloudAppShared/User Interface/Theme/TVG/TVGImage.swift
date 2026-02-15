@@ -36,21 +36,15 @@ public class TVGImage: NSObject {
 	var imageName: String?
 
 	public init?(with data: Data) {
+		var attributes: [String:Any]?
+
 		do {
 			let tvgObject : Any = try JSONSerialization.jsonObject(with: data, options: JSONSerialization.ReadingOptions(rawValue: 0))
 
 			if let tvgDict : Dictionary = tvgObject as? [String: Any] {
 				imageString = tvgDict["image"] as? String
 				defaultValues = tvgDict["defaults"] as? [String:String]
-
-				if let attributes = tvgDict["attributes"] as? [String:Any] {
-					for (key, value) in attributes {
-						if let attributeDict = value as? [String:String],
-						   let name = TVGImageAttribute.Name(rawValue: key) {
-							self.attributes[name] = TVGImageAttribute(name:name, dict:attributeDict)
-						}
-					}
-				}
+				attributes = tvgDict["attributes"] as? [String:Any]
 
 				if (tvgDict["viewBox"] as? String) != nil {
 					viewBox = NSCoder.cgRect(for: (tvgDict["viewBox"] as? String)!)
@@ -63,6 +57,17 @@ public class TVGImage: NSObject {
 		}
 
 		super.init()
+
+		if let attributes {
+			for (key, value) in attributes {
+				if let attributeDict = value as? [String:String],
+				   let name = TVGImageAttribute.Name(rawValue: key) {
+					self.attributes[name] = TVGImageAttribute(name:name, dict:attributeDict, image: self)
+				}
+			}
+		}
+
+		cssSelectors = [.tvgIcon]
 	}
 
 	public convenience init?(named name: String) {
@@ -93,6 +98,10 @@ public class TVGImage: NSObject {
 		self.init(with: data)
 
 		imageName = name
+
+		if let imageName {
+			cssSelectors = [.tvgIcon, ThemeCSSSelector(rawValue: imageName)]
+		}
 	}
 
 	public func svgString(with variables: [String:String]? = nil) -> String? {
@@ -200,8 +209,8 @@ public class TVGImage: NSObject {
 
 		let fittingSize : CGSize = SVGAdjustCGRectForContentsGravity(CGRect(origin: CGPoint.zero, size: fitInSize), (viewBox != nil) ? viewBox!.size : pathBoundingRect.size, CALayerContentsGravity.resizeAspect.rawValue).size
 
-		let overwriteFillColor = (themeCollection != nil) ? attribute(.fill)?.color(forDark: themeCollection?.style == .dark)?.cgColor : nil
-		let overwriteStrokeColor = (themeCollection != nil) ? attribute(.stroke)?.color(forDark: themeCollection?.style == .dark)?.cgColor : nil
+		let overwriteFillColor = (themeCollection != nil) ? attribute(.fill)?.color(for: themeCollection!)?.cgColor : nil
+		let overwriteStrokeColor = (themeCollection != nil) ? attribute(.stroke)?.color(for: themeCollection!)?.cgColor : nil
 
 		image = UIImage.imageWithSize(size: fittingSize, scale: UIScreen.main.scale) { (rect) in
 			if let graphicsContext = UIGraphicsGetCurrentContext() {
@@ -246,4 +255,8 @@ public class TVGImage: NSObject {
 			bezierPathsBoundsByIdentifier.removeAll()
 		}
 	}
+}
+
+public extension ThemeCSSSelector {
+	static let tvgIcon = ThemeCSSSelector(rawValue: "tvgIcon")
 }
