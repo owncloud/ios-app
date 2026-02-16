@@ -287,7 +287,7 @@
 		DC298CA929362523009FA87F /* ClientLocationPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC298CA829362523009FA87F /* ClientLocationPicker.swift */; };
 		DC298CAC29362710009FA87F /* ClientLocationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC298CAB29362710009FA87F /* ClientLocationPickerViewController.swift */; };
 		DC298CAE2936598B009FA87F /* DriveGridCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC298CAD2936598B009FA87F /* DriveGridCell.swift */; };
-		DC298CB029366B96009FA87F /* AccountControllerSpacesGridViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC298CAF29366B96009FA87F /* AccountControllerSpacesGridViewController.swift */; };
+		DC298CB029366B96009FA87F /* AccountControllerSpacesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC298CAF29366B96009FA87F /* AccountControllerSpacesViewController.swift */; };
 		DC2A128428D0722F0088A2B7 /* OCSavedSearch.h in Headers */ = {isa = PBXBuildFile; fileRef = DC2A127C28D06F060088A2B7 /* OCSavedSearch.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC2A128528D072350088A2B7 /* OCVault+SavedSearches.h in Headers */ = {isa = PBXBuildFile; fileRef = DC2A128028D0718B0088A2B7 /* OCVault+SavedSearches.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC2A128628D0725D0088A2B7 /* OCVault+SavedSearches.m in Sources */ = {isa = PBXBuildFile; fileRef = DC2A128128D0718B0088A2B7 /* OCVault+SavedSearches.m */; };
@@ -1280,7 +1280,7 @@
 		DC298CA829362523009FA87F /* ClientLocationPicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientLocationPicker.swift; sourceTree = "<group>"; };
 		DC298CAB29362710009FA87F /* ClientLocationPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientLocationPickerViewController.swift; sourceTree = "<group>"; };
 		DC298CAD2936598B009FA87F /* DriveGridCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriveGridCell.swift; sourceTree = "<group>"; };
-		DC298CAF29366B96009FA87F /* AccountControllerSpacesGridViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountControllerSpacesGridViewController.swift; sourceTree = "<group>"; };
+		DC298CAF29366B96009FA87F /* AccountControllerSpacesViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountControllerSpacesViewController.swift; sourceTree = "<group>"; };
 		DC2A127C28D06F060088A2B7 /* OCSavedSearch.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCSavedSearch.h; sourceTree = "<group>"; };
 		DC2A127D28D06F060088A2B7 /* OCSavedSearch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSavedSearch.m; sourceTree = "<group>"; };
 		DC2A128028D0718B0088A2B7 /* OCVault+SavedSearches.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCVault+SavedSearches.h"; sourceTree = "<group>"; };
@@ -2707,7 +2707,7 @@
 				DCD68A2C291D979400993FF5 /* AccountController.swift */,
 				DC6C0A532923FFF30045FF2A /* AccountControllerSection.swift */,
 				DC298C8C2934B3E7009FA87F /* AccountConnectionErrorHandler.swift */,
-				DC298CAF29366B96009FA87F /* AccountControllerSpacesGridViewController.swift */,
+				DC298CAF29366B96009FA87F /* AccountControllerSpacesViewController.swift */,
 				DC2A8E692B57EA8F001F0522 /* AccountControllerSearchViewController.swift */,
 				DC89EA662995456A00BFF393 /* BrowserNavigationBookmark+AccountController.swift */,
 			);
@@ -4787,7 +4787,7 @@
 				DCB330E029F1442500BFF393 /* OCShareRole+UniversalItemListCellContentProvider.swift in Sources */,
 				DC9B4FCE2941DA6E0037F8F8 /* UINavigationItem+Extension.swift in Sources */,
 				DC89EA572992FDCD00BFF393 /* AppStateAction.swift in Sources */,
-				DC298CB029366B96009FA87F /* AccountControllerSpacesGridViewController.swift in Sources */,
+				DC298CB029366B96009FA87F /* AccountControllerSpacesViewController.swift in Sources */,
 				DCB330E429F18C6800BFF393 /* OptionItem.swift in Sources */,
 				DCE4E48824C1FA430051722F /* NamingViewController.swift in Sources */,
 				DC01AF2128411D8400903101 /* ThemeableCollectionViewListCell.swift in Sources */,
