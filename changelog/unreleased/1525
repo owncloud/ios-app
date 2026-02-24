@@ -7,5 +7,3 @@ ocis/web uses variables and a mapping table to associate icons with suffixes and
 This PR translates that structure to the native iOS app and also integrates it into its own CSS system. The colors of icons can therefore be changed through its CSS system.
 
 https://github.com/owncloud/ios-app/pull/1525
-https://github.com/owncloud/ios-app/issues/1310
-https://github.com/owncloud/ios-app/issues/1397
