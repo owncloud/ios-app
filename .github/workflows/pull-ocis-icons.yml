@@ -1,9 +1,10 @@
 name: "Pull icons from ocis/web"
-
 on:
   workflow_dispatch:
   pull_request:
     branches: ["release/*"]
+permissions:
+  contents: write
 
 jobs:
   pull-icons:
