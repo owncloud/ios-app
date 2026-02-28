@@ -226,6 +226,12 @@ public class TVGImage: NSObject {
 					let svgFillColor = svgPath.svgAttributes["fill"] as! CGColor?
 					if let fillColor = overwriteFillColor ?? svgFillColor, fillColor.alpha > 0,
 					   svgFillColor != nil ? svgFillColor!.alpha > 0 : true { // prevent 'fill="none"' paths from being filled
+					   	// respect fill-rule (only implemented by PocketSVG for SVGLayer, but not SVGDrawPathsWithBlock)
+						if (svgPath.svgAttributes["fill-rule"] as? String) == "evenodd" {
+							svgPath.usesEvenOddFillRule = true
+						}
+
+						// set color & fill
 						graphicsContext.setFillColor(fillColor)
 						svgPath.fill()
 					}
@@ -233,6 +239,40 @@ public class TVGImage: NSObject {
 					let svgStrokeColor = svgPath.svgAttributes["stroke"] as! CGColor?
 					if let strokeColor = overwriteStrokeColor ?? svgStrokeColor, strokeColor.alpha > 0,
 					   svgStrokeColor != nil ? svgStrokeColor!.alpha > 0 : true { // prevent 'stroke="none"' paths from being drawn
+					   	// respect stroke-linecap (only implemented by PocketSVG for SVGLayer, but not SVGDrawPathsWithBlock)
+						if let strokeLineCap = svgPath.svgAttributes["stroke-linecap"] as? String {
+							switch strokeLineCap {
+								case "round":
+									svgPath.lineCapStyle = .round
+								case "square":
+									svgPath.lineCapStyle = .square
+								default:
+									svgPath.lineCapStyle = .butt
+							}
+						}
+						// respect stroke-linejoin (only implemented by PocketSVG for SVGLayer, but not SVGDrawPathsWithBlock)
+						if let strokeLineJoin = svgPath.svgAttributes["stroke-linejoin"] as? String {
+							switch strokeLineJoin {
+								case "round":
+									svgPath.lineJoinStyle = .round
+								case "bevel":
+									svgPath.lineJoinStyle = .bevel
+								default:
+									svgPath.lineJoinStyle = .miter
+							}
+						}
+
+						// respect stroke-miterlimit (only implemented by PocketSVG for SVGLayer, but not SVGDrawPathsWithBlock)
+						if let strokeMiterLimit = (svgPath.svgAttributes["stroke-miterlimit"] as? NSString)?.doubleValue {
+							svgPath.miterLimit = strokeMiterLimit
+						}
+
+						// respect stroke-dasharray (only implemented by PocketSVG for SVGLayer, but not SVGDrawPathsWithBlock)
+						if let dashPattern = (svgPath.svgAttributes["stroke-dasharray"] as? String)?.components(separatedBy: ",").map({ (component) in return CGFloat((component.replacingOccurrences(of: " ", with: "") as NSString).doubleValue) }) {
+							svgPath.setLineDash(dashPattern, count: dashPattern.count, phase: 0)
+						}
+
+						// set color & stroke
 						graphicsContext.setStrokeColor(strokeColor)
 						svgPath.stroke()
 					}

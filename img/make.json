@@ -43,6 +43,11 @@
 
 			"replace" : "#1D293B",
 			"variable" : "logoFillColor"
+		},
+
+		" fill=\"currentColor\"" : {
+			"description" : "Remove unsupported (and irrelevant here) fill color value that makes PocketSVG crash",
+			"overwrite" : ""
 		}
 	},
 
