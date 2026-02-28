@@ -430,7 +430,61 @@ end
         appicon_name: outputIconName
       )
     end
-  end
+    end
+    
+    lane :update_profiles do
+    update_existing_apps(
+      DISTRIBUTION_TYPE: "AppStore",
+      APP_ID: "com.owncloud.ios-app",
+      FP_ID: "com.owncloud.ios-app.ownCloud-File-Provider",
+      FP_UI_ID: "com.owncloud.ios-app.ownCloud-File-ProviderUI",
+      INTENT_ID: "com.owncloud.ios-app.ownCloud-Intents",
+      SHARE_EXTENSION_ID: "com.owncloud.ios-app.ownCloud-Share-Extension",
+      ACTION_EXTENSION_ID: "com.owncloud.ios-app.ownCloud-Action-Extension",
+      TXT_ID: ""
+    )
+    end
+    
+
+    lane :update_adhoc_profiles do
+    update_existing_apps(
+      DISTRIBUTION_TYPE: "AdHoc",
+      APP_ID: "com.owncloud.ios-app",
+      FP_ID: "com.owncloud.ios-app.ownCloud-File-Provider",
+      FP_UI_ID: "com.owncloud.ios-app.ownCloud-File-ProviderUI",
+      INTENT_ID: "com.owncloud.ios-app.ownCloud-Intents",
+      SHARE_EXTENSION_ID: "com.owncloud.ios-app.ownCloud-Share-Extension",
+      ACTION_EXTENSION_ID: "com.owncloud.ios-app.ownCloud-Action-Extension",
+      TXT_ID: "ADHOC"
+    )
+    end
+  
+    lane :update_emm_profiles do
+    update_existing_apps(
+      DISTRIBUTION_TYPE: "AppStore",
+      APP_ID: "com.owncloud.ios-app.emm",
+      FP_ID: "com.owncloud.ios-app.emm.ownCloud-File-Provider",
+      FP_UI_ID: "com.owncloud.ios-app.emm.ownCloud-File-ProviderUI",
+      INTENT_ID: "com.owncloud.ios-app.emm.ownCloud-Intents",
+      SHARE_EXTENSION_ID: "com.owncloud.ios-app.emm.ownCloud-Share-Extension",
+      ACTION_EXTENSION_ID: "com.owncloud.ios-app.emm.ownCloud-Action-Extension",
+      TXT_ID: "EMM"
+      )
+    end
+    
+  
+    lane :update_online_profiles do
+    update_existing_apps(
+      DISTRIBUTION_TYPE: "AppStore",
+      APP_ID: "online.owncloud.ios-app",
+      FP_ID: "online.owncloud.ios-app.DocumentProvider",
+      FP_UI_ID: "online.owncloud.ios-app.DocumentProviderUI",
+      INTENT_ID: "online.owncloud.ios-app.Intents",
+      SHARE_EXTENSION_ID: "online.owncloud.ios-app.ShareExtApp",
+      ACTION_EXTENSION_ID: "online.owncloud.ios-app.Action-Extension",
+      TXT_ID: "OCONLINE"
+      )
+    end
 
   desc "In-House Enterprise IPA generation"
    lane :build_ipa_in_house do |values|
