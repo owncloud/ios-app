@@ -19,6 +19,54 @@ jobs:
 #       run: sudo xcode-select -switch /Applications/Xcode_14.3.app
       - name: Xcode version
         run: /usr/bin/xcodebuild -version
+      - name: Install the Apple certificate and provisioning profiles
+        env:
+          BUILD_CERTIFICATE_BASE64: ${{ secrets.BUILD_CERTIFICATE_BASE64 }}
+          P12_PASSWORD: ${{ secrets.P12_PASSWORD }}
+          APP_PROVISION_PROFILE_BASE64: ${{ secrets.APP_PROVISION_PROFILE_BASE64 }}
+          FILEPROVIDER_PROVISION_PROFILE_BASE64: ${{ secrets.FILEPROVIDER_PROVISION_PROFILE_BASE64 }}
+          FILEPROVIDERUI_PROVISION_PROFILE_BASE64: ${{ secrets.FILEPROVIDERUI_PROVISION_PROFILE_BASE64 }}
+          INTENT_PROVISION_PROFILE_BASE64: ${{ secrets.INTENT_PROVISION_PROFILE_BASE64 }}
+          SHAREEXTENSION_PROVISION_PROFILE_BASE64: ${{ secrets.SHAREEXTENSION_PROVISION_PROFILE_BASE64 }}
+          ACTIONEXTENSION_PROVISION_PROFILE_BASE64: ${{ secrets.ACTIONEXTENSION_PROVISION_PROFILE_BASE64 }}
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+        run: |
+          # Create variables
+          CERTIFICATE_PATH=$RUNNER_TEMP/build_certificate.p12
+          APP_PP_PATH=$RUNNER_TEMP/App.mobileprovision
+          FILEPROVIDER_PP_PATH=$RUNNER_TEMP/FileProvider.mobileprovision
+          FILEPROVIDERUI_PP_PATH=$RUNNER_TEMP/FileProviderUI.mobileprovision
+          INTENT_PP_PATH=$RUNNER_TEMP/Intent.mobileprovision
+          SHAREEXTENSION_PP_PATH=$RUNNER_TEMP/ShareExtension.mobileprovision
+          ACTIONEXTENSION_PP_PATH=$RUNNER_TEMP/ActionExtension.mobileprovision
+          KEYCHAIN_PATH=$RUNNER_TEMP/app-signing.keychain-db
+          
+          # Import certificate and provisioning profiles from secrets
+          echo -n "$BUILD_CERTIFICATE_BASE64" | base64 --decode --output $CERTIFICATE_PATH
+          echo -n "$APP_PROVISION_PROFILE_BASE64" | base64 --decode --output $APP_PP_PATH
+          echo -n "$FILEPROVIDER_PROVISION_PROFILE_BASE64" | base64 --decode --output $FILEPROVIDER_PP_PATH
+          echo -n "$FILEPROVIDERUI_PROVISION_PROFILE_BASE64" | base64 --decode --output $FILEPROVIDERUI_PP_PATH
+          echo -n "$INTENT_PROVISION_PROFILE_BASE64" | base64 --decode --output $INTENT_PP_PATH
+          echo -n "$SHAREEXTENSION_PROVISION_PROFILE_BASE64" | base64 --decode --output $SHAREEXTENSION_PP_PATH
+          echo -n "$ACTIONEXTENSION_PROVISION_PROFILE_BASE64" | base64 --decode --output $ACTIONEXTENSION_PP_PATH
+          
+          # Create temporary keychain
+          security create-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          security set-keychain-settings -lut 21600 $KEYCHAIN_PATH
+          security unlock-keychain -p "$KEYCHAIN_PASSWORD" $KEYCHAIN_PATH
+          
+          # Import certificate to keychain
+          security import $CERTIFICATE_PATH -P "$P12_PASSWORD" -A -t cert -f pkcs12 -k $KEYCHAIN_PATH
+          security list-keychain -d user -s $KEYCHAIN_PATH
+          
+          # Apply provisioning profiles
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          cp $APP_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+          cp $FILEPROVIDER_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+          cp $FILEPROVIDERUI_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+          cp $INTENT_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+          cp $SHAREEXTENSION_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
+          cp $ACTIONEXTENSION_PP_PATH ~/Library/MobileDevice/Provisioning\ Profiles/
       - name: Install gomplate
         run: brew install gomplate
       - name: Run Generate Docs
@@ -29,3 +77,4 @@ jobs:
         with:
           commit_message: Configuration documentation updated
           file_pattern: doc/CONFIGURATION.json doc/configuration.adoc
+          
