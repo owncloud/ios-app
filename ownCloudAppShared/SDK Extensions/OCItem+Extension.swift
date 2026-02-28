@@ -55,58 +55,58 @@ extension OCItem {
 		return mimeTypeToIconMap
 	}()
 
-	static public let validIconNames : [String] = [
-		// List taken from https://github.com/owncloud/core/blob/master/core/js/mimetypelist.js
-		"application",
-		"application-pdf",
-		"audio",
-		"file",
-		"folder",
-		"folder-create",
-		"folder-drag-accept",
-		"folder-external",
-		"folder-public",
-		"folder-shared",
-		"folder-starred",
-		"image",
-		"package-x-generic",
-		"text",
-		"text-calendar",
-		"text-code",
-		"text-uri-list",
-		"text-vcard",
-		"video",
-		"x-office-document",
-		"x-office-presentation",
-		"x-office-spreadsheet",
-		"icon-search"
-	]
+	static private let iconMap: [String:[String:String]] = {
+		if let iconMapURL = TVGImage.URL(forResource: "icon-map", withExtension: "json"),
+		   let iconMapData = try? Data(contentsOf: iconMapURL),
+		   let iconMap = try? JSONSerialization.jsonObject(with: iconMapData, options: []) as? [String:[String:String]] {
+		   	return iconMap
+		}
+		return [:]
+	}()
 
-	static public func iconName(for MIMEType: String?) -> String? {
+	static public let validIconNames : [String] = {
+		if let tvgIconsFolderURL = TVGImage.tvgIconsFolderURL,
+		   let tvgURLs = try? FileManager.default.contentsOfDirectory(at: tvgIconsFolderURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles) {
+		   	return tvgURLs.compactMap { (url) in
+				guard url.pathExtension == "tvg" else { return nil }
+				return url.deletingPathExtension().lastPathComponent
+			}
+		}
+		return []
+	}()
+
+	static public func validatedIconName(_ iconName: String?, withoutTypeMap: Bool = false) -> String? {
+		guard let iconName else { return nil }
+
+		if !withoutTypeMap, let byTypeMap = iconMap["by-type"] {
+			if let iconNameForType = byTypeMap[iconName] {
+				return (iconNameForType as NSString).deletingPathExtension as String
+			}
+		}
+
+		if self.validIconNames.contains(iconName) {
+			return iconName
+		}
+
+		return nil
+	}
+
+	static public func iconName(for mimeType: String?, fileName: String?) -> String? {
 		var iconName : String?
 
-		if let mimeType = MIMEType {
-			iconName = self.iconNamesByMIMEType[mimeType]
+		if let bySuffixMap = iconMap["by-suffix"], let suffix = (fileName as? NSString)?.pathExtension as? String {
+			iconName = validatedIconName((bySuffixMap[suffix] as? NSString)?.deletingPathExtension as? String, withoutTypeMap: true)
+		}
 
-			if iconName != nil {
-				if !(self.validIconNames.contains(iconName!)) {
-					iconName = nil
-				}
-			}
-
+		if let mimeType, iconName == nil {
+			iconName = validatedIconName(iconNamesByMIMEType[mimeType])
 			if iconName == nil {
 				let flatMIMEType = mimeType.replacingOccurrences(of: "/", with: "-")
-
-				if self.validIconNames.contains(flatMIMEType) {
-					iconName = flatMIMEType
-				} else {
-					if let mimeCategory = mimeType.components(separatedBy: "/").first {
-						if mimeCategory != "application" {
-							if self.validIconNames.contains(mimeCategory) {
-								iconName = mimeCategory
-							}
-						}
-					}
+				iconName = validatedIconName(flatMIMEType)
+			}
+			if iconName == nil {
+				if let mimeCategory = mimeType.components(separatedBy: "/").first, mimeCategory != "application" {
+					iconName = validatedIconName(mimeCategory)
 				}
 			}
 		}
@@ -115,7 +115,7 @@ extension OCItem {
 	}
 
 	public var iconName : String? {
-		var iconName = OCItem.iconName(for: self.mimeType)
+		var iconName = OCItem.iconName(for: self.mimeType, fileName: self.name)
 
 		if iconName == nil {
 			if self.type == .collection {

@@ -52,7 +52,7 @@ class UploadFileAction: UploadBaseAction {
 
 	override class func iconForLocation(_ location: OCExtensionLocationIdentifier) -> UIImage? {
 		Theme.shared.add(tvgResourceFor: "text")
-		return Theme.shared.image(for: "text", size: CGSize(width: 30.0, height: 30.0))!.withRenderingMode(.alwaysTemplate)
+		return Theme.shared.image(for: "text", size: CGSize(width: 30.0, height: 30.0))?.withRenderingMode(.alwaysTemplate)
 	}
 }
 
