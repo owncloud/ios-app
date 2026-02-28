@@ -87,28 +87,30 @@ class AccountControllerSpacesViewController: CollectionViewController, ViewContr
 	}
 
 	func updateSpaceManagementOptions() {
+		var menuItems: [UIMenuElement]
+
+		let switchLayoutItem = UIDeferredMenuElement.uncached({ [weak self] completion in
+			// List/Grid
+			if let self {
+				completion([
+					UIAction(title: Self.listView ? OCLocalizedString("Grid",nil) : OCLocalizedString("List", nil),
+						 image: OCSymbol.icon(forSymbolName: Self.listView ? "square.grid.2x2" : "list.bullet"),
+						 handler: { _ in
+							self.listView = !self.listView
+						 })
+				])
+			}
+		})
+
 		if canManageSpaces {
-			let spaceActionsButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: nil, action: nil)
-			spaceActionsButton.accessibilityIdentifier = "client.space-actions"
-			spaceActionsButton.accessibilityLabel = OCLocalizedString("Space Actions", nil)
-			spaceActionsButton.menu = UIMenu(title: "", children: [
+			menuItems = [
 				// Create space
 				UIAction(title: OCLocalizedString("Create space",nil), image: OCSymbol.icon(forSymbolName: "plus"), handler: { [weak clientContext] _ in
 					OCDrive.create(with: clientContext)
 				}),
 
 				// List/Grid
-				UIDeferredMenuElement.uncached({ [weak self] completion in
-					if let self {
-						completion([
-							UIAction(title: Self.listView ? OCLocalizedString("Grid",nil) : OCLocalizedString("List", nil),
-								 image: OCSymbol.icon(forSymbolName: Self.listView ? "square.grid.2x2" : "list.bullet"),
-								 handler: { _ in
-									self.listView = !self.listView
-								 })
-						])
-					}
-				}),
+				switchLayoutItem,
 
 				// Show/Hide disabled spaces
 				UIDeferredMenuElement.uncached({ [weak self] completion in
@@ -122,12 +124,24 @@ class AccountControllerSpacesViewController: CollectionViewController, ViewContr
 						])
 					}
 				})
-			])
+			]
+		} else {
+			menuItems = [
+				// List/Grid
+				switchLayoutItem
+			]
+		}
+
+		if menuItems.count > 0 {
+			let spaceActionsButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: nil, action: nil)
+			spaceActionsButton.accessibilityIdentifier = "client.space-actions"
+			spaceActionsButton.accessibilityLabel = OCLocalizedString("Space Actions", nil)
+			spaceActionsButton.menu = UIMenu(title: "", children: menuItems)
 			navigationItem.rightBarButtonItem = spaceActionsButton
 		} else {
 			navigationItem.rightBarButtonItem = nil
-
 		}
+
 	}
 
 	static var listView: Bool {
