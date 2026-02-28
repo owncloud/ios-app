@@ -3,7 +3,7 @@
 //  MakeTVG
 //
 //  Created by Felix Schwarz on 12.04.18.
-//  Copyright © 2018 ownCloud GmbH. All rights reserved.
+//  Copyright © 2026 ownCloud GmbH. All rights reserved.
 //
 
 import Foundation
@@ -33,13 +33,17 @@ func applyReplacementDict(svgString : String, replacementDict : NSDictionary, de
 		if let replaceOpts = replaceWith as? NSDictionary {
 			let replaceSubString : String? = replaceOpts["replace"] as? String
 			let variableName : String? = replaceOpts["variable"] as? String
-			let variableString : String = "{{" + variableName! + "}}"
+			let variableString : String = "{{" + (variableName ?? "") + "}}"
+			let overwriteString : String? = replaceOpts["overwrite"] as? String
 			var replaceString : String?
 			var searchStringUpper : String?
 			var defaultValue : String?
 			var adaptedString : String?
 
-			if replaceSubString != nil {
+			if let overwriteString {
+				newString = newString.replacingOccurrences(of: searchString, with: overwriteString)
+				return
+			} else  if replaceSubString != nil {
 				replaceString = searchString.replacingOccurrences(of: replaceSubString!, with: variableString)
 				searchStringUpper = searchString.replacingOccurrences(of: replaceSubString!, with: replaceSubString!.uppercased())
 				defaultValue = replaceSubString
@@ -136,12 +140,68 @@ func extractRootAttributes(from svgString: String) -> [String:String]? {
 	return nil
 }
 
+class YAMLParser {
+	private var lines: [String]
+	private var offset: Int = 0
+
+	var yamlTree: NSMutableDictionary = [:]
+
+	init(yamlData: Data) {
+		if let yamlString = String(bytes: yamlData, encoding: .utf8) {
+			lines = yamlString.components(separatedBy: .newlines).map { $0.replacingOccurrences(of: "\r", with: "") }
+		} else {
+			lines = []
+		}
+	}
+
+	func parse() {
+		parseSlice(baseIndentLevel: 0, addTo: &yamlTree)
+	}
+
+	func parseSlice(baseIndentLevel: Int, addTo treeSlice: inout NSMutableDictionary) {
+		var lastKey: String?
+
+		while offset < lines.count {
+			let line = lines[offset]
+			let indentLevel = line.prefix(while: { $0 == " " }).count
+			let unindentedLine = line.trimmingPrefix(while: { $0 == " " })
+
+			if unindentedLine.hasPrefix("--") || unindentedLine.hasPrefix("#") {
+				offset += 1
+				continue
+			}
+
+			let splitComponents = unindentedLine.components(separatedBy: ":")
+			let lineKey = splitComponents[0]
+			let lineValue = splitComponents.count > 1 ? splitComponents[1].trimmingCharacters(in: .whitespacesAndNewlines).trimmingCharacters(in: CharacterSet(charactersIn: "\"'")) : nil
+
+			if baseIndentLevel == indentLevel {
+				if let lineValue {
+					treeSlice[lineKey] = lineValue
+				}
+				offset += 1
+			} else if baseIndentLevel > indentLevel {
+				// Segment ended, return
+				return
+			} else if indentLevel > baseIndentLevel, let lastKey {
+				// New subsegment began
+				var sliceDict: NSMutableDictionary = NSMutableDictionary()
+				parseSlice(baseIndentLevel: indentLevel, addTo: &sliceDict)
+				treeSlice[lastKey] = sliceDict
+				continue
+			}
+
+			lastKey = lineKey
+		}
+	}
+}
+
 if CommandLine.argc < 3 {
 	print("MakeTVG --makefile [make.json] [--icon-ts icon.ts] [--web-theme theme.json] [--file-filter only-matches] [--icon-map icon-map.json] [--legacy-input [old/app-specific icons folder]] --input [input folder] --output [output folder]")
 } else {
 	var iconMapURL, targetDirectoryURL: URL?
 	var sourceURLs : [URL] = []
-	var ocisIconTSFileURL, webThemeFileURL: URL?
+	var ocisIconTSFileURL, webThemeFileURL, colorYAMLFileURL: URL?
 	var fileFilter: String?
 	var makeDict: NSMutableDictionary?
 
@@ -160,6 +220,9 @@ if CommandLine.argc < 3 {
 				case "web-theme":
 					webThemeFileURL = URL(fileURLWithPath: cmdArg)
 
+				case "color-yaml":
+					colorYAMLFileURL = URL(fileURLWithPath: cmdArg)
+
 				case "file-filter":
 					fileFilter = cmdArg
 
@@ -169,7 +232,7 @@ if CommandLine.argc < 3 {
 				case "input", "legacy-input":
 					let sourceDirectoryURL = URL(fileURLWithPath: cmdArg)
 					if let fileURLs = try? FileManager.default.contentsOfDirectory(at: sourceDirectoryURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles) {
-						sourceURLs.append(contentsOf: fileURLs)
+						sourceURLs.append(contentsOf: fileURLs.filter({ url in sourceURLs.first(where: { $0.lastPathComponent == url.lastPathComponent }) == nil }))
 						if optName == "legacy-input" {
 							for fileURL in fileURLs {
 								if makeDict?[fileURL.lastPathComponent] == nil {
@@ -218,6 +281,7 @@ if CommandLine.argc < 3 {
 	makeDict.removeObject(forKey: ".type-icon-map")
 
 	if let webThemeFileURL, let webThemeData = try? Data(NSData(contentsOf: webThemeFileURL)) {
+		// Extract colors from theme.json
 		if let webTheme = try? JSONSerialization.jsonObject(with: webThemeData, options: [.json5Allowed]) as? NSDictionary {
 			if let themes = webTheme.value(forKeyPath: "clients.web.themes") as? [NSDictionary] {
 				for theme in themes {
@@ -230,6 +294,7 @@ if CommandLine.argc < 3 {
 									colorVariables[colorVar] = [:]
 								}
 								colorVariables[colorVar]?[styleName] = colorValue
+								print("Adding color for \(colorVar)/\(styleName) as '\(colorValue)' based on '\(webThemeFileURL.lastPathComponent)'")
 							}
 						}
 					}
@@ -238,7 +303,38 @@ if CommandLine.argc < 3 {
 		}
 	}
 
+	if let colorYAMLFileURL, let colorYAMLData = try? Data(NSData(contentsOf: colorYAMLFileURL)) {
+		// Add colors missing from theme.json from the design system's color.yaml
+		let parser = YAMLParser(yamlData: colorYAMLData)
+		parser.parse()
+		if let colors = parser.yamlTree["color"] as? [String:Any],
+		   let icons = colors["icon"] as? [String:Any] {
+			for iconColorName in icons.keys {
+				if let iconColorValue = (icons[iconColorName] as? [String:Any])?["value"] as? String,
+				   colorVariables["icon-" + iconColorName] == nil {
+				   	var effectiveColorValue = iconColorValue
+				   	var resolveCount = 0
+
+					while effectiveColorValue.hasPrefix("{"), effectiveColorValue.hasSuffix("}"), resolveCount < 100 {
+						if let resolvedColor = parser.yamlTree.value(forKeyPath: effectiveColorValue.trimmingCharacters(in: CharacterSet(charactersIn: "{}")) + ".value") as? String {
+							effectiveColorValue = resolvedColor
+							resolveCount += 1
+						}
+					}
+
+				   	colorVariables["icon-" + iconColorName] = [
+				   		"dark": effectiveColorValue,
+				   		"light": effectiveColorValue
+					]
+
+					print("Adding color for icon-\(iconColorName) as '\(effectiveColorValue)' for dark/light mode based on '\(colorYAMLFileURL.lastPathComponent)'")
+				}
+			}
+		}
+	}
+
 	if let ocisIconTSFileURL {
+		// Read icon.ts
 		let iconTSContents = try? NSString(contentsOf: ocisIconTSFileURL, encoding: NSUTF8StringEncoding) as String
 		var fileIconTable: Any?
 		if let iconTSContents {
@@ -348,7 +444,7 @@ if CommandLine.argc < 3 {
 			let tvgFileName = fileReplacements?[AlternativeFileName] as? String ?? (((sourceURL.lastPathComponent as NSString).deletingPathExtension) as NSString).appendingPathExtension("tvg")
 			let targetURL = targetDirectoryURL.appendingPathComponent(tvgFileName!, isDirectory: false)
 
-			print("Writing TVG with " + String(defaultValuesForVariables.count) + " changes, based on " + sourceURL.lastPathComponent + ", to " + targetURL.lastPathComponent)
+			print("Writing TVG with " + String(defaultValuesForVariables.count) + " changes, based on " + sourceURL.path + ", to " + targetURL.lastPathComponent)
 
 			try tvgData.write(to: targetURL)
 		}
@@ -381,6 +477,4 @@ if CommandLine.argc < 3 {
 			"by-suffix": suffixIconMap
 		], options: [.sortedKeys]))?.write(to: iconMapURL)
 	}
-
-	// try? (try? JSONSerialization.data(withJSONObject: makeDict))?.write(to: targetDirectoryURL.appendingPathComponent("_make.json", isDirectory: false))
 }
