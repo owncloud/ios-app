@@ -1,5 +1,5 @@
 //
-//  AccountControllerSpacesGridViewController.swift
+//  AccountControllerSpacesViewController.swift
 //  ownCloudAppShared
 //
 //  Created by Felix Schwarz on 29.11.22.
@@ -19,7 +19,7 @@
 import UIKit
 import ownCloudSDK
 
-class AccountControllerSpacesGridViewController: CollectionViewController, ViewControllerPusher {
+class AccountControllerSpacesViewController: CollectionViewController, ViewControllerPusher {
 	var spacesSection: CollectionViewSection
 	var noSpacesCondition: DataSourceCondition?
 
@@ -41,7 +41,7 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 			context.viewControllerPusher = owner as? ViewControllerPusher
 		}
 
-		spacesSection = CollectionViewSection(identifier: "spaces", dataSource: spacesDataSource, cellStyle: .init(with: .gridCell), cellLayout: AccountControllerSpacesGridViewController.cellLayout(for: .current))
+		spacesSection = CollectionViewSection(identifier: "spaces", dataSource: spacesDataSource, cellStyle: Self.cellStyle(for: .current), cellLayout: Self.cellLayout(for: .current))
 
 		super.init(context: gridContext, sections: [ spacesSection ], useStackViewRoot: true, hierarchic: false)
 
@@ -87,15 +87,30 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 	}
 
 	func updateSpaceManagementOptions() {
+		var menuItems: [UIMenuElement]
+
+		let switchLayoutItem = UIDeferredMenuElement.uncached({ [weak self] completion in
+			// List/Grid
+			if let self {
+				completion([
+					UIAction(title: Self.listView ? OCLocalizedString("Grid",nil) : OCLocalizedString("List", nil),
+						 image: OCSymbol.icon(forSymbolName: Self.listView ? "square.grid.2x2" : "list.bullet"),
+						 handler: { _ in
+							self.listView = !self.listView
+						 })
+				])
+			}
+		})
+
 		if canManageSpaces {
-			let spaceActionsButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: nil, action: nil)
-			spaceActionsButton.accessibilityIdentifier = "client.space-actions"
-			spaceActionsButton.accessibilityLabel = OCLocalizedString("Space Actions", nil)
-			spaceActionsButton.menu = UIMenu(title: "", children: [
+			menuItems = [
 				// Create space
 				UIAction(title: OCLocalizedString("Create space",nil), image: OCSymbol.icon(forSymbolName: "plus"), handler: { [weak clientContext] _ in
 					OCDrive.create(with: clientContext)
 				}),
+
+				// List/Grid
+				switchLayoutItem,
 
 				// Show/Hide disabled spaces
 				UIDeferredMenuElement.uncached({ [weak self] completion in
@@ -109,15 +124,61 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 						])
 					}
 				})
-			])
+			]
+		} else {
+			menuItems = [
+				// List/Grid
+				switchLayoutItem
+			]
+		}
+
+		if menuItems.count > 0 {
+			let spaceActionsButton = UIBarButtonItem(image: UIImage(named: "more-dots"), style: .plain, target: nil, action: nil)
+			spaceActionsButton.accessibilityIdentifier = "client.space-actions"
+			spaceActionsButton.accessibilityLabel = OCLocalizedString("Space Actions", nil)
+			spaceActionsButton.menu = UIMenu(title: "", children: menuItems)
 			navigationItem.rightBarButtonItem = spaceActionsButton
 		} else {
 			navigationItem.rightBarButtonItem = nil
+		}
 
+	}
+
+	static var listView: Bool {
+		set {
+			OCAppIdentity.shared.userDefaults?.set(newValue ? "list" : "grid", forKey: "spaces-view")
+		}
+		get {
+			return OCAppIdentity.shared.userDefaults?.string(forKey: "spaces-view") == "list"
 		}
 	}
 
+	var listView: Bool {
+		get {
+			return Self.listView
+		}
+
+		set {
+			Self.listView = newValue
+			OnMainThread {
+				self.spacesSection.cellStyle = Self.cellStyle(for: .current)
+				self.spacesSection.cellLayout = Self.cellLayout(for: .current)
+			}
+		}
+	}
+
+	static func cellStyle(for traitCollection: UITraitCollection) -> CollectionViewCellStyle {
+		if listView {
+			return .init(with: .tableCell)
+		}
+		return .init(with: .gridCell)
+	}
+
 	static func cellLayout(for traitCollection: UITraitCollection) -> CollectionViewSection.CellLayout {
+		if listView {
+			return .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+		}
+
 		return .fillingGrid(minimumWidth: 260, maximumWidth: 300, computeHeight: { width in
 			return floor(width * 3 / 4)
 		}, cellSpacing: NSDirectionalEdgeInsets(top: 10, leading: 10, bottom: 10, trailing: 10), sectionInsets: NSDirectionalEdgeInsets(top: 5, leading: 5, bottom: 5, trailing: 5), center: true)
@@ -127,7 +188,7 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 		super.traitCollectionDidChange(previousTraitCollection)
 
 		OnMainThread {
-			self.spacesSection.cellLayout = AccountControllerSpacesGridViewController.cellLayout(for: self.traitCollection)
+			self.spacesSection.cellLayout = Self.cellLayout(for: self.traitCollection)
 		}
 	}
 
@@ -164,7 +225,7 @@ class AccountControllerSpacesGridViewController: CollectionViewController, ViewC
 	}
 }
 
-extension AccountControllerSpacesGridViewController: AccountConnectionStatusObserver {
+extension AccountControllerSpacesViewController: AccountConnectionStatusObserver {
 	func account(connection: AccountConnection, changedStatusTo: AccountConnection.Status, initial: Bool) {
 		OnMainThread {
 			self.updateSpaceManagementOptions()
