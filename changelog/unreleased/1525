@@ -1,0 +1,9 @@
+Enhancement: adopt and integrate ocis/web icons
+
+This PR adds automation infrastructure and an accompanying TVG format update to support using icons and colors from ocis/web in the iOS app.
+
+Branding support
+ocis/web uses variables and a mapping table to associate icons with suffixes and allow adjusting colors using CSS variables.
+This PR translates that structure to the native iOS app and also integrates it into its own CSS system. The colors of icons can therefore be changed through its CSS system.
+
+https://github.com/owncloud/ios-app/pull/1525

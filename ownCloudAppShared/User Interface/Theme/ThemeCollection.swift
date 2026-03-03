@@ -148,6 +148,9 @@ public class ThemeCollection : NSObject {
 	// MARK: - ThemeCSS
 	public var css: ThemeCSS
 
+	// MARK: - Style
+	public var style: ThemeCollectionStyle
+
 	// MARK: - Default Collection
 	static public var defaultCollection : ThemeCollection = {
 		let collection = ThemeCollection()
@@ -167,6 +170,7 @@ public class ThemeCollection : NSObject {
 		return (collection)
 	}()
 
+	// MARK: - Pair generation
 	private static func generateColorPairs(with baseSelectors:[ThemeCSSSelector], foregroundColor: UIColor, backgroundColor: UIColor) -> [ThemeCSSRecord] {
 		var disabledSelectors = baseSelectors
 		disabledSelectors.append(.disabled)
@@ -207,11 +211,12 @@ public class ThemeCollection : NSObject {
 		return colorPairs
 	}
 
+	// MARK: - Init
 	init(darkBrandColor inDarkColor: UIColor, lightBrandColor inLightColor: UIColor, style: ThemeCollectionStyle = .dark, interfaceStyles: NSDictionary? = nil, useSystemColors: Bool = false, systemTintColor: UIColor? = nil) {
-		var logoFillColor : UIColor?
-
 		self.css = ThemeCSS()
+		self.style = style
 
+		var logoFillColor : UIColor?
 		var interfaceStyle : UIUserInterfaceStyle = .unspecified
 		var keyboardAppearance : UIKeyboardAppearance = .default
 		var backgroundBlurEffectStyle : UIBlurEffect.Style = .regular
@@ -783,6 +788,10 @@ public class ThemeCollection : NSObject {
 			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar, .segments, .item, .separator],	property: .stroke, value: contentToolbarSet.secondaryLabelColor),
 			ThemeCSSRecord(selectors: [.content, .toolbar, .locationBar],					property: .fill,   value: contentToolbarSet.backgroundColor)
 		])
+
+		// TVG branding example for changing the fill color variable "icon-folder" for the TVG icon
+		// -> the CSS path is "tvgIcon.[iconName].[tvgColorVariable].[fill|stroke]", so f.ex. tvgIcon.folder.icon-folder.fill for the folder icon's "icon-folder" variable fill color
+		// css.add(record: ThemeCSSRecord(selectors: [.tvgIcon, ThemeCSSSelector(rawValue: "folder")], property: .fill, value: UIColor.systemYellow))
 
 		// System colors
 		css.addSystemColors()

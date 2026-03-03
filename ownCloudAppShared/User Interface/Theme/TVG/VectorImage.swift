@@ -27,11 +27,12 @@ class VectorImage: NSObject {
 		self.image = tvgImage
 	}
 
-	func rasteredImage(fitInSize: CGSize, with variables: [String:String], cacheFor identifier: String? = nil) -> UIImage? {
+	func rasteredImage(fitInSize: CGSize, themeCollection: ThemeCollection? = nil, cacheIfPossible: Bool = true) -> UIImage? {
 		var uiImage : UIImage?
 		let sizeString = NSCoder.string(for: fitInSize)
+		let identifier = themeCollection?.identifier
 
-		if identifier != nil {
+		if identifier != nil, cacheIfPossible {
 			OCSynchronized(self) {
 				if identifier != lastSeenIdentifier {
 					flushRasteredImages()
@@ -41,7 +42,7 @@ class VectorImage: NSObject {
 				uiImage = rasteredImages[sizeString]
 
 				if uiImage == nil {
-					uiImage = image.image(fitInSize: fitInSize, with: variables)
+					uiImage = image.image(fitInSize: fitInSize, themeCollection: themeCollection)
 
 					if uiImage == nil {
 						rasteredImages[sizeString] = uiImage
@@ -49,7 +50,7 @@ class VectorImage: NSObject {
 				}
 			}
 		} else {
-			uiImage = image.image(fitInSize: fitInSize, with: variables)
+			uiImage = image.image(fitInSize: fitInSize, themeCollection: themeCollection)
 		}
 
 		return uiImage

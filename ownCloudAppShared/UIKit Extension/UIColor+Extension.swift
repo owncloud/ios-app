@@ -38,6 +38,60 @@ extension UIColor {
 		self.init(red: (rgbHex >> 16) & 0xFF, green: (rgbHex >> 8) & 0xFF, blue: (rgbHex & 0xFF), alpha: alpha)
 	}
 
+	public convenience init?(from cssString: String) {
+		let colorString = cssString.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() // Normalize input string
+		var components: [Int]?
+		var alpha: Float?
+
+		if colorString.hasPrefix("rgb") {
+			if colorString.hasPrefix("rgb("), colorString.hasSuffix(")") {
+				// rgb(r,g,b)
+				components = colorString.dropFirst(4).dropLast().split(separator: ",").compactMap({ str in Int(str.replacingOccurrences(of: " ", with: "")) })
+			} else if colorString.hasPrefix("rgba("), colorString.hasSuffix(")") {
+				// rgba(r,g,b,a)
+				var numberStrings = colorString.dropFirst(5).dropLast().split(separator: ",")
+				alpha = Float(numberStrings.removeLast())
+				components = numberStrings.compactMap({ str in Int(str) })
+			}
+		} else if colorString.hasPrefix("#") {
+			let hexString = String(colorString.dropFirst())
+
+			var intVal: UInt64 = 0
+			let scanner = Scanner(string: hexString)
+			if scanner.scanHexInt64(&intVal) {
+				switch hexString.count {
+					case 3:
+						// #rgb (expand to rr, gg, bb via masking + bit shifting)
+						components = [
+							Int(((intVal & 0x0F00) >> 4) + ((intVal & 0x0F00) >> 8)),
+							Int( (intVal & 0x00F0)       + ((intVal & 0x00F0) >> 4)),
+						  	Int(((intVal & 0x000F) << 4) + ((intVal & 0x000F)      ))
+						]
+
+					case 6:
+						// #rrggbb
+						components = [
+							Int(((intVal & 0xFF0000) >> 16)),
+							Int(((intVal & 0x00FF00) >> 8)),
+							Int( (intVal & 0x0000FF))
+						]
+					default: break
+				}
+			}
+		}
+
+		if let components, components.count == 3 {
+			if let alpha {
+				self.init(red: components[0], green: components[1], blue: components[2], alpha: alpha)
+			} else {
+				self.init(red: components[0], green: components[1], blue: components[2])
+			}
+			return
+		}
+
+		return nil
+	}
+
 	public func blended(withFraction fraction: Double, ofColor blendColor: UIColor) -> UIColor {
 		var selfRed : CGFloat = 0, selfGreen : CGFloat  = 0, selfBlue : CGFloat  = 0, selfAlpha : CGFloat = 0
 		var blendRed : CGFloat = 0, blendGreen : CGFloat  = 0, blendBlue : CGFloat  = 0, blendAlpha : CGFloat = 0

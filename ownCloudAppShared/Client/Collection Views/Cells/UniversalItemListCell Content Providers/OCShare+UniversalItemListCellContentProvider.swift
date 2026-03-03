@@ -43,7 +43,7 @@ extension OCShare: UniversalItemListCellContentProvider {
 
 		// Icon
 		if let mimeType = itemMIMEType, isFile {
-			content.icon = .mime(type: mimeType)
+			content.icon = .mime(type: mimeType, fileName: itemLocation.lastPathComponent)
 		} else {
 			content.icon = isFile ? .file : (itemLocation.isDriveRoot ? .drive : .folder)
 		}

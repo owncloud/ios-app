@@ -292,7 +292,6 @@
 		DC2A128528D072350088A2B7 /* OCVault+SavedSearches.h in Headers */ = {isa = PBXBuildFile; fileRef = DC2A128028D0718B0088A2B7 /* OCVault+SavedSearches.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DC2A128628D0725D0088A2B7 /* OCVault+SavedSearches.m in Sources */ = {isa = PBXBuildFile; fileRef = DC2A128128D0718B0088A2B7 /* OCVault+SavedSearches.m */; };
 		DC2A128728D0725D0088A2B7 /* OCSavedSearch.m in Sources */ = {isa = PBXBuildFile; fileRef = DC2A127D28D06F060088A2B7 /* OCSavedSearch.m */; };
-		DC2A68D529D492B300BFF393 /* space.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC2A68D429D492B200BFF393 /* space.tvg */; };
 		DC2A68D729D4E93300BFF393 /* SharedKeyCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2A68D629D4E93300BFF393 /* SharedKeyCommands.swift */; };
 		DC2A8E6A2B57EA8F001F0522 /* AccountControllerSearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2A8E692B57EA8F001F0522 /* AccountControllerSearchViewController.swift */; };
 		DC2BB5402CD96C1600320384 /* ServerSideSearchScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC2BB53F2CD96C1600320384 /* ServerSideSearchScope.swift */; };
@@ -509,7 +508,6 @@
 		DCB7964C2BC4901400D6D759 /* INIFile+URLFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7964B2BC4901400D6D759 /* INIFile+URLFile.swift */; };
 		DCB796582BC535AD00D6D759 /* RemoveFromSidebarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */; };
 		DCB796642BC73AF100D6D759 /* CreateShortcutFileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796632BC73AF100D6D759 /* CreateShortcutFileAction.swift */; };
-		DCB7967F2BC83E6E00D6D759 /* text-uri-list.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCB7967E2BC83E6E00D6D759 /* text-uri-list.tvg */; };
 		DCB7969D2BCE71C300D6D759 /* OpenShortcutFileAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7969C2BCE71C300D6D759 /* OpenShortcutFileAction.swift */; };
 		DCB7969F2BCE745500D6D759 /* INIFile+ShortcutResolution.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB7969E2BCE745500D6D759 /* INIFile+ShortcutResolution.swift */; };
 		DCB796A72BCFB6EC00D6D759 /* CreateShortcutFileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796A62BCFB6EC00D6D759 /* CreateShortcutFileViewController.swift */; };
@@ -582,6 +580,9 @@
 		DCDC20A22399A715003CFF5B /* OCCore+LicenseEnvironment.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDC20A02399A715003CFF5B /* OCCore+LicenseEnvironment.m */; };
 		DCDC20AB2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDC20A92399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		DCDC20AC2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = DCDC20AA2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m */; };
+		DCDE0F8E2F3F71E4000F57D2 /* TVGImageAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDE0F8D2F3F71E4000F57D2 /* TVGImageAttribute.swift */; };
+		DCDE0FF52F41212B000F57D2 /* tvg-icons in Resources */ = {isa = PBXBuildFile; fileRef = DCDE0FF42F41212B000F57D2 /* tvg-icons */; };
+		DCDE0FF72F4224E6000F57D2 /* FontAwesome.LICENSE in Resources */ = {isa = PBXBuildFile; fileRef = DCDE0FF62F4224E6000F57D2 /* FontAwesome.LICENSE */; };
 		DCDE444D2A36F56000BFF393 /* AppStateActionOpenItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDE444C2A36F56000BFF393 /* AppStateActionOpenItem.swift */; };
 		DCDF58B323CE82E100080BEB /* LicenseInAppPurchaseFeatureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCDF58B223CE82E100080BEB /* LicenseInAppPurchaseFeatureView.swift */; };
 		DCE0275E21F1DF7E00F2544E /* ownCloudUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2393697C2076110900BCE21A /* ownCloudUI.framework */; settings = {ATTRIBUTES = (Required, ); }; };
@@ -603,33 +604,6 @@
 		DCE4E48024C1F58D0051722F /* ownCloudSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 239369782076110900BCE21A /* ownCloudSDK.framework */; };
 		DCE4E48724C1F9F50051722F /* CreateFolderAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ED1B80A21A4004900E16C95 /* CreateFolderAction.swift */; };
 		DCE4E48824C1FA430051722F /* NamingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D77FC6212BFBD100DE76F1 /* NamingViewController.swift */; };
-		DCE4E48924C1FB750051722F /* application-pdf.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89A2080D780005F60CE /* application-pdf.tvg */; };
-		DCE4E48A24C1FB750051722F /* application.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8912080D77F005F60CE /* application.tvg */; };
-		DCE4E48B24C1FB750051722F /* audio.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88F2080D77E005F60CE /* audio.tvg */; };
-		DCE4E48C24C1FB750051722F /* file.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88E2080D77E005F60CE /* file.tvg */; };
-		DCE4E48D24C1FB750051722F /* folder-drag-accept.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89B2080D780005F60CE /* folder-drag-accept.tvg */; };
-		DCE4E48E24C1FB750051722F /* folder-external.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88D2080D77E005F60CE /* folder-external.tvg */; };
-		DCE4E48F24C1FB750051722F /* folder-public.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8932080D77F005F60CE /* folder-public.tvg */; };
-		DCE4E49024C1FB750051722F /* folder-shared.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89F2080D780005F60CE /* folder-shared.tvg */; };
-		DCE4E49124C1FB750051722F /* folder-starred.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8982080D77F005F60CE /* folder-starred.tvg */; };
-		DCE4E49224C1FB750051722F /* folder.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8902080D77E005F60CE /* folder.tvg */; };
-		DCE4E49324C1FB750051722F /* folder-create.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 6EB8EDBE2114358300C2BF44 /* folder-create.tvg */; };
-		DCE4E49424C1FB750051722F /* icon-available-offline.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC3393A722E0C4ED00DD3DA4 /* icon-available-offline.tvg */; };
-		DCE4E49524C1FB750051722F /* icon-locked.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */; };
-		DCE4E49624C1FB750051722F /* icon-password-manager.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */; };
-		DCE4E49724C1FB750051722F /* image.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8942080D77F005F60CE /* image.tvg */; };
-		DCE4E49824C1FB750051722F /* owncloud-logo.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8952080D77F005F60CE /* owncloud-logo.tvg */; };
-		DCE4E49924C1FB750051722F /* package-x-generic.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89C2080D780005F60CE /* package-x-generic.tvg */; };
-		DCE4E49A24C1FB750051722F /* status-flash.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCB504D7221EF07E007638BE /* status-flash.tvg */; };
-		DCE4E49B24C1FB750051722F /* text-calendar.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89D2080D780005F60CE /* text-calendar.tvg */; };
-		DCE4E49C24C1FB750051722F /* text-code.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8992080D780005F60CE /* text-code.tvg */; };
-		DCE4E49D24C1FB750051722F /* text-vcard.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E89E2080D780005F60CE /* text-vcard.tvg */; };
-		DCE4E49E24C1FB750051722F /* text.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8962080D77F005F60CE /* text.tvg */; };
-		DCE4E49F24C1FB750051722F /* video.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E88C2080D77E005F60CE /* video.tvg */; };
-		DCE4E4A024C1FB750051722F /* x-office-document.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8972080D77F005F60CE /* x-office-document.tvg */; };
-		DCE4E4A124C1FB750051722F /* x-office-presentation.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */; };
-		DCE4E4A224C1FB750051722F /* x-office-spreadsheet.tvg in Resources */ = {isa = PBXBuildFile; fileRef = DCE5E8922080D77F005F60CE /* x-office-spreadsheet.tvg */; };
-		DCE4E4A324C1FB750051722F /* icon-search.tvg in Resources */ = {isa = PBXBuildFile; fileRef = 239F437D20D0EE6300B1276D /* icon-search.tvg */; };
 		DCE4E4C724C255E00051722F /* AppExtensionNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCE4E4C624C255E00051722F /* AppExtensionNavigationController.swift */; };
 		DCE684F6241BD4E800799C30 /* Branding.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3931206A2326451900E8DFBA /* Branding.plist */; };
 		DCEA7F41282D3B110050A3C0 /* VFSManager.h in Headers */ = {isa = PBXBuildFile; fileRef = DCEA7F3F282D3B110050A3C0 /* VFSManager.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1038,7 +1012,6 @@
 		236735A521217C3500E5834A /* FrameViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FrameViewController.swift; sourceTree = "<group>"; };
 		23957A6C209AFFE8003C8537 /* MoreSettingsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoreSettingsSection.swift; sourceTree = "<group>"; };
 		239F1318205A693A0029F186 /* UIColor+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extension.swift"; sourceTree = "<group>"; };
-		239F437D20D0EE6300B1276D /* icon-search.tvg */ = {isa = PBXFileReference; lastKnownFileType = text; name = "icon-search.tvg"; path = "../img/filetypes-tvg/icon-search.tvg"; sourceTree = "<group>"; };
 		23C5652F212167BD00BD4B47 /* CardPresentationController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardPresentationController.swift; sourceTree = "<group>"; };
 		23C56536212167BE00BD4B47 /* CardTransitionDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardTransitionDelegate.swift; sourceTree = "<group>"; };
 		23D5241421491C670002C566 /* DisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayViewController.swift; sourceTree = "<group>"; };
@@ -1193,7 +1166,6 @@
 		6E5FC171221590B000F60846 /* DisplayHostViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayHostViewController.swift; sourceTree = "<group>"; };
 		6E91F37D21ECA6FD009436D2 /* CopyAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyAction.swift; sourceTree = "<group>"; };
 		6EA78B8E2179B55400A5216A /* ImageScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageScrollView.swift; sourceTree = "<group>"; };
-		6EB8EDBE2114358300C2BF44 /* folder-create.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-create.tvg"; path = "img/filetypes-tvg/folder-create.tvg"; sourceTree = SOURCE_ROOT; };
 		6ED1B80A21A4004900E16C95 /* CreateFolderAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateFolderAction.swift; sourceTree = "<group>"; };
 		A56EA84D8AD331FFA604138B /* Pods_ownCloudTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloudTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D0D9C062DD1E85A838608B0F /* EarlGrey.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = EarlGrey.framework; path = Pods/EarlGrey/EarlGrey/EarlGrey.framework; sourceTree = SOURCE_ROOT; };
@@ -1285,14 +1257,12 @@
 		DC2A127D28D06F060088A2B7 /* OCSavedSearch.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCSavedSearch.m; sourceTree = "<group>"; };
 		DC2A128028D0718B0088A2B7 /* OCVault+SavedSearches.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCVault+SavedSearches.h"; sourceTree = "<group>"; };
 		DC2A128128D0718B0088A2B7 /* OCVault+SavedSearches.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCVault+SavedSearches.m"; sourceTree = "<group>"; };
-		DC2A68D429D492B200BFF393 /* space.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = space.tvg; path = "img/filetypes-tvg/space.tvg"; sourceTree = SOURCE_ROOT; };
 		DC2A68D629D4E93300BFF393 /* SharedKeyCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedKeyCommands.swift; sourceTree = "<group>"; };
 		DC2A8E692B57EA8F001F0522 /* AccountControllerSearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountControllerSearchViewController.swift; sourceTree = "<group>"; };
 		DC2BB53F2CD96C1600320384 /* ServerSideSearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerSideSearchScope.swift; sourceTree = "<group>"; };
 		DC2EB4342D6E303C00100A67 /* EditSpaceDescriptionAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditSpaceDescriptionAction.swift; sourceTree = "<group>"; };
 		DC2EB43A2D6E367300100A67 /* MarkdownViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownViewController.swift; sourceTree = "<group>"; };
 		DC321260207EB01B00DB171D /* ThemeImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeImage.swift; sourceTree = "<group>"; };
-		DC3393A722E0C4ED00DD3DA4 /* icon-available-offline.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-available-offline.tvg"; path = "../img/filetypes-tvg/icon-available-offline.tvg"; sourceTree = "<group>"; };
 		DC36885624DC98BF00333600 /* OCFileProviderServiceSession.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCFileProviderServiceSession.h; sourceTree = "<group>"; };
 		DC36885724DC98BF00333600 /* OCFileProviderServiceSession.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCFileProviderServiceSession.m; sourceTree = "<group>"; };
 		DC36886024DDA3C300333600 /* ProgressIndicatorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressIndicatorViewController.swift; sourceTree = "<group>"; };
@@ -1450,8 +1420,6 @@
 		DC9B4FC42940F8D60037F8F8 /* ShareExtensionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShareExtensionViewController.swift; sourceTree = "<group>"; };
 		DC9B4FCD2941DA6E0037F8F8 /* UINavigationItem+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationItem+Extension.swift"; sourceTree = "<group>"; };
 		DC9BFBB220A19AF3007064B5 /* doc */ = {isa = PBXFileReference; lastKnownFileType = folder; path = doc; sourceTree = "<group>"; };
-		DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-locked.tvg"; path = "img/filetypes-tvg/icon-locked.tvg"; sourceTree = SOURCE_ROOT; };
-		DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "icon-password-manager.tvg"; path = "img/filetypes-tvg/icon-password-manager.tvg"; sourceTree = SOURCE_ROOT; };
 		DC9BFBBC20A1C37B007064B5 /* PasswordManagerAccess.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManagerAccess.swift; sourceTree = "<group>"; };
 		DC9C1AEB247C76470067895A /* MessageGroupCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageGroupCell.swift; sourceTree = "<group>"; };
 		DC9CE3B72D0C4D1400979C44 /* ThemeCSSTextField+Styled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ThemeCSSTextField+Styled.swift"; sourceTree = "<group>"; };
@@ -1502,7 +1470,6 @@
 		DCB458EB2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "OCQueryCondition+SearchSegmenter.h"; sourceTree = "<group>"; };
 		DCB458EC2604A7D4006A02AB /* OCQueryCondition+SearchSegmenter.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCQueryCondition+SearchSegmenter.m"; sourceTree = "<group>"; };
 		DCB459042604AD2A006A02AB /* SearchSegmentationTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SearchSegmentationTests.m; sourceTree = "<group>"; };
-		DCB504D7221EF07E007638BE /* status-flash.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "status-flash.tvg"; path = "img/filetypes-tvg/status-flash.tvg"; sourceTree = SOURCE_ROOT; };
 		DCB5D56A2861BEBE004AF425 /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		DCB5D5A628632C17004AF425 /* SearchScope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchScope.swift; sourceTree = "<group>"; };
 		DCB5D60A25FC14B6004C52D9 /* OCIssue+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCIssue+Extension.swift"; sourceTree = "<group>"; };
@@ -1529,7 +1496,6 @@
 		DCB7964B2BC4901400D6D759 /* INIFile+URLFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "INIFile+URLFile.swift"; sourceTree = "<group>"; };
 		DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoveFromSidebarAction.swift; sourceTree = "<group>"; };
 		DCB796632BC73AF100D6D759 /* CreateShortcutFileAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateShortcutFileAction.swift; sourceTree = "<group>"; };
-		DCB7967E2BC83E6E00D6D759 /* text-uri-list.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-uri-list.tvg"; path = "img/filetypes-tvg/text-uri-list.tvg"; sourceTree = SOURCE_ROOT; };
 		DCB7969C2BCE71C300D6D759 /* OpenShortcutFileAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OpenShortcutFileAction.swift; sourceTree = "<group>"; };
 		DCB7969E2BCE745500D6D759 /* INIFile+ShortcutResolution.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "INIFile+ShortcutResolution.swift"; sourceTree = "<group>"; };
 		DCB796A62BCFB6EC00D6D759 /* CreateShortcutFileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateShortcutFileViewController.swift; sourceTree = "<group>"; };
@@ -1602,6 +1568,9 @@
 		DCDC20A02399A715003CFF5B /* OCCore+LicenseEnvironment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "OCCore+LicenseEnvironment.m"; sourceTree = "<group>"; };
 		DCDC20A92399A8CF003CFF5B /* OCLicenseEnterpriseProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OCLicenseEnterpriseProvider.h; sourceTree = "<group>"; };
 		DCDC20AA2399A8CF003CFF5B /* OCLicenseEnterpriseProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = OCLicenseEnterpriseProvider.m; sourceTree = "<group>"; };
+		DCDE0F8D2F3F71E4000F57D2 /* TVGImageAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TVGImageAttribute.swift; sourceTree = "<group>"; };
+		DCDE0FF42F41212B000F57D2 /* tvg-icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "tvg-icons"; path = "img/tvg-icons"; sourceTree = SOURCE_ROOT; };
+		DCDE0FF62F4224E6000F57D2 /* FontAwesome.LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = FontAwesome.LICENSE; sourceTree = "<group>"; };
 		DCDE444C2A36F56000BFF393 /* AppStateActionOpenItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppStateActionOpenItem.swift; sourceTree = "<group>"; };
 		DCDF58B223CE82E100080BEB /* LicenseInAppPurchaseFeatureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseInAppPurchaseFeatureView.swift; sourceTree = "<group>"; };
 		DCE20271249AB50E0015A22A /* OCMessage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OCMessage+Extension.swift"; sourceTree = "<group>"; };
@@ -1612,27 +1581,6 @@
 		DCE4E46F24C1F5610051722F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DCE4E48224C1F5B70051722F /* ownCloud Share Extension.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ownCloud Share Extension.entitlements"; sourceTree = "<group>"; };
 		DCE4E4C624C255E00051722F /* AppExtensionNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppExtensionNavigationController.swift; sourceTree = "<group>"; };
-		DCE5E88C2080D77E005F60CE /* video.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = video.tvg; path = "img/filetypes-tvg/video.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E88D2080D77E005F60CE /* folder-external.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-external.tvg"; path = "img/filetypes-tvg/folder-external.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E88E2080D77E005F60CE /* file.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = file.tvg; path = "img/filetypes-tvg/file.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E88F2080D77E005F60CE /* audio.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = audio.tvg; path = "img/filetypes-tvg/audio.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E8902080D77E005F60CE /* folder.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = folder.tvg; path = "img/filetypes-tvg/folder.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E8912080D77F005F60CE /* application.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = application.tvg; path = "img/filetypes-tvg/application.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E8922080D77F005F60CE /* x-office-spreadsheet.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "x-office-spreadsheet.tvg"; path = "img/filetypes-tvg/x-office-spreadsheet.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E8932080D77F005F60CE /* folder-public.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-public.tvg"; path = "img/filetypes-tvg/folder-public.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E8942080D77F005F60CE /* image.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = image.tvg; path = "img/filetypes-tvg/image.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E8952080D77F005F60CE /* owncloud-logo.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "owncloud-logo.tvg"; path = "img/filetypes-tvg/owncloud-logo.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E8962080D77F005F60CE /* text.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = text.tvg; path = "img/filetypes-tvg/text.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E8972080D77F005F60CE /* x-office-document.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "x-office-document.tvg"; path = "img/filetypes-tvg/x-office-document.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E8982080D77F005F60CE /* folder-starred.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-starred.tvg"; path = "img/filetypes-tvg/folder-starred.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E8992080D780005F60CE /* text-code.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-code.tvg"; path = "img/filetypes-tvg/text-code.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E89A2080D780005F60CE /* application-pdf.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "application-pdf.tvg"; path = "img/filetypes-tvg/application-pdf.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E89B2080D780005F60CE /* folder-drag-accept.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-drag-accept.tvg"; path = "img/filetypes-tvg/folder-drag-accept.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E89C2080D780005F60CE /* package-x-generic.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "package-x-generic.tvg"; path = "img/filetypes-tvg/package-x-generic.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E89D2080D780005F60CE /* text-calendar.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-calendar.tvg"; path = "img/filetypes-tvg/text-calendar.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E89E2080D780005F60CE /* text-vcard.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "text-vcard.tvg"; path = "img/filetypes-tvg/text-vcard.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E89F2080D780005F60CE /* folder-shared.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "folder-shared.tvg"; path = "img/filetypes-tvg/folder-shared.tvg"; sourceTree = SOURCE_ROOT; };
-		DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = "x-office-presentation.tvg"; path = "img/filetypes-tvg/x-office-presentation.tvg"; sourceTree = SOURCE_ROOT; };
 		DCE8AB722AE8121B00BFF393 /* branding-assets */ = {isa = PBXFileReference; lastKnownFileType = folder; path = "branding-assets"; sourceTree = "<group>"; };
 		DCE974B1207E3AF80069FC2B /* ThemeNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeNavigationController.swift; sourceTree = "<group>"; };
 		DCE974BB207EACA60069FC2B /* UIImage+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extension.swift"; sourceTree = "<group>"; };
@@ -2034,6 +1982,7 @@
 				394A0AFB22EEFC2C00603813 /* ownCloudAppShared.h */,
 				DCD863FA28115C8700CA6631 /* Down.LICENSE */,
 				DC0492B0258CC4EE00DEDC27 /* PocketSVG.LICENSE */,
+				DCDE0FF62F4224E6000F57D2 /* FontAwesome.LICENSE */,
 				394A0AFC22EEFC2C00603813 /* Info.plist */,
 			);
 			path = ownCloudAppShared;
@@ -2795,6 +2744,7 @@
 			isa = PBXGroup;
 			children = (
 				DC7DBA53207FA80C00E7337D /* TVGImage.swift */,
+				DCDE0F8D2F3F71E4000F57D2 /* TVGImageAttribute.swift */,
 				DC7DBA28207F71D600E7337D /* VectorImage.swift */,
 				DC7DBA2A207F71E400E7337D /* VectorImageView.swift */,
 			);
@@ -3351,35 +3301,7 @@
 		DCCE54092080175B00067D1D /* TVGs */ = {
 			isa = PBXGroup;
 			children = (
-				DCE5E89A2080D780005F60CE /* application-pdf.tvg */,
-				DCE5E8912080D77F005F60CE /* application.tvg */,
-				DCE5E88F2080D77E005F60CE /* audio.tvg */,
-				DCE5E88E2080D77E005F60CE /* file.tvg */,
-				DCE5E89B2080D780005F60CE /* folder-drag-accept.tvg */,
-				DCE5E88D2080D77E005F60CE /* folder-external.tvg */,
-				DCE5E8932080D77F005F60CE /* folder-public.tvg */,
-				DCE5E89F2080D780005F60CE /* folder-shared.tvg */,
-				DCE5E8982080D77F005F60CE /* folder-starred.tvg */,
-				DCE5E8902080D77E005F60CE /* folder.tvg */,
-				6EB8EDBE2114358300C2BF44 /* folder-create.tvg */,
-				DC3393A722E0C4ED00DD3DA4 /* icon-available-offline.tvg */,
-				DC9BFBB820A1AF2B007064B5 /* icon-locked.tvg */,
-				DC9BFBBA20A1B3CA007064B5 /* icon-password-manager.tvg */,
-				DCE5E8942080D77F005F60CE /* image.tvg */,
-				DCE5E8952080D77F005F60CE /* owncloud-logo.tvg */,
-				DCE5E89C2080D780005F60CE /* package-x-generic.tvg */,
-				DC2A68D429D492B200BFF393 /* space.tvg */,
-				DCB504D7221EF07E007638BE /* status-flash.tvg */,
-				DCE5E89D2080D780005F60CE /* text-calendar.tvg */,
-				DCE5E8992080D780005F60CE /* text-code.tvg */,
-				DCB7967E2BC83E6E00D6D759 /* text-uri-list.tvg */,
-				DCE5E89E2080D780005F60CE /* text-vcard.tvg */,
-				DCE5E8962080D77F005F60CE /* text.tvg */,
-				DCE5E88C2080D77E005F60CE /* video.tvg */,
-				DCE5E8972080D77F005F60CE /* x-office-document.tvg */,
-				DCE5E8A02080D781005F60CE /* x-office-presentation.tvg */,
-				DCE5E8922080D77F005F60CE /* x-office-spreadsheet.tvg */,
-				239F437D20D0EE6300B1276D /* icon-search.tvg */,
+				DCDE0FF42F41212B000F57D2 /* tvg-icons */,
 			);
 			name = TVGs;
 			sourceTree = "<group>";
@@ -4370,40 +4292,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DCE4E49B24C1FB750051722F /* text-calendar.tvg in Resources */,
-				DCE4E49C24C1FB750051722F /* text-code.tvg in Resources */,
-				DCE4E48F24C1FB750051722F /* folder-public.tvg in Resources */,
-				DCE4E49224C1FB750051722F /* folder.tvg in Resources */,
-				DCE4E49524C1FB750051722F /* icon-locked.tvg in Resources */,
-				DCE4E49D24C1FB750051722F /* text-vcard.tvg in Resources */,
-				DCE4E48C24C1FB750051722F /* file.tvg in Resources */,
-				DCE4E49F24C1FB750051722F /* video.tvg in Resources */,
-				DCE4E49424C1FB750051722F /* icon-available-offline.tvg in Resources */,
+				DCDE0FF52F41212B000F57D2 /* tvg-icons in Resources */,
 				DC0A356E24C0E42200FB58FC /* PasscodeViewController.xib in Resources */,
-				DCE4E4A324C1FB750051722F /* icon-search.tvg in Resources */,
-				DCE4E48E24C1FB750051722F /* folder-external.tvg in Resources */,
-				DCE4E48924C1FB750051722F /* application-pdf.tvg in Resources */,
 				DCB330EB29F6864D00BFF393 /* Assets.xcassets in Resources */,
-				DCE4E48D24C1FB750051722F /* folder-drag-accept.tvg in Resources */,
-				DCE4E49E24C1FB750051722F /* text.tvg in Resources */,
-				DCE4E48B24C1FB750051722F /* audio.tvg in Resources */,
-				DCE4E49624C1FB750051722F /* icon-password-manager.tvg in Resources */,
-				DCE4E49724C1FB750051722F /* image.tvg in Resources */,
-				DCE4E49A24C1FB750051722F /* status-flash.tvg in Resources */,
-				DCE4E4A024C1FB750051722F /* x-office-document.tvg in Resources */,
-				DC2A68D529D492B300BFF393 /* space.tvg in Resources */,
-				DCE4E49124C1FB750051722F /* folder-starred.tvg in Resources */,
-				DCE4E4A124C1FB750051722F /* x-office-presentation.tvg in Resources */,
-				DCE4E49924C1FB750051722F /* package-x-generic.tvg in Resources */,
 				395E3B192C8B0E84007979C9 /* Localizable.xcstrings in Resources */,
-				DCE4E49324C1FB750051722F /* folder-create.tvg in Resources */,
-				DCB7967F2BC83E6E00D6D759 /* text-uri-list.tvg in Resources */,
-				DCE4E49824C1FB750051722F /* owncloud-logo.tvg in Resources */,
 				DC0492B1258CC4EE00DEDC27 /* PocketSVG.LICENSE in Resources */,
+				DCDE0FF72F4224E6000F57D2 /* FontAwesome.LICENSE in Resources */,
 				DCD863FB28115C8700CA6631 /* Down.LICENSE in Resources */,
-				DCE4E48A24C1FB750051722F /* application.tvg in Resources */,
-				DCE4E49024C1FB750051722F /* folder-shared.tvg in Resources */,
-				DCE4E4A224C1FB750051722F /* x-office-spreadsheet.tvg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4808,6 +4703,7 @@
 				DC46F3D1284546F000038880 /* OCItem+Interactions.swift in Sources */,
 				DCBAEAED29A627D900BFF393 /* DataSourceCondition.swift in Sources */,
 				DC0A356B24C0E42200FB58FC /* AppLockManager.swift in Sources */,
+				DCDE0F8E2F3F71E4000F57D2 /* TVGImageAttribute.swift in Sources */,
 				DCFA9CAF2987E14B00004F24 /* BrowserNavigationBookmark.swift in Sources */,
 				DC298C9F2934D6D9009FA87F /* AccountAuthenticationUpdaterPasswordPromptViewController.swift in Sources */,
 				DCB1B8A229C7379C00BFF393 /* NSObject+ThemeCSS.swift in Sources */,
@@ -5931,7 +5827,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 			};
@@ -5944,7 +5840,7 @@
 				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				MACOSX_DEPLOYMENT_TARGET = 15.6;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = macosx;
 			};

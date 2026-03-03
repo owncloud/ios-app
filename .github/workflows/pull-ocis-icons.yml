@@ -1,0 +1,45 @@
+name: "Pull icons from ocis/web"
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: ["release/*"]
+permissions:
+  contents: write
+
+jobs:
+  pull-icons:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ssh-key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
+
+      - name: Build MakeTVG
+        run: |
+          swift -v
+          swiftc tools/MakeTVG/main.swift -o /tmp/MakeTVG
+
+      - name: Clone ocis and web repos
+        run: |
+          git clone "https://github.com/owncloud/ocis/" /tmp/ocis-git
+          git clone "https://github.com/owncloud/web/" /tmp/web-git
+
+      - name: Run MakeTVG
+        run: |
+          /tmp/MakeTVG \
+             --makefile img/make.json \
+             --icon-ts /tmp/web-git/packages/web-pkg/src/helpers/resource/icon.ts \
+             --web-theme /tmp/ocis-git/services/web/assets/themes/owncloud/theme.json \
+             --color-yaml /tmp/web-git/packages/design-system/src/tokens/ods/color.yaml \
+             --legacy-input img/icons \
+             --input /tmp/web-git/packages/design-system/src/assets/icons \
+             --file-filter only-matches \
+             --icon-map img/tvg-icons/icon-map.json \
+             --output img/tvg-icons
+
+      - uses: GuillaumeFalourd/git-commit-push@v1.3
+        with:
+          email: devops@owncloud.com
+          name: ownClouders
+          commit_message: "[icons] updated icons from ocis and ocis web"
