@@ -540,7 +540,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				viewController = ClientSharedByMeViewController(context: context, byLink: true)
 
 			case .spacesFolder:
-				viewController = AccountControllerSpacesGridViewController(with: context)
+				viewController = AccountControllerSpacesViewController(with: context)
 
 			case .globalSearch:
 				viewController = AccountControllerSearchViewController(context: context)
