@@ -40,6 +40,7 @@ ownCloud admins and users.
 ## Summary
 
 * Enhancement - IOS 26 compatibility and optimizations: [#1497](https://github.com/owncloud/ios-app/issues/1497)
+* Enhancement - Adopt and integrate ocis/web icons: [#1525](https://github.com/owncloud/ios-app/pull/1525)
 
 ## Details
 
@@ -55,6 +56,18 @@ ownCloud admins and users.
    https://github.com/owncloud/ios-app/issues/1500
    https://github.com/owncloud/ios-app/issues/1512
    https://github.com/owncloud/ios-app/issues/1520
+
+* Enhancement - Adopt and integrate ocis/web icons: [#1525](https://github.com/owncloud/ios-app/pull/1525)
+
+   This PR adds automation infrastructure and an accompanying TVG format update to
+   support using icons and colors from ocis/web in the iOS app.
+
+   Branding support ocis/web uses variables and a mapping table to associate icons
+   with suffixes and allow adjusting colors using CSS variables. This PR translates
+   that structure to the native iOS app and also integrates it into its own CSS
+   system. The colors of icons can therefore be changed through its CSS system.
+
+   https://github.com/owncloud/ios-app/pull/1525
 
 # Changelog for ownCloud iOS Client [12.6.1] (2025-12-09)
 The following sections list the changes in ownCloud iOS Client 12.6.1 relevant to
