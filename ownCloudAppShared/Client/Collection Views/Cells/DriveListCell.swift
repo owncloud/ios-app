@@ -26,6 +26,34 @@ class DriveListCell: ThemeableCollectionViewListCell {
 	let titleLabel = UILabel()
 	let subtitleLabel = UILabel()
 
+	lazy var moreButton: UIButton = {
+		let moreButton = UIButton()
+		let symbolConfig = UIImage.SymbolConfiguration(pointSize: 10)
+		var buttonConfig = UIButton.Configuration.filled()
+		buttonConfig.image = UIImage(systemName: "ellipsis", withConfiguration: symbolConfig)
+		buttonConfig.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6)
+		buttonConfig.buttonSize = .mini
+		buttonConfig.cornerStyle = .capsule
+
+		moreButton.configuration = buttonConfig
+		moreButton.translatesAutoresizingMaskIntoConstraints = false
+		moreButton.setContentCompressionResistancePriority(.required, for: .horizontal)
+		moreButton.setContentHuggingPriority(.required, for: .horizontal)
+
+		return moreButton
+	}()
+	var moreAction: OCAction? {
+		didSet {
+			configureMoreButton()
+		}
+	}
+
+	var moreMenu: UIMenu? {
+		didSet {
+			configureMoreButton()
+		}
+	}
+
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 		configure()
@@ -105,6 +133,31 @@ class DriveListCell: ThemeableCollectionViewListCell {
 		])
 	}
 
+	func configureMoreButton() {
+		// Reset state
+		moreButton.removeAction(identifiedBy: .ocMoreAction, for: .primaryActionTriggered)
+		moreButton.menu = nil
+		moreButton.showsMenuAsPrimaryAction = false
+		moreButton.isHidden = true
+		accessibilityCustomActions = nil
+
+		if let moreAction {
+			moreButton.addAction(UIAction(identifier: .ocMoreAction, handler: { [weak self] _ in
+				self?.moreAction?.run()
+			}), for: .primaryActionTriggered)
+
+			moreButton.isHidden = false
+			accessibilityCustomActions = [ moreAction.accessibilityCustomAction() ]
+		}
+
+		if let moreMenu {
+			moreButton.menu = moreMenu
+			moreButton.showsMenuAsPrimaryAction = true
+
+			moreButton.isHidden = false
+		}
+	}
+
 	override func prepareForReuse() {
 		super.prepareForReuse()
 		coverImageResourceView.activeViewProvider = nil
@@ -123,7 +176,33 @@ class DriveListRowCell: DriveListCell {
 		labelContainer.translatesAutoresizingMaskIntoConstraints = false
 		labelContainer.addSubview(titleLabel)
 		labelContainer.addSubview(subtitleLabel)
+
 		contentView.addSubview(labelContainer)
+		contentView.addSubview(moreButton)
+	}
+
+	private var disabledIcon: UIView?
+	var isDisabled: Bool = false {
+		didSet {
+			if isDisabled == oldValue { return }
+
+			// Remove disabled icon (if any)
+			disabledIcon?.removeFromSuperview()
+			disabledIcon = nil
+
+			if isDisabled {
+				// Create and add disabled label
+				let sizeConfig = UIImage.SymbolConfiguration(pointSize: 24, weight: .regular, scale: .large).applying(UIImage.SymbolConfiguration(paletteColors: [.lightGray]))
+				disabledIcon = UIImageView(image: UIImage(systemName: "pause.circle", withConfiguration: sizeConfig))
+				disabledIcon?.translatesAutoresizingMaskIntoConstraints = false
+				if let disabledIcon {
+					embed(centered: disabledIcon, enclosingAnchors: coverImageResourceView.defaultAnchorSet)
+				}
+				coverImageResourceView.alpha = 0
+			} else {
+				coverImageResourceView.alpha = 1
+			}
+		}
 	}
 
 	override func configureLayout() {
@@ -136,7 +215,7 @@ class DriveListRowCell: DriveListCell {
 			coverImageResourceView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -coverImageSpacing),
 
 			labelContainer.leadingAnchor.constraint(equalTo: coverImageResourceView.trailingAnchor, constant: textOuterSpacing),
-			labelContainer.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -textOuterSpacing),
+			labelContainer.trailingAnchor.constraint(equalTo: moreButton.leadingAnchor, constant: -textOuterSpacing),
 			labelContainer.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
 
 			titleLabel.leadingAnchor.constraint(equalTo: labelContainer.leadingAnchor),
@@ -148,12 +227,46 @@ class DriveListRowCell: DriveListCell {
 			subtitleLabel.trailingAnchor.constraint(equalTo: labelContainer.trailingAnchor),
 			subtitleLabel.bottomAnchor.constraint(equalTo: labelContainer.bottomAnchor),
 
+			moreButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -textOuterSpacing),
+			moreButton.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
+
 			separatorLayoutGuide.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor)
 		])
 	}
 }
 
 extension DriveListCell {
+	func setupMoreButton(with cellConfiguration: CollectionViewCellConfiguration, for driveItem: OCDataItem) {
+		// More item button action
+		if let clientContext = cellConfiguration.clientContext, let moreItemHandling = clientContext.moreItemHandler, let drive = driveItem as? OCDrive {
+			if drive.isDisabled {
+				// Disabled space => show space manage UI
+				moreAction = nil
+				moreMenu = UIMenu(title: "", children: [
+					UIAction(title: OCLocalizedString("Enable", nil), image: OCSymbol.icon(forSymbolName: "play.circle"), handler: { [weak clientContext] _ in
+						drive.restore(with: clientContext)
+					}),
+					UIAction(title: OCLocalizedString("Delete", nil), image: OCSymbol.icon(forSymbolName: "trash"), handler: { [weak clientContext] _ in
+						drive.delete(with: clientContext)
+					})
+				])
+			} else {
+				// Enabled space = show available actions
+				moreMenu = nil
+				moreAction = OCAction(title: OCLocalizedString("Actions", nil), icon: nil, action: { [weak moreItemHandling] (action, options, completion) in
+					clientContext.core?.cachedItem(at: drive.rootLocation, resultHandler: { error, item in
+						if let item {
+							OnMainThread {
+								moreItemHandling?.moreOptions(for: item, at: .moreFolder, context: clientContext, sender: action)
+							}
+						}
+						completion(error)
+					})
+				})
+			}
+		}
+	}
+
 	static func registerCellProvider() {
 		let driveListCellRegistration = UICollectionView.CellRegistration<DriveListRowCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
 			var coverImageRequest : OCResourceRequest?
@@ -169,6 +282,11 @@ extension DriveListCell {
 					resourceManager = cellConfiguration.core?.vault.resourceManager
 
 					coverImageRequest = try? presentable.provideResourceRequest(.coverImage, withOptions: nil)
+
+					cell.isDisabled = (item as? OCDrive)?.isDisabled ?? false
+
+					// More item button action
+					cell.setupMoreButton(with: cellConfiguration, for: item)
 				}
 			})
 
@@ -235,36 +353,10 @@ extension DriveListCell {
 
 					coverImageRequest = try? presentable.provideResourceRequest(.coverImage, withOptions: nil)
 
-					// More item button action
-					if let clientContext = cellConfiguration.clientContext, let moreItemHandling = clientContext.moreItemHandler, let drive = driveItem as? OCDrive {
-						isDisabled = drive.isDisabled
+					isDisabled = (driveItem as? OCDrive)?.isDisabled ?? false
 
-						if drive.isDisabled {
-							// Disabled space => show space manage UI
-							cell.moreAction = nil
-							cell.moreMenu = UIMenu(title: "", children: [
-								UIAction(title: OCLocalizedString("Enable", nil), image: OCSymbol.icon(forSymbolName: "play.circle"), handler: { [weak clientContext] _ in
-									drive.restore(with: clientContext)
-								}),
-								UIAction(title: OCLocalizedString("Delete", nil), image: OCSymbol.icon(forSymbolName: "trash"), handler: { [weak clientContext] _ in
-									drive.delete(with: clientContext)
-								})
-							])
-						} else {
-							// Enabled space = show available actions
-							cell.moreMenu = nil
-							cell.moreAction = OCAction(title: OCLocalizedString("Actions", nil), icon: nil, action: { [weak moreItemHandling] (action, options, completion) in
-								clientContext.core?.cachedItem(at: drive.rootLocation, resultHandler: { error, item in
-									if let item {
-										OnMainThread {
-											moreItemHandling?.moreOptions(for: item, at: .moreFolder, context: clientContext, sender: action)
-										}
-									}
-									completion(error)
-								})
-							})
-						}
-					}
+					// More item button action
+					cell.setupMoreButton(with: cellConfiguration, for: driveItem)
 				}
 			})
 
