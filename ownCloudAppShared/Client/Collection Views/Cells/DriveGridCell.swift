@@ -24,44 +24,6 @@ extension UIAction.Identifier {
 }
 
 class DriveGridCell: DriveHeaderCell {
-	var moreButton: UIButton = UIButton()
-	var moreAction: OCAction? {
-		didSet {
-			configureMoreButton()
-		}
-	}
-
-	var moreMenu: UIMenu? {
-		didSet {
-			configureMoreButton()
-		}
-	}
-
-	func configureMoreButton() {
-		// Reset state
-		moreButton.removeAction(identifiedBy: .ocMoreAction, for: .primaryActionTriggered)
-		moreButton.menu = nil
-		moreButton.showsMenuAsPrimaryAction = false
-		moreButton.isHidden = true
-		accessibilityCustomActions = nil
-
-		if let moreAction {
-			moreButton.addAction(UIAction(identifier: .ocMoreAction, handler: { [weak self] _ in
-				self?.moreAction?.run()
-			}), for: .primaryActionTriggered)
-
-			moreButton.isHidden = false
-			accessibilityCustomActions = [ moreAction.accessibilityCustomAction() ]
-		}
-
-		if let moreMenu {
-			moreButton.menu = moreMenu
-			moreButton.showsMenuAsPrimaryAction = true
-
-			moreButton.isHidden = false
-		}
-	}
-
 	private var disabledLabel: UIView?
 	var isDisabled: Bool = false {
 		didSet {
@@ -94,16 +56,6 @@ class DriveGridCell: DriveHeaderCell {
 		subtitleLabel.numberOfLines = 1
 		subtitleLabel.lineBreakMode = .byTruncatingTail
 
-		let symbolConfig = UIImage.SymbolConfiguration(pointSize: 10)
-		var buttonConfig = UIButton.Configuration.filled()
-		buttonConfig.image = UIImage(systemName: "ellipsis", withConfiguration: symbolConfig)
-		buttonConfig.contentInsets = NSDirectionalEdgeInsets(top: 6, leading: 6, bottom: 6, trailing: 6)
-		buttonConfig.buttonSize = .mini
-		buttonConfig.cornerStyle = .capsule
-
-		moreButton.configuration = buttonConfig
-		moreButton.translatesAutoresizingMaskIntoConstraints = false
-		moreButton.setContentCompressionResistancePriority(.required, for: .horizontal)
 		configureMoreButton()
 
 		titleLabel.isAccessibilityElement = false
