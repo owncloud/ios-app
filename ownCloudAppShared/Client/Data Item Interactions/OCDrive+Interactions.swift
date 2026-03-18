@@ -35,6 +35,11 @@ extension OCDrive {
 // MARK: - Selection > Open
 extension OCDrive: DataItemSelectionInteraction {
 	public func openItem(from viewController: UIViewController?, with context: ClientContext?, animated: Bool, pushViewController: Bool, completion: ((Bool) -> Void)?) -> UIViewController? {
+		if isDisabled {
+			completion?(false)
+			return nil
+		}
+
 		let rootLocation = self.rootLocation(with: context)
 		return rootLocation.openItem(from: viewController, with: context, animated: animated, pushViewController: pushViewController, completion: completion)
 	}

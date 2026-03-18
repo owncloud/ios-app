@@ -86,6 +86,17 @@ class AccountControllerSpacesViewController: CollectionViewController, ViewContr
 		}
 	}
 
+	var presentedInLocationPicker: Bool {
+		var viewController: UIViewController? = self
+
+		while viewController != nil {
+			viewController = viewController?.parent
+			if viewController is ClientLocationPickerViewController { return true }
+		}
+
+		return false
+	}
+
 	func updateSpaceManagementOptions() {
 		var menuItems: [UIMenuElement]
 
@@ -115,7 +126,9 @@ class AccountControllerSpacesViewController: CollectionViewController, ViewContr
 				// Show/Hide disabled spaces
 				UIDeferredMenuElement.uncached({ [weak self] completion in
 					if let self {
-						completion([
+						completion(self.presentedInLocationPicker ? [
+							// No "Hide disabled spaces" option when in location picker
+						] : [
 							UIAction(title: self.showDisabledSpaces ? OCLocalizedString("Hide disabled spaces",nil) : OCLocalizedString("Show disabled spaces", nil),
 								 image: OCSymbol.icon(forSymbolName: self.showDisabledSpaces ? "eye.slash" : "eye"),
 								 handler: { _ in
@@ -137,11 +150,10 @@ class AccountControllerSpacesViewController: CollectionViewController, ViewContr
 			spaceActionsButton.accessibilityIdentifier = "client.space-actions"
 			spaceActionsButton.accessibilityLabel = OCLocalizedString("Space Actions", nil)
 			spaceActionsButton.menu = UIMenu(title: "", children: menuItems)
-			navigationItem.rightBarButtonItem = spaceActionsButton
+			navigationItem.navigationContent.add(items: [NavigationContentItem(identifier: "spaces-actions", area: .right, priority: .high, position: .leading, items: [spaceActionsButton])])
 		} else {
-			navigationItem.rightBarButtonItem = nil
+			navigationItem.navigationContent.remove(itemsWithIdentifier: "spaces-actions")
 		}
-
 	}
 
 	static var listView: Bool {

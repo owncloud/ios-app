@@ -110,6 +110,11 @@ class DriveListCell: ThemeableCollectionViewListCell {
 		subtitleLabel.setContentHuggingPriority(.required, for: .vertical)
 
 		coverImageResourceView.backgroundColor = .white
+
+		titleLabel.isAccessibilityElement = false
+		subtitleLabel.isAccessibilityElement = false
+		isAccessibilityElement = true
+		accessibilityTraits = .button
 	}
 
 	func configureLayout() {
@@ -176,6 +181,8 @@ class DriveListRowCell: DriveListCell {
 		labelContainer.translatesAutoresizingMaskIntoConstraints = false
 		labelContainer.addSubview(titleLabel)
 		labelContainer.addSubview(subtitleLabel)
+
+		configureMoreButton()
 
 		contentView.addSubview(labelContainer)
 		contentView.addSubview(moreButton)
@@ -273,6 +280,7 @@ extension DriveListCell {
 			var resourceManager : OCResourceManager?
 			var title : String?
 			var subtitle : String?
+			var isDisabled: Bool = false
 
 			collectionItemRef.ocCellConfiguration?.configureCell(for: collectionItemRef, with: { itemRecord, item, cellConfiguration in
 				if let presentable = OCDataRenderer.default.renderItem(item, asType: .presentable, error: nil, withOptions: nil) as? OCDataItemPresentable {
@@ -283,7 +291,8 @@ extension DriveListCell {
 
 					coverImageRequest = try? presentable.provideResourceRequest(.coverImage, withOptions: nil)
 
-					cell.isDisabled = (item as? OCDrive)?.isDisabled ?? false
+					isDisabled = (item as? OCDrive)?.isDisabled ?? false
+					cell.isDisabled = isDisabled
 
 					// More item button action
 					cell.setupMoreButton(with: cellConfiguration, for: item)
@@ -301,7 +310,11 @@ extension DriveListCell {
 
 			cell.secureView(core: collectionItemRef.ocCellConfiguration?.clientContext?.core)
 
-			cell.accessories = [ .disclosureIndicator() ]
+			if !isDisabled {
+				cell.accessories = [ .disclosureIndicator() ]
+			} else {
+				cell.accessories = [ .disclosureIndicator(displayed: .always, options: UICellAccessory.DisclosureIndicatorOptions(isHidden: true, reservedLayoutWidth: .custom(14))) ]
+			}
 		}
 
 		let driveHeaderCellRegistration = UICollectionView.CellRegistration<DriveHeaderCell, CollectionViewController.ItemRef> { (cell, indexPath, collectionItemRef) in
