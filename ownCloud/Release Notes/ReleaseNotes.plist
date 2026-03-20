@@ -2178,6 +2178,26 @@ Added an optional &quot;Wait for completion&quot; option to the &quot;Save File&
 				</dict>
 				<dict>
 					<key>Title</key>
+					<string>New icons</string>
+					<key>Subtitle</key>
+					<string>Fresh, colorful - and for plenty more file types.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>paintpalette</string>
+				</dict>
+				<dict>
+					<key>Title</key>
+					<string>Spaces list view</string>
+					<key>Subtitle</key>
+					<string>A compact alternative to the grid you already know.</string>
+					<key>Type</key>
+					<string>New</string>
+					<key>ImageName</key>
+					<string>list.bullet</string>
+				</dict>
+				<dict>
+					<key>Title</key>
 					<string>Bugfixes</string>
 					<key>Subtitle</key>
 					<string>You reported them, we fixed them.</string>
