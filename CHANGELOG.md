@@ -41,6 +41,7 @@ ownCloud admins and users.
 
 * Enhancement - IOS 26 compatibility and optimizations: [#1497](https://github.com/owncloud/ios-app/issues/1497)
 * Enhancement - Adopt and integrate ocis/web icons: [#1525](https://github.com/owncloud/ios-app/pull/1525)
+* Enhancement - Add list view for Spaces: [#1526](https://github.com/owncloud/ios-app/pull/1526)
 
 ## Details
 
@@ -68,6 +69,12 @@ ownCloud admins and users.
    system. The colors of icons can therefore be changed through its CSS system.
 
    https://github.com/owncloud/ios-app/pull/1525
+
+* Enhancement - Add list view for Spaces: [#1526](https://github.com/owncloud/ios-app/pull/1526)
+
+   Adds an option to view the Spaces on a server as a list.
+
+   https://github.com/owncloud/ios-app/pull/1526
 
 # Changelog for ownCloud iOS Client [12.6.1] (2025-12-09)
 The following sections list the changes in ownCloud iOS Client 12.6.1 relevant to
