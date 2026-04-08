@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2 (previously v4)
         with:
           ssh-key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
           ref: "master"
 
       - name: l10n-pull
-        uses: transifex/cli-action@v2
+        uses: transifex/cli-action@584fd205cbe598773b5a81ce711fa44842678189 # v2
         with:
           token: ${{ secrets.TX_TOKEN }}
           args: pull --force --skip --all
@@ -36,7 +36,7 @@ jobs:
           beautifyJSON "ownCloudAppFramework/Resources/Localizable.xcstrings"
 
       - name: Setup Swift
-        uses: swift-actions/setup-swift@v2.4.0
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
 
       - name: Build ocstringstool
         run: |
@@ -46,7 +46,7 @@ jobs:
       - name: Run ocstringstool
         run: /tmp/ocstringstool normalize "ownCloud/Resources" "ownCloud Action Extension" "ownCloud File Provider" "ownCloud Share Extension" "ownCloudAppFramework/Resources"
 
-      - uses: GuillaumeFalourd/git-commit-push@v1.3
+      - uses: GuillaumeFalourd/git-commit-push@205c043bca2f932f7a48a28a8d619ba30eb84baf # v1.3
         with:
           email: devops@owncloud.com
           name: ownClouders
