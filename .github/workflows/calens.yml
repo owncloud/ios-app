@@ -10,14 +10,14 @@ jobs:
     runs-on: ubuntu-latest
     name: Generate Calens Changelog
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           ssh-key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
           ref: "master"
       - uses: actionhippie/calens@v1
         with:
           target: CHANGELOG.md
-      - uses: GuillaumeFalourd/git-commit-push@v1.3
+      - uses: GuillaumeFalourd/git-commit-push@205c043bca2f932f7a48a28a8d619ba30eb84baf # v1.3
         with:
           email: devops@owncloud.com
           name: ownClouders
