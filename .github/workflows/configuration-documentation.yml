@@ -24,8 +24,9 @@ jobs:
       - name: Run Generate Docs
         run: ./generate_docs.sh
         working-directory: ./tools/GenerateDocs/
-      - name: Commit files
-        uses: stefanzweifel/git-auto-commit-action@04702edda442b2e678b25b537cec683a1493fcb9 # v7.1.0 (previously v4)
+      - uses: GuillaumeFalourd/git-commit-push@205c043bca2f932f7a48a28a8d619ba30eb84baf # v1.3
         with:
-          commit_message: Configuration documentation updated
-          file_pattern: doc/CONFIGURATION.json doc/configuration.adoc
+          email: devops@owncloud.com
+          name: ownClouders
+          commit_message: "Configuration documentation updated"
+          files: doc/CONFIGURATION.json doc/configuration.adoc
