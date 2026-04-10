@@ -4,7 +4,6 @@ on:
   push:
     branches:
     - master
-    - main
 
 permissions:
   contents: write
@@ -14,10 +13,10 @@ jobs:
     runs-on: macos-latest
     name: Generate/Update SBOM
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2 (previously v4)
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          ssh-key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
-          submodules: true
+          ref: "master"
+          persist-credentials: false
       - name: Xcode version
         run: /usr/bin/xcodebuild -version
       - name: Install cdxgen
@@ -51,10 +50,21 @@ jobs:
           }
           trimAndFormatJSON "sbom.json"
           addSHA3IUFLicense "sbom.json"
-      - name: Commit files
-        uses: GuillaumeFalourd/git-commit-push@205c043bca2f932f7a48a28a8d619ba30eb84baf # v1.3
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@21cfef2b496dd8ef5b904c159339626a10ad380e # v1.11.6
         with:
-          email: devops@owncloud.com
-          name: ownClouders
-          commit_message: "[sbom] updated SBOM via cdxgen"
-          files: sbom.json
+          app-id: ${{ secrets.TRANSLATION_APP_ID }}
+          private-key: ${{ secrets.TRANSLATION_APP_PRIVATE_KEY }}
+      - name: Create or update changelog PR
+        uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
+        with:
+          add-paths: sbom.json
+          token: ${{ steps.app-token.outputs.token }}
+          branch: chore/changelog-update
+          base: master
+          commit-message: "chore: update changelog"
+          title: "chore: update changelog"
+          body: "Automated changelog update via Calens. This pull request is updated on each push to `master` — merging it will close it and a fresh one will be opened on the next change."
+          delete-branch: true
+          sign-commits: true
