@@ -17,6 +17,7 @@ jobs:
         with:
           ref: "master"
           persist-credentials: false
+          submodules: true
       - name: Xcode version
         run: /usr/bin/xcodebuild -version
       - name: Install cdxgen
