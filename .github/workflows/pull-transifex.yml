@@ -40,7 +40,7 @@ jobs:
           beautifyJSON "ownCloudAppFramework/Resources/Localizable.xcstrings"
 
       - name: Setup Swift
-        uses: swift-actions/setup-swift@v2.4.0
+        uses: swift-actions/setup-swift@7ca6abe6b3b0e8b5421b88be48feee39cbf52c6a # v2.4.0
 
       - name: Build ocstringstool
         run: |
