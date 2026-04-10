@@ -56,15 +56,15 @@ jobs:
         with:
           app-id: ${{ secrets.TRANSLATION_APP_ID }}
           private-key: ${{ secrets.TRANSLATION_APP_PRIVATE_KEY }}
-      - name: Create or update changelog PR
+      - name: Create or update SBOM PR
         uses: peter-evans/create-pull-request@c0f553fe549906ede9cf27b5156039d195d2ece0 # v8.1.0
         with:
           add-paths: sbom.json
           token: ${{ steps.app-token.outputs.token }}
-          branch: chore/changelog-update
+          branch: chore/sbom-update
           base: master
-          commit-message: "chore: update changelog"
-          title: "chore: update changelog"
-          body: "Automated changelog update via Calens. This pull request is updated on each push to `master` — merging it will close it and a fresh one will be opened on the next change."
+          commit-message: "chore: update SBOM"
+          title: "chore: update sbom.json"
+          body: "Automated SBOM update. This pull request is updated on each push to `master` — merging it will close it and a fresh one will be opened on the next change."
           delete-branch: true
           sign-commits: true
