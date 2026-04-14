@@ -36,7 +36,7 @@ class ClientSharedByMeViewController: CollectionViewController {
 		})
 		super.init(context: context, sections: nil, useStackViewRoot: true)
 		revoke(in: inContext, when: [ .connectionClosed ])
-		navigationItem.titleLabelText = (byMe && !byLink) ? OCLocalizedString("Shared by me", nil) : ((!byMe && byLink) ? OCLocalizedString("Shared by link", nil) : OCLocalizedString("Shared", nil))
+		navigationItem.titleLabelText = (byMe && !byLink) ? OCLocalizedString("Shared with others", nil) : ((!byMe && byLink) ? OCLocalizedString("Shared by link", nil) : OCLocalizedString("Shared", nil))
 	}
 
 	required public init?(coder: NSCoder) {
@@ -59,10 +59,6 @@ class ClientSharedByMeViewController: CollectionViewController {
 			section.hideIfEmptyDataSource = contentDataSource
 			section.hidden = true
 
-			section.boundarySupplementaryItems = [
-				.title(title, pinned: true)
-			]
-
 			return section
 		}
 
@@ -80,7 +76,7 @@ class ClientSharedByMeViewController: CollectionViewController {
 		var sectionsToAdd: [CollectionViewSection] = []
 
 		if hasByMeSection, let byMeDataSource = clientContext?.core?.sharedByMeGroupedDataSource {
-			sharedByMeSection = buildSection(identifier: "byMe", titled: OCLocalizedString("Shared by me", nil), contentDataSource: byMeDataSource)
+			sharedByMeSection = buildSection(identifier: "byMe", titled: OCLocalizedString("Shared with others", nil), contentDataSource: byMeDataSource)
 			sectionsToAdd.append(sharedByMeSection!)
 
 			addNoItemsCondition(imageName: "arrowshape.turn.up.right", title: OCLocalizedString("No items shared by you", nil), datasource: byMeDataSource)

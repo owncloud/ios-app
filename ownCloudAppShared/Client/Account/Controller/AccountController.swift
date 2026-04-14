@@ -366,7 +366,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 				}
 
 				if specialItems[.sharedByMe] == nil {
-					specialItems[.sharedByMe] = CollectionSidebarAction(with: OCLocalizedString("Shared by me", nil), icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.right"), identifier: specialItemsDataReferences[.sharedByMe], viewControllerProvider: { [weak self] context, action in
+					specialItems[.sharedByMe] = CollectionSidebarAction(with: OCLocalizedString("Shared with others", nil), icon: OCSymbol.icon(forSymbolName: "arrowshape.turn.up.right"), identifier: specialItemsDataReferences[.sharedByMe], viewControllerProvider: { [weak self] context, action in
 						return self?.provideViewController(for: .sharedByMe, in: context)
 					}, cacheViewControllers: false)
 				}

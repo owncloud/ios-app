@@ -41,7 +41,8 @@ class AccountControllerSpacesViewController: CollectionViewController, ViewContr
 			context.viewControllerPusher = owner as? ViewControllerPusher
 		}
 
-		spacesSection = CollectionViewSection(identifier: "spaces", dataSource: spacesDataSource, cellStyle: Self.cellStyle(for: .current), cellLayout: Self.cellLayout(for: .current))
+		spacesSection = CollectionViewSection(identifier: "spaces", dataSource: spacesDataSource, cellStyle: Self.cellStyle(for: .current, listView: Self.listView), cellLayout: Self.cellLayout(for: .current, listView: Self.listView))
+		_actualListView = Self.listView
 
 		super.init(context: gridContext, sections: [ spacesSection ], useStackViewRoot: true, hierarchic: false)
 
@@ -104,8 +105,8 @@ class AccountControllerSpacesViewController: CollectionViewController, ViewContr
 			// List/Grid
 			if let self {
 				completion([
-					UIAction(title: Self.listView ? OCLocalizedString("Grid",nil) : OCLocalizedString("List", nil),
-						 image: OCSymbol.icon(forSymbolName: Self.listView ? "square.grid.2x2" : "list.bullet"),
+					UIAction(title: self.listView ? OCLocalizedString("Grid",nil) : OCLocalizedString("List", nil),
+						 image: OCSymbol.icon(forSymbolName: self.listView ? "square.grid.2x2" : "list.bullet"),
 						 handler: { _ in
 							self.listView = !self.listView
 						 })
@@ -165,28 +166,30 @@ class AccountControllerSpacesViewController: CollectionViewController, ViewContr
 		}
 	}
 
+	private var _actualListView: Bool
 	var listView: Bool {
 		get {
-			return Self.listView
+			return _actualListView
 		}
 
 		set {
+			_actualListView = newValue
 			Self.listView = newValue
 			OnMainThread {
-				self.spacesSection.cellStyle = Self.cellStyle(for: .current)
-				self.spacesSection.cellLayout = Self.cellLayout(for: .current)
+				self.spacesSection.cellStyle = Self.cellStyle(for: .current, listView:newValue)
+				self.spacesSection.cellLayout = Self.cellLayout(for: .current, listView:newValue)
 			}
 		}
 	}
 
-	static func cellStyle(for traitCollection: UITraitCollection) -> CollectionViewCellStyle {
+	static func cellStyle(for traitCollection: UITraitCollection, listView: Bool) -> CollectionViewCellStyle {
 		if listView {
 			return .init(with: .tableCell)
 		}
 		return .init(with: .gridCell)
 	}
 
-	static func cellLayout(for traitCollection: UITraitCollection) -> CollectionViewSection.CellLayout {
+	static func cellLayout(for traitCollection: UITraitCollection, listView: Bool) -> CollectionViewSection.CellLayout {
 		if listView {
 			return .list(appearance: .plain, contentInsets: NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
 		}
@@ -200,7 +203,7 @@ class AccountControllerSpacesViewController: CollectionViewController, ViewContr
 		super.traitCollectionDidChange(previousTraitCollection)
 
 		OnMainThread {
-			self.spacesSection.cellLayout = Self.cellLayout(for: self.traitCollection)
+			self.spacesSection.cellLayout = Self.cellLayout(for: self.traitCollection, listView: self.listView)
 		}
 	}
 
