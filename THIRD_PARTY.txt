@@ -88,3 +88,10 @@ The third party software included and used by this project is:
         Placed as Swift package
         Original license document included at ownCloudAppShared/PocketSVG.LICENSE.
         See https://github.com/pocketsvg/PocketSVG
+
+ *      SHA3IUF
+        Copyright (c) brainhub
+        Licensed under MIT License.
+        Placed at ios-sdk/ownCloudSDK/External/SHA3IUF/Sources/SHA3IUF
+        Original license document included at ios-sdk/ownCloudSDK/File Handling/Checksums/SHA3/SHA3IUF.LICENSE.
+        See https://github.com/brainhub/SHA3IUF/blob/master/LICENSE
