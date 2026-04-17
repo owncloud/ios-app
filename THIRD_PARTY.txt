@@ -95,3 +95,10 @@ The third party software included and used by this project is:
         Placed at ios-sdk/ownCloudSDK/External/SHA3IUF/Sources/SHA3IUF
         Original license document included at ios-sdk/ownCloudSDK/File Handling/Checksums/SHA3/SHA3IUF.LICENSE.
         See https://github.com/brainhub/SHA3IUF/blob/master/LICENSE
+
+ *      Font Awesome Icons
+        Copyright (c) Fonticons, Inc.
+        Licensed under CC BY 4.0 License.
+        Placed at https://github.com/owncloud/ios-app/tree/master/img/tvg-icons in TVG format.
+        Original license document included at ownCloudAppShared/FontAwesome.LICENSE.
+        See https://github.com/fortawesome/font-awesome
