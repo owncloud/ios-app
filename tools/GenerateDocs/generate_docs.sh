@@ -4,7 +4,7 @@
 xcodebuild test \
 -project ../../ownCloud.xcodeproj \
 -scheme ownCloud \
--destination 'platform=iOS Simulator,name=iPhone 14,OS=latest' \
+-destination 'platform=iOS Simulator,name=iPhone 17,OS=latest' \
 -only-testing ownCloudTests/MetadataDocumentationTests/testUpdateConfigurationJSONFromMetadata
 
 # Make temporary copy
