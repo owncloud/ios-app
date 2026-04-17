@@ -3,6 +3,7 @@
      Copyright (C) 2024, ownCloud GmbH.
 
 
+
      This code is covered by the GNU Public License Version 3.
 
      For distribution utilizing Apple mechanisms please see
