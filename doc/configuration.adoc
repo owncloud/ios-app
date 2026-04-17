@@ -1426,6 +1426,9 @@ tag::extensions[]
 ! `license.Down`
 ! Extension with the identifier license.Down.
 
+! `license.FontAwesome`
+! Extension with the identifier license.FontAwesome.
+
 ! `license.ISRunLoopThread`
 ! Extension with the identifier license.ISRunLoopThread.
 
