@@ -66,6 +66,12 @@ extension AccountController: ownCloudAppShared.AccountControllerExtraItems {
 				activityViewController.navigationBookmark = BrowserNavigationBookmark(type: .specialItem, bookmarkUUID: context.accountConnection?.bookmark.uuid, specialItem: .activity)
 				return activityViewController
 
+			case .tags:
+				let tagsViewController = TagsViewController(context: context)
+				tagsViewController.revoke(in: context, when: [ .connectionClosed ])
+				tagsViewController.navigationBookmark = BrowserNavigationBookmark(type: .specialItem, bookmarkUUID: context.accountConnection?.bookmark.uuid, specialItem: .tags)
+				return tagsViewController
+
 			default:
 				return nil
 		}

@@ -36,8 +36,9 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 		public var showSearch: Bool
 		public var showSavedSearches: Bool
 		public var showUserSidebarItems: Bool
-		public var showRecents: Bool
-		public var showFavorites: Bool
+	public var showRecents: Bool
+	public var showTags: Bool
+	public var showFavorites: Bool
 		public var showAvailableOffline: Bool
 		public var showActivity: Bool
 		public var autoSelectPersonalFolder: Bool
@@ -70,6 +71,7 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			showUserSidebarItems = true
 			showFavorites = true
 			showRecents = true
+			showTags = true
 			showAvailableOffline = true
 			showActivity = true
 
@@ -87,11 +89,12 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 		case globalSearch
 
-		case recents
-		case favoriteItems
-		case availableOfflineItems
+	case recents
+	case tags
+	case favoriteItems
+	case availableOfflineItems
 
-		case activity
+	case activity
 	}
 
 	open var clientContext: ClientContext
@@ -444,6 +447,13 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			// Recents
 			addSidebarItem(.recents) {
 				return OCSavedSearch(scope: .account, location: nil, name: OCLocalizedString("Recents", nil), isTemplate: false, searchTerm: ":recent :file").withCustomIcon(name: "clock.arrow.circlepath").useNameAsTitle(true).useSortDescriptor(SortDescriptor(method: .lastUsed, direction: .ascending))
+			}
+
+			// Tags
+			if configuration.showTags {
+				addSidebarItem(.tags) {
+					return buildSidebarSpecialItem(with: OCLocalizedString("Tags", nil), icon: OCSymbol.icon(forSymbolName: "tag"), for: .tags)
+				}
 			}
 
 			// Favorites
