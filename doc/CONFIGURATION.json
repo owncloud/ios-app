@@ -2246,6 +2246,10 @@
         "value" : "license.Down"
       },
       {
+        "description" : "Extension with the identifier license.FontAwesome.",
+        "value" : "license.FontAwesome"
+      },
+      {
         "description" : "Extension with the identifier license.ISRunLoopThread.",
         "value" : "license.ISRunLoopThread"
       },
