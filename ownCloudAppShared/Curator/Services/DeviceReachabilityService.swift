@@ -90,16 +90,47 @@ public final actor DeviceReachabilityService {
 	public private(set) var localDevices: [LocalDevice] = []
 	private var remotePathProbesByCN: [String: [String: PathProbe]] = [:]
     private var onUpdate: (@MainActor ([MergedDevice]) -> Void)?
+    private var onDetectionComplete: (@MainActor ([MergedDevice]) -> Void)?
+    private var onDeviceFound: (@MainActor (RemoteDevice) -> Void)?
+    private var onLocalDeviceFound: (@MainActor (MergedDevice) -> Void)?
     private var onReachabilityChange: (@MainActor (Bool) -> Void)?
 	private var onEmailValidationRequest: (@MainActor (String) -> Void)?
 	private var onReprobePrompt: (@MainActor (@escaping (Bool) -> Void) -> Void)?
 	private var onRemoteBaseURLChange: (@MainActor (URL?) -> Void)?
 	private var triggersCancellable: AnyCancellable?
 	private var reachabilityStatusCancellable: AnyCancellable?
+	private var networkChangeCancellable: AnyCancellable?
+	private var foregroundCancellable: AnyCancellable?
 	private var staticDeviceAddressCancellable: AnyCancellable?
 	private var loadTask: Task<[MergedDevice], Error>?
 	private var isReloading: Bool = false
 	private var lastNetworkState: NetworkState?
+	/// Spec: the first reachability event is the initial known state and should not trigger re-detection.
+	private var hasSeenInitialNetworkState: Bool = false
+	/// Tracks foreground/background using lifecycle notifications — avoids UIApplication.shared (unavailable in extensions).
+	private var isAppActive: Bool = true
+	/// Spec: network changes that arrive while the app is in background are stored and processed on foreground resume.
+	private var pendingNetworkChange: NetworkState?
+	/// Spec: minimum 30-second cooldown between network-change-triggered re-detection attempts.
+	private var lastDetectionAt: Date?
+	private let detectionCooldownSeconds: TimeInterval = 30
+	/// Holds a deferred detection scheduled to fire after the cooldown window expires.
+	private var cooldownTask: Task<Void, Never>?
+	/// Monotonically increasing counter. Each new detection pass takes a snapshot;
+	/// any suspended prior pass sees a mismatch and exits early (cancel-and-restart).
+	private var detectionGeneration: Int = 0
+	/// Spec: connection paths cached with a timestamp; expire after 1 hour.
+	private var pathCacheByCN: [String: CachedPaths] = [:]
+	/// Retains the last successfully validated local URL per CN.
+	/// Unlike `localDevices`, this is NOT cleared on WiFi loss so that Algorithm B step 1
+	/// can test the URL directly (no WiFi check) when a network change fires.
+	private var lastKnownLocalURLByCN: [String: URL] = [:]
+	private struct CachedPaths: Codable {
+		var paths: [RemoteDevice.Path]
+		var timestamp: Date
+		var isExpired: Bool { Date().timeIntervalSince(timestamp) > 3600 }
+		mutating func refreshTimestamp() { timestamp = Date() }
+	}
 	private var staticRemoteDevice: RemoteDevice?
 	/// Throttles automatic reprobe (timeout, cannot connect, status.php poll failures, …).
 	private var lastTimeoutSwitchAttemptAt: Date?
@@ -125,6 +156,12 @@ public final actor DeviceReachabilityService {
 
 		urlProvider = DeviceReachabilityURLProvider(preferences: preferences)
 
+		// Spec: restore the path cache (with timestamps) from the last session.
+		if let data = preferences.cachedDevicePathsData,
+		   let restored = try? JSONDecoder().decode([String: CachedPaths].self, from: data) {
+			pathCacheByCN = restored
+		}
+
 		staticRemoteDevice = Self.buildStaticRemoteDevice(from: preferences.staticDeviceAddress)
 		staticDeviceAddressCancellable = preferences.staticDeviceAddressPublisher
 			.removeDuplicates()
@@ -144,18 +181,46 @@ public final actor DeviceReachabilityService {
 		// Cancel previous subscriptions
 		triggersCancellable?.cancel()
 		reachabilityStatusCancellable?.cancel()
+		networkChangeCancellable?.cancel()
+		foregroundCancellable?.cancel()
 
-		// Forward reachability availability to observers
+		// Track foreground/background without UIApplication.shared (unavailable in extensions).
+		// Spec: process any deferred network change when the app returns to foreground.
+		foregroundCancellable = Publishers.Merge(
+			NotificationCenter.default
+				.publisher(for: UIApplication.didBecomeActiveNotification)
+				.map { _ in true },
+			NotificationCenter.default
+				.publisher(for: UIApplication.willResignActiveNotification)
+				.map { _ in false }
+		)
+		.sink { [weak self] isActive in
+			guard let self else { return }
+			Task {
+				await self.handleAppLifecycleChange(isActive: isActive)
+			}
+		}
+
+		// Immediate reactions: clear local devices on WiFi loss and forward reachability to UI.
 		reachabilityStatusCancellable = reachability
 			.updatesPublisher
 			.sink { [weak self] state in
 				guard let self else { return }
 				Task {
-					await self.handleNetworkChange(state)
+					await self.handleImmediateNetworkStateChange(state)
 					if let handler = await self.onReachabilityChange {
 						await MainActor.run { handler(state.isReachable) }
 					}
 				}
+			}
+
+		// Spec Algorithm D: debounce rapid network changes for 3 seconds before re-detecting.
+		networkChangeCancellable = reachability
+			.updatesPublisher
+			.debounce(for: .seconds(3), scheduler: DispatchQueue.main)
+			.sink { [weak self] state in
+				guard let self else { return }
+				Task { await self.handleNetworkChange(state) }
 			}
 
 		// Merge triggers: reachability became reachable OR app became active OR periodic reevaluation
@@ -179,7 +244,7 @@ public final actor DeviceReachabilityService {
 			.eraseToAnyPublisher()
 
 		triggersCancellable = Publishers.MergeMany([reachableTrigger, appActiveTrigger, periodicTrigger])
-			.debounce(for: .milliseconds(300), scheduler: DispatchQueue.main)
+			.debounce(for: .seconds(3), scheduler: DispatchQueue.main)
 			.sink { [weak self] in
 				guard let self else { return }
 				Task { await self.reprobeExistingPaths() }
@@ -191,6 +256,12 @@ public final actor DeviceReachabilityService {
 		triggersCancellable = nil
 		reachabilityStatusCancellable?.cancel()
 		reachabilityStatusCancellable = nil
+		networkChangeCancellable?.cancel()
+		networkChangeCancellable = nil
+		foregroundCancellable?.cancel()
+		foregroundCancellable = nil
+		cooldownTask?.cancel()
+		cooldownTask = nil
 	}
 
 	// MARK: - Fast reprobe (no device reload)
@@ -208,16 +279,47 @@ public final actor DeviceReachabilityService {
 		let merged = self.currentMerged()
 		if let onUpdate = self.onUpdate { await MainActor.run { onUpdate(merged) } }
 		recalculateBestURLs()
+
 	}
 
 	private func handleMDNSUpdate(_ locals: [LocalDevice]) {
+		// Spec: local discovery is only useful on the same network as the device.
+		// Skip mDNS results when WiFi is confirmed absent.
+		// When the interface is .none (unknown), proceed rather than block (spec rule).
+		let iface = reachability.currentState.interface
+		guard iface == .wifi || iface == .none else {
+			Log.debug("[STX-MDNS]: Skipping mDNS update — WiFi not available (interface: \(iface.rawValue)).")
+			return
+		}
+		let previous = localDevices
 		self.localDevices = locals
+
+		// Remember every validated local URL so Algorithm B step 1 can use it even after WiFi loss.
+		for local in locals {
+			guard let cn = local.certificateCommonName,
+				  let url = URL(host: local.host, port: local.port) else { continue }
+			lastKnownLocalURLByCN[cn] = url
+		}
+
 		let merged = rebuildMerged(
 			localDevices: localDevices,
 			remoteDevices: remoteDevices,
 			remotePathProbesByCN: remotePathProbesByCN,
 			staticRemoteDevice: staticRemoteDevice
 		)
+
+		// Spec Algorithm A Phase 1: emit deviceFound for each newly CN-validated local device.
+		// "newly" = the device has a CN now but didn't before (about endpoint just validated it).
+		if let handler = onLocalDeviceFound {
+			for local in locals {
+				guard let cn = local.certificateCommonName else { continue }
+				let wasValidated = previous.contains(where: { $0.certificateCommonName == cn })
+				if !wasValidated, let entry = merged.first(where: { $0.certificateCommonName == cn }) {
+					Task { @MainActor in handler(entry) }
+				}
+			}
+		}
+
 		if let onUpdate { Task { @MainActor in onUpdate(merged) } }
 	}
 
@@ -251,6 +353,15 @@ public final actor DeviceReachabilityService {
 				remote = []
 			}
 			await self.setRemoteDevices(remote)
+			// Spec: populate the path cache so subsequent direct resolutions can use it.
+			await self.updatePathCache(from: remote)
+			// Spec §remote-phase: emit a device-found event for each remote device.
+			// The payload is the raw RemoteDevice; local mDNS fields are intentionally excluded.
+			if let handler = await self.onDeviceFound {
+				for device in remote {
+					await MainActor.run { handler(device) }
+				}
+			}
 			if Task.isCancelled { return [] }
 
 			let probes: [String: [String: PathProbe]]
@@ -263,7 +374,9 @@ public final actor DeviceReachabilityService {
 			if Task.isCancelled { return [] }
 
 			let merged = await self.currentMerged()
-			if let onUpdate = await self.onUpdate {
+			// Only publish via onUpdate when paths have been probed; callers that pass
+			// probeRemotePaths: false (e.g. reloadDevices) publish after the separate probe step.
+			if probeRemotePaths, let onUpdate = await self.onUpdate {
 				await MainActor.run { onUpdate(merged) }
 			}
 			return merged
@@ -279,38 +392,453 @@ public final actor DeviceReachabilityService {
 		self.remotePathProbesByCN = d
 	}
 
+	private func updatePathCache(from devices: [RemoteDevice]) {
+		for device in devices {
+			pathCacheByCN[device.certificateCommonName] = CachedPaths(paths: device.paths, timestamp: Date())
+		}
+		persistPathCache()
+	}
+
+	/// Persists the current `pathCacheByCN` to `HCPreferences` so that the 1-hour TTL
+	/// survives app restarts (spec: "cached device paths with timestamp" as required state).
+	private func persistPathCache() {
+		if let data = try? JSONEncoder().encode(pathCacheByCN) {
+			preferences.cachedDevicePathsData = data
+		}
+	}
+
 	// MARK: - Reload status
 	public func isReloadingNow() -> Bool {
 		return isReloading
 	}
 
     private func handleNetworkChange(_ state: NetworkState) async {
+		// Spec Algorithm D: ignore the very first event — it represents the initial known state,
+		// not an actual change. Record it so subsequent events can be compared against it.
+		guard hasSeenInitialNetworkState else {
+			hasSeenInitialNetworkState = true
+			lastNetworkState = state
+			return
+		}
+
 		if let last = lastNetworkState, last.interface == state.interface { return }
 		lastNetworkState = state
 
-		if let email = preferences.favoriteEmail {
-			let hasToken = await remoteAccessService.hasValidTokens()
-			if hasToken == false, let handler = onEmailValidationRequest {
+		// Spec Algorithm D step 1: auth check — unconditional, not gated on favoriteEmail.
+		let hasToken = await remoteAccessService.hasValidTokens()
+		if !hasToken {
+			if let email = preferences.favoriteEmail, let handler = onEmailValidationRequest {
 				await MainActor.run { handler(email) }
 			}
+			return
+		}
+
+		// Spec Algorithm D step 2: if a detection is already running, return immediately.
+		guard !isReloading else {
+			Log.debug("[STX-RA]: Network change dropped — detection already in progress.")
+			return
+		}
+
+		// Spec Algorithm D: 30-second cooldown between re-detection attempts.
+		// Schedule a deferred task so the re-detection fires after the remaining wait time
+		// rather than being silently dropped.
+		if let last = lastDetectionAt {
+			let elapsed = Date().timeIntervalSince(last)
+			if elapsed < detectionCooldownSeconds {
+				let wait = detectionCooldownSeconds - elapsed
+				Log.debug("[STX-RA]: Cooldown active; deferring re-detection by \(Int(wait))s.")
+				cooldownTask?.cancel()
+				let capturedState = state
+				cooldownTask = Task { [weak self] in
+					try? await Task.sleep(nanoseconds: UInt64(wait * 1_000_000_000))
+					guard let self, !Task.isCancelled else { return }
+					await self.runDeferredDetection(state: capturedState)
+				}
+				return
+			}
+		}
+		cooldownTask?.cancel()
+		cooldownTask = nil
+		lastDetectionAt = Date()
+
+		// Spec Algorithm D: background check comes after the cooldown (spec §Re-Detection order).
+		if !isAppActive {
+			pendingNetworkChange = state
+			Log.debug("[STX-RA]: Network change deferred (app not active). Interface: \(state.interface.rawValue).")
+			return
+		}
+
+		await runDetection(state: state)
+    }
+
+	/// Processes a network change that was previously deferred (stored in pendingNetworkChange).
+	/// Unlike handleNetworkChange, this skips the first-event and interface-equality filters
+	/// (those only apply to freshly received events) but still enforces auth, cooldown, and
+	/// background so deferred detections are rate-limited the same as any fresh event.
+	private func processDeferredNetworkChange(_ state: NetworkState) async {
+		// Spec Algorithm D step 1: auth check — unconditional, not gated on favoriteEmail.
+		let hasToken = await remoteAccessService.hasValidTokens()
+		if !hasToken {
+			if let email = preferences.favoriteEmail, let handler = onEmailValidationRequest {
+				await MainActor.run { handler(email) }
+			}
+			return
+		}
+		// Spec Algorithm D: cooldown check comes before background check.
+		if let last = lastDetectionAt {
+			let elapsed = Date().timeIntervalSince(last)
+			if elapsed < detectionCooldownSeconds {
+				let wait = detectionCooldownSeconds - elapsed
+				Log.debug("[STX-RA]: Cooldown active; deferring deferred change by \(Int(wait))s.")
+				cooldownTask?.cancel()
+				let capturedState = state
+				cooldownTask = Task { [weak self] in
+					try? await Task.sleep(nanoseconds: UInt64(wait * 1_000_000_000))
+					guard let self, !Task.isCancelled else { return }
+					await self.runDeferredDetection(state: capturedState)
+				}
+				return
+			}
+		}
+		cooldownTask?.cancel()
+		cooldownTask = nil
+		lastDetectionAt = Date()
+		// Spec Algorithm D: background check comes after cooldown.
+		guard isAppActive else {
+			pendingNetworkChange = state
+			Log.debug("[STX-RA]: Deferred network change re-deferred (app not active).")
+			return
+		}
+		await runDetection(state: state)
+	}
+
+	/// Runs the core detection logic for a deferred cooldown trigger.
+	private func runDeferredDetection(state: NetworkState) async {
+		guard !isReloading else { return }
+		// Spec Algorithm D: background check comes after the cooldown wait. The cooldown timer
+		// fires asynchronously; by the time it does, the app may be in the background.
+		// Re-defer to pendingNetworkChange instead of running detection while backgrounded.
+		guard isAppActive else {
+			pendingNetworkChange = state
+			Log.debug("[STX-RA]: Cooldown fired while app is in background — re-deferred to foreground.")
+			return
+		}
+		lastDetectionAt = Date()
+		await runDetection(state: state)
+	}
+
+	/// Shared detection logic used by both handleNetworkChange and runDeferredDetection.
+	private func runDetection(state: NetworkState) async {
+		// Spec Algorithm D: auth check — unconditional, not gated on favoriteEmail.
+		let hasToken = await remoteAccessService.hasValidTokens()
+		if !hasToken {
+			if let email = preferences.favoriteEmail, let handler = onEmailValidationRequest {
+				await MainActor.run { handler(email) }
+			}
+			return
+		}
+
+		// Spec Algorithm D: when seagateDeviceID is already known, skip full re-discovery
+		// and resolve paths for the known device directly. Fall back to a full reload only
+		// if that targeted attempt fails (device truly unreachable or auth lost).
+		if let saved = preferences.currentConnectedDevice,
+		   let seagateDeviceID = saved.seagateDeviceID,
+		   !seagateDeviceID.isEmpty {
+			let resolved = await tryDirectPathResolution(
+				seagateDeviceID: seagateDeviceID,
+				certificateCommonName: saved.certificateCommonName
+			)
+			if resolved { return }
 		}
 
 		await forceReloadDevices()
-    }
+
+		// Spec Algorithm D post-condition: distinguish RA auth failure from general unreachability.
+		// "if current device is found again → update host; else → surface failure OR ask for RA auth"
+		if let cn = preferences.favoriteDeviceCN {
+			let merged = currentMerged()
+			let preferredReachable = merged
+				.first(where: { $0.certificateCommonName == cn })
+				.flatMap { currentBestPath(for: $0) } != nil
+			if !preferredReachable {
+				Log.debug("[STX-RA]: Device \(cn) not reachable after full discovery.")
+				let tokensStillValid = await remoteAccessService.hasValidTokens()
+				if !tokensStillValid, let email = preferences.favoriteEmail, let handler = onEmailValidationRequest {
+					// Auth was lost during detection — ask user to re-authenticate.
+					await MainActor.run { handler(email) }
+				} else {
+					// Authenticated but no path available — surface reconnection failure.
+					await requestReprobeFromUI()
+				}
+			}
+		}
+	}
+
+	/// Called by the lifecycle notification subscriber to keep `isAppActive` in sync
+	/// and to drain any network change that was deferred while the app was in background.
+	private func handleAppLifecycleChange(isActive: Bool) async {
+		isAppActive = isActive
+		guard isActive, let pending = pendingNetworkChange else { return }
+		pendingNetworkChange = nil
+		Log.debug("[STX-RA]: Processing deferred network change on foreground. Interface: \(pending.interface.rawValue).")
+		// Use processDeferredNetworkChange rather than handleNetworkChange.
+		// handleNetworkChange updates lastNetworkState *before* the background check, so when
+		// the same state is replayed here the interface-equality filter ("already on this
+		// interface, nothing to do") immediately returns and the detection is silently dropped.
+		// processDeferredNetworkChange skips that filter while still enforcing auth, background,
+		// and the 30-second cooldown.
+		await processDeferredNetworkChange(pending)
+	}
+
+	/// Reacts immediately to each raw reachability event — clears stale local devices when
+	/// WiFi is lost so they are not shown as reachable on cellular/wired/other connections.
+	private func handleImmediateNetworkStateChange(_ state: NetworkState) async {
+		guard state.interface != .wifi && state.interface != .none else { return }
+		guard !localDevices.isEmpty else { return }
+		localDevices = []
+		let merged = currentMerged()
+		if let onUpdate { await MainActor.run { onUpdate(merged) } }
+	}
+
+	/// Spec Algorithm C: test local and public paths in parallel; return the best result
+	/// immediately using local-beats-public priority without waiting for all probes to finish.
+	/// Remote relay paths should NOT be passed here — use a separate call for relay fallback.
+	nonisolated private func testPriorityPaths(_ paths: [RemoteDevice.Path]) async -> (path: RemoteDevice.Path, probe: PathProbe)? {
+		guard !paths.isEmpty else { return nil }
+
+		return await withTaskGroup(of: (RemoteDevice.Path, PathProbe?, Bool).self) { group in
+			var localPending = 0
+			for path in paths {
+				let isLocal = path.kind == .local
+				if isLocal { localPending += 1 }
+				group.addTask {
+					guard let url = path.apiBaseURL() else { return (path, nil, isLocal) }
+					let api = DeviceAPI(deviceBaseURL: url)
+					let timeout: Double = isLocal ? 4.0 : 9.0
+					var status: Status?
+					var about: About?
+					do { status = try await self.withTimeout(timeout) { try await api.getStatus() } } catch {}
+					do { about  = try await self.withTimeout(timeout) { try await api.getAbout() } } catch {}
+					guard let s = status, let a = about else { return (path, nil, isLocal) }
+					return (path, PathProbe(source: .remotePath(path), status: s, about: a), isLocal)
+				}
+			}
+
+			var totalPending = paths.count
+			var bestPublicResult: (RemoteDevice.Path, PathProbe)?
+
+			while let (path, probe, isLocal) = await group.next() {
+				if let probe, probe.isReachable {
+					if isLocal {
+						// Spec: local success → return immediately, cancel remaining.
+						group.cancelAll()
+						return (path, probe)
+					} else {
+						if bestPublicResult == nil { bestPublicResult = (path, probe) }
+						// Spec: this check only fires on public success, not on local failure.
+						if localPending == 0 {
+							group.cancelAll()
+							return bestPublicResult!
+						}
+					}
+				}
+				if isLocal { localPending -= 1 }
+				totalPending -= 1
+				if totalPending == 0 { return bestPublicResult }
+			}
+			return bestPublicResult
+		}
+	}
+
+	/// Stores a successful direct-resolution result and notifies observers.
+	private func commitDirectResolution(
+		certificateCommonName: String,
+		seagateDeviceID: String,
+		allPaths: [RemoteDevice.Path],
+		winningPath: RemoteDevice.Path,
+		winningProbe: PathProbe
+	) async -> Bool {
+		if let existing = remoteDevices.first(where: { $0.certificateCommonName == certificateCommonName }) {
+			let updated = RemoteDevice(
+				seagateDeviceID: existing.seagateDeviceID,
+				friendlyName: existing.friendlyName,
+				hostname: existing.hostname,
+				certificateCommonName: certificateCommonName,
+				paths: allPaths
+			)
+			if let idx = remoteDevices.firstIndex(where: { $0.certificateCommonName == certificateCommonName }) {
+				remoteDevices[idx] = updated
+			}
+		} else if let saved = preferences.currentConnectedDevice {
+			let built = RemoteDevice(
+				seagateDeviceID: seagateDeviceID,
+				friendlyName: saved.friendlyName ?? "",
+				hostname: saved.hostname ?? "",
+				certificateCommonName: certificateCommonName,
+				paths: allPaths
+			)
+			remoteDevices.append(built)
+		}
+		remotePathProbesByCN[certificateCommonName] = [winningPath.key: winningProbe]
+		let merged = currentMerged()
+		if let onUpdate { await MainActor.run { onUpdate(merged) } }
+		recalculateBestURLs()
+		Log.debug("[STX-RA]: Direct path resolution succeeded (\(winningPath.kind)) for \(certificateCommonName).")
+		return true
+	}
+
+	private func pathsAreEqual(_ a: [RemoteDevice.Path], _ b: [RemoteDevice.Path]) -> Bool {
+		Set(a.map(\.key)) == Set(b.map(\.key))
+	}
+
+	/// Spec Algorithm B: find the best connection for the known device without a full re-discovery.
+	/// Steps: (1) local baseUrl shortcut, (2) cached or fresh paths → Algorithm C priority test,
+	/// (3) cache refresh if expired, (4) relay fallback. Falls back to full reload on failure.
+	private func tryDirectPathResolution(seagateDeviceID: String, certificateCommonName: String) async -> Bool {
+		// Step 1: test the known local baseUrl directly — no WiFi check (spec WiFi exception).
+		// Prefer in-memory localDevices; fall back to lastKnownLocalURLByCN which survives WiFi loss.
+		let localURL: URL? = localDevices
+			.first(where: { $0.certificateCommonName == certificateCommonName })
+			.flatMap { URL(host: $0.host, port: $0.port) }
+			?? lastKnownLocalURLByCN[certificateCommonName]
+
+		if let url = localURL {
+			do {
+				let api = DeviceAPI(deviceBaseURL: url)
+				let about = try await withTimeout(4.0) { try await api.getAbout() }
+				if about.certificate_common_name == certificateCommonName {
+					Log.debug("[STX-RA]: Local baseUrl shortcut succeeded for \(certificateCommonName).")
+					let merged = currentMerged()
+					if let onUpdate { await MainActor.run { onUpdate(merged) } }
+					recalculateBestURLs()
+					return true
+				}
+			} catch {
+				Log.debug("[STX-RA]: Local baseUrl shortcut failed: \(error). Proceeding to backend.")
+			}
+		}
+
+		guard await remoteAccessService.hasValidTokens() else { return false }
+
+		let wifiAvailable = wifiAvailableForLocalPaths
+
+		// Step 2: get paths from cache (spec: reuse even if expired; only fetch fresh if no cache at all).
+		// Expired cached paths are still tested first. Fresh paths are only fetched in step 4,
+		// after all cached priority paths fail AND the cache is confirmed expired.
+		let cachedEntry = pathCacheByCN[certificateCommonName]
+		let fromCache = cachedEntry != nil
+		var allPaths: [RemoteDevice.Path]
+
+		if let cached = cachedEntry {
+			allPaths = cached.paths
+			Log.debug("[STX-RA]: Using cached paths for \(certificateCommonName) (expired: \(cached.isExpired)).")
+		} else {
+			do {
+				allPaths = try await remoteAccessService.getPathsForDevice(seagateDeviceID: seagateDeviceID)
+				pathCacheByCN[certificateCommonName] = CachedPaths(paths: allPaths, timestamp: Date())
+				persistPathCache()
+			} catch {
+				Log.debug("[STX-RA]: Failed to fetch paths for \(certificateCommonName): \(error).")
+				return false
+			}
+		}
+
+		guard !allPaths.isEmpty else { return false }
+
+		// Step 3: Algorithm C — test local + public paths with priority early-return.
+		var priorityPaths = allPaths.filter { $0.kind != .remote }
+		if !wifiAvailable { priorityPaths = priorityPaths.filter { $0.kind != .local } }
+
+		if let (best, probe) = await testPriorityPaths(priorityPaths) {
+			return await commitDirectResolution(
+				certificateCommonName: certificateCommonName, seagateDeviceID: seagateDeviceID,
+				allPaths: allPaths, winningPath: best, winningProbe: probe
+			)
+		}
+
+		// Step 4: if paths came from cache and cache is now expired, refresh once.
+		if fromCache, pathCacheByCN[certificateCommonName]?.isExpired == true {
+			do {
+				let freshPaths = try await remoteAccessService.getPathsForDevice(seagateDeviceID: seagateDeviceID)
+				if pathsAreEqual(freshPaths, allPaths) {
+					// Spec: identical paths — refresh timestamp only, do not re-test.
+					pathCacheByCN[certificateCommonName]?.refreshTimestamp()
+					persistPathCache()
+					Log.debug("[STX-RA]: Cache refreshed (paths unchanged) for \(certificateCommonName).")
+				} else {
+					pathCacheByCN[certificateCommonName] = CachedPaths(paths: freshPaths, timestamp: Date())
+					persistPathCache()
+					var freshPriority = freshPaths.filter { $0.kind != .remote }
+					if !wifiAvailable { freshPriority = freshPriority.filter { $0.kind != .local } }
+					if let (best, probe) = await testPriorityPaths(freshPriority) {
+						return await commitDirectResolution(
+							certificateCommonName: certificateCommonName, seagateDeviceID: seagateDeviceID,
+							allPaths: freshPaths, winningPath: best, winningProbe: probe
+						)
+					}
+				}
+			} catch {
+				Log.debug("[STX-RA]: Failed to refresh paths for \(certificateCommonName): \(error).")
+			}
+		}
+
+		// Step 5: relay as last fallback.
+		let relayPaths = allPaths.filter { $0.kind == .remote }
+		if let (best, probe) = await testPriorityPaths(relayPaths) {
+			return await commitDirectResolution(
+				certificateCommonName: certificateCommonName, seagateDeviceID: seagateDeviceID,
+				allPaths: allPaths, winningPath: best, winningProbe: probe
+			)
+		}
+
+		Log.debug("[STX-RA]: Direct path resolution failed for \(certificateCommonName). Falling back to full reload.")
+		return false
+	}
+
+	/// Spec Phase 1: wait up to 5 seconds for local mDNS discovery before starting remote.
+	/// Exits immediately when local devices are already known, WiFi is unavailable, or the
+	/// detection generation has been superseded by a newer call (cancel-and-restart).
+	private func waitForLocalDiscovery(generation: Int) async {
+		guard wifiAvailableForLocalPaths, localDevices.isEmpty else { return }
+		Log.debug("[STX-RA]: Waiting for local discovery window (up to 5 s)…")
+		let deadline = Date().addingTimeInterval(5)
+		while localDevices.isEmpty && Date() < deadline && detectionGeneration == generation {
+			try? await Task.sleep(nanoseconds: 100_000_000) // 100 ms poll
+		}
+		Log.debug("[STX-RA]: Local discovery window complete. Found \(localDevices.count) device(s).")
+	}
 
 	private func reloadDevices() async {
-		guard isReloading == false else {
-			Log.debug("[STX-RA]: Reload requested but a reload is already in progress; skipping.")
-			return
-		}
+		// Spec: cancel any active detection session and restart from a clean state.
+		// Bump the generation so any suspended prior pass sees a mismatch and exits early.
+		detectionGeneration &+= 1
+		let myGen = detectionGeneration
+		loadTask?.cancel()
+		loadTask = nil
 		isReloading = true
-		defer { isReloading = false }
+		defer { if detectionGeneration == myGen { isReloading = false } }
+
+		// Spec Algorithm A: reset the temporary device map before each detection pass.
+		remoteDevices = []
+		remotePathProbesByCN = [:]
+
+		// Spec cancel-and-restart: stop mDNS and clear local state so the new detection
+		// pass begins from a clean slate, then restart for the local discovery window.
+		localDevices = []
+		mdnsService.stop()
+		mdnsService.start()
+
+		// Spec Phase 1: local discovery window. Phase 2 (remote) starts only after this returns.
+		await waitForLocalDiscovery(generation: myGen)
+		guard detectionGeneration == myGen else { return }
 
 		Log.debug("[STX-RA]: Reloading devices.")
-		var didUpdateUsingEmail = false
-		if let email = preferences.favoriteEmail {
-			_ = (try? await getMergedDevices(email: email)) ?? []
-			didUpdateUsingEmail = true // getMergedDevices() already fetches, probes and publishes
+		// Spec Algorithm A: only attempt remote discovery when authenticated.
+		// Discovery only — path probing is Algorithm B and runs as a separate step below.
+		if let email = preferences.favoriteEmail,
+		   await remoteAccessService.hasValidTokens() {
+			_ = (try? await getMergedDevices(email: email, probeRemotePaths: false)) ?? []
+			guard detectionGeneration == myGen else { return }
 		}
 		if remoteDevices.isEmpty, let saved = preferences.currentConnectedDevice {
 			// Seed with saved connected device so we can probe paths after relaunch
@@ -332,17 +860,19 @@ public final actor DeviceReachabilityService {
 				paths: paths
 			)
 			self.setRemoteDevices([seeded])
-			didUpdateUsingEmail = false // seeding requires a fresh probe below
 		}
-		// If we didn't perform getMergedDevices(), perform a probe + publish now (seeded or no email)
-		if didUpdateUsingEmail == false {
-			let probes = (try? await self.probeAll(self.remoteDevices)) ?? [:]
-			self.setProbes(probes)
-			let merged = self.currentMerged()
-			if let onUpdate = self.onUpdate { await MainActor.run { onUpdate(merged) } }
-			Log.debug("[STX-RA]: Remote count: \(remoteDevices.count). Local count: \(localDevices.count).")
-		}
+		// Spec Algorithm B is separate from Algorithm A: probe all paths after discovery completes.
+		let probes = (try? await self.probeAll(self.remoteDevices)) ?? [:]
+		guard detectionGeneration == myGen else { return }
+		self.setProbes(probes)
+		let merged = self.currentMerged()
+		if let onUpdate = self.onUpdate { await MainActor.run { onUpdate(merged) } }
+		Log.debug("[STX-RA]: Remote count: \(remoteDevices.count). Local count: \(localDevices.count).")
 		recalculateBestURLs()
+
+		// Spec Algorithm A: emit detectionComplete after all phases (local + remote) have finished.
+		let finalMerged = currentMerged()
+		if let handler = onDetectionComplete { await MainActor.run { handler(finalMerged) } }
 	}
 
 	// MARK: - Operation error handling → reprobe prompt
@@ -409,8 +939,9 @@ public final actor DeviceReachabilityService {
 	}
 
 	public func forceReloadDevices() async {
+		// Spec: reloadDevices() already probes all paths (via getMergedDevices or probeAll).
+		// A second reprobeExistingPaths() call would probe every path twice; removed.
 		await reloadDevices()
-		await reprobeExistingPaths()
 	}
 
 	public func recalculateBestURLs() {
@@ -454,6 +985,26 @@ public final actor DeviceReachabilityService {
 		self.onReachabilityChange = handler
 	}
 
+	// MARK: - Observing detection-complete event (spec Algorithm A)
+	/// Called once after every full detection run (Algorithm A) completes, carrying the final device map.
+	public func observeDetectionComplete(_ handler: @escaping @MainActor ([MergedDevice]) -> Void) {
+		self.onDetectionComplete = handler
+	}
+
+	// MARK: - Observing per-device remote-phase events
+	/// Called for each remote device discovered during the remote phase. The payload is the raw
+	/// `RemoteDevice` without local mDNS fields merged in (spec §remote-phase device-found event).
+	public func observeDeviceFound(_ handler: @escaping @MainActor (RemoteDevice) -> Void) {
+		self.onDeviceFound = handler
+	}
+
+	// MARK: - Observing per-device local-phase events (spec Algorithm A Phase 1)
+	/// Called for each mDNS device whose `about` endpoint has just been validated.
+	/// The payload is the full `MergedDevice` map entry for that device.
+	public func observeLocalDeviceFound(_ handler: @escaping @MainActor (MergedDevice) -> Void) {
+		self.onLocalDeviceFound = handler
+	}
+
 	// MARK: - Observing email validation requests (when RA tokens are required)
 	public func observeEmailValidationRequest(_ handler: @escaping @MainActor (String) -> Void) {
 		self.onEmailValidationRequest = handler
@@ -464,6 +1015,9 @@ public final actor DeviceReachabilityService {
 		remoteDevices = []
 		localDevices = []
 		remotePathProbesByCN = [:]
+		pathCacheByCN = [:]
+		lastKnownLocalURLByCN = [:]
+		preferences.cachedDevicePathsData = nil
 		loadTask?.cancel()
 		loadTask = nil
 		let merged = currentMerged()
@@ -512,11 +1066,22 @@ public final actor DeviceReachabilityService {
 	}
 
 	// MARK: - Best path selection
+
+	/// Returns true when local-type paths should be considered.
+	/// Spec: local paths (mDNS and local-type Remote Access paths) are gated by WiFi.
+	/// When the interface is unknown (.none), allow local paths rather than blocking.
+	private var wifiAvailableForLocalPaths: Bool {
+		let iface = reachability.currentState.interface
+		return iface == .wifi || iface == .none
+	}
+
 	public func currentBestPath(certificateCommonName cn: String) -> SelectedPath? {
-		// Prefer reachable remote path by priority
+		let wifiAvailable = wifiAvailableForLocalPaths
+		// Prefer reachable remote path by priority, skipping local-type paths when WiFi is absent.
 		if let remote = remoteDevices.first(where: { $0.certificateCommonName == cn }) {
 			let probesDict = remotePathProbesByCN[cn] ?? [:]
 			for path in remote.paths.ordered() {
+				guard path.kind != .local || wifiAvailable else { continue }
 				if let probe = probesDict[path.key], probe.isReachable {
 					return .remote(path)
 				}
@@ -534,8 +1099,8 @@ public final actor DeviceReachabilityService {
 			}
 		}
 
-		// Fallback: local by CN
-		if let local = localDevices.first(where: { $0.certificateCommonName == cn }) {
+		// Fallback: local mDNS — only when WiFi is available (spec: local paths are WiFi-gated).
+		if wifiAvailable, let local = localDevices.first(where: { $0.certificateCommonName == cn }) {
 			return .mdns(host: local.host, port: local.port)
 		}
 
@@ -548,8 +1113,18 @@ public final actor DeviceReachabilityService {
 	}
 
 	public func currentBestPath(for merged: MergedDevice) -> SelectedPath? {
-		// 1) Prefer reachable probes in existing priority order (pathProbes already ordered and includes mDNS last if local exists)
-		if let probe = merged.pathProbes.first(where: { $0.isReachable }) {
+		let wifiAvailable = wifiAvailableForLocalPaths
+
+		// 1) Prefer reachable probes in priority order, skipping local-type paths when WiFi is absent.
+		if let probe = merged.pathProbes.first(where: { probe in
+			guard probe.isReachable else { return false }
+			switch probe.source {
+				case .remotePath(let path) where path.kind == .local && !wifiAvailable:
+					return false
+				default:
+					return true
+			}
+		}) {
 			switch probe.source {
 				case .remotePath(let path):
 					return .remote(path)
@@ -558,13 +1133,15 @@ public final actor DeviceReachabilityService {
 			}
 		}
 
-		// 2) Fallback: best ordered remote path
-		if let remote = merged.remoteDevice, let first = remote.paths.ordered().first {
-			return .remote(first)
+		// 2) Fallback: best ordered non-local remote path (or any path if WiFi is available).
+		if let remote = merged.remoteDevice {
+			let ordered = remote.paths.ordered()
+			let candidate = wifiAvailable ? ordered.first : ordered.first(where: { $0.kind != .local })
+			if let first = candidate { return .remote(first) }
 		}
 
-		// 3) Fallback: local mDNS if available
-		if let local = merged.localDevice {
+		// 3) Fallback: local mDNS only when WiFi is available.
+		if wifiAvailable, let local = merged.localDevice {
 			return .mdns(host: local.host, port: local.port)
 		}
 
@@ -616,15 +1193,18 @@ public final actor DeviceReachabilityService {
 				group.addTask {
 					let api = DeviceAPI(deviceBaseURL: item.url)
 
+					// Spec: 4 s budget for local paths, 9 s for public/remote paths.
+					let timeout: Double = item.path.kind == .local ? 4.0 : 9.0
+
 					var status: Status?
 					var about: About?
 
-					do { status = try await self.withTimeout(5) { try await api.getStatus() } } catch {
+					do { status = try await self.withTimeout(timeout) { try await api.getStatus() } } catch {
 #if DEBUG
 						Log.debug("[STX-RA]: Failed to get status. URL: \(item.url). Error \(error)")
 #endif
 					}
-					do { about  = try await self.withTimeout(5) { try await api.getAbout() } } catch {
+					do { about  = try await self.withTimeout(timeout) { try await api.getAbout() } } catch {
 #if DEBUG
 						Log.debug("[STX-RA]: Failed to get about. URL: \(item.url). Error \(error)")
 #endif
@@ -704,22 +1284,26 @@ public final actor DeviceReachabilityService {
 						pathProbes: appendMDNSProbeIfNeeded([], local: local)
 					)
 				}
+		} else {
+			// Spec: the merge key is always certificateCommonName.
+			// A device without a CN has not yet been validated via the about endpoint.
+			// Store it under a synthetic key so it is visible in the UI but cannot be
+			// incorrectly merged with a remote device that has a real CN.
+			let pendingKey = "__unresolved__\(local.name)"
+			if let existing = map[pendingKey] {
+				map[pendingKey] = MergedDevice(
+					remoteDevice: existing.remoteDevice,
+					localDevice: local,
+					pathProbes: appendMDNSProbeIfNeeded(existing.pathProbes, local: local)
+				)
 			} else {
-				// Fallback to name-based merge when CN is missing
-				if let existing = map[local.name] {
-					map[local.name] = MergedDevice(
-						remoteDevice: existing.remoteDevice,
-						localDevice: local,
-						pathProbes: appendMDNSProbeIfNeeded(existing.pathProbes, local: local)
-					)
-				} else {
-					map[local.name] = MergedDevice(
-						remoteDevice: nil,
-						localDevice: local,
-						pathProbes: appendMDNSProbeIfNeeded([], local: local)
-					)
-				}
+				map[pendingKey] = MergedDevice(
+					remoteDevice: nil,
+					localDevice: local,
+					pathProbes: appendMDNSProbeIfNeeded([], local: local)
+				)
 			}
+		}
 		}
 
 		var merged = Array(map.values).sorted { a, b in
