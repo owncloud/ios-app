@@ -107,6 +107,12 @@ public actor RemoteAccessService {
 		api.accessToken = nil
 	}
 
+	/// Fetches and maps connection paths for a single known device without a full device-list round-trip.
+	public func getPathsForDevice(seagateDeviceID: String) async throws -> [RemoteDevice.Path] {
+		let raPaths = try await getDevicePaths(clientId: Constants.clientId, deviceID: seagateDeviceID)
+		return raPaths.paths.map { RemoteDevice.Path(raDevicePath: $0) }
+	}
+
 	public func getRemoteDevices(email: String) async throws -> [RemoteDevice] {
 		let apiDevices = try await listDevices(clientId: Constants.clientId)
 		return try await withThrowingTaskGroup(of: RemoteDevice.self) { group in
@@ -157,9 +163,14 @@ public actor RemoteAccessService {
 				try await body()
 			}
 		} catch let error as RemoteAccessAPIError {
-			if case .forbidden = error {
+			// Spec: both 401 (unauthorized) and 403 (forbidden) trigger a single
+			// token-refresh-and-replay attempt before the session is treated as invalid.
+			switch error {
+			case .unauthorized, .forbidden:
 				let newToken = try await forceRefresh(clientId: clientId)
 				api.accessToken = newToken
+			default:
+				break
 			}
 			return try await mapErrors {
 				try await body()

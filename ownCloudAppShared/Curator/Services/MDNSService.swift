@@ -59,13 +59,28 @@ public final class MDNSService {
 			}
 		}
 
-		browser.browseResultsChangedHandler = { results, changes in
-			for result in results {
-				if case let .service(name: name, type: _, domain: _, interface: _) = result.endpoint {
-					guard Constants.isHomeCloud(name) else { return }
-
+		browser.browseResultsChangedHandler = { _, changes in
+			// Spec Phase 1: only process newly added or changed services — not the full result
+			// set on every event. Re-resolving all known services on each change causes redundant
+			// about/status HTTP requests for already-validated devices.
+			for change in changes {
+				switch change {
+				case .added(let result), .changed(_, let result, _):
+					guard case let .service(name: name, type: _, domain: _, interface: _) = result.endpoint else { continue }
+					guard Constants.isHomeCloud(name) else { continue }
 					self.resolve(result: result)
 					Log.debug("[STX-MDNS]: Found service: \"\(name)\"")
+
+				case .removed(let result):
+					// Spec: when a service disappears, remove it from the local device list
+					// immediately so stale entries don't accumulate until WiFi loss or restart.
+					guard case let .service(name: name, type: _, domain: _, interface: _) = result.endpoint else { continue }
+					guard Constants.isHomeCloud(name) else { continue }
+					self.remove(byName: name)
+					Log.debug("[STX-MDNS]: Removed service: \"\(name)\"")
+
+				@unknown default:
+					break
 				}
 			}
 		}
@@ -83,7 +98,12 @@ public final class MDNSService {
 				guard let self else { return }
 
 				self.upsert(updated)
-				self.onUpdate?(results)
+				// Spec Phase 1 step 5: "if the call succeeds, create or update the logical device."
+				// Only propagate devices that passed about validation (have a certificateCommonName).
+				// Devices whose about endpoint failed or timed out remain in `results` internally
+				// but must not enter the merged device map without a confirmed CN.
+				let validated = results.filter { $0.certificateCommonName != nil }
+				self.onUpdate?(validated)
 				self.devicesSubject.send(results)
 			}
 			.store(in: &cancellables)
@@ -92,6 +112,10 @@ public final class MDNSService {
 	public func stop() {
 		browser?.cancel()
 		browser = nil
+		// Spec cancel-and-restart: tear down the Combine pipeline and clear accumulated results
+		// so a subsequent start() creates a fresh discovery session from a clean slate.
+		cancellables.removeAll()
+		results = []
 	}
 
 	public func currentDevices() -> [LocalDevice] {
@@ -123,10 +147,11 @@ public final class MDNSService {
 						case let .ipv6(addr):
 							hostString = addr.string
 
-						case let .name(name, _):
-							hostString = name
+					case let .name(name, _):
+						// mDNS names often end with a trailing dot; strip it to get a valid hostname.
+						hostString = name.hasSuffix(".") ? String(name.dropLast()) : name
 
-						@unknown default:
+					@unknown default:
 							hostString = nil
 					}
 					guard let hostString else {
@@ -158,9 +183,9 @@ public final class MDNSService {
 											wifiHostString = addr.string
 										case let .ipv6(addr):
 											wifiHostString = addr.string
-										case let .name(name, _):
-											wifiHostString = name
-										@unknown default:
+									case let .name(name, _):
+										wifiHostString = name.hasSuffix(".") ? String(name.dropLast()) : name
+									@unknown default:
 											wifiHostString = nil
 									}
 									if let wifiHostString, self.isIPv4(wifiHostString), self.isLinkLocal(wifiHostString) == false {
@@ -216,10 +241,28 @@ public final class MDNSService {
 
 	private func upsert(_ entry: LocalDevice) {
 		if let idx = results.firstIndex(where: { $0.name == entry.name }) {
-			results[idx] = entry
+			let existing = results[idx]
+			// Preserve a previously validated CN — don't silently demote it to nil if a
+			// subsequent about re-resolve fails (e.g. due to a transient timeout).
+			let resolvedCN = entry.certificateCommonName ?? existing.certificateCommonName
+			let resolvedOOBE = entry.certificateCommonName != nil ? entry.oobeIsDone : existing.oobeIsDone
+			results[idx] = LocalDevice(
+				name: entry.name,
+				host: entry.host,
+				port: entry.port,
+				certificateCommonName: resolvedCN,
+				oobeIsDone: resolvedOOBE
+			)
 		} else {
 			results.append(entry)
 		}
+	}
+
+	private func remove(byName name: String) {
+		results.removeAll { $0.name == name }
+		let validated = results.filter { $0.certificateCommonName != nil }
+		onUpdate?(validated)
+		devicesSubject.send(results)
 	}
 
 	private func aboutPublisher(for device: LocalDevice) -> AnyPublisher<LocalDevice, Never> {
@@ -232,18 +275,33 @@ public final class MDNSService {
 					}
 
 					let api = DeviceAPI(deviceBaseURL: baseURL)
-					// First check status to ensure OOBE is done
-					let status = try await api.getStatus()
 
-					// Then fetch about when ready
-					let about = try await api.getAbout()
-					promise(.success(LocalDevice(
-						name: device.name,
-						host: device.host,
-						port: device.port,
-						certificateCommonName: about.certificate_common_name,
-						oobeIsDone: status.OOBE.done
-					)))
+					// Spec: local API timeout for `about` is 4 seconds total.
+					// Race the status+about sequence against a 4-second deadline.
+					let resolved: LocalDevice = try await withThrowingTaskGroup(of: LocalDevice.self) { group in
+						group.addTask {
+							// Spec: the about endpoint is the required validation call.
+							// getStatus() is supplementary (OOBE state); treat it as optional
+							// so a slow status response cannot block CN validation.
+							let about = try await api.getAbout()
+							let status = try? await api.getStatus()
+							return LocalDevice(
+								name: device.name,
+								host: device.host,
+								port: device.port,
+								certificateCommonName: about.certificate_common_name,
+								oobeIsDone: status?.OOBE.done ?? false
+							)
+						}
+						group.addTask {
+							try await Task.sleep(nanoseconds: 4_000_000_000)
+							throw CancellationError()
+						}
+						let result = try await group.next()!
+						group.cancelAll()
+						return result
+					}
+					promise(.success(resolved))
 				} catch {
 					Log.debug("[STX-MDNS]: Got error resolving device: \(error)")
 					promise(.success(device))

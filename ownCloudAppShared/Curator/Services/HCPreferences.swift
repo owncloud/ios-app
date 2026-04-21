@@ -14,6 +14,7 @@ private enum UserDefaultsKeys {
 	static let keyTrustedDeviceCerts = "trustedDeviceCerts"
 	static let keyStaticDeviceAddress = "staticDeviceAddress"
 	static let keyLoginSettingsEnabled = "loginSettingsEnabled"
+	static let keyPathCache = "cachedDevicePathsWithTimestamps"
 }
 
 @objcMembers
@@ -176,6 +177,25 @@ public final class HCPreferences: NSObject {
 					self.userDefaults.set(data, forKey: UserDefaultsKeys.keyCurrentDevice)
 				} else {
 					self.userDefaults.removeObject(forKey: UserDefaultsKeys.keyCurrentDevice)
+				}
+			}
+		}
+	}
+
+	// MARK: - Path cache (paths + timestamps for Algorithm B direct resolution)
+	/// Raw JSON blob written by DeviceReachabilityService; HCPreferences treats it as opaque Data.
+	public var cachedDevicePathsData: Data? {
+		get {
+			queue.sync {
+				userDefaults.data(forKey: UserDefaultsKeys.keyPathCache)
+			}
+		}
+		set {
+			queue.async {
+				if let newValue {
+					self.userDefaults.set(newValue, forKey: UserDefaultsKeys.keyPathCache)
+				} else {
+					self.userDefaults.removeObject(forKey: UserDefaultsKeys.keyPathCache)
 				}
 			}
 		}
