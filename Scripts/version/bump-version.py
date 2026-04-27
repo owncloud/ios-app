@@ -88,7 +88,7 @@ def update_pbxproj(pbxproj: pathlib.Path, part: str, dry_run: bool, verbose: boo
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--project', required=True, help='Path to .xcodeproj')
-    ap.add_argument('--part', choices=['major','minor','patch'], default='patch')
+    ap.add_argument('--part', choices=['major','minor','patch'], default='minor')
     ap.add_argument('--branch-name', default='chore/bump-version')
     ap.add_argument('--recreate-branch', action='store_true')
     ap.add_argument('--allow-dirty', action='store_true')
