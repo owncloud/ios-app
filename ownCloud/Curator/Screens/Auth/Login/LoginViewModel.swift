@@ -47,7 +47,7 @@ final public class LoginViewModel {
     @Published private(set) var isDetectingDevices: Bool = false
 	@Published private(set) var step: Step = .emailEntry
 
-	private var mergedDevices: [DeviceReachabilityService.MergedDevice] = []
+	private var mergedDevices: [MergedDevice] = []
 	private var cancellables = Set<AnyCancellable>()
 	private var isCantFindFlowInProgress = false
 	private var didPerformInitialLoad = false
@@ -340,7 +340,7 @@ final public class LoginViewModel {
 								guard let self else { return }
 								try? await Task.sleep(nanoseconds: UInt64(initialGrace * 1_000_000_000))
 
-								if await self.deviceReachabilityService.localDevices.isEmpty {
+								if await self.deviceReachabilityService.localDevices().isEmpty {
 									await MainActor.run {
 										self.selectedDeviceIndex = nil
 										self.triggerCantFindDeviceFlow(autoTriggered: true)
@@ -414,9 +414,9 @@ final public class LoginViewModel {
 	}
 
 	private func probe(
-		for path: DeviceReachabilityService.SelectedPath,
-		in device: DeviceReachabilityService.MergedDevice
-	) -> DeviceReachabilityService.PathProbe? {
+		for path: SelectedPath,
+		in device: MergedDevice
+	) -> PathProbe? {
 		switch path {
 			case .remote(let remotePath):
 				return device.pathProbes.first { probe in
@@ -445,7 +445,7 @@ final public class LoginViewModel {
 		let targetCN = device.certificateCommonName
 
 		let hasRAToken = await raService.hasValidTokens()
-		let merged: [DeviceReachabilityService.MergedDevice]
+		let merged: [MergedDevice]
 		do {
 			merged = try await deviceReachabilityService.getMergedDevices(
 				email: email,
@@ -465,7 +465,7 @@ final public class LoginViewModel {
 			self.deviceItems = merged.map { $0.remoteDevice?.friendlyName ?? $0.localDevice?.name ?? "" }
 		}
 
-		let updatedDevice: DeviceReachabilityService.MergedDevice? = {
+		let updatedDevice: MergedDevice? = {
 			if let targetCN {
 				return merged.first(where: { $0.certificateCommonName == targetCN })
 			}
@@ -486,8 +486,10 @@ final public class LoginViewModel {
 		}
 		// Ensure we have all probes before picking the login URL.
 		await deviceReachabilityService.reprobeExistingPaths()
+		// `reachableSelection` (not `nextURLToAttempt`) so that we *only* proceed when an
+		// actual probe succeeded — otherwise login would head off to an unreachable URL.
 		guard
-			let bestPath = await deviceReachabilityService.currentBestPath(for: selectedDevice),
+			let bestPath = await deviceReachabilityService.reachableSelection(for: selectedDevice),
 			let deviceURL = bestPath.url
 		else {
 			await MainActor.run {

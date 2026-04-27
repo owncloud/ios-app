@@ -186,4 +186,9 @@ public enum HCL10n {
 		public static var messageFormat: String { OCLocalizedString("TrustPrompt.messageFormat", nil) }
 		public static var trust: String { OCLocalizedString("TrustPrompt.trust", nil) }
 	}
+
+	public enum Network {
+		public static var findingNetwork: String { OCLocalizedString("Network.findingNetwork", nil) }
+		public static var noInternet: String { OCLocalizedString("Network.noInternet", nil) }
+	}
 }

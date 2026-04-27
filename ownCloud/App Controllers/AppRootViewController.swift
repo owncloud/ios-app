@@ -206,17 +206,6 @@ open class AppRootViewController: EmbeddingViewController, BrowserNavigationView
 		super.viewDidAppear(animated)
 
 		CodeVerificationService.shared.setup(with: self)
-		HCContext.shared.deviceReachabilityService.observeReprobePrompt { [weak self] completion in
-			guard let self else { return }
-			let alert = UIAlertController(
-				title: "Connection issue",
-				message: "Reprobe devices to find the best path?",
-				preferredStyle: .alert
-			)
-			alert.addAction(UIAlertAction(title: "No", style: .cancel, handler: { _ in completion(false) }))
-			alert.addAction(UIAlertAction(title: "Yes", style: .default, handler: { _ in completion(true) }))
-			self.present(alert, animated: true)
-		}
 
 		ClientSessionManager.shared.add(delegate: self)
 

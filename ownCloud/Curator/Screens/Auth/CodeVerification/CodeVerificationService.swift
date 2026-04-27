@@ -1,4 +1,5 @@
 import UIKit
+import Combine
 import ownCloudAppShared
 
 public final class CodeVerificationService {
@@ -23,6 +24,7 @@ public final class CodeVerificationService {
 	private var currentEmail: String?
 	private var reference: String?
 	private var onUnknownEmailCancel: (() -> Void)?
+	private var cancellables = Set<AnyCancellable>()
 
 	private var codeVerificationVM: CodeVerificationCardViewModel!
 	private var codeVerificationVC: CodeVerificationCardViewController!
@@ -41,8 +43,10 @@ public final class CodeVerificationService {
 		guard isSetup == false else { return }
 		isSetup = true
 		self.rootViewController = rootViewController
-		Task {
-			await deviceReachabilityService.observeEmailValidationRequest { [weak self] email in
+		deviceReachabilityService.events
+			.receive(on: DispatchQueue.main)
+			.sink { [weak self] event in
+				guard case let .emailValidationNeeded(email) = event else { return }
 				self?.requestEmailVerification(email: email, completion: { [weak self] isAuthenticated in
 					guard isAuthenticated else { return }
 					Task {
@@ -50,7 +54,7 @@ public final class CodeVerificationService {
 					}
 				})
 			}
-		}
+			.store(in: &cancellables)
 	}
 
 	/// Request the code verification flow. If a flow is already visible, the completion is queued
