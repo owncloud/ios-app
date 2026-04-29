@@ -1,4 +1,5 @@
 import Foundation
+import Combine
 import ownCloudSDK
 
 public extension Notification.Name {
@@ -20,6 +21,7 @@ public final class HCContext {
 	public let deviceReachabilityService: DeviceReachabilityService
 	public let mdnsService: MDNSService
 	public let remoteAccessTokenStore: RemoteAccessTokenStore
+	public let networkAvailabilityMonitor: NetworkAvailabilityMonitor
 	public var emailVerificationHandler: (@MainActor (_ email: String, _ completion: @escaping (Bool) -> Void) -> Void)?
 
 	// Hack to provide this info for related data sources.
@@ -27,6 +29,7 @@ public final class HCContext {
 	public var lastRemoteBaseURL: URL?
 
 	private var networkFailureObserver: NSObjectProtocol?
+	private var cancellables = Set<AnyCancellable>()
 
 	public init() {
 		self.preferences = HCPreferences()
@@ -37,20 +40,24 @@ public final class HCContext {
 			tokenStore: remoteAccessTokenStore
 		)
 		self.mdnsService = MDNSService()
+		self.networkAvailabilityMonitor = NetworkAvailabilityMonitor.shared
 
 		self.deviceReachabilityService = DeviceReachabilityService(
 			reachability: DefaultReachabilityObserver(),
 			remoteAccessService: remoteAccessService,
 			mdnsService: mdnsService,
-			preferences: preferences
+			preferences: preferences,
+			availabilityMonitor: networkAvailabilityMonitor
 		)
 
-		Task {
-			await self.deviceReachabilityService.observeRemoteBaseURL { url in
-				self.lastRemoteBaseURL = url
+		deviceReachabilityService.events
+			.receive(on: DispatchQueue.main)
+			.sink { [weak self] event in
+				guard case let .remoteBaseURLChanged(url) = event else { return }
+				self?.lastRemoteBaseURL = url
 				NotificationCenter.default.post(name: .hcRemoteBaseURLDidChange, object: nil)
 			}
-		}
+			.store(in: &cancellables)
 	}
 
 	public func setup() {
