@@ -32,6 +32,7 @@ public enum RemoteAccessSharingURLResolver {
 
 		let hasTokens = await HCContext.shared.remoteAccessService.hasValidTokens()
 		if hasTokens == false {
+			Log.debug("[STX-RA]: Has no valid tokens. Requesting email verification.")
 			let authenticated = await requestEmailVerification(email: email)
 			guard authenticated else { return nil }
 		}

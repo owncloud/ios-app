@@ -120,6 +120,10 @@ public enum HCColor {
 		public static func secondaryLabel(_ isDark: Bool) -> UIColor {
 			isDark ? UIColor(hexString: "#212121FF") : UIColor(hexString: "#FFFFFFFF")
 		}
+		// Interaction/Destructive Solid Normal
+		public static func destructiveSolidNormal(_ isDark: Bool) -> UIColor {
+			isDark ? UIColor(hexString: "#F2918AFF") : UIColor(hexString: "#A02A21FF")
+		}
 	}
 
 	public enum Structure {

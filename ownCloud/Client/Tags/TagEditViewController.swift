@@ -26,12 +26,26 @@ class TagEditViewController: UIViewController, Themeable {
 	private let tag: OCSystemTag?
 	private let completion: CompletionHandler
 
-	private let textField = UITextField()
+	private let tagNameField = HCTextFieldView(frame: .zero)
+	private let cancelBarButtonItem: UIBarButtonItem
+	private let doneBarButtonItem: UIBarButtonItem
 	private var themeRegistered = false
 
 	init(tag: OCSystemTag?, completion: @escaping CompletionHandler) {
 		self.tag = tag
 		self.completion = completion
+		self.cancelBarButtonItem = UIBarButtonItem(
+			title: HCL10n.TagEdit.cancel,
+			style: .plain,
+			target: nil,
+			action: nil
+		)
+		self.doneBarButtonItem = UIBarButtonItem(
+			title: HCL10n.TagEdit.done,
+			style: .done,
+			target: nil,
+			action: nil
+		)
 		super.init(nibName: nil, bundle: nil)
 	}
 
@@ -44,23 +58,18 @@ class TagEditViewController: UIViewController, Themeable {
 	override func viewDidLoad() {
 		super.viewDidLoad()
 
+		Theme.shared.register(client: self, applyImmediately: true)
+
 		title = (tag == nil)
-			? OCLocalizedString("New Tag", nil)
-			: OCLocalizedString("Edit Tag", nil)
+			? HCL10n.TagEdit.add
+			: HCL10n.TagEdit.edit
 
-		navigationItem.leftBarButtonItem = UIBarButtonItem(
-			title: OCLocalizedString("Cancel", nil),
-			style: .plain,
-			target: self,
-			action: #selector(cancelTapped)
-		)
-
-		navigationItem.rightBarButtonItem = UIBarButtonItem(
-			title: OCLocalizedString("Done", nil),
-			style: .done,
-			target: self,
-			action: #selector(doneTapped)
-		)
+		cancelBarButtonItem.target = self
+		cancelBarButtonItem.action = #selector(cancelTapped)
+		doneBarButtonItem.target = self
+		doneBarButtonItem.action = #selector(doneTapped)
+		navigationItem.leftBarButtonItem = cancelBarButtonItem
+		navigationItem.rightBarButtonItem = doneBarButtonItem
 
 		setupTextField()
 	}
@@ -68,12 +77,7 @@ class TagEditViewController: UIViewController, Themeable {
 	override func viewDidAppear(_ animated: Bool) {
 		super.viewDidAppear(animated)
 
-		if !themeRegistered {
-			themeRegistered = true
-			Theme.shared.register(client: self, applyImmediately: true)
-		}
-
-		textField.becomeFirstResponder()
+		tagNameField.textField.becomeFirstResponder()
 	}
 
 	deinit {
@@ -86,31 +90,31 @@ class TagEditViewController: UIViewController, Themeable {
 
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.applyThemeCollection(collection)
-		view.backgroundColor = collection.css.getColor(.fill, for: view) ?? .white
-		textField.textColor = collection.css.getColor(.stroke, selectors: [.label, .primary], for: textField)
-		textField.backgroundColor = collection.css.getColor(.fill, for: textField) ?? .white
+		view.backgroundColor = HCColor.Structure.appBackground(collection.isDark)
+
+		cancelBarButtonItem.tintColor = HCColor.Interaction.primarySolidNormal(collection.isDark)
+		doneBarButtonItem.tintColor = HCColor.Interaction.primarySolidNormal(collection.isDark)
 	}
 
 	// MARK: - Setup
 
 	private func setupTextField() {
-		textField.translatesAutoresizingMaskIntoConstraints = false
-		textField.placeholder = OCLocalizedString("Tag Name", nil)
-		textField.text = tag?.displayName
-		textField.clearButtonMode = .whileEditing
-		textField.returnKeyType = .done
-		textField.autocapitalizationType = .none
-		textField.autocorrectionType = .no
-		textField.borderStyle = .roundedRect
-		textField.delegate = self
-		textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+		tagNameField.translatesAutoresizingMaskIntoConstraints = false
+		tagNameField.title = HCL10n.TagEdit.name
+		tagNameField.placeholder = HCL10n.TagEdit.name
+		tagNameField.textField.text = tag?.displayName
+		tagNameField.textField.returnKeyType = .done
+		tagNameField.textField.autocapitalizationType = .none
+		tagNameField.textField.autocorrectionType = .no
+		tagNameField.textField.delegate = self
+		tagNameField.textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
 
-		view.addSubview(textField)
+		view.addSubview(tagNameField)
 
 		NSLayoutConstraint.activate([
-			textField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-			textField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
-			textField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
+			tagNameField.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
+			tagNameField.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
+			tagNameField.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16)
 		])
 
 		updateDoneButton()
@@ -124,7 +128,7 @@ class TagEditViewController: UIViewController, Themeable {
 	}
 
 	@objc private func doneTapped() {
-		guard let name = textField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !name.isEmpty else {
+		guard let name = tagNameField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !name.isEmpty else {
 			return
 		}
 		dismiss(animated: true)
@@ -136,8 +140,8 @@ class TagEditViewController: UIViewController, Themeable {
 	}
 
 	private func updateDoneButton() {
-		let hasText = !(textField.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
-		navigationItem.rightBarButtonItem?.isEnabled = hasText
+		let hasText = !(tagNameField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
+		doneBarButtonItem.isEnabled = hasText
 	}
 }
 

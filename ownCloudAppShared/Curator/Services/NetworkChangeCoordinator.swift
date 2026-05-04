@@ -275,6 +275,7 @@ public actor NetworkChangeCoordinator {
 	/// `performDetection(for:)` in a Task. Returning from `startDetection` does not wait
 	/// for detection to complete; completion is reported via `.detectionFinished`.
 	private func startDetection(for state: NetworkState) {
+		Log.debug("[STX-RA]: Network state: \(state)")
 		cancelCooldown()
 		lastDetectionAt = Date()
 		coordinatorState = .detecting(queued: nil)

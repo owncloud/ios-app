@@ -41,23 +41,29 @@ private class TagTableViewCell: ThemeTableViewCell {
 	}
 
 	private func setupViews() {
+		let primaryTextColor = UIColor { traitCollection in
+			HCColor.Content.textPrimary(traitCollection.userInterfaceStyle == .dark)
+		}
+		let destructiveColor = UIColor { traitCollection in
+			HCColor.Interaction.destructiveSolidNormal(traitCollection.userInterfaceStyle == .dark)
+		}
+
 		nameLabel.translatesAutoresizingMaskIntoConstraints = false
 		nameLabel.font = UIFont.systemFont(ofSize: UIFont.labelFontSize)
 
 		editButton.translatesAutoresizingMaskIntoConstraints = false
-		editButton.setImage(UIImage(systemName: "pencil"), for: .normal)
-		editButton.accessibilityLabel = OCLocalizedString("Edit", nil)
+		editButton.setImage(HCIcon.edit, for: .normal)
+		editButton.tintColor = primaryTextColor
 		editButton.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
 
 		deleteButton.translatesAutoresizingMaskIntoConstraints = false
-		deleteButton.setImage(UIImage(systemName: "trash"), for: .normal)
-		deleteButton.tintColor = .systemRed
-		deleteButton.accessibilityLabel = OCLocalizedString("Delete", nil)
+		deleteButton.setImage(HCIcon.delete, for: .normal)
+		deleteButton.tintColor = destructiveColor
 		deleteButton.addTarget(self, action: #selector(deleteTapped), for: .touchUpInside)
 
 		buttonStack.translatesAutoresizingMaskIntoConstraints = false
 		buttonStack.axis = .horizontal
-		buttonStack.spacing = 8
+		buttonStack.spacing = 16
 		buttonStack.alignment = .center
 		buttonStack.addArrangedSubview(editButton)
 		buttonStack.addArrangedSubview(deleteButton)
@@ -73,7 +79,12 @@ private class TagTableViewCell: ThemeTableViewCell {
 			buttonStack.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -16),
 			buttonStack.centerYAnchor.constraint(equalTo: contentView.centerYAnchor),
 			buttonStack.topAnchor.constraint(greaterThanOrEqualTo: contentView.topAnchor, constant: 8),
-			buttonStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8)
+			buttonStack.bottomAnchor.constraint(lessThanOrEqualTo: contentView.bottomAnchor, constant: -8),
+
+			editButton.widthAnchor.constraint(equalToConstant: 24),
+			editButton.heightAnchor.constraint(equalToConstant: 24),
+			deleteButton.widthAnchor.constraint(equalToConstant: 24),
+			deleteButton.heightAnchor.constraint(equalToConstant: 24)
 		])
 	}
 
@@ -94,6 +105,7 @@ class TagsViewController: UITableViewController, Themeable {
 
 	private var clientContext: ClientContext
 	private var tags: [OCSystemTag] = []
+	private var emptyStateView: ComposedMessageView?
 	private var themeRegistered = false
 	private var canManageTags = true
 
@@ -115,6 +127,7 @@ class TagsViewController: UITableViewController, Themeable {
 		tableView.register(TagTableViewCell.self, forCellReuseIdentifier: TagTableViewCell.reuseIdentifier)
 		tableView.rowHeight = 50
 		tableView.tableFooterView = UIView()
+		setupEmptyState()
 
 		updateAddButton()
 	}
@@ -141,6 +154,8 @@ class TagsViewController: UITableViewController, Themeable {
 	func applyThemeCollection(theme: Theme, collection: ThemeCollection, event: ThemeEvent) {
 		self.applyThemeCollection(collection)
 		tableView.reloadData()
+		tableView.backgroundColor = HCColor.Structure.appBackground(collection.isDark)
+		view.backgroundColor = HCColor.Structure.appBackground(collection.isDark)
 	}
 
 	// MARK: - Tags API
@@ -156,34 +171,35 @@ class TagsViewController: UITableViewController, Themeable {
 			OnMainThread {
 				guard let self else { return }
 				if let error {
-					self.showError(error, title: OCLocalizedString("Error loading tags", nil))
+					self.showError(error, title: HCL10n.TagsList.loadingError)
 					return
 				}
 				self.tags = (fetchedTags ?? []).sorted { $0.displayName < $1.displayName }
 				self.tableView.reloadData()
+				self.updateEmptyStateVisibility()
 			}
 		}
 	}
 
-	// MARK: - Permission handling
-
-	private func isPermissionsError(_ error: Error) -> Bool {
-		let msg = error.localizedDescription.lowercased()
-		return msg.contains("not sufficient permissions") || msg.contains("permission") || (error as NSError).code == 403
+	private func setupEmptyState() {
+		let emptyView = ComposedMessageView(elements: [
+			.image(OCSymbol.icon(forSymbolName: "tag") ?? UIImage(), size: CGSize(width: 48, height: 48), alignment: .centered),
+			.title(HCL10n.TagsList.empty, alignment: .centered)
+		])
+		emptyView.translatesAutoresizingMaskIntoConstraints = false
+		view.addSubview(emptyView)
+		NSLayoutConstraint.activate([
+			emptyView.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+			emptyView.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor),
+			emptyView.leadingAnchor.constraint(greaterThanOrEqualTo: view.leadingAnchor, constant: 20),
+			emptyView.trailingAnchor.constraint(lessThanOrEqualTo: view.trailingAnchor, constant: -20)
+		])
+		emptyView.isHidden = true
+		emptyStateView = emptyView
 	}
 
-	private func handlePermissionsError() {
-		canManageTags = false
-		updateAddButton()
-		tableView.reloadData()
-
-		let alert = UIAlertController(
-			title: OCLocalizedString("Insufficient Permissions", nil),
-			message: OCLocalizedString("Managing tags requires administrator privileges on the server.", nil),
-			preferredStyle: .alert
-		)
-		alert.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default))
-		present(alert, animated: true)
+	private func updateEmptyStateVisibility() {
+		emptyStateView?.isHidden = !tags.isEmpty
 	}
 
 	private func updateAddButton() {
@@ -194,7 +210,6 @@ class TagsViewController: UITableViewController, Themeable {
 				target: self,
 				action: #selector(addTag)
 			)
-			navigationItem.rightBarButtonItem?.accessibilityLabel = OCLocalizedString("Add Tag", nil)
 		} else {
 			navigationItem.rightBarButtonItem = nil
 		}
@@ -239,7 +254,14 @@ class TagsViewController: UITableViewController, Themeable {
 
 		sortedDataSource.sortingFollowsContext = filesVC.clientContext
 
-		navigationController?.pushViewController(filesVC, animated: true)
+		if let navController = navigationController ?? parent?.navigationController {
+			navController.pushViewController(filesVC, animated: true)
+		} else if splitViewController != nil {
+			showDetailViewController(ThemeNavigationController(rootViewController: filesVC), sender: self)
+		} else {
+			let navController = ThemeNavigationController(rootViewController: filesVC)
+			present(navController, animated: true)
+		}
 	}
 
 	private func editTag(_ tag: OCSystemTag) {
@@ -248,13 +270,13 @@ class TagsViewController: UITableViewController, Themeable {
 
 	private func deleteTag(_ tag: OCSystemTag, at indexPath: IndexPath) {
 		let alert = UIAlertController(
-			title: OCLocalizedString("Delete Tag", nil),
-			message: String(format: OCLocalizedString("Are you sure you want to delete the tag \"%@\"?", nil), tag.displayName),
+			title: HCL10n.TagsList.Delete.title,
+			message: String(format: HCL10n.TagsList.Delete.description, tag.displayName),
 			preferredStyle: .alert
 		)
 
-		alert.addAction(UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel))
-		alert.addAction(UIAlertAction(title: OCLocalizedString("Delete", nil), style: .destructive) { [weak self] _ in
+		alert.addAction(UIAlertAction(title: HCL10n.TagsList.Delete.cancel, style: .cancel))
+		alert.addAction(UIAlertAction(title: HCL10n.TagsList.Delete.confirm, style: .destructive) { [weak self] _ in
 			self?.performDelete(tag: tag, at: indexPath)
 		})
 
@@ -268,15 +290,12 @@ class TagsViewController: UITableViewController, Themeable {
 			OnMainThread {
 				guard let self else { return }
 				if let error {
-					if self.isPermissionsError(error) {
-						self.handlePermissionsError()
-					} else {
-						self.showError(error, title: OCLocalizedString("Error deleting tag", nil))
-					}
+					self.showError(error, title: HCL10n.TagsList.Delete.error)
 					return
 				}
 				self.tags.remove(at: indexPath.row)
 				self.tableView.deleteRows(at: [indexPath], with: .automatic)
+				self.updateEmptyStateVisibility()
 			}
 		}
 	}
@@ -304,17 +323,14 @@ class TagsViewController: UITableViewController, Themeable {
 			OnMainThread {
 				guard let self else { return }
 				if let error {
-					if self.isPermissionsError(error) {
-						self.handlePermissionsError()
-					} else {
-						self.showError(error, title: OCLocalizedString("Error creating tag", nil))
-					}
+					self.showError(error, title: HCL10n.TagsList.Create.error)
 					return
 				}
 				if let newTag {
 					self.tags.append(newTag)
 					self.tags.sort { $0.displayName < $1.displayName }
 					self.tableView.reloadData()
+					self.updateEmptyStateVisibility()
 				}
 			}
 		}
@@ -327,17 +343,14 @@ class TagsViewController: UITableViewController, Themeable {
 			OnMainThread {
 				guard let self else { return }
 				if let error {
-					if self.isPermissionsError(error) {
-						self.handlePermissionsError()
-					} else {
-						self.showError(error, title: OCLocalizedString("Error updating tag", nil))
-					}
+					self.showError(error, title: HCL10n.TagsList.Update.error)
 					return
 				}
 				if let idx = self.tags.firstIndex(where: { $0.identifier == tag.identifier }) {
 					self.tags[idx].displayName = newName
 					self.tags.sort { $0.displayName < $1.displayName }
 					self.tableView.reloadData()
+					self.updateEmptyStateVisibility()
 				}
 			}
 		}
@@ -345,7 +358,7 @@ class TagsViewController: UITableViewController, Themeable {
 
 	private func showError(_ error: Error, title: String) {
 		let alert = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: .alert)
-		alert.addAction(UIAlertAction(title: OCLocalizedString("OK", nil), style: .default))
+		alert.addAction(UIAlertAction(title: HCL10n.TagsList.errorOk, style: .default))
 		present(alert, animated: true)
 	}
 
@@ -353,7 +366,7 @@ class TagsViewController: UITableViewController, Themeable {
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
-		openFileList(for: tags[indexPath.row])
+		// openFileList(for: tags[indexPath.row])
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
