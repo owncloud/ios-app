@@ -57,6 +57,7 @@ open class BrowserNavigationItem: NSObject {
 			AccountController.SpecialItem.globalSearch,
 			AccountController.SpecialItem.activity,
 			AccountController.SpecialItem.recents,
+			AccountController.SpecialItem.tags,
 			AccountController.SpecialItem.favoriteItems,
 			AccountController.SpecialItem.sharedByMe,
 			AccountController.SpecialItem.sharedByLink,

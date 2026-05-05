@@ -68,16 +68,19 @@ public actor RemoteAccessService {
 		} catch let error as RemoteAccessServiceError {
 			switch error {
 				case .missingTokens:
+					Log.debug("[STX-RA]: Tokens are missing.")
 					return false
 
 				case let .apiError(apiError):
 					switch apiError {
 						case .forbidden, .unauthorized:
+							Log.debug("[STX-RA]: forbiden or unauthorized after token refresh.")
 							return false
 
 						case let .httpStatus(statusCode, _):
 							if (400...499).contains(statusCode) {
 								_ = tokenStore.clear()
+								Log.debug("[STX-RA]: \(statusCode) after token refresh.")
 								return false
 							} else {
 								return true
@@ -194,9 +197,7 @@ public actor RemoteAccessService {
 			return tokens.accessToken
 		}
 
-		return try await performTokenUpdate {
-			try await self.api.refreshAccessToken(clientId: clientId, refreshToken: tokens.refreshToken)
-		}
+		return try await refreshAccessToken(clientId: clientId)
 	}
 
 	private func forceRefresh(clientId: String) async throws -> String {
@@ -209,16 +210,58 @@ public actor RemoteAccessService {
 			throw RemoteAccessServiceError.missingTokens
 		}
 
-		return try await performTokenUpdate {
-			do {
-				return try await self.api.refreshAccessToken(clientId: clientId, refreshToken: tokens.refreshToken)
-			} catch let error as RemoteAccessServiceError {
-				throw error
-			} catch let error as RemoteAccessAPIError {
-				throw RemoteAccessServiceError.apiError(error)
-			} catch {
-				throw RemoteAccessServiceError.unexpected(.init(error))
+		return try await refreshAccessToken(clientId: clientId)
+	}
+
+	/// Serializes refresh and always uses the latest stored refresh token.
+	/// If backend reports the token as invalid, retries once when storage changed.
+	private func refreshAccessToken(clientId: String) async throws -> String {
+		try await performTokenUpdate { [weak self] in
+			guard let self else { throw CancellationError() }
+			return try await self.refreshTokenResponseWithStaleRetry(clientId: clientId)
+		}
+	}
+
+	private func refreshTokenResponseWithStaleRetry(clientId: String) async throws -> RATokenResponse {
+		let firstRefreshToken = try currentRefreshToken()
+		do {
+			return try await api.refreshAccessToken(
+				clientId: clientId,
+				refreshToken: firstRefreshToken
+			)
+		} catch {
+			let mapped = RemoteAccessAPIError(catching: error)
+			guard shouldRetryRefreshWithLatestToken(mapped),
+				  let latest = tokenStore.loadTokens()?.refreshToken,
+				  !latest.isEmpty,
+				  latest != firstRefreshToken
+			else {
+				throw mapped
 			}
+
+			return try await api.refreshAccessToken(
+				clientId: clientId,
+				refreshToken: latest
+			)
+		}
+	}
+
+	private func currentRefreshToken() throws -> String {
+		guard let token = tokenStore.loadTokens()?.refreshToken, !token.isEmpty else {
+			_ = tokenStore.clear()
+			throw RemoteAccessServiceError.missingTokens
+		}
+		return token
+	}
+
+	private func shouldRetryRefreshWithLatestToken(_ error: RemoteAccessAPIError) -> Bool {
+		switch error {
+		case .unauthorized, .forbidden:
+			return true
+		case .httpStatus(let code, _):
+			return code == 400
+		default:
+			return false
 		}
 	}
 

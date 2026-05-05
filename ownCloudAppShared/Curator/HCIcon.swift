@@ -9,6 +9,8 @@ public enum HCIcon {
 	public static var touchId: UIImage? { sharedIcon("touch-id") }
 	public static var faceId: UIImage? { sharedIcon("face-id") }
 	public static var deleteArrow: UIImage? { sharedIcon("delete-arrow") }
+	public static var edit: UIImage? { sharedIcon("edit") }
+	public static var delete: UIImage? { sharedIcon("delete") }
 
 	private static func sharedIcon(_ name: String) -> UIImage? {
 		UIImage(named: name, in: Bundle.sharedAppBundle, with: nil)

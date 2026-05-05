@@ -91,8 +91,9 @@ public actor DetectionPipeline {
 		defer { isReloading = false }
 
 		let remote = await catalog.remoteDevices()
+		let probeTargets = probeTargets(from: remote)
 		do {
-			let probes = try await pathProber.probeAll(remote)
+			let probes = try await pathProber.probeAll(probeTargets)
 			await catalog.setProbes(probes)
 		} catch {
 			Log.debug("[STX-RA]: Failed to probe device with error: \(error)")
@@ -289,7 +290,8 @@ public actor DetectionPipeline {
 			remoteList = [seeded]
 		}
 		// Spec Algorithm B is separate from Algorithm A: probe all paths after discovery completes.
-		let probes = (try? await pathProber.probeAll(remoteList)) ?? [:]
+		let probeTargets = probeTargets(from: remoteList)
+		let probes = (try? await pathProber.probeAll(probeTargets)) ?? [:]
 		guard detectionGeneration == myGen else { return }
 		await catalog.setProbes(probes)
 		emit(.devicesUpdated(await catalog.mergedDevices()))
@@ -381,6 +383,29 @@ public actor DetectionPipeline {
 
 	private nonisolated func availabilityToastKind() -> NetworkAvailabilityToastKind {
 		reachability.currentState.isReachable ? .noInternet : .findingNetwork
+	}
+
+	/// Restrict probing to the currently connected/preferred device.
+	/// This avoids probing every known device on each periodic/event-driven reload.
+	private func probeTargets(from remoteDevices: [RemoteDevice]) -> [RemoteDevice] {
+		guard remoteDevices.isEmpty == false else { return [] }
+
+		if let saved = preferences.currentConnectedDevice {
+			if let seagateDeviceID = saved.seagateDeviceID, !seagateDeviceID.isEmpty {
+				let byID = remoteDevices.filter { $0.seagateDeviceID == seagateDeviceID }
+				if byID.isEmpty == false { return byID }
+			}
+
+			let bySavedCN = remoteDevices.filter { $0.certificateCommonName == saved.certificateCommonName }
+			if bySavedCN.isEmpty == false { return bySavedCN }
+		}
+
+		if let favoriteCN = preferences.favoriteDeviceCN {
+			let byFavoriteCN = remoteDevices.filter { $0.certificateCommonName == favoriteCN }
+			if byFavoriteCN.isEmpty == false { return byFavoriteCN }
+		}
+
+		return []
 	}
 
 	static func buildStaticRemoteDevice(from address: String?) -> RemoteDevice? {

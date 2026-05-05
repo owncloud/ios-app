@@ -643,6 +643,8 @@
 		DCB6B206292E1D8400D27573 /* RoundedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 396BE4C92289500E00B254A9 /* RoundedLabel.swift */; };
 		DCB6B20A292E296800D27573 /* CollectionSidebarAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B209292E296800D27573 /* CollectionSidebarAction.swift */; };
 		DCB6B20C292E428000D27573 /* AccountController+ExtraItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20B292E428000D27573 /* AccountController+ExtraItems.swift */; };
+		DCA0000103ABCDEF00000001 /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA0000102ABCDEF00000001 /* TagsViewController.swift */; };
+		DCA0000105ABCDEF00000001 /* TagEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA0000104ABCDEF00000001 /* TagEditViewController.swift */; };
 		DCB6B20F292F843800D27573 /* CollectionViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20E292F843800D27573 /* CollectionViewAction.swift */; };
 		DCB750522D2F0B3600CCF68C /* DetailsSpaceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9CE3D12D1080EE00979C44 /* DetailsSpaceAction.swift */; };
 		DCB796472BC4847200D6D759 /* ShortcutFileDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796462BC4847200D6D759 /* ShortcutFileDisplayViewController.swift */; };
@@ -1785,6 +1787,8 @@
 		DCB6B204292D859B00D27573 /* UIViewController+NavigationRevocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+NavigationRevocation.swift"; sourceTree = "<group>"; };
 		DCB6B209292E296800D27573 /* CollectionSidebarAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionSidebarAction.swift; sourceTree = "<group>"; };
 		DCB6B20B292E428000D27573 /* AccountController+ExtraItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccountController+ExtraItems.swift"; sourceTree = "<group>"; };
+		DCA0000102ABCDEF00000001 /* TagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewController.swift; sourceTree = "<group>"; };
+		DCA0000104ABCDEF00000001 /* TagEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagEditViewController.swift; sourceTree = "<group>"; };
 		DCB6B20E292F843800D27573 /* CollectionViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewAction.swift; sourceTree = "<group>"; };
 		DCB6C4DD24559B1600C1EAE1 /* AccountAuthenticationUpdaterPasswordPromptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationUpdaterPasswordPromptViewController.swift; sourceTree = "<group>"; };
 		DCB796462BC4847200D6D759 /* ShortcutFileDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutFileDisplayViewController.swift; sourceTree = "<group>"; };
@@ -3299,6 +3303,7 @@
 			children = (
 				23EC774D2137F3CD0032D4E6 /* Viewer */,
 				236735A421217C2300E5834A /* Actions */,
+				DCA0000101ABCDEF00000001 /* Tags */,
 				DC63208421FCEBE9007EC0A8 /* ClientActivityCell.swift */,
 				DC63208221FCAC1E007EC0A8 /* ClientActivityViewController.swift */,
 				DCE28F5F2433683700879DEC /* ClientSessionManager.swift */,
@@ -3306,6 +3311,15 @@
 				DC1BEEF52C2DFE940016C94F /* HelpAndSupportViewController.swift */,
 			);
 			path = Client;
+			sourceTree = "<group>";
+		};
+		DCA0000101ABCDEF00000001 /* Tags */ = {
+			isa = PBXGroup;
+			children = (
+				DCA0000102ABCDEF00000001 /* TagsViewController.swift */,
+				DCA0000104ABCDEF00000001 /* TagEditViewController.swift */,
+			);
+			path = Tags;
 			sourceTree = "<group>";
 		};
 		DC3DDEFE287E1AA500E5586D /* UIKit Extensions */ = {
@@ -5326,6 +5340,8 @@
 				DCB7969D2BCE71C300D6D759 /* OpenShortcutFileAction.swift in Sources */,
 				DCB6B1EB292B7C2400D27573 /* AppRootViewController+ItemActions.swift in Sources */,
 				DCB6B20C292E428000D27573 /* AccountController+ExtraItems.swift in Sources */,
+				DCA0000103ABCDEF00000001 /* TagsViewController.swift in Sources */,
+				DCA0000105ABCDEF00000001 /* TagEditViewController.swift in Sources */,
 				233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */,
 				396D7C6523224A53002380C1 /* DiscardSceneAction.swift in Sources */,
 				4C82D07022C9387300835F0B /* MediaDisplayViewController.swift in Sources */,

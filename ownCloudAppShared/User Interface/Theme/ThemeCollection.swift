@@ -146,6 +146,10 @@ public class ThemeCollection : NSObject {
 	@objc var identifier : String = UUID().uuidString
 	public let style: ThemeCollectionStyle
 
+	public var isDark: Bool {
+		style == .dark
+	}
+
 	// MARK: - ThemeCSS
 	public var css: ThemeCSS
 
