@@ -94,14 +94,16 @@ class TagEditViewController: UIViewController, Themeable {
 
 		cancelBarButtonItem.tintColor = HCColor.Interaction.primarySolidNormal(collection.isDark)
 		doneBarButtonItem.tintColor = HCColor.Interaction.primarySolidNormal(collection.isDark)
+
+		tagNameField.clearButton.setImage(collection.isDark ? HCIcon.clearDark : HCIcon.clearLight, for: .normal)
 	}
 
 	// MARK: - Setup
 
 	private func setupTextField() {
 		tagNameField.translatesAutoresizingMaskIntoConstraints = false
-		tagNameField.title = HCL10n.TagEdit.name
-		tagNameField.placeholder = HCL10n.TagEdit.name
+		tagNameField.title = ""
+		tagNameField.placeholder = tag == nil ? HCL10n.TagEdit.addPlaceholder : HCL10n.TagEdit.editPlaceholder
 		tagNameField.textField.text = tag?.displayName
 		tagNameField.textField.returnKeyType = .done
 		tagNameField.textField.autocapitalizationType = .none
@@ -123,25 +125,49 @@ class TagEditViewController: UIViewController, Themeable {
 	// MARK: - Actions
 
 	@objc private func cancelTapped() {
-		dismiss(animated: true)
-		completion(nil)
+		tagNameField.textField.resignFirstResponder()
+		dismiss(animated: true) { [completion] in
+			completion(nil)
+		}
 	}
 
 	@objc private func doneTapped() {
-		guard let name = tagNameField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines), !name.isEmpty else {
+		let trimmedName = tagNameField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+		guard !trimmedName.isEmpty else { return }
+		if let error = validationError(for: trimmedName) {
+			tagNameField.errorText = error
 			return
 		}
-		dismiss(animated: true)
-		completion(name)
+		tagNameField.textField.resignFirstResponder()
+		dismiss(animated: true) { [completion] in
+			completion(trimmedName)
+		}
 	}
 
 	@objc private func textFieldDidChange() {
+		validateInput()
 		updateDoneButton()
 	}
 
+	private func validationError(for name: String) -> String? {
+		if name.count > HCL10n.TagEdit.maxNameLength {
+			return HCL10n.TagEdit.nameTooLongError
+		}
+		if name.rangeOfCharacter(from: HCL10n.TagEdit.forbiddenCharacters) != nil {
+			return HCL10n.TagEdit.invalidCharactersError
+		}
+		return nil
+	}
+
+	private func validateInput() {
+		let trimmedName = tagNameField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+		tagNameField.errorText = trimmedName.isEmpty ? nil : validationError(for: trimmedName)
+	}
+
 	private func updateDoneButton() {
-		let hasText = !(tagNameField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty ?? true)
-		doneBarButtonItem.isEnabled = hasText
+		let trimmedName = tagNameField.textField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+		let isValid = !trimmedName.isEmpty && validationError(for: trimmedName) == nil
+		doneBarButtonItem.isEnabled = isValid
 	}
 }
 

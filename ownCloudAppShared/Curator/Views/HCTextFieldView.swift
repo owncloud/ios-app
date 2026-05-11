@@ -35,7 +35,7 @@ open class HCTextFieldView: HCFieldView {
 		return textField
 	}()
 
-	private lazy var clearButton: UIButton = {
+	private(set) public lazy var clearButton: UIButton = {
 		let button = UIButton(type: .custom)
 		button.setImage(UIImage(named: "xmark-circle", in: Bundle.sharedAppBundle, with: nil), for: .normal)
 		button.addTarget(self, action: #selector(clearTextField), for: .touchUpInside)

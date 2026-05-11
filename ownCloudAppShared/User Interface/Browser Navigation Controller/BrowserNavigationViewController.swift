@@ -564,6 +564,30 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		navArrowsStackView.isHidden = false
 	}
 
+	private func previousHistoryItemTitle() -> String? {
+		let previousPosition = history.position - 1
+		guard previousPosition >= 0, previousPosition < history.items.count else { return nil }
+		let previousVC = history.items[previousPosition].viewControllerIfLoaded
+		return previousVC?.navigationItem.title ?? previousVC?.title
+	}
+
+	private func buildBackBarButtonItem(title: String?) -> UIBarButtonItem {
+		var configuration = UIButton.Configuration.plain()
+		configuration.image = OCSymbol.icon(forSymbolName: "chevron.backward")
+		configuration.title = title
+		configuration.imagePadding = 4
+		configuration.contentInsets = NSDirectionalEdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 8)
+
+		let button = UIButton(configuration: configuration, primaryAction: UIAction { [weak self] _ in
+			self?.navBack()
+		})
+		button.contentHorizontalAlignment = .leading
+
+		let backButtonItem = UIBarButtonItem(customView: button)
+		backButtonItem.tag = BarButtonTags.backButton.rawValue
+		return backButtonItem
+	}
+
 	func buildSideBarToggleBarButtonItem() -> UIBarButtonItem {
 		let buttonItem = UIBarButtonItem(
 			image: OCItem.hanurgerMenu, style: .plain, target: self,
@@ -611,16 +635,19 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 		}
 
 		if withBackButton {
+			let previousTitle = previousHistoryItemTitle()
+
 			let item = reuseOrBuild(
 				.backButton,
 				{
-					let backButtonItem = UIBarButtonItem(
-						image: OCSymbol.icon(forSymbolName: "chevron.backward"), style: .plain,
-						target: self, action: #selector(navBack))
-					backButtonItem.tag = BarButtonTags.backButton.rawValue
-
-					return backButtonItem
+					return buildBackBarButtonItem(title: previousTitle)
 				})
+
+			if let button = item.customView as? UIButton {
+				var configuration = button.configuration ?? UIButton.Configuration.plain()
+				configuration.title = previousTitle
+				button.configuration = configuration
+			}
 
 			item.isEnabled = history.canMoveBack
 
@@ -659,10 +686,16 @@ open class BrowserNavigationViewController: EmbeddingViewController, Themeable, 
 
 	func updateContentNavigationItems() {
 		if let contentNavigationItem = contentViewController?.navigationItem {
+			let hasHistoryBack = history.canMoveBack
+				&& !(history.lastPushAttempt?.isSpecialTabBarItem ?? true)
+			let shouldShowSidebarToggle = hasHistoryBack
+				? false
+				: ((effectiveSideBarDisplayMode == .sideBySide) ? isSideBarHidden : true)
+
 			updateLeftBarButtonItems(
 				for: contentNavigationItem,
-				withToggleSideBar: (effectiveSideBarDisplayMode == .sideBySide)
-				? isSideBarHidden : true)
+				withToggleSideBar: shouldShowSidebarToggle,
+				withBackButton: hasHistoryBack)
 		}
 
 		updateHistoryButtons()
