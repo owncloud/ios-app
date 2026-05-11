@@ -197,6 +197,7 @@ public enum HCL10n {
 		public static var empty: String { OCLocalizedString("TagsList.empty", nil) }
 		public static var loadingError: String { OCLocalizedString("TagsList.loadingError", nil) }
 		public static var errorOk: String { OCLocalizedString("TagsList.errorOk", nil) }
+		public static var alreadyExists: String { OCLocalizedString("TagsList.alreadyExists", nil) }
 		public enum Delete {
 			public static var error: String { OCLocalizedString("TagsList.Delete.error", nil) }
 			public static var title: String { OCLocalizedString("TagsList.Delete.title", nil) }
@@ -217,6 +218,19 @@ public enum HCL10n {
 		public static var cancel: String { OCLocalizedString("TagEdit.cancel", nil) }
 		public static var add: String { OCLocalizedString("TagEdit.add", nil) }
 		public static var edit: String { OCLocalizedString("TagEdit.edit", nil) }
-		public static var name: String { OCLocalizedString("TagEdit.name", nil) }
+		public static var addPlaceholder: String { OCLocalizedString("TagEdit.addPlaceholder", nil) }
+		public static var editPlaceholder: String { OCLocalizedString("TagEdit.editPlaceholder", nil) }
+		public static var nameTooLongError: String {
+			String(format: OCLocalizedString("TagEdit.nameTooLong", nil), TagEdit.maxNameLength)
+		}
+		public static var invalidCharactersError: String {
+			OCLocalizedString("TagEdit.invalidCharacters", nil)
+		}
+		public static let maxNameLength: Int = 30
+		// Disallowed characters in tag names: control chars, path separators and other
+		// punctuation/special symbols that have no place in a human-readable tag.
+		public static let forbiddenCharacters = CharacterSet(charactersIn: "/\\:*?\"<>|`~!@#$%^&()+={}[];,")
+			.union(.controlCharacters)
+			.union(.newlines)
 	}
 }

@@ -225,41 +225,44 @@ class TagsViewController: UITableViewController, Themeable {
 		guard let connection = connection else { return }
 		let context = ClientContext(with: clientContext)
 
-		let itemsDataSource = OCDataSourceArray(items: [])
-		let sortedDataSource = SortedItemDataSource(itemDataSource: itemsDataSource)
+		let buildFilesViewController: (ClientContext) -> ClientItemViewController = { context in
+			let itemsDataSource = OCDataSourceArray(items: [])
+			let sortedDataSource = SortedItemDataSource(itemDataSource: itemsDataSource)
 
-		let filesVC = ClientItemViewController(
-			context: context,
-			query: nil,
-			itemsDatasource: sortedDataSource,
-			showRevealButtonForItems: true,
-			emptyItemListIcon: OCSymbol.icon(forSymbolName: "tag"),
-			emptyItemListTitleLocalized: OCLocalizedString("No files found", nil),
-			emptyItemListMessageLocalized: OCLocalizedString("No files are tagged with this tag.", nil)
-		)
-		filesVC.useOverlayEmptyState = true
-		filesVC.navigationTitle = tag.displayName
-		filesVC.revoke(in: context, when: [.connectionClosed])
+			let filesVC = ClientItemViewController(
+				context: context,
+				query: nil,
+				itemsDatasource: sortedDataSource,
+				showRevealButtonForItems: true,
+				emptyItemListIcon: OCSymbol.icon(forSymbolName: "tag"),
+				emptyItemListTitleLocalized: OCLocalizedString("No files found", nil),
+				emptyItemListMessageLocalized: OCLocalizedString("No files are tagged with this tag.", nil)
+			)
+			filesVC.useOverlayEmptyState = true
+			filesVC.navigationTitle = "\"\(tag.displayName)\""
+			filesVC.revoke(in: context, when: [.connectionClosed])
 
-		let eventTarget = OCEventTarget(ephermalEventHandlerBlock: { [weak itemsDataSource] (event: OCEvent, _: Any?) in
-			if event.error != nil { return }
-			if let items = event.result as? [OCItem] {
-				OnMainThread {
-					itemsDataSource?.setVersionedItems(items)
+			let eventTarget = OCEventTarget(ephermalEventHandlerBlock: { [weak itemsDataSource] (event: OCEvent, _: Any?) in
+				if event.error != nil { return }
+				if let items = event.result as? [OCItem] {
+					OnMainThread {
+						itemsDataSource?.setVersionedItems(items)
+					}
 				}
-			}
-		}, userInfo: nil, ephermalUserInfo: nil)
+			}, userInfo: nil, ephermalUserInfo: nil)
 
-		connection.retrieveFiles(with: tag, resultTarget: eventTarget)
+			connection.retrieveFiles(with: tag, resultTarget: eventTarget)
+			sortedDataSource.sortingFollowsContext = filesVC.clientContext
+			return filesVC
+		}
 
-		sortedDataSource.sortingFollowsContext = filesVC.clientContext
+		let openedViewController = context.pushViewControllerToNavigation(context: context, provider: { context in
+			return buildFilesViewController(context)
+		}, push: true, animated: true)
 
-		if let navController = navigationController ?? parent?.navigationController {
-			navController.pushViewController(filesVC, animated: true)
-		} else if splitViewController != nil {
-			showDetailViewController(ThemeNavigationController(rootViewController: filesVC), sender: self)
-		} else {
-			let navController = ThemeNavigationController(rootViewController: filesVC)
+		if openedViewController == nil {
+			let fallbackVC = buildFilesViewController(context)
+			let navController = ThemeNavigationController(rootViewController: fallbackVC)
 			present(navController, animated: true)
 		}
 	}
@@ -303,7 +306,6 @@ class TagsViewController: UITableViewController, Themeable {
 	private func presentTagEditor(tag: OCSystemTag?) {
 		let editVC = TagEditViewController(tag: tag) { [weak self] newName in
 			guard let self, let newName else { return }
-
 			if let existingTag = tag {
 				self.performUpdate(tag: existingTag, newName: newName)
 			} else {
@@ -323,7 +325,7 @@ class TagsViewController: UITableViewController, Themeable {
 			OnMainThread {
 				guard let self else { return }
 				if let error {
-					self.showError(error, title: HCL10n.TagsList.Create.error)
+					self.showTagOperationError(error, fallbackTitle: HCL10n.TagsList.Create.error)
 					return
 				}
 				if let newTag {
@@ -343,7 +345,7 @@ class TagsViewController: UITableViewController, Themeable {
 			OnMainThread {
 				guard let self else { return }
 				if let error {
-					self.showError(error, title: HCL10n.TagsList.Update.error)
+					self.showTagOperationError(error, fallbackTitle: HCL10n.TagsList.Update.error)
 					return
 				}
 				if let idx = self.tags.firstIndex(where: { $0.identifier == tag.identifier }) {
@@ -356,17 +358,30 @@ class TagsViewController: UITableViewController, Themeable {
 		}
 	}
 
+	private func showTagOperationError(_ error: Error, fallbackTitle: String) {
+		let nsError = error as NSError
+		if nsError.isOCError(withCode: .itemAlreadyExists) {
+			presentAlert(title: HCL10n.TagsList.alreadyExists, message: nil)
+			return
+		}
+		showError(error, title: fallbackTitle)
+	}
+
 	private func showError(_ error: Error, title: String) {
-		let alert = UIAlertController(title: title, message: error.localizedDescription, preferredStyle: .alert)
+		presentAlert(title: title, message: error.localizedDescription)
+	}
+
+	private func presentAlert(title: String, message: String?) {
+		let alert = ThemedAlertController(title: title, message: message, preferredStyle: .alert)
 		alert.addAction(UIAlertAction(title: HCL10n.TagsList.errorOk, style: .default))
-		present(alert, animated: true)
+		clientContext.present(alert, animated: true)
 	}
 
 	// MARK: - UITableViewDataSource / Delegate
 
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 		tableView.deselectRow(at: indexPath, animated: true)
-		// openFileList(for: tags[indexPath.row])
+		openFileList(for: tags[indexPath.row])
 	}
 
 	override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

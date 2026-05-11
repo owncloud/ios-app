@@ -60,7 +60,10 @@ open class BrowserNavigationHistory {
 	open func push(item: BrowserNavigationItem, completion: CompletionHandler? = nil) {
 		lastPushAttempt = item
 
-		if !item.isSpecialTabBarItem && !item.isSavedSearchItem {
+		let shouldKeepSpecialItemInHistory = (item.navigationBookmark?.specialItem == .tags)
+		let shouldAppendToHistory = !item.isSavedSearchItem && (!item.isSpecialTabBarItem || shouldKeepSpecialItemInHistory)
+
+		if shouldAppendToHistory {
 			OCSynchronized(self) {
 				if position < items.count - 1 {
 					items.removeSubrange((position+1)...items.count-1)
