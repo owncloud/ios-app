@@ -1,6 +1,6 @@
 {
   "bomFormat": "CycloneDX",
-  "specVersion": "1.6",
+  "specVersion": "1.7",
   "version": 1,
   "metadata": {
     "tools": {
@@ -8,10 +8,10 @@
         {
           "group": "@cyclonedx",
           "name": "cdxgen",
-          "version": "12.1.1",
-          "purl": "pkg:npm/%40cyclonedx/cdxgen@12.1.1",
+          "version": "12.2.1",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@12.2.1",
           "type": "application",
-          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@12.1.1",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@12.2.1",
           "publisher": "OWASP Foundation",
           "authors": [
             {
@@ -31,6 +31,9 @@
         "phase": "build"
       }
     ],
+    "distributionConstraints": {
+      "tlp": "CLEAR"
+    },
     "component": {
       "group": "",
       "name": "swiftpm",
@@ -284,10 +287,10 @@
         "component": {
           "group": "@cyclonedx",
           "name": "cdxgen",
-          "version": "12.1.1",
-          "purl": "pkg:npm/%40cyclonedx/cdxgen@12.1.1",
+          "version": "12.2.1",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@12.2.1",
           "type": "application",
-          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@12.1.1",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@12.2.1",
           "publisher": "OWASP Foundation",
           "authors": [
             {
