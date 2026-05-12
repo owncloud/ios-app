@@ -337,15 +337,29 @@
 	{
 		 if ((item = [self itemForIdentifier:itemIdentifier error:&error]) != nil)
 		 {
-			FPLogCmdBegin(@"StartProviding", @"Downloading %@", item);
+			OCItem *ocItem = OCTypedCast(item, OCItem);
 
-			if (((OCItem *)item).type == OCItemTypeCollection) {
-				// Can't download folders
-				completionHandler([NSError errorWithDomain:NSCocoaErrorDomain code:NSFeatureUnsupportedError userInfo:@{}]);
+			if (ocItem == nil)
+			{
+				// itemForIdentifier can also return OCVFSNode items, typically for virtual folders. Nothing to download in this case.
+				// Return success regardless for consistency with the behaviour for "real" folders (=> see below)
+				FPLogCmdBegin(@"StartProviding", @"Completed with success for VFS item %@", item);
+				completionHandler(nil);
 				return;
 			}
 
-			[self.core downloadItem:(OCItem *)item options:@{
+			if (ocItem.type == OCItemTypeCollection)
+			{
+				// Folder item - nothing to download
+				// Return success regardless to avoid breaking recursive ops in Files.app.
+				FPLogCmdBegin(@"StartProviding", @"Completed with success for folder %@", item);
+				completionHandler(nil);
+				return;
+			}
+
+			FPLogCmdBegin(@"StartProviding", @"Downloading %@", item);
+
+			[self.core downloadItem:ocItem options:@{
 
 				OCCoreOptionAddFileClaim : [OCClaim claimForLifetimeOfCore:core explicitIdentifier:OCClaimExplicitIdentifierFileProvider withLockType:OCClaimLockTypeRead]
 
