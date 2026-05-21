@@ -213,17 +213,21 @@ public enum HCL10n {
 		}
 	}
 
-	public enum FileTags {
-		public static var screenTitle: String { OCLocalizedString("FileTags.screenTitle", nil) }
-		public static var actionTitle: String { OCLocalizedString("FileTags.actionTitle", nil) }
-		public static var selectTagPlaceholder: String { OCLocalizedString("FileTags.selectTagPlaceholder", nil) }
-		public static var noTagsAvailableHint: String { OCLocalizedString("FileTags.noTagsAvailableHint", nil) }
-		public static var addTagFormat: String { OCLocalizedString("FileTags.addTagFormat", nil) }
-		public static var emptyFileMessage: String { OCLocalizedString("FileTags.emptyFileMessage", nil) }
-		public static var showMoreFormat: String { OCLocalizedString("FileTags.showMoreFormat", nil) }
-		public static var showLess: String { OCLocalizedString("FileTags.showLess", nil) }
-		public static var assignFailed: String { OCLocalizedString("FileTags.assignFailed", nil) }
-		public static var removeFailed: String { OCLocalizedString("FileTags.removeFailed", nil) }
+	public enum TagManage {
+		public static var title: String { OCLocalizedString("TagManage.title", nil) }
+		public static var actionTitle: String { OCLocalizedString("TagManage.actionTitle", nil) }
+		public static var selectTagPlaceholder: String { OCLocalizedString("TagManage.selectTagPlaceholder", nil) }
+		public static var noTagsAvailableHint: String { OCLocalizedString("TagManage.noTagsAvailableHint", nil) }
+		public static var addTagFormat: String { OCLocalizedString("TagManage.addTagFormat", nil) }
+		public static var emptyFileMessage: String { OCLocalizedString("TagManage.emptyFileMessage", nil) }
+		public static var showMoreFormat: String { OCLocalizedString("TagManage.showMoreFormat", nil) }
+		public static var showLess: String { OCLocalizedString("TagManage.showLess", nil) }
+		public static var assignFailed: String { OCLocalizedString("TagManage.assignFailed", nil) }
+		public static var removeFailed: String { OCLocalizedString("TagManage.removeFailed", nil) }
+		public static var loadingError: String { OCLocalizedString("TagManage.loadingError", nil) }
+		public static var errorOk: String { OCLocalizedString("TagManage.errorOk", nil) }
+		public static var createError: String { OCLocalizedString("TagManage.createError", nil) }
+		public static var alreadyExists: String { OCLocalizedString("TagManage.alreadyExists", nil) }
 	}
 
 	public enum TagEdit {

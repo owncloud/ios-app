@@ -102,6 +102,12 @@ public struct PathProber: Sendable {
 		}
 	}
 
+	/// Probes a single path (status + about). Used by the login fast path.
+	public func probeSingle(path: RemoteDevice.Path) async -> PathProbe? {
+		guard let url = path.apiBaseURL() else { return nil }
+		return await Self.probe(path: path, url: url)
+	}
+
 	/// Single-call helper for the local-baseUrl shortcut: only fetches `about`, with the
 	/// caller-supplied timeout. Used by Algorithm B step 1 where a fast yes/no is enough.
 	public func fetchAbout(url: URL, timeout: TimeInterval = PathProber.localTimeout) async throws -> About {

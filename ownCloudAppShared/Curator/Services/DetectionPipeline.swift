@@ -83,6 +83,93 @@ public actor DetectionPipeline {
 		loadTask = nil
 	}
 
+	// MARK: - Login fast path (Algorithm C — selected device only)
+
+	/// Result of probing the three connection links for login (local → public → remote relay).
+	public struct LoginPathResult: Sendable {
+		public let path: SelectedPath
+		public let probe: PathProbe
+	}
+
+	/// Probes only the selected device's paths using priority early-return (Algorithm C).
+	/// Unlike `getMergedDevices(probeRemotePaths: true)`, this does not reload every device
+	/// or probe every path to completion.
+	public func selectLoginPath(for merged: MergedDevice) async -> LoginPathResult? {
+		let wifi = wifiAvailableForLocalPaths
+
+		if wifi, let local = merged.localDevice {
+			let localPath = RemoteDevice.Path(kind: .local, address: local.host, port: local.port)
+			if let probe = await pathProber.probeSingle(path: localPath), probe.isOperational {
+				let path: SelectedPath = .mdns(host: local.host, port: local.port)
+				if let cn = local.certificateCommonName ?? merged.certificateCommonName {
+					await commitLoginProbe(cn: cn, pathKey: localPath.key, probe: probe, remote: merged.remoteDevice)
+				}
+				return LoginPathResult(path: path, probe: probe)
+			}
+		}
+
+		guard var remote = merged.remoteDevice else { return nil }
+
+		if await remoteAccessService.hasValidTokens() {
+			do {
+				let paths = try await remoteAccessService.getPathsForDevice(seagateDeviceID: remote.seagateDeviceID)
+				remote = RemoteDevice(
+					seagateDeviceID: remote.seagateDeviceID,
+					friendlyName: remote.friendlyName,
+					hostname: remote.hostname,
+					certificateCommonName: remote.certificateCommonName,
+					paths: paths
+				)
+				await catalog.upsertRemoteDevice(remote)
+				await pathCacheStore.set(forCN: remote.certificateCommonName, paths: paths)
+			} catch {
+				Log.debug("[STX-RA]: Login path refresh failed: \(error)")
+			}
+		}
+
+		var priorityPaths = remote.paths.filter { $0.kind != .remote }
+		if !wifi { priorityPaths = priorityPaths.filter { $0.kind != .local } }
+
+		if let (winningPath, probe) = await pathProber.testPriorityPaths(priorityPaths) {
+			await commitLoginProbe(
+				cn: remote.certificateCommonName,
+				pathKey: winningPath.key,
+				probe: probe,
+				remote: remote
+			)
+			return LoginPathResult(path: .remote(winningPath), probe: probe)
+		}
+
+		let relayPaths = remote.paths.filter { $0.kind == .remote }
+		if let (winningPath, probe) = await pathProber.testPriorityPaths(relayPaths) {
+			await commitLoginProbe(
+				cn: remote.certificateCommonName,
+				pathKey: winningPath.key,
+				probe: probe,
+				remote: remote
+			)
+			return LoginPathResult(path: .remote(winningPath), probe: probe)
+		}
+
+		return nil
+	}
+
+	private func commitLoginProbe(
+		cn: String,
+		pathKey: String,
+		probe: PathProbe,
+		remote: RemoteDevice?
+	) async {
+		if let remote {
+			await catalog.upsertResolution(remote, winningPathKey: pathKey, winningProbe: probe)
+		} else {
+			var probes = await catalog.probes()
+			probes[cn] = [pathKey: probe]
+			await catalog.setProbes(probes)
+		}
+		await recalculateBestURLs()
+	}
+
 	// MARK: - Fast reprobe (no device reload)
 
 	public func reprobeExistingPaths() async {
@@ -328,13 +415,19 @@ public actor DetectionPipeline {
 		let merged = await catalog.mergedDevices()
 		let wifi = wifiAvailableForLocalPaths
 		for device in merged {
+			guard let cn = device.certificateCommonName else { continue }
+			let preferredKey = preferences.lastSuccessfulPathKey(forCN: cn)
 			guard
-				let cn = device.certificateCommonName,
-				let path = catalog.nextURLToAttempt(for: device, wifiAvailable: wifi),
+				let path = catalog.nextURLToAttempt(
+					for: device,
+					wifiAvailable: wifi,
+					preferredPathKey: preferredKey
+				),
 				let url = path.url
 			else { continue }
 
 			urlProvider.setBestURL(url, for: cn)
+			preferences.updateLastSuccessfulPathKey(path.persistenceKey, forCN: cn)
 			if let favoriteCN = preferences.favoriteDeviceCN {
 				emit(.remoteBaseURLChanged(await catalog.remoteBaseURL(forCN: favoriteCN)))
 			} else {

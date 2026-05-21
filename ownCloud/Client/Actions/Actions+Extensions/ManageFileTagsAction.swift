@@ -11,7 +11,7 @@ import ownCloudAppShared
 class ManageFileTagsAction: Action {
 	override class var identifier: OCExtensionIdentifier? { OCExtensionIdentifier("com.owncloud.action.manageFileTags") }
 	override class var category: ActionCategory? { .normal }
-	override class var name: String { HCL10n.FileTags.actionTitle }
+	override class var name: String { HCL10n.TagManage.actionTitle }
 	override class var locations: [OCExtensionLocationIdentifier]? {
 		[.moreItem, .moreDetailItem, .multiSelection, .contextMenuItem, .tableRow, .accessibilityCustomAction]
 	}
@@ -51,7 +51,7 @@ class ManageFileTagsAction: Action {
 		}
 
 		let vc = FileTagsManagementViewController(item: item, core: core)
-		vc.navigationItem.title = HCL10n.FileTags.screenTitle
+		vc.navigationItem.title = HCL10n.TagManage.title
 		vc.navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: vc, action: #selector(FileTagsManagementViewController.dismissAnimated))
 
 		let nav = ThemeNavigationController(rootViewController: vc)

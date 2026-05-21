@@ -413,84 +413,18 @@ final public class LoginViewModel {
 		}
 	}
 
-	private func probe(
-		for path: SelectedPath,
-		in device: MergedDevice
-	) -> PathProbe? {
-		switch path {
-			case .remote(let remotePath):
-				return device.pathProbes.first { probe in
-					if case .remotePath(let p) = probe.source {
-						return p.key == remotePath.key
-					}
-					return false
-				}
-			case .mdns(let host, let port):
-				return device.pathProbes.first { probe in
-					if case .mdns(let h, let p) = probe.source {
-						return h == host && p == port
-					}
-					return false
-				}
-		}
-	}
-
 	private func prepareAddressAndLoginForSelectedDevice() async {
 		Log.debug("[STX]: Composing device URL")
         guard let idx = selectedDeviceIndex, idx < mergedDevices.count else {
 			await MainActor.run { self.isLoading = false }
 			return
 		}
-        let device = mergedDevices[idx]
-		let targetCN = device.certificateCommonName
+        let selectedDevice = mergedDevices[idx]
 
-		let hasRAToken = await raService.hasValidTokens()
-		let merged: [MergedDevice]
-		do {
-			merged = try await deviceReachabilityService.getMergedDevices(
-				email: email,
-				includeRemote: hasRAToken,
-				probeRemotePaths: true
-			)
-		} catch {
-			await MainActor.run {
-				self.isLoading = false
-				self.eventHandler.handle(.unableToConnect)
-			}
-			return
-		}
-
-		await MainActor.run {
-			self.mergedDevices = merged
-			self.deviceItems = merged.map { $0.remoteDevice?.friendlyName ?? $0.localDevice?.name ?? "" }
-		}
-
-		let updatedDevice: MergedDevice? = {
-			if let targetCN {
-				return merged.first(where: { $0.certificateCommonName == targetCN })
-			}
-			return merged.first
-		}()
-
-		guard let selectedDevice = updatedDevice else {
-			await MainActor.run {
-				self.isLoading = false
-				self.eventHandler.handle(.unableToConnect)
-			}
-			return
-		}
-
-		if let cn = selectedDevice.certificateCommonName,
-		   let newIdx = merged.firstIndex(where: { $0.certificateCommonName == cn }) {
-			await MainActor.run { self.selectedDeviceIndex = newIdx }
-		}
-		// Ensure we have all probes before picking the login URL.
-		await deviceReachabilityService.reprobeExistingPaths()
-		// `reachableSelection` (not `nextURLToAttempt`) so that we *only* proceed when an
-		// actual probe succeeded — otherwise login would head off to an unreachable URL.
+		// Algorithm C: probe only this device's local / public / relay links (early return).
 		guard
-			let bestPath = await deviceReachabilityService.reachableSelection(for: selectedDevice),
-			let deviceURL = bestPath.url
+			let loginPath = await deviceReachabilityService.selectLoginPath(for: selectedDevice),
+			let deviceURL = loginPath.path.url
 		else {
 			await MainActor.run {
 				self.isLoading = false
@@ -498,11 +432,14 @@ final public class LoginViewModel {
 			}
 			return
 		}
+
+		let bestPath = loginPath.path
+		let probe = loginPath.probe
+
 		let owncloudServerURL = deviceURL.appendingPathComponent("files")
 		Log.debug("[STX]: Login best path: \(owncloudServerURL)")
-		let api = DeviceAPI(deviceBaseURL: deviceURL)
-		let about = try? await api.getAbout()
-		if let about, (about.os_state?.lowercased() ?? "normal") != "normal" {
+
+		if let about = probe.about, (about.os_state?.lowercased() ?? "normal") != "normal" {
 			await MainActor.run {
 				self.isLoading = false
 				self.step = .deviceSelection
@@ -511,8 +448,7 @@ final public class LoginViewModel {
 			return
 		}
 
-		let status = try? await api.getStatus()
-		if let status {
+		if let status = probe.status {
 			if status.OOBE.done == false {
 				await MainActor.run {
 					self.isLoading = false
@@ -550,7 +486,8 @@ final public class LoginViewModel {
 					certificateCommonName: remote.certificateCommonName,
 					friendlyName: remote.friendlyName,
 					hostname: remote.hostname,
-					paths: savedPaths
+					paths: savedPaths,
+					lastSuccessfulPathKey: bestPath.persistenceKey
 				)
 				HCContext.shared.preferences.currentConnectedDevice = saved
 			}

@@ -201,7 +201,7 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 		thumbnailView.request = request
 		core.vault.resourceManager?.start(request)
 
-		tagSelectField.textFieldView.placeholder = HCL10n.FileTags.selectTagPlaceholder
+		tagSelectField.textFieldView.placeholder = HCL10n.TagManage.selectTagPlaceholder
 		tagSelectField.textFieldView.title = ""
 		tagSelectField.textFieldView.leftIcon = HCIcon.tagIcon
 		tagSelectField.dropdownHostView = view
@@ -209,18 +209,16 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 		tagSelectField.optionsTableView.delegate = self
 		tagSelectField.optionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
 		tagSelectField.onEditingBegan = { [weak self] in
-			self?.rebuildDropdownRows()
-			self?.tagSelectField.reloadOptions()
+			self?.refreshTagDropdown()
 		}
 		tagSelectField.onSearchTextChanged = { [weak self] in
-			self?.rebuildDropdownRows()
-			self?.tagSelectField.reloadOptions()
+			self?.refreshTagDropdown()
 		}
 
 		emptyTagsLabel.font = .systemFont(ofSize: 15)
 		emptyTagsLabel.textAlignment = .center
 		emptyTagsLabel.numberOfLines = 0
-		emptyTagsLabel.text = HCL10n.FileTags.emptyFileMessage
+		emptyTagsLabel.text = HCL10n.TagManage.emptyFileMessage
 
 		chipsCollectionView.backgroundColor = .clear
 		chipsCollectionView.isScrollEnabled = false
@@ -290,6 +288,7 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 		nameLabel.textColor = HCColor.Content.textPrimary(isDark)
 		emptyTagsLabel.textColor = HCColor.Content.textSecondary(isDark)
 		tagSelectField.textFieldView.leftIconTintColor = HCColor.Interaction.primarySolidNormal(isDark)
+		tagSelectField.textFieldView.clearButton.setImage(collection.isDark ? HCIcon.clearDark : HCIcon.clearLight, for: .normal)
 		chipsCollectionView.reloadData()
 	}
 
@@ -345,7 +344,7 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 			guard let self else { return }
 			self.showLoading(false)
 			if let e = sysErr ?? fileErr {
-				self.presentAlert(title: HCL10n.TagsList.loadingError, message: e.localizedDescription)
+				self.presentAlert(title: HCL10n.TagManage.loadingError, message: e.localizedDescription)
 			}
 			if sysErr == nil, let tags = sysTags {
 				self.allSystemTags = tags.sorted { $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending }
@@ -354,8 +353,7 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 				self.assignedTags = tags.sorted { $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending }
 			}
 			self.updateChipsUI()
-			self.rebuildDropdownRows()
-			self.tagSelectField.reloadOptions()
+			self.refreshTagDropdown()
 		}
 	}
 
@@ -375,24 +373,21 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 
 	private func rebuildDropdownRows() {
 		let q = tagSelectField.textFieldView.textField.text?.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) ?? ""
-		var rows: [DropdownRow] = []
 
 		if let err = TagNameValidation.validationError(for: q), !q.isEmpty {
 			dropdownRows = [.error(err)]
 			return
 		}
 
-		if allSystemTags.isEmpty && q.isEmpty {
-			dropdownRows = [.hint(HCL10n.FileTags.noTagsAvailableHint)]
-			return
-		}
-
-		if allSystemTags.isEmpty && !q.isEmpty {
-			dropdownRows = [.addNew(q)]
+		if allSystemTags.isEmpty {
+			dropdownRows = q.isEmpty
+				? [.hint(HCL10n.TagManage.noTagsAvailableHint)]
+				: [.addNew(q)]
 			return
 		}
 
 		let candidates = candidateTags(filteredBy: q)
+		var rows: [DropdownRow] = []
 		for t in candidates {
 			rows.append(.tag(t))
 		}
@@ -405,6 +400,14 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 		}
 
 		dropdownRows = rows
+	}
+
+	private func refreshTagDropdown() {
+		rebuildDropdownRows()
+		tagSelectField.reloadOptions()
+		if tagSelectField.textFieldView.textField.isFirstResponder {
+			tagSelectField.expandDropdownIfNeeded()
+		}
 	}
 
 	private func chipWidth(forTitle title: String, showsRemove: Bool) -> CGFloat {
@@ -477,7 +480,7 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 			let hidden = total - candidate
 			var widths = Array(tagWidths.prefix(candidate))
 			if hidden > 0 {
-				let moreTitle = String(format: HCL10n.FileTags.showMoreFormat, hidden)
+				let moreTitle = String(format: HCL10n.TagManage.showMoreFormat, hidden)
 				widths.append(chipWidth(forTitle: moreTitle, showsRemove: false))
 			}
 			if flowLayoutHeight(forWidths: widths, containerWidth: containerWidth) <= maxCollapsedChipsHeight + 0.5 {
@@ -517,7 +520,7 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 
 	private func presentAlert(title: String, message: String?) {
 		let alert = ThemedAlertController(title: title, message: message, preferredStyle: .alert)
-		alert.addAction(UIAlertAction(title: HCL10n.TagsList.errorOk, style: .default))
+		alert.addAction(UIAlertAction(title: HCL10n.TagManage.errorOk, style: .default))
 		present(alert, animated: true)
 	}
 
@@ -528,7 +531,7 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 			OnMainThread {
 				self?.showLoading(false)
 				if let error {
-					self?.presentAlert(title: HCL10n.FileTags.assignFailed, message: error.localizedDescription)
+					self?.presentAlert(title: HCL10n.TagManage.assignFailed, message: error.localizedDescription)
 					return
 				}
 				guard let self else { return }
@@ -539,8 +542,7 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 				self.tagSelectField.textFieldView.textField.text = ""
 				self.tagSelectField.collapseDropdown()
 				self.updateChipsUI()
-				self.rebuildDropdownRows()
-				self.tagSelectField.reloadOptions()
+				self.refreshTagDropdown()
 			}
 		}
 	}
@@ -557,7 +559,7 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 						self?.reloadAllTagDataAfterConflict(wantedName: name)
 						return
 					}
-					self?.presentAlert(title: HCL10n.TagsList.Create.error, message: error.localizedDescription)
+					self?.presentAlert(title: HCL10n.TagManage.createError, message: error.localizedDescription)
 					return
 				}
 				guard let self else { return }
@@ -574,8 +576,7 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 				self.tagSelectField.textFieldView.textField.text = ""
 				self.tagSelectField.collapseDropdown()
 				self.updateChipsUI()
-				self.rebuildDropdownRows()
-				self.tagSelectField.reloadOptions()
+				self.refreshTagDropdown()
 			}
 		}
 	}
@@ -589,14 +590,14 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 				guard let self else { return }
 				self.showLoading(false)
 				if let error {
-					self.presentAlert(title: HCL10n.TagsList.loadingError, message: error.localizedDescription)
+					self.presentAlert(title: HCL10n.TagManage.loadingError, message: error.localizedDescription)
 					return
 				}
 				self.allSystemTags = (tags ?? []).sorted { $0.displayName.localizedCaseInsensitiveCompare($1.displayName) == .orderedAscending }
 				if let existing = self.allSystemTags.first(where: { $0.displayName.compare(wantedName, options: [.caseInsensitive, .diacriticInsensitive]) == .orderedSame }) {
 					self.assignOnServer(existing)
 				} else {
-					self.presentAlert(title: HCL10n.TagsList.alreadyExists, message: nil)
+					self.presentAlert(title: HCL10n.TagManage.alreadyExists, message: nil)
 				}
 			}
 		}
@@ -609,13 +610,12 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 			OnMainThread {
 				self?.showLoading(false)
 				if let error {
-					self?.presentAlert(title: HCL10n.FileTags.removeFailed, message: error.localizedDescription)
+					self?.presentAlert(title: HCL10n.TagManage.removeFailed, message: error.localizedDescription)
 					return
 				}
 				self?.assignedTags.removeAll { $0.identifier == tag.identifier }
 				self?.updateChipsUI()
-				self?.rebuildDropdownRows()
-				self?.tagSelectField.reloadOptions()
+				self?.refreshTagDropdown()
 			}
 		}
 	}
@@ -641,6 +641,8 @@ extension FileTagsManagementViewController: UITableViewDataSource, UITableViewDe
 			case .hint(let s):
 				config.text = s
 				config.textProperties.color = HCColor.Content.textSecondary(isDark)
+				config.textProperties.numberOfLines = 0
+				config.textProperties.lineBreakMode = .byWordWrapping
 				cell.selectionStyle = .none
 			case .error(let s):
 				let errorColor = HCColor.Symbolic.error(isDark)
@@ -657,7 +659,7 @@ extension FileTagsManagementViewController: UITableViewDataSource, UITableViewDe
 				config.textProperties.color = HCColor.Content.textPrimary(isDark)
 				config.textProperties.numberOfLines = 1
 			case .addNew(let name):
-				config.text = String(format: HCL10n.FileTags.addTagFormat, name)
+				config.text = String(format: HCL10n.TagManage.addTagFormat, name)
 				config.textProperties.color = HCColor.Interaction.primarySolidNormal(isDark)
 				config.textProperties.numberOfLines = 1
 		}
@@ -696,11 +698,11 @@ extension FileTagsManagementViewController: UICollectionViewDataSource, UICollec
 					self?.unassignOnServer(tag)
 				}
 			case .showMore(let hiddenCount):
-				cell.titleLabel.text = String(format: HCL10n.FileTags.showMoreFormat, hiddenCount)
+				cell.titleLabel.text = String(format: HCL10n.TagManage.showMoreFormat, hiddenCount)
 				cell.setShowsRemoveButton(false)
 				cell.onRemove = nil
 			case .showLess:
-				cell.titleLabel.text = HCL10n.FileTags.showLess
+				cell.titleLabel.text = HCL10n.TagManage.showLess
 				cell.setShowsRemoveButton(false)
 				cell.onRemove = nil
 		}
@@ -716,10 +718,10 @@ extension FileTagsManagementViewController: UICollectionViewDataSource, UICollec
 				title = tag.displayName
 				showsRemove = true
 			case .showMore(let hiddenCount):
-				title = String(format: HCL10n.FileTags.showMoreFormat, hiddenCount)
+				title = String(format: HCL10n.TagManage.showMoreFormat, hiddenCount)
 				showsRemove = false
 			case .showLess:
-				title = HCL10n.FileTags.showLess
+				title = HCL10n.TagManage.showLess
 				showsRemove = false
 		}
 		let width = chipWidth(forTitle: title, showsRemove: showsRemove)
