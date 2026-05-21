@@ -107,7 +107,77 @@ public final actor DeviceReachabilityService {
 		mdnsService.onUpdate = { [pipeline] locals in
 			Task { await pipeline.handleMDNSUpdate(locals) }
 		}
-		Task { await forceReloadDevices() }
+		Task {
+			await seedInitialBestURLFromSession()
+			await performLaunchPathDetection()
+		}
+	}
+
+	/// Seeds the SDK base URL from the last successful path or bookmark before the first
+	/// detection pass, so authenticated cold launch does not default to local-first.
+	private func seedInitialBestURLFromSession() async {
+		guard let cn = preferences.favoriteDeviceCN,
+		      await remoteAccessService.hasValidTokens() else { return }
+
+		let url: URL?
+		if let saved = preferences.currentConnectedDevice,
+		   saved.certificateCommonName == cn,
+		   let key = saved.lastSuccessfulPathKey {
+			if key.hasPrefix("mdns|") {
+				let parts = key.split(separator: "|", omittingEmptySubsequences: false)
+				if parts.count == 3, let port = Int(parts[2]) {
+					url = URL(host: String(parts[1]), port: port)
+				} else {
+					url = nil
+				}
+			} else if let savedPath = saved.paths.first(where: { $0.pathKey == key }) {
+				url = savedPath.asRemotePath().apiBaseURL()
+			} else {
+				url = nil
+			}
+		} else {
+			url = Self.deviceBaseURLFromBookmark()
+		}
+
+		if let url {
+			urlProvider.setBestURL(url, for: cn)
+			Log.debug("[STX-RA]: Cold launch seeded base URL: \(url.absoluteString)")
+		}
+	}
+
+	private static func deviceBaseURLFromBookmark() -> URL? {
+		guard let bookmarkURL = OCBookmarkManager.shared.bookmarks.first?.url else { return nil }
+		if bookmarkURL.lastPathComponent == "files" {
+			return bookmarkURL.deletingLastPathComponent()
+		}
+		return bookmarkURL
+	}
+
+	/// After seeding the last successful URL for a fast cold start, still run Algorithm B
+	/// (priority path probing / local shortcut) so we can switch to a better link when available.
+	private func performLaunchPathDetection() async {
+		await coordinator.beginExternalDetection()
+		if await tryLaunchDirectPathResolution() == false {
+			await pipeline.reloadDevices()
+		}
+		await coordinator.endExternalDetection()
+	}
+
+	/// Algorithm B — same entry as `NetworkChangeCoordinator.performDetection`.
+	private func tryLaunchDirectPathResolution() async -> Bool {
+		guard await remoteAccessService.hasValidTokens(),
+		      let saved = preferences.currentConnectedDevice,
+		      let seagateDeviceID = saved.seagateDeviceID,
+		      !seagateDeviceID.isEmpty
+		else {
+			return false
+		}
+
+		return await pipeline.attemptDirectResolution(
+			seagateDeviceID: seagateDeviceID,
+			certificateCommonName: saved.certificateCommonName,
+			wifiAvailable: wifiAvailableForLocalPaths
+		)
 	}
 
 	private func installReloadTriggers() {
@@ -361,7 +431,11 @@ public final actor DeviceReachabilityService {
 	// "is anything reachable?".
 
 	public func nextURLToAttempt(certificateCommonName cn: String) async -> SelectedPath? {
-		await catalog.nextURLToAttempt(forCN: cn, wifiAvailable: wifiAvailableForLocalPaths)
+		await catalog.nextURLToAttempt(
+			forCN: cn,
+			wifiAvailable: wifiAvailableForLocalPaths,
+			preferredPathKey: preferences.lastSuccessfulPathKey(forCN: cn)
+		)
 	}
 
 	public func reachableSelection(certificateCommonName cn: String) async -> SelectedPath? {
@@ -374,11 +448,22 @@ public final actor DeviceReachabilityService {
 	}
 
 	public func nextURLToAttempt(for merged: MergedDevice) -> SelectedPath? {
-		catalog.nextURLToAttempt(for: merged, wifiAvailable: wifiAvailableForLocalPaths)
+		let cn = merged.certificateCommonName
+		let preferredKey = cn.flatMap { preferences.lastSuccessfulPathKey(forCN: $0) }
+		return catalog.nextURLToAttempt(
+			for: merged,
+			wifiAvailable: wifiAvailableForLocalPaths,
+			preferredPathKey: preferredKey
+		)
 	}
 
 	public func reachableSelection(for merged: MergedDevice) -> SelectedPath? {
 		catalog.reachableSelection(for: merged, wifiAvailable: wifiAvailableForLocalPaths)
+	}
+
+	/// Fast login path selection: probes only the selected device's links (Algorithm C).
+	public func selectLoginPath(for merged: MergedDevice) async -> DetectionPipeline.LoginPathResult? {
+		await pipeline.selectLoginPath(for: merged)
 	}
 
 }

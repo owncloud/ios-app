@@ -29,6 +29,7 @@ public final class DeviceReachabilityURLProvider: NSObject, OCBaseURLProvider {
 
 		cacheQueue.async(flags: .barrier) { self.bestURLByCN[cn] = url }
 
+		let isFavoriteDevice = (cn == preferences.favoriteDeviceCN)
 		DispatchQueue.main.async {
 			let bookmarks = OCBookmarkManager.shared.bookmarks
 			for bookmark in bookmarks {
@@ -62,6 +63,14 @@ public final class DeviceReachabilityURLProvider: NSObject, OCBaseURLProvider {
 					core.connection.validateConnection(withReason: "Best URL switched", dueToResponseTo: nil)
 				}
 			}
+
+			if isFavoriteDevice {
+				NotificationCenter.default.post(
+					name: .hcBestBaseURLDidChange,
+					object: nil,
+					userInfo: [HCBestBaseURLNotification.urlUserInfoKey: url]
+				)
+			}
 		}
 	}
 
@@ -77,6 +86,9 @@ public final class DeviceReachabilityURLProvider: NSObject, OCBaseURLProvider {
 
 	public func clearAll() {
 		cacheQueue.async(flags: .barrier) { self.bestURLByCN.removeAll() }
+		DispatchQueue.main.async {
+			NotificationCenter.default.post(name: .hcBestBaseURLDidChange, object: nil)
+		}
 	}
 
 	private func cachedBestURL(for cn: String) -> URL? {

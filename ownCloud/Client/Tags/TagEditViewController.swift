@@ -150,13 +150,7 @@ class TagEditViewController: UIViewController, Themeable {
 	}
 
 	private func validationError(for name: String) -> String? {
-		if name.count > HCL10n.TagEdit.maxNameLength {
-			return HCL10n.TagEdit.nameTooLongError
-		}
-		if name.rangeOfCharacter(from: HCL10n.TagEdit.forbiddenCharacters) != nil {
-			return HCL10n.TagEdit.invalidCharactersError
-		}
-		return nil
+		TagNameValidation.validationError(for: name)
 	}
 
 	private func validateInput() {

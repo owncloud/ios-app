@@ -5,6 +5,12 @@ import ownCloudSDK
 public extension Notification.Name {
 	/// Posted on main when `HCContext.lastRemoteBaseURL` changes (reachability best path).
 	static let hcRemoteBaseURLDidChange = Notification.Name("HCRemoteBaseURLDidChange")
+	/// Posted on main when the favorite device's best connection URL changes.
+	static let hcBestBaseURLDidChange = Notification.Name("HCBestBaseURLDidChange")
+}
+
+public enum HCBestBaseURLNotification {
+	public static let urlUserInfoKey = "url"
 }
 
 private enum Constants {
@@ -28,7 +34,11 @@ public final class HCContext {
 	// Use `RemoteAccessSharingURLResolver` directly if possible.
 	public var lastRemoteBaseURL: URL?
 
+	/// Best URL for the favorite device (local or remote). Updated when reachability picks a new path.
+	public private(set) var lastBestBaseURL: URL?
+
 	private var networkFailureObserver: NSObjectProtocol?
+	private var bestBaseURLObserver: NSObjectProtocol?
 	private var cancellables = Set<AnyCancellable>()
 
 	public init() {
@@ -58,6 +68,14 @@ public final class HCContext {
 				NotificationCenter.default.post(name: .hcRemoteBaseURLDidChange, object: nil)
 			}
 			.store(in: &cancellables)
+
+		bestBaseURLObserver = NotificationCenter.default.addObserver(
+			forName: .hcBestBaseURLDidChange,
+			object: nil,
+			queue: .main
+		) { [weak self] note in
+			self?.lastBestBaseURL = note.userInfo?[HCBestBaseURLNotification.urlUserInfoKey] as? URL
+		}
 	}
 
 	public func setup() {

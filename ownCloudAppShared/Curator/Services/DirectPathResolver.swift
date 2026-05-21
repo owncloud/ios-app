@@ -53,6 +53,17 @@ public struct DirectPathResolver: Sendable {
 		wifiAvailable: Bool
 	) async -> Bool {
 		// Step 1: test the known local baseUrl directly — no WiFi check (spec WiFi exception).
+		// Skip when the last successful session path was non-local (cold launch should retry WAN first).
+		let skipLocalShortcut: Bool = {
+			guard let saved = preferences.currentConnectedDevice,
+			      saved.certificateCommonName == certificateCommonName,
+			      let key = saved.lastSuccessfulPathKey,
+			      !key.hasPrefix("mdns|"),
+			      let savedPath = saved.paths.first(where: { $0.pathKey == key }) else { return false }
+			return savedPath.kind != .local
+		}()
+
+		if !skipLocalShortcut {
 		// Prefer in-memory localDevices; fall back to lastKnownLocalURL which survives WiFi loss.
 		let locals = await catalog.localDevices()
 		let localURLFromMDNS: URL? = locals
@@ -77,6 +88,7 @@ public struct DirectPathResolver: Sendable {
 			} catch {
 				Log.debug("[STX-RA]: Local baseUrl shortcut failed: \(error). Proceeding to backend.")
 			}
+		}
 		}
 
 		guard await remoteAccessService.hasValidTokens() else { return false }
@@ -185,6 +197,10 @@ public struct DirectPathResolver: Sendable {
 		}
 		emit(.devicesUpdated(await catalog.mergedDevices()))
 		await recalculateBestURLs()
+		preferences.updateLastSuccessfulPathKey(
+			SelectedPath.remote(winningPath).persistenceKey,
+			forCN: certificateCommonName
+		)
 		Task { [availabilityMonitor] in await availabilityMonitor.recordSuccess() }
 		Log.debug("[STX-RA]: Direct path resolution succeeded (\(winningPath.kind)) for \(certificateCommonName).")
 		return true

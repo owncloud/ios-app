@@ -645,6 +645,10 @@
 		DCB6B20C292E428000D27573 /* AccountController+ExtraItems.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20B292E428000D27573 /* AccountController+ExtraItems.swift */; };
 		DCA0000103ABCDEF00000001 /* TagsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA0000102ABCDEF00000001 /* TagsViewController.swift */; };
 		DCA0000105ABCDEF00000001 /* TagEditViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA0000104ABCDEF00000001 /* TagEditViewController.swift */; };
+		DCA0000111ABCDEF00000001 /* TagNameValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA0000110ABCDEF00000001 /* TagNameValidation.swift */; };
+		DCA0000113ABCDEF00000001 /* FileTagsManagementViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA0000112ABCDEF00000001 /* FileTagsManagementViewController.swift */; };
+		DCA0000115ABCDEF00000001 /* ManageFileTagsAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA0000114ABCDEF00000001 /* ManageFileTagsAction.swift */; };
+		DCA0000117ABCDEF00000001 /* HCTagSelectFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCA0000116ABCDEF00000001 /* HCTagSelectFieldView.swift */; };
 		DCB6B20F292F843800D27573 /* CollectionViewAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB6B20E292F843800D27573 /* CollectionViewAction.swift */; };
 		DCB750522D2F0B3600CCF68C /* DetailsSpaceAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC9CE3D12D1080EE00979C44 /* DetailsSpaceAction.swift */; };
 		DCB796472BC4847200D6D759 /* ShortcutFileDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB796462BC4847200D6D759 /* ShortcutFileDisplayViewController.swift */; };
@@ -1789,6 +1793,10 @@
 		DCB6B20B292E428000D27573 /* AccountController+ExtraItems.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AccountController+ExtraItems.swift"; sourceTree = "<group>"; };
 		DCA0000102ABCDEF00000001 /* TagsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagsViewController.swift; sourceTree = "<group>"; };
 		DCA0000104ABCDEF00000001 /* TagEditViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagEditViewController.swift; sourceTree = "<group>"; };
+		DCA0000110ABCDEF00000001 /* TagNameValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagNameValidation.swift; sourceTree = "<group>"; };
+		DCA0000112ABCDEF00000001 /* FileTagsManagementViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileTagsManagementViewController.swift; sourceTree = "<group>"; };
+		DCA0000114ABCDEF00000001 /* ManageFileTagsAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManageFileTagsAction.swift; sourceTree = "<group>"; };
+		DCA0000116ABCDEF00000001 /* HCTagSelectFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HCTagSelectFieldView.swift; sourceTree = "<group>"; };
 		DCB6B20E292F843800D27573 /* CollectionViewAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollectionViewAction.swift; sourceTree = "<group>"; };
 		DCB6C4DD24559B1600C1EAE1 /* AccountAuthenticationUpdaterPasswordPromptViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountAuthenticationUpdaterPasswordPromptViewController.swift; sourceTree = "<group>"; };
 		DCB796462BC4847200D6D759 /* ShortcutFileDisplayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutFileDisplayViewController.swift; sourceTree = "<group>"; };
@@ -2560,6 +2568,7 @@
 				DC0CE19C28C89CD9009ABDFB /* CreateDocumentAction.swift */,
 				DC1621372B8FE9BF00EB17F8 /* AddToSidebarAction.swift */,
 				DCB796572BC535AD00D6D759 /* RemoveFromSidebarAction.swift */,
+				DCA0000114ABCDEF00000001 /* ManageFileTagsAction.swift */,
 			);
 			path = "Actions+Extensions";
 			sourceTree = "<group>";
@@ -2923,6 +2932,7 @@
 				991B368A2E2199B000369B7D /* HCTextFieldView.swift */,
 				991B36912E22D54300369B7D /* HCSecureTextFieldView.swift */,
 				99C42DDD2EA668AA00E36414 /* HCDropdownTextFieldView.swift */,
+				DCA0000116ABCDEF00000001 /* HCTagSelectFieldView.swift */,
 				9915B3612E215B870096765C /* HCBorderView.swift */,
 				99DF68732E1E67D900F1A0B9 /* HCAppLogoView.swift */,
 				99DF68762E1E67D900F1A0B9 /* HCSpacerView.swift */,
@@ -3318,6 +3328,8 @@
 			children = (
 				DCA0000102ABCDEF00000001 /* TagsViewController.swift */,
 				DCA0000104ABCDEF00000001 /* TagEditViewController.swift */,
+				DCA0000110ABCDEF00000001 /* TagNameValidation.swift */,
+				DCA0000112ABCDEF00000001 /* FileTagsManagementViewController.swift */,
 			);
 			path = Tags;
 			sourceTree = "<group>";
@@ -5342,6 +5354,9 @@
 				DCB6B20C292E428000D27573 /* AccountController+ExtraItems.swift in Sources */,
 				DCA0000103ABCDEF00000001 /* TagsViewController.swift in Sources */,
 				DCA0000105ABCDEF00000001 /* TagEditViewController.swift in Sources */,
+				DCA0000111ABCDEF00000001 /* TagNameValidation.swift in Sources */,
+				DCA0000113ABCDEF00000001 /* FileTagsManagementViewController.swift in Sources */,
+				DCA0000115ABCDEF00000001 /* ManageFileTagsAction.swift in Sources */,
 				233E0FD82099F11D00C3D8D5 /* SecuritySettingsSection.swift in Sources */,
 				396D7C6523224A53002380C1 /* DiscardSceneAction.swift in Sources */,
 				4C82D07022C9387300835F0B /* MediaDisplayViewController.swift in Sources */,
@@ -5468,6 +5483,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				99C42DDF2EA6692E00E36414 /* HCDropdownTextFieldView.swift in Sources */,
+				DCA0000117ABCDEF00000001 /* HCTagSelectFieldView.swift in Sources */,
 				DC0A357E24C0E43C00FB58FC /* ThemeStyle+Extensions.swift in Sources */,
 				DCB1B8C829C8F84800BFF393 /* ThemeCSSProgressView.swift in Sources */,
 				DC2BB5402CD96C1600320384 /* ServerSideSearchScope.swift in Sources */,

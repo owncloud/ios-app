@@ -34,6 +34,14 @@ public actor DeviceCatalog {
 		remoteDevicesStore = devices
 	}
 
+	public func upsertRemoteDevice(_ device: RemoteDevice) {
+		if let idx = remoteDevicesStore.firstIndex(where: { $0.certificateCommonName == device.certificateCommonName }) {
+			remoteDevicesStore[idx] = device
+		} else {
+			remoteDevicesStore.append(device)
+		}
+	}
+
 	public func setLocalDevices(_ devices: [LocalDevice]) {
 		localDevicesStore = devices
 	}
@@ -168,7 +176,11 @@ public actor DeviceCatalog {
 
 	// MARK: - Path selection (caller passes `wifiAvailable`)
 
-	public func nextURLToAttempt(forCN cn: String, wifiAvailable: Bool) -> SelectedPath? {
+	public func nextURLToAttempt(
+		forCN cn: String,
+		wifiAvailable: Bool,
+		preferredPathKey: String? = nil
+	) -> SelectedPath? {
 		// Prefer reachable remote path by priority, skipping local-type paths when WiFi is absent.
 		if let remote = remoteDevicesStore.first(where: { $0.certificateCommonName == cn }) {
 			let probesDict = probesByCN[cn] ?? [:]
@@ -178,6 +190,15 @@ public actor DeviceCatalog {
 					return .remote(path)
 				}
 			}
+			if let preferredPathKey,
+			   let preferred = SelectedPath.matching(
+			   	persistenceKey: preferredPathKey,
+			   	paths: remote.paths,
+			   	localDevice: localDevicesStore.first(where: { $0.certificateCommonName == cn }),
+			   	wifiAvailable: wifiAvailable
+			   ) {
+				return preferred
+			}
 		}
 		if let staticRemoteDeviceStore, staticRemoteDeviceStore.certificateCommonName == cn {
 			let probesDict = probesByCN[cn] ?? [:]
@@ -185,6 +206,15 @@ public actor DeviceCatalog {
 				if let probe = probesDict[path.key], probe.isOperational {
 					return .remote(path)
 				}
+			}
+			if let preferredPathKey,
+			   let preferred = SelectedPath.matching(
+			   	persistenceKey: preferredPathKey,
+			   	paths: staticRemoteDeviceStore.paths,
+			   	localDevice: nil,
+			   	wifiAvailable: wifiAvailable
+			   ) {
+				return preferred
 			}
 			// Static device is a user-configured override — always offer its first path
 			// even when no probe succeeded, so the SDK can keep trying.
@@ -229,7 +259,11 @@ public actor DeviceCatalog {
 		return nil
 	}
 
-	public nonisolated func nextURLToAttempt(for merged: MergedDevice, wifiAvailable: Bool) -> SelectedPath? {
+	public nonisolated func nextURLToAttempt(
+		for merged: MergedDevice,
+		wifiAvailable: Bool,
+		preferredPathKey: String? = nil
+	) -> SelectedPath? {
 		// 1) Prefer operational probes in priority order, skipping local-type paths when WiFi is absent.
 		if let probe = merged.pathProbes.first(where: { probe in
 			guard probe.isOperational else { return false }
@@ -248,14 +282,25 @@ public actor DeviceCatalog {
 			}
 		}
 
-		// 2) Fallback: best ordered non-local remote path (or any path if WiFi is available).
+		// 2) Cold launch / relaunch: retry last successful path before defaulting to local-first order.
+		if let preferredPathKey, let remote = merged.remoteDevice,
+		   let preferred = SelectedPath.matching(
+		   	persistenceKey: preferredPathKey,
+		   	paths: remote.paths,
+		   	localDevice: merged.localDevice,
+		   	wifiAvailable: wifiAvailable
+		   ) {
+			return preferred
+		}
+
+		// 3) Fallback: best ordered non-local remote path (or any path if WiFi is available).
 		if let remote = merged.remoteDevice {
 			let ordered = remote.paths.ordered()
 			let candidate = wifiAvailable ? ordered.first : ordered.first(where: { $0.kind != .local })
 			if let first = candidate { return .remote(first) }
 		}
 
-		// 3) Fallback: local mDNS only when WiFi is available.
+		// 4) Fallback: local mDNS only when WiFi is available.
 		if wifiAvailable, let local = merged.localDevice {
 			return .mdns(host: local.host, port: local.port)
 		}

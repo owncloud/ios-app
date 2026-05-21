@@ -230,8 +230,11 @@ public class ActionContext: OCExtensionContext {
 	}
 
 	public func add(item:OCItem) {
-
-		guard !self.itemStorage.contains(item) else {
+		if let localID = item.localID {
+			guard !itemStorage.contains(where: { $0.localID == localID }) else {
+				return
+			}
+		} else if itemStorage.contains(item) {
 			return
 		}
 

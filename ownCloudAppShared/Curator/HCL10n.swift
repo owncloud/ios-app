@@ -213,6 +213,23 @@ public enum HCL10n {
 		}
 	}
 
+	public enum TagManage {
+		public static var title: String { OCLocalizedString("TagManage.title", nil) }
+		public static var actionTitle: String { OCLocalizedString("TagManage.actionTitle", nil) }
+		public static var selectTagPlaceholder: String { OCLocalizedString("TagManage.selectTagPlaceholder", nil) }
+		public static var noTagsAvailableHint: String { OCLocalizedString("TagManage.noTagsAvailableHint", nil) }
+		public static var addTagFormat: String { OCLocalizedString("TagManage.addTagFormat", nil) }
+		public static var emptyFileMessage: String { OCLocalizedString("TagManage.emptyFileMessage", nil) }
+		public static var showMoreFormat: String { OCLocalizedString("TagManage.showMoreFormat", nil) }
+		public static var showLess: String { OCLocalizedString("TagManage.showLess", nil) }
+		public static var assignFailed: String { OCLocalizedString("TagManage.assignFailed", nil) }
+		public static var removeFailed: String { OCLocalizedString("TagManage.removeFailed", nil) }
+		public static var loadingError: String { OCLocalizedString("TagManage.loadingError", nil) }
+		public static var errorOk: String { OCLocalizedString("TagManage.errorOk", nil) }
+		public static var createError: String { OCLocalizedString("TagManage.createError", nil) }
+		public static var alreadyExists: String { OCLocalizedString("TagManage.alreadyExists", nil) }
+	}
+
 	public enum TagEdit {
 		public static var done: String { OCLocalizedString("TagEdit.done", nil) }
 		public static var cancel: String { OCLocalizedString("TagEdit.cancel", nil) }
