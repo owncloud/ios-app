@@ -68,6 +68,13 @@ open class HCTextFieldView: HCFieldView {
 		}
 	}
 
+	/// When set, `leftIcon` is rendered as a template and tinted with this color.
+	open var leftIconTintColor: UIColor? {
+		didSet {
+			updateAppearance()
+		}
+	}
+
 	public override var contentView: UIView {
 		stackView
 	}
@@ -137,7 +144,13 @@ open class HCTextFieldView: HCFieldView {
 		super.updateAppearance()
 
 		if let leftIcon {
-			iconView.image = leftIcon
+			if let leftIconTintColor {
+				iconView.image = leftIcon.withRenderingMode(.alwaysTemplate)
+				iconView.tintColor = leftIconTintColor
+			} else {
+				iconView.image = leftIcon
+				iconView.tintColor = nil
+			}
 			iconView.isHidden = false
 		} else {
 			iconView.isHidden = true

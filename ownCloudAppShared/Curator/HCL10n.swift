@@ -213,6 +213,19 @@ public enum HCL10n {
 		}
 	}
 
+	public enum FileTags {
+		public static var screenTitle: String { OCLocalizedString("FileTags.screenTitle", nil) }
+		public static var actionTitle: String { OCLocalizedString("FileTags.actionTitle", nil) }
+		public static var selectTagPlaceholder: String { OCLocalizedString("FileTags.selectTagPlaceholder", nil) }
+		public static var noTagsAvailableHint: String { OCLocalizedString("FileTags.noTagsAvailableHint", nil) }
+		public static var addTagFormat: String { OCLocalizedString("FileTags.addTagFormat", nil) }
+		public static var emptyFileMessage: String { OCLocalizedString("FileTags.emptyFileMessage", nil) }
+		public static var showMoreFormat: String { OCLocalizedString("FileTags.showMoreFormat", nil) }
+		public static var showLess: String { OCLocalizedString("FileTags.showLess", nil) }
+		public static var assignFailed: String { OCLocalizedString("FileTags.assignFailed", nil) }
+		public static var removeFailed: String { OCLocalizedString("FileTags.removeFailed", nil) }
+	}
+
 	public enum TagEdit {
 		public static var done: String { OCLocalizedString("TagEdit.done", nil) }
 		public static var cancel: String { OCLocalizedString("TagEdit.cancel", nil) }

@@ -103,6 +103,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		OCExtensionManager.shared.addExtension(FavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(UnfavoriteAction.actionExtension)
 		OCExtensionManager.shared.addExtension(DisplayExifMetadataAction.actionExtension)
+		OCExtensionManager.shared.addExtension(ManageFileTagsAction.actionExtension)
 		OCExtensionManager.shared.addExtension(PresentationModeAction.actionExtension)
 		OCExtensionManager.shared.addExtension(PDFGoToPageAction.actionExtension)
 		OCExtensionManager.shared.addExtension(ImportPasteboardAction.actionExtension)

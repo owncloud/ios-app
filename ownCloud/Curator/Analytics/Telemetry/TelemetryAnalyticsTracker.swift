@@ -1,7 +1,17 @@
 import Foundation
 import ownCloudAppShared
-import telemetry
 import UIKit
+
+#if targetEnvironment(simulator) && (arch(arm64) || arch(arm64_32))
+// telemetry.xcframework ships x86_64/i386 simulator slices only (no arm64 simulator).
+final class TelemetryAnalyticsTracker: AnalyticsTrackerType {
+	init() {}
+
+	func track(_ event: AnalyticsEvent) {}
+}
+
+#else
+import telemetry
 
 final class TelemetryAnalyticsTracker: AnalyticsTrackerType {
 	private let client = TelemetryClient.client
@@ -42,3 +52,5 @@ final class TelemetryAnalyticsTracker: AnalyticsTrackerType {
 		}
 	}
 }
+
+#endif

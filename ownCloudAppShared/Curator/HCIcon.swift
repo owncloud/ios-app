@@ -13,6 +13,8 @@ public enum HCIcon {
 	public static var delete: UIImage? { sharedIcon("delete") }
 	public static var clearDark: UIImage? { sharedIcon("clear_dark") }
 	public static var clearLight: UIImage? { sharedIcon("clear_light") }
+	public static var errorIcon: UIImage? { sharedIcon("error_icon") }
+	public static var tagIcon: UIImage? { sharedIcon("tag_icon") }
 
 	private static func sharedIcon(_ name: String) -> UIImage? {
 		UIImage(named: name, in: Bundle.sharedAppBundle, with: nil)

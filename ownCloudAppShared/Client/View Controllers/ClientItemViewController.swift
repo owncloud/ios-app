@@ -962,7 +962,7 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 					// Setup multi selection action datasource
 					multiSelectionActionsDatasource = OCDataSourceArray()
 					refreshMultiselectActions()
-					showActionsBar(with: multiSelectionActionsDatasource!)
+					showActionsBar(with: multiSelectionActionsDatasource!, context: clientContext)
 				} else {
 					// Restore navigation item
 					closeActionsBar()
@@ -979,6 +979,11 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 	func refreshMultiselectActions() {
 		if let multiSelectionActionContext = multiSelectionActionContext {
 			var actionItems : [OCDataItem & OCDataItemVersioning] = []
+			let actionCompletionHandler : ActionCompletionHandler = { [weak self] action, error in
+				OnMainThread {
+					self?.isMultiSelecting = false
+				}
+			}
 
 			if multiSelectionActionContext.items.count == 0 {
 				if noActionsTextItem == nil {
@@ -997,11 +1002,6 @@ open class ClientItemViewController: CollectionViewController, SortBarDelegate, 
 				multiSelectionToggleSelectionBarButtonItem?.title = OCLocalizedString("Select All", nil)
 			} else {
 				let actions = Action.sortedApplicableActions(for: multiSelectionActionContext)
-				let actionCompletionHandler : ActionCompletionHandler = { [weak self] action, error in
-					OnMainThread {
-						self?.isMultiSelecting = false
-					}
-				}
 
 				for action in actions {
 					action.completionHandler = actionCompletionHandler

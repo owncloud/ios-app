@@ -44,7 +44,7 @@ public final class HCSidebarHeaderView: ThemeCSSView {
 
 	public var onEditTap: (() -> Void)?
 
-	private var remoteURLObserver: NSObjectProtocol?
+	private var bestBaseURLObserver: NSObjectProtocol?
 
 	public override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -84,8 +84,8 @@ public final class HCSidebarHeaderView: ThemeCSSView {
 			$0.bottom.equalToSuperview().offset(-24)
 		}
 
-		remoteURLObserver = NotificationCenter.default.addObserver(
-			forName: .hcRemoteBaseURLDidChange,
+		bestBaseURLObserver = NotificationCenter.default.addObserver(
+			forName: .hcBestBaseURLDidChange,
 			object: nil,
 			queue: .main
 		) { [weak self] _ in
@@ -94,8 +94,8 @@ public final class HCSidebarHeaderView: ThemeCSSView {
 	}
 
 	deinit {
-		if let remoteURLObserver {
-			NotificationCenter.default.removeObserver(remoteURLObserver)
+		if let bestBaseURLObserver {
+			NotificationCenter.default.removeObserver(bestBaseURLObserver)
 		}
 	}
 
@@ -114,7 +114,7 @@ public final class HCSidebarHeaderView: ThemeCSSView {
 			userNamePrefix = userName + "@"
 		}
 		let hostPart: String = {
-			if let best = HCContext.shared.lastRemoteBaseURL {
+			if let best = HCContext.shared.lastBestBaseURL {
 				let label = Self.hostLabel(for: best)
 				if label.isEmpty == false { return label }
 			}
