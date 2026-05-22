@@ -75,6 +75,15 @@ open class HCTextFieldView: HCFieldView {
 		}
 	}
 
+	/// When `true`, the field uses `HCColor.Structure.cardBackground` inside the border’s rounded shape.
+	open var showsCardBackground: Bool = false {
+		didSet {
+			borderView.showsBackground = showsCardBackground
+			updateCardBackgroundColor()
+			updateAppearance()
+		}
+	}
+
 	public override var contentView: UIView {
 		stackView
 	}
@@ -105,9 +114,34 @@ open class HCTextFieldView: HCFieldView {
 			iconView, textField
 		])
 
+		installBorderTapToFocus()
 		updateTextField()
 		updateAppearance()
 		updateContentView()
+	}
+
+	/// Makes taps anywhere in the bordered field area focus the text field (including padding and icons).
+	private func installBorderTapToFocus() {
+		borderView.isUserInteractionEnabled = true
+
+		let tap = UITapGestureRecognizer(target: self, action: #selector(borderedAreaTapped))
+		tap.cancelsTouchesInView = false
+		borderView.addGestureRecognizer(tap)
+
+		for case let scrollView as UIScrollView in borderView.subviews {
+			let scrollTap = UITapGestureRecognizer(target: self, action: #selector(borderedAreaTapped))
+			scrollTap.cancelsTouchesInView = false
+			scrollView.addGestureRecognizer(scrollTap)
+		}
+	}
+
+	@objc private func borderedAreaTapped() {
+		guard !textField.isFirstResponder else { return }
+		_ = textField.becomeFirstResponder()
+	}
+
+	public override func becomeFirstResponder() -> Bool {
+		textField.becomeFirstResponder()
 	}
 
 	public override func updateContentView() {
@@ -133,6 +167,7 @@ open class HCTextFieldView: HCFieldView {
 		placeholderColor = collection.css.getColor(.stroke, selectors: [.placeholder], for: self)
 		textColor = collection.css.getColor(.stroke, selectors: [.text], for: self)
 		clearButton.tintColor = textColor
+		updateCardBackgroundColor(isDark: collection.isDark)
 		updateAppearance()
 
 		super.applyThemeCollection(theme: theme, collection: collection, event: event)
@@ -140,8 +175,30 @@ open class HCTextFieldView: HCFieldView {
 		backgroundColor = .clear
 	}
 
+	private func updateCardBackgroundColor(isDark: Bool? = nil) {
+		guard showsCardBackground else {
+			borderView.backgroundFillColor = nil
+			return
+		}
+		let isDark = isDark ?? Theme.shared.activeCollection.isDark
+		borderView.backgroundFillColor = HCColor.Structure.cardBackground(isDark)
+		borderView.showsBackground = true
+	}
+
+	/// With card background, only show the border while focused or in an error state.
+	private func applyCardBackgroundBorderStyle() {
+		guard showsCardBackground else { return }
+		let hasError = errorText != nil
+		if hasError || isActive {
+			return
+		}
+		borderView.borderWidth = 0
+		borderView.borderColor = .clear
+	}
+
 	public override func updateAppearance() {
 		super.updateAppearance()
+		applyCardBackgroundBorderStyle()
 
 		if let leftIcon {
 			if let leftIconTintColor {
@@ -166,10 +223,8 @@ open class HCTextFieldView: HCFieldView {
 
 	@objc private func clearTextField() {
 		textField.text = ""
-
+		textField.sendActions(for: .editingChanged)
 		NotificationCenter.default.post(name: UITextField.textDidChangeNotification, object: textField)
-
-		updateTextField()
 	}
 
 	@objc private func editingChanged() {

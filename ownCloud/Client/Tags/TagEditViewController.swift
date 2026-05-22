@@ -110,6 +110,7 @@ class TagEditViewController: UIViewController, Themeable {
 		tagNameField.textField.autocorrectionType = .no
 		tagNameField.textField.delegate = self
 		tagNameField.textField.addTarget(self, action: #selector(textFieldDidChange), for: .editingChanged)
+		tagNameField.showsCardBackground = true
 
 		view.addSubview(tagNameField)
 

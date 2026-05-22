@@ -36,6 +36,7 @@ public final class HCTagSelectFieldView: UIView {
 	private weak var installedHostView: UIView?
 	private var outsideTapRecognizer: UITapGestureRecognizer?
 	private var isExpanded = false
+	private var keyboardFrameInHostView: CGRect = .zero
 
 	public override init(frame: CGRect) {
 		super.init(frame: frame)
@@ -43,6 +44,7 @@ public final class HCTagSelectFieldView: UIView {
 
 		textFieldView.textField.delegate = self
 		textFieldView.textField.addTarget(self, action: #selector(textDidChange), for: UIControl.Event.editingChanged)
+		installKeyboardObservers()
 
 		dropdownCard.showsShadow = true
 		dropdownCard.isHidden = true
@@ -56,13 +58,14 @@ public final class HCTagSelectFieldView: UIView {
 		textFieldView.snp.makeConstraints {
 			$0.edges.equalToSuperview()
 		}
-		textFieldView.borderView.snp.makeConstraints {
-			$0.height.equalTo(48)
-		}
 	}
 
 	public required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
+	}
+
+	deinit {
+		NotificationCenter.default.removeObserver(self)
 	}
 
 	public func expandDropdownIfNeeded() {
@@ -105,12 +108,12 @@ public final class HCTagSelectFieldView: UIView {
 			make.trailing.equalTo(textFieldView.borderView.snp.trailing)
 			dropdownHeightConstraint = make.height.equalTo(0).constraint
 		}
+		installedHostView = hostView
 		updateDropdownHeight()
 		dropdownCard.isHidden = false
 		UIView.animate(withDuration: 0.2) {
 			self.dropdownCard.alpha = 1
 		}
-		installedHostView = hostView
 		installOutsideTapRecognizer()
 	}
 
@@ -130,11 +133,79 @@ public final class HCTagSelectFieldView: UIView {
 		removeOutsideTapRecognizer()
 	}
 
+	private func installKeyboardObservers() {
+		let center = NotificationCenter.default
+		center.addObserver(
+			self,
+			selector: #selector(keyboardFrameDidChange(_:)),
+			name: UIResponder.keyboardWillShowNotification,
+			object: nil
+		)
+		center.addObserver(
+			self,
+			selector: #selector(keyboardFrameDidChange(_:)),
+			name: UIResponder.keyboardWillChangeFrameNotification,
+			object: nil
+		)
+		center.addObserver(
+			self,
+			selector: #selector(keyboardWillHide(_:)),
+			name: UIResponder.keyboardWillHideNotification,
+			object: nil
+		)
+	}
+
+	@objc private func keyboardFrameDidChange(_ notification: Notification) {
+		updateKeyboardFrame(from: notification)
+		if isExpanded {
+			updateDropdownHeight()
+		}
+	}
+
+	@objc private func keyboardWillHide(_ notification: Notification) {
+		keyboardFrameInHostView = .zero
+		if isExpanded {
+			updateDropdownHeight()
+		}
+	}
+
+	private func updateKeyboardFrame(from notification: Notification) {
+		guard let hostView = installedHostView ?? dropdownHostView,
+		      let frameValue = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? NSValue else {
+			return
+		}
+		let screenFrame = frameValue.cgRectValue
+		if let window = hostView.window {
+			keyboardFrameInHostView = hostView.convert(screenFrame, from: window)
+		} else {
+			keyboardFrameInHostView = hostView.convert(screenFrame, from: UIScreen.main.coordinateSpace)
+		}
+	}
+
+	private func availableDropdownMaxHeight(in hostView: UIView) -> CGFloat {
+		let anchorRect = textFieldView.borderView.convert(textFieldView.borderView.bounds, to: hostView)
+		let dropdownTop = anchorRect.maxY + 4
+		var availableBottom = hostView.bounds.maxY - hostView.safeAreaInsets.bottom
+
+		if keyboardFrameInHostView.height > 0 {
+			let keyboardTop = keyboardFrameInHostView.minY
+			if keyboardTop > dropdownTop {
+				availableBottom = min(availableBottom, keyboardTop - 8)
+			}
+		}
+
+		return max(availableBottom - dropdownTop, 48)
+	}
+
 	private func updateDropdownHeight() {
+		guard isExpanded, let hostView = installedHostView else { return }
+
 		optionsTableView.layoutIfNeeded()
 		let contentHeight = optionsTableView.contentSize.height + Constants.dropdownInset * 2
-		let h = min(max(contentHeight, 1), Constants.maxDropdownHeight)
-		dropdownHeightConstraint?.update(offset: h)
+		let maxAvailable = min(Constants.maxDropdownHeight, availableDropdownMaxHeight(in: hostView))
+		let height = min(max(contentHeight, 1), maxAvailable)
+		optionsTableView.isScrollEnabled = contentHeight > height + 0.5
+		dropdownHeightConstraint?.update(offset: height)
 		installedHostView?.layoutIfNeeded()
 	}
 
@@ -185,6 +256,8 @@ extension HCTagSelectFieldView: UITextFieldDelegate {
 	public func textFieldDidBeginEditing(_ textField: UITextField) {
 		if !isExpanded {
 			expandDropdown()
+		} else {
+			updateDropdownHeight()
 		}
 	}
 
