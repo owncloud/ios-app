@@ -34,11 +34,14 @@ public final class HCContext {
 	// Use `RemoteAccessSharingURLResolver` directly if possible.
 	public var lastRemoteBaseURL: URL?
 
-	/// Best URL for the favorite device (local or remote). Updated when reachability picks a new path.
-	public private(set) var lastBestBaseURL: URL?
+	/// Best URL for the favorite device (local or remote). Always queries the URL provider
+	/// directly so callers see the live value, not a cached copy that depends on
+	/// notification-observer ordering.
+	public var currentBestBaseURL: URL? {
+		deviceReachabilityService.urlProvider.currentBaseURL()
+	}
 
 	private var networkFailureObserver: NSObjectProtocol?
-	private var bestBaseURLObserver: NSObjectProtocol?
 	private var cancellables = Set<AnyCancellable>()
 
 	public init() {
@@ -68,18 +71,10 @@ public final class HCContext {
 				NotificationCenter.default.post(name: .hcRemoteBaseURLDidChange, object: nil)
 			}
 			.store(in: &cancellables)
-
-		bestBaseURLObserver = NotificationCenter.default.addObserver(
-			forName: .hcBestBaseURLDidChange,
-			object: nil,
-			queue: .main
-		) { [weak self] note in
-			self?.lastBestBaseURL = note.userInfo?[HCBestBaseURLNotification.urlUserInfoKey] as? URL
-		}
 	}
 
 	public func setup() {
-		Task { OCConnection.defaultBaseURLProvider = await deviceReachabilityService.urlProvider }
+		OCConnection.defaultBaseURLProvider = deviceReachabilityService.urlProvider
 		deviceReachabilityService.start()
 
 		// status.php polling & similar: SDK does not call OCCoreDelegate handleError for these.

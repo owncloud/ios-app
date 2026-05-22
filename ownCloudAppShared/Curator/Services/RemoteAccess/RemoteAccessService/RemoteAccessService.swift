@@ -1,5 +1,6 @@
 import Foundation
 import UIKit
+import ownCloudSDK
 
 private enum Constants {
 	static var clientId: String {
@@ -8,6 +9,61 @@ private enum Constants {
 
 	static var clientFriendlyName: String {
 		UIDevice.current.name
+	}
+}
+
+
+/// Inter-process exclusion around the "read refresh token → POST /auth/refresh →
+/// save new tokens" critical section. The actor's `isUpdatingTokens` only dedupes
+/// callers inside one process; this lock also dedupes across the main app and its
+/// extensions (Share, File Provider UI, Intents) which all share the same keychain
+/// via `OCKeychainAccessGroupIdentifier`.
+///
+/// Implementation: advisory `flock(LOCK_EX)` on a sentinel file in the app group
+/// container. The OS releases all flocks held by a process on exit, so a crashed
+/// process can't deadlock the survivors.
+private enum CrossProcessRefreshLock {
+	struct Handle {
+		let fd: Int32
+		let acquired: Bool
+	}
+
+	private static let lockFilename = "ra-refresh.lock"
+
+	private static var lockURL: URL? {
+		guard let container = OCAppIdentity.shared.appGroupContainerURL else { return nil }
+		return container.appendingPathComponent(lockFilename)
+	}
+
+	static func acquire() async -> Handle {
+		guard let url = lockURL else {
+			return Handle(fd: -1, acquired: false)
+		}
+
+		return await withCheckedContinuation { (cont: CheckedContinuation<Handle, Never>) in
+			// `flock(LOCK_EX)` blocks the calling thread until the lock is free.
+			// Park the wait on a utility queue so we never block the actor's executor
+			// (or, worse, the main thread).
+			DispatchQueue.global(qos: .utility).async {
+				let fd = open(url.path, O_RDWR | O_CREAT, 0o644)
+				guard fd >= 0 else {
+					cont.resume(returning: Handle(fd: -1, acquired: false))
+					return
+				}
+				if flock(fd, LOCK_EX) != 0 {
+					close(fd)
+					cont.resume(returning: Handle(fd: -1, acquired: false))
+					return
+				}
+				cont.resume(returning: Handle(fd: fd, acquired: true))
+			}
+		}
+	}
+
+	static func release(_ handle: Handle) {
+		guard handle.acquired, handle.fd >= 0 else { return }
+		_ = flock(handle.fd, LOCK_UN)
+		close(handle.fd)
 	}
 }
 
@@ -225,7 +281,44 @@ public actor RemoteAccessService {
 	}
 
 	private func refreshAccessToken(clientId: String) async throws -> String {
-		try await performTokenUpdate {
+		// In-process single-flight first: any concurrent refresh callers in this process
+		// wait on the same continuation. Only the winning task contends for the
+		// cross-process lock — we never queue multiple lock waiters from one process.
+		if isUpdatingTokens {
+			return try await waitForInFlightTokenUpdate()
+		}
+
+		isUpdatingTokens = true
+		do {
+			let accessToken = try await mapErrors {
+				try await self.crossProcessLockedRefresh(clientId: clientId)
+			}
+			resumeTokenUpdateWaiters(with: .success(accessToken))
+			return accessToken
+		} catch {
+			resumeTokenUpdateWaiters(with: .failure(error))
+			throw error
+		}
+	}
+
+	/// Acquires the inter-process refresh lock, re-checks the keychain (another process
+	/// may have refreshed while we were parked), and only sends `/auth/refresh` if no
+	/// fresh tokens are visible.
+	private func crossProcessLockedRefresh(clientId: String) async throws -> String {
+		let handle = await CrossProcessRefreshLock.acquire()
+		defer { CrossProcessRefreshLock.release(handle) }
+
+		// Adopt another process's fresh tokens if any. The 5-second skew protects us
+		// from a token that's about to expire by the time we use it.
+		if let tokens = tokenStore.loadTokens(),
+		   !tokens.refreshToken.isEmpty,
+		   let exp = tokens.accessTokenExpiry,
+		   Date() < exp.addingTimeInterval(-5) {
+			api.accessToken = tokens.accessToken
+			return tokens.accessToken
+		}
+
+		return try await runTokenUpdate {
 			try await self.refreshTokenResponseWithStaleRetry(clientId: clientId)
 		}
 	}
