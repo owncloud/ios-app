@@ -176,85 +176,142 @@ public actor DeviceCatalog {
 
 	// MARK: - Path selection (caller passes `wifiAvailable`)
 
+	/// First path in `paths.ordered()` whose kind matches `predicate` and whose probe is
+	/// operational. Used by the `forCN`-keyed selectors which look up probes by path key.
+	private static func firstOperationalPath(
+		_ paths: [RemoteDevice.Path],
+		probes: [String: PathProbe],
+		where predicate: (RemoteDevice.Path.Kind) -> Bool
+	) -> RemoteDevice.Path? {
+		for path in paths.ordered() where predicate(path.kind) {
+			if probes[path.key]?.isOperational == true {
+				return path
+			}
+		}
+		return nil
+	}
+
+	/// First `.remotePath` probe whose kind matches `predicate` and is operational, in
+	/// array order. Used by the merged-device selectors which iterate already-ordered
+	/// probes attached to the merged record.
+	private static func firstOperationalProbePath(
+		_ probes: [PathProbe],
+		where predicate: (RemoteDevice.Path.Kind) -> Bool
+	) -> RemoteDevice.Path? {
+		for probe in probes {
+			guard probe.isOperational,
+			      case let .remotePath(path) = probe.source,
+			      predicate(path.kind)
+			else { continue }
+			return path
+		}
+		return nil
+	}
+
 	public func nextURLToAttempt(
 		forCN cn: String,
 		wifiAvailable: Bool,
 		preferredPathKey: String? = nil
 	) -> SelectedPath? {
-		// Prefer reachable remote path by priority, skipping local-type paths when WiFi is absent.
-		if let remote = remoteDevicesStore.first(where: { $0.certificateCommonName == cn }) {
-			let probesDict = probesByCN[cn] ?? [:]
-			for path in remote.paths.ordered() {
-				guard path.kind != .local || wifiAvailable else { continue }
-				if let probe = probesDict[path.key], probe.isOperational {
-					return .remote(path)
-				}
+		let probesDict = probesByCN[cn] ?? [:]
+		let dynamicRemote = remoteDevicesStore.first(where: { $0.certificateCommonName == cn })
+		let staticRemote: RemoteDevice? = {
+			guard let static_ = staticRemoteDeviceStore, static_.certificateCommonName == cn else { return nil }
+			return static_
+		}()
+
+		// 1) LOCAL tier. Spec: "If we have local matching device we should use it."
+		if wifiAvailable {
+			// 1a) Operational RA `.local` probe on the dynamic device.
+			if let remote = dynamicRemote,
+			   let localPath = Self.firstOperationalPath(remote.paths, probes: probesDict, where: { $0 == .local }) {
+				return .remote(localPath)
 			}
-			if let preferredPathKey,
-			   let preferred = SelectedPath.matching(
-			   	persistenceKey: preferredPathKey,
-			   	paths: remote.paths,
-			   	localDevice: localDevicesStore.first(where: { $0.certificateCommonName == cn }),
-			   	wifiAvailable: wifiAvailable
-			   ) {
-				return preferred
+			// 1a') Operational RA `.local` probe on the static device.
+			if let remote = staticRemote,
+			   let localPath = Self.firstOperationalPath(remote.paths, probes: probesDict, where: { $0 == .local }) {
+				return .remote(localPath)
 			}
-		}
-		if let staticRemoteDeviceStore, staticRemoteDeviceStore.certificateCommonName == cn {
-			let probesDict = probesByCN[cn] ?? [:]
-			for path in staticRemoteDeviceStore.paths.ordered() {
-				if let probe = probesDict[path.key], probe.isOperational {
-					return .remote(path)
-				}
-			}
-			if let preferredPathKey,
-			   let preferred = SelectedPath.matching(
-			   	persistenceKey: preferredPathKey,
-			   	paths: staticRemoteDeviceStore.paths,
-			   	localDevice: nil,
-			   	wifiAvailable: wifiAvailable
-			   ) {
-				return preferred
-			}
-			// Static device is a user-configured override — always offer its first path
-			// even when no probe succeeded, so the SDK can keep trying.
-			if let first = staticRemoteDeviceStore.paths.ordered().first {
-				return .remote(first)
+			// 1b) CN-validated mDNS local.
+			if let local = localDevicesStore.first(where: { $0.certificateCommonName == cn }) {
+				return .mdns(host: local.host, port: local.port)
 			}
 		}
 
-		// Fallback: local mDNS — only when WiFi is available (spec: local paths are WiFi-gated).
-		if wifiAvailable, let local = localDevicesStore.first(where: { $0.certificateCommonName == cn }) {
-			return .mdns(host: local.host, port: local.port)
+		// 2) NON-LOCAL tier: operational .public / .remote probes in priority order.
+		if let remote = dynamicRemote,
+		   let path = Self.firstOperationalPath(remote.paths, probes: probesDict, where: { $0 != .local }) {
+			return .remote(path)
+		}
+		if let remote = staticRemote,
+		   let path = Self.firstOperationalPath(remote.paths, probes: probesDict, where: { $0 != .local }) {
+			return .remote(path)
+		}
+
+		// 3) Cold launch / relaunch: retry last successful path before defaulting.
+		if let preferredPathKey, let remote = dynamicRemote,
+		   let preferred = SelectedPath.matching(
+		   	persistenceKey: preferredPathKey,
+		   	paths: remote.paths,
+		   	localDevice: localDevicesStore.first(where: { $0.certificateCommonName == cn }),
+		   	wifiAvailable: wifiAvailable
+		   ) {
+			return preferred
+		}
+		if let preferredPathKey, let remote = staticRemote,
+		   let preferred = SelectedPath.matching(
+		   	persistenceKey: preferredPathKey,
+		   	paths: remote.paths,
+		   	localDevice: nil,
+		   	wifiAvailable: wifiAvailable
+		   ) {
+			return preferred
+		}
+
+		// 4) Static device fallback: user-configured override — always offer its first
+		// non-local path even when no probe succeeded, so the SDK can keep trying.
+		if let remote = staticRemote,
+		   let first = remote.paths.ordered().first(where: { $0.kind != .local }) {
+			return .remote(first)
 		}
 
 		return nil
 	}
 
 	public func reachableSelection(forCN cn: String, wifiAvailable: Bool) -> SelectedPath? {
-		if let remote = remoteDevicesStore.first(where: { $0.certificateCommonName == cn }) {
-			let probesDict = probesByCN[cn] ?? [:]
-			for path in remote.paths.ordered() {
-				guard path.kind != .local || wifiAvailable else { continue }
-				if let probe = probesDict[path.key], probe.isOperational {
-					return .remote(path)
-				}
-			}
-		}
-		if let staticRemoteDeviceStore, staticRemoteDeviceStore.certificateCommonName == cn {
-			let probesDict = probesByCN[cn] ?? [:]
-			for path in staticRemoteDeviceStore.paths.ordered() {
-				if let probe = probesDict[path.key], probe.isOperational {
-					return .remote(path)
-				}
-			}
-			// Note: no first-path fallback here — `reachableSelection` requires evidence.
-		}
+		let probesDict = probesByCN[cn] ?? [:]
+		let dynamicRemote = remoteDevicesStore.first(where: { $0.certificateCommonName == cn })
+		let staticRemote: RemoteDevice? = {
+			guard let static_ = staticRemoteDeviceStore, static_.certificateCommonName == cn else { return nil }
+			return static_
+		}()
+
+		// 1) LOCAL tier — when any local-source evidence exists, prefer it.
 		// Validated mDNS local: presence of a CN means we successfully fetched `about`,
 		// which is positive evidence even though the synthetic probe has state == .unknown.
-		if wifiAvailable,
-		   let local = localDevicesStore.first(where: { $0.certificateCommonName == cn }) {
-			return .mdns(host: local.host, port: local.port)
+		if wifiAvailable {
+			if let remote = dynamicRemote,
+			   let localPath = Self.firstOperationalPath(remote.paths, probes: probesDict, where: { $0 == .local }) {
+				return .remote(localPath)
+			}
+			if let remote = staticRemote,
+			   let localPath = Self.firstOperationalPath(remote.paths, probes: probesDict, where: { $0 == .local }) {
+				return .remote(localPath)
+			}
+			if let local = localDevicesStore.first(where: { $0.certificateCommonName == cn }) {
+				return .mdns(host: local.host, port: local.port)
+			}
+		}
+
+		// 2) NON-LOCAL tier — operational .public / .remote probes only.
+		// No first-path fallback here — `reachableSelection` requires evidence.
+		if let remote = dynamicRemote,
+		   let path = Self.firstOperationalPath(remote.paths, probes: probesDict, where: { $0 != .local }) {
+			return .remote(path)
+		}
+		if let remote = staticRemote,
+		   let path = Self.firstOperationalPath(remote.paths, probes: probesDict, where: { $0 != .local }) {
+			return .remote(path)
 		}
 		return nil
 	}
@@ -264,25 +321,25 @@ public actor DeviceCatalog {
 		wifiAvailable: Bool,
 		preferredPathKey: String? = nil
 	) -> SelectedPath? {
-		// 1) Prefer operational probes in priority order, skipping local-type paths when WiFi is absent.
-		if let probe = merged.pathProbes.first(where: { probe in
-			guard probe.isOperational else { return false }
-			switch probe.source {
-				case .remotePath(let path) where path.kind == .local && !wifiAvailable:
-					return false
-				default:
-					return true
+		// 1) LOCAL tier. Spec: "If we have local matching device we should use it."
+		// Any local-source signal wins over .public / .remote.
+		if wifiAvailable {
+			// 1a) Operational RA probe with kind == .local — actively verified end-to-end.
+			if let path = Self.firstOperationalProbePath(merged.pathProbes, where: { $0 == .local }) {
+				return .remote(path)
 			}
-		}) {
-			switch probe.source {
-				case .remotePath(let path):
-					return .remote(path)
-				case .mdns(let host, let port):
-					return .mdns(host: host, port: port)
+			// 1b) CN-validated mDNS local — non-nil CN means `about` succeeded recently.
+			if let local = merged.localDevice, local.certificateCommonName != nil {
+				return .mdns(host: local.host, port: local.port)
 			}
 		}
 
-		// 2) Cold launch / relaunch: retry last successful path before defaulting to local-first order.
+		// 2) NON-LOCAL tier: operational .public / .remote probes in priority order.
+		if let path = Self.firstOperationalProbePath(merged.pathProbes, where: { $0 != .local }) {
+			return .remote(path)
+		}
+
+		// 3) Cold launch / relaunch: retry last successful path before defaulting.
 		if let preferredPathKey, let remote = merged.remoteDevice,
 		   let preferred = SelectedPath.matching(
 		   	persistenceKey: preferredPathKey,
@@ -293,42 +350,30 @@ public actor DeviceCatalog {
 			return preferred
 		}
 
-		// 3) Fallback: best ordered non-local remote path (or any path if WiFi is available).
-		if let remote = merged.remoteDevice {
-			let ordered = remote.paths.ordered()
-			let candidate = wifiAvailable ? ordered.first : ordered.first(where: { $0.kind != .local })
-			if let first = candidate { return .remote(first) }
-		}
-
-		// 4) Fallback: local mDNS only when WiFi is available.
-		if wifiAvailable, let local = merged.localDevice {
-			return .mdns(host: local.host, port: local.port)
+		// 4) Fallback: first ordered non-local remote path (unprobed).
+		// Tier 1 already covered all local signals, so we never offer .local here.
+		if let remote = merged.remoteDevice,
+		   let first = remote.paths.ordered().first(where: { $0.kind != .local }) {
+			return .remote(first)
 		}
 
 		return nil
 	}
 
 	public nonisolated func reachableSelection(for merged: MergedDevice, wifiAvailable: Bool) -> SelectedPath? {
-		if let probe = merged.pathProbes.first(where: { probe in
-			guard probe.isOperational else { return false }
-			switch probe.source {
-				case .remotePath(let path) where path.kind == .local && !wifiAvailable:
-					return false
-				default:
-					return true
+		// 1) LOCAL tier — operational RA `.local` probe or CN-validated mDNS local.
+		if wifiAvailable {
+			if let path = Self.firstOperationalProbePath(merged.pathProbes, where: { $0 == .local }) {
+				return .remote(path)
 			}
-		}) {
-			switch probe.source {
-				case .remotePath(let path):
-					return .remote(path)
-				case .mdns(let host, let port):
-					return .mdns(host: host, port: port)
+			if let local = merged.localDevice, local.certificateCommonName != nil {
+				return .mdns(host: local.host, port: local.port)
 			}
 		}
 
-		// Validated mDNS local counts as reachable.
-		if wifiAvailable, let local = merged.localDevice, local.certificateCommonName != nil {
-			return .mdns(host: local.host, port: local.port)
+		// 2) NON-LOCAL tier — operational .public / .remote probes.
+		if let path = Self.firstOperationalProbePath(merged.pathProbes, where: { $0 != .local }) {
+			return .remote(path)
 		}
 
 		return nil

@@ -114,7 +114,7 @@ public final class HCSidebarHeaderView: ThemeCSSView {
 			userNamePrefix = userName + "@"
 		}
 		let hostPart: String = {
-			if let best = HCContext.shared.lastBestBaseURL {
+			if let best = HCContext.shared.currentBestBaseURL {
 				let label = Self.hostLabel(for: best)
 				if label.isEmpty == false { return label }
 			}

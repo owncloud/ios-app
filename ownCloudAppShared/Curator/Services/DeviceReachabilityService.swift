@@ -5,7 +5,10 @@ import ownCloudSDK
 import UIKit
 
 public final actor DeviceReachabilityService {
-	public let urlProvider: DeviceReachabilityURLProvider
+	/// Source of truth for the current best base URL. Exposed `nonisolated` so callers
+	/// (notably the sidebar) can query `currentBaseURL()` synchronously from the main
+	/// thread without an actor hop.
+	public nonisolated let urlProvider: DeviceReachabilityURLProvider
 
 	/// Owns the remote/local/probes/static state and all path-selection logic. The service
 	/// is reachability-aware (it knows the current `wifiAvailable` flag) and threads that

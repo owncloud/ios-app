@@ -2,8 +2,11 @@ import Foundation
 import ownCloudSDK
 
 // MARK: - URL Provider Bridge (OCBaseURLProvider)
+// Thread-safe: all mutable state is guarded by `cacheQueue`; `preferences` has its own
+// internal queue. Marked `@unchecked Sendable` so it can be exposed `nonisolated` from
+// `DeviceReachabilityService` and queried synchronously from UI code.
 @objcMembers
-public final class DeviceReachabilityURLProvider: NSObject, OCBaseURLProvider {
+public final class DeviceReachabilityURLProvider: NSObject, OCBaseURLProvider, @unchecked Sendable {
 	private let cacheQueue = DispatchQueue(label: "com.personalCloudFiles.best-url-cache", attributes: .concurrent)
 	private var bestURLByCN: [String: URL] = [:]
 

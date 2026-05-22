@@ -257,6 +257,15 @@ public actor DetectionPipeline {
 		if locals.contains(where: { $0.certificateCommonName != nil }) {
 			Task { [availabilityMonitor] in await availabilityMonitor.recordSuccess() }
 		}
+
+		// Spec: local takes precedence over .public/.remote. A fresh mDNS validation
+		// (or a previously-validated local disappearing) must reach the SDK promptly
+		// rather than waiting for the next reload/reprobe trigger.
+		let previousCNs = Set(previous.compactMap(\.certificateCommonName))
+		let currentCNs = Set(locals.compactMap(\.certificateCommonName))
+		if previousCNs != currentCNs {
+			await recalculateBestURLs()
+		}
 	}
 
 	// MARK: - Static device

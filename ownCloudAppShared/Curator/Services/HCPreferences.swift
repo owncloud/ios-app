@@ -90,10 +90,17 @@ public final class HCPreferences: NSObject {
 		}
 		set {
 			queue.async {
+				let previous = self.userDefaults.string(forKey: UserDefaultsKeys.keyFavoriteDeviceCN)
 				if let newValue {
 					self.userDefaults.set(newValue, forKey: UserDefaultsKeys.keyFavoriteDeviceCN)
 				} else {
 					self.userDefaults.removeObject(forKey: UserDefaultsKeys.keyFavoriteDeviceCN)
+				}
+				guard previous != newValue else { return }
+				// Wake up subscribers (sidebar etc.) so they re-query the URL provider
+				// for the new favorite's best URL.
+				DispatchQueue.main.async {
+					NotificationCenter.default.post(name: .hcBestBaseURLDidChange, object: nil)
 				}
 			}
 		}
