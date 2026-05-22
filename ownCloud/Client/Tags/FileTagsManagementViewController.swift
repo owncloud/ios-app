@@ -118,14 +118,109 @@ private enum DropdownRow {
 	case error(String)
 }
 
+private final class TagDropdownTableViewCell: UITableViewCell {
+	static let reuseId = "TagDropdownTableViewCell"
+
+	private let errorIconView = UIImageView()
+	private let titleLabel = UILabel()
+	private let contentStack: UIStackView = {
+		let stack = UIStackView()
+		stack.axis = .horizontal
+		stack.spacing = 8
+		stack.alignment = .center
+		return stack
+	}()
+
+	var showsBottomSeparator = true {
+		didSet { setNeedsLayout() }
+	}
+
+	override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+		super.init(style: style, reuseIdentifier: reuseIdentifier)
+		backgroundColor = .clear
+		contentView.backgroundColor = .clear
+		backgroundConfiguration = UIBackgroundConfiguration.clear()
+
+		errorIconView.contentMode = .scaleAspectFit
+		errorIconView.setContentHuggingPriority(.required, for: .horizontal)
+		errorIconView.snp.makeConstraints { $0.width.height.equalTo(24) }
+
+		titleLabel.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+
+		contentStack.addArrangedSubview(errorIconView)
+		contentStack.addArrangedSubview(titleLabel)
+		contentView.addSubview(contentStack)
+		contentStack.snp.makeConstraints { make in
+			make.edges.equalToSuperview().inset(UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12))
+		}
+		errorIconView.isHidden = true
+	}
+
+	required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+	override func prepareForReuse() {
+		super.prepareForReuse()
+		errorIconView.isHidden = true
+		selectionStyle = .default
+		isUserInteractionEnabled = true
+	}
+
+	override func layoutSubviews() {
+		super.layoutSubviews()
+		if showsBottomSeparator {
+			separatorInset = UIEdgeInsets(top: 0, left: 12, bottom: 0, right: 12)
+		} else {
+			separatorInset = UIEdgeInsets(top: 0, left: .greatestFiniteMagnitude, bottom: 0, right: 0)
+		}
+	}
+
+	func configure(row: DropdownRow, isLast: Bool, isDark: Bool) {
+		showsBottomSeparator = !isLast
+		errorIconView.isHidden = true
+		titleLabel.font = .systemFont(ofSize: 16)
+		titleLabel.lineBreakMode = .byTruncatingTail
+
+		switch row {
+			case .hint(let text):
+				titleLabel.text = text
+				titleLabel.textColor = HCColor.Content.textPrimary(isDark)
+				titleLabel.numberOfLines = 0
+				titleLabel.lineBreakMode = .byWordWrapping
+				selectionStyle = .none
+				isUserInteractionEnabled = false
+			case .error(let text):
+				let errorColor = HCColor.Symbolic.error(isDark)
+				errorIconView.isHidden = false
+				errorIconView.image = HCIcon.errorIcon?.withRenderingMode(.alwaysTemplate)
+				errorIconView.tintColor = errorColor
+				titleLabel.text = text
+				titleLabel.textColor = errorColor
+				titleLabel.numberOfLines = 0
+				titleLabel.lineBreakMode = .byWordWrapping
+				selectionStyle = .none
+				isUserInteractionEnabled = false
+			case .tag(let tag):
+				titleLabel.text = tag.displayName
+				titleLabel.textColor = HCColor.Content.textPrimary(isDark)
+				titleLabel.numberOfLines = 1
+				selectionStyle = .default
+				isUserInteractionEnabled = true
+			case .addNew(let name):
+				titleLabel.text = String(format: HCL10n.TagManage.addTagFormat, name)
+				titleLabel.textColor = HCColor.Content.textPrimary(isDark)
+				titleLabel.numberOfLines = 1
+				selectionStyle = .default
+				isUserInteractionEnabled = true
+		}
+	}
+}
+
 final class FileTagsManagementViewController: UIViewController, Themeable {
 	private let item: OCItem
 	private let core: OCCore
 
-	private let scrollView = UIScrollView()
-	private let contentStack = UIStackView()
 	private let fileHeaderContainer = UIView()
-	private let formStack = UIStackView()
+	private let tagsBodyContainer = UIView()
 
 	private let thumbnailView = ResourceViewHost()
 	private let nameLabel = UILabel()
@@ -133,7 +228,7 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 
 	private let chipsContainer = UIView()
 	private let chipsCollectionView: UICollectionView
-	private let emptyTagsLabel = UILabel()
+	private let emptyTagsMessageView: ComposedMessageView
 
 	private var themeRegistered = false
 	private var loadingOverlay: UIActivityIndicatorView?
@@ -162,7 +257,16 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 		layout.estimatedItemSize = .zero
 		layout.sectionInset = .zero
 		self.chipsCollectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
+		self.emptyTagsMessageView = Self.makeEmptyTagsMessageView()
 		super.init(nibName: nil, bundle: nil)
+	}
+
+	private static func makeEmptyTagsMessageView() -> ComposedMessageView {
+		return ComposedMessageView(elements: [
+			.image(OCSymbol.icon(forSymbolName: "tag") ?? UIImage(), size: CGSize(width: 48, height: 48), alignment: .centered),
+			.spacing(8),
+			.subtitle(HCL10n.TagManage.emptyFileMessage, alignment: .centered)
+		])
 	}
 
 	required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
@@ -177,15 +281,6 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 		super.viewDidLoad()
 
 		view.backgroundColor = .systemGroupedBackground
-
-		scrollView.alwaysBounceVertical = true
-		contentStack.axis = .vertical
-		contentStack.spacing = 0
-
-		formStack.axis = .vertical
-		formStack.spacing = 20
-		formStack.isLayoutMarginsRelativeArrangement = true
-		formStack.layoutMargins = UIEdgeInsets(top: 20, left: 16, bottom: 24, right: 16)
 
 		nameLabel.font = .systemFont(ofSize: 17, weight: .semibold)
 		nameLabel.numberOfLines = 0
@@ -204,10 +299,11 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 		tagSelectField.textFieldView.placeholder = HCL10n.TagManage.selectTagPlaceholder
 		tagSelectField.textFieldView.title = ""
 		tagSelectField.textFieldView.leftIcon = HCIcon.tagIcon
+		tagSelectField.textFieldView.showsCardBackground = true
 		tagSelectField.dropdownHostView = view
 		tagSelectField.optionsTableView.dataSource = self
 		tagSelectField.optionsTableView.delegate = self
-		tagSelectField.optionsTableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+		tagSelectField.optionsTableView.register(TagDropdownTableViewCell.self, forCellReuseIdentifier: TagDropdownTableViewCell.reuseId)
 		tagSelectField.onEditingBegan = { [weak self] in
 			self?.refreshTagDropdown()
 		}
@@ -215,13 +311,9 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 			self?.refreshTagDropdown()
 		}
 
-		emptyTagsLabel.font = .systemFont(ofSize: 15)
-		emptyTagsLabel.textAlignment = .center
-		emptyTagsLabel.numberOfLines = 0
-		emptyTagsLabel.text = HCL10n.TagManage.emptyFileMessage
-
 		chipsCollectionView.backgroundColor = .clear
-		chipsCollectionView.isScrollEnabled = false
+		chipsCollectionView.isScrollEnabled = true
+		chipsCollectionView.alwaysBounceVertical = false
 		chipsCollectionView.register(FileTagChipCell.self, forCellWithReuseIdentifier: FileTagChipCell.reuseId)
 		chipsCollectionView.dataSource = self
 		chipsCollectionView.delegate = self
@@ -248,21 +340,36 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 			chipsHeightConstraint = make.height.equalTo(0).constraint
 		}
 
-		formStack.addArrangedSubview(tagSelectField)
-		formStack.addArrangedSubview(emptyTagsLabel)
-		formStack.addArrangedSubview(chipsContainer)
+		tagsBodyContainer.addSubview(emptyTagsMessageView)
+		tagsBodyContainer.addSubview(chipsContainer)
+		emptyTagsMessageView.snp.makeConstraints { make in
+			make.center.equalToSuperview()
+			make.leading.greaterThanOrEqualToSuperview().offset(20)
+			make.trailing.lessThanOrEqualToSuperview().offset(-20)
+		}
 
-		contentStack.addArrangedSubview(fileHeaderContainer)
-		contentStack.addArrangedSubview(formStack)
+		view.addSubview(fileHeaderContainer)
+		view.addSubview(tagSelectField)
+		view.addSubview(tagsBodyContainer)
 
-		tagSelectField.snp.makeConstraints { $0.height.equalTo(56) }
-
-		view.addSubview(scrollView)
-		scrollView.addSubview(contentStack)
-		scrollView.snp.makeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
-		contentStack.snp.makeConstraints { make in
-			make.leading.trailing.bottom.width.equalToSuperview()
-			make.top.equalToSuperview().offset(16)
+		fileHeaderContainer.snp.makeConstraints { make in
+			make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
+			make.leading.trailing.equalToSuperview()
+		}
+		tagSelectField.snp.makeConstraints { make in
+			make.top.equalTo(fileHeaderContainer.snp.bottom).offset(20)
+			make.leading.equalToSuperview().offset(16)
+			make.trailing.equalToSuperview().offset(-16)
+		}
+		tagsBodyContainer.snp.makeConstraints { make in
+			make.top.equalTo(tagSelectField.snp.bottom)
+			make.leading.trailing.bottom.equalTo(view.safeAreaLayoutGuide)
+		}
+		chipsContainer.snp.makeConstraints { make in
+			make.top.equalToSuperview()
+			make.leading.equalToSuperview().offset(20)
+			make.trailing.equalToSuperview().offset(-20)
+			make.bottom.lessThanOrEqualToSuperview()
 		}
 
 		showLoading(true)
@@ -283,10 +390,10 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 		let isDark = collection.isDark
 		let appBackground = HCColor.Structure.appBackground(isDark)
 		view.backgroundColor = appBackground
-		scrollView.backgroundColor = appBackground
+		tagsBodyContainer.backgroundColor = appBackground
 		fileHeaderContainer.backgroundColor = HCColor.Structure.cardBackground(isDark)
 		nameLabel.textColor = HCColor.Content.textPrimary(isDark)
-		emptyTagsLabel.textColor = HCColor.Content.textSecondary(isDark)
+		emptyTagsMessageView.applyThemeCollection(theme: theme, collection: collection, event: event)
 		tagSelectField.textFieldView.leftIconTintColor = HCColor.Interaction.primarySolidNormal(isDark)
 		tagSelectField.textFieldView.clearButton.setImage(collection.isDark ? HCIcon.clearDark : HCIcon.clearLight, for: .normal)
 		chipsCollectionView.reloadData()
@@ -387,6 +494,11 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 		}
 
 		let candidates = candidateTags(filteredBy: q)
+		if q.isEmpty, candidates.isEmpty {
+			dropdownRows = [.hint(HCL10n.TagManage.noTagsAvailableHint)]
+			return
+		}
+
 		var rows: [DropdownRow] = []
 		for t in candidates {
 			rows.append(.tag(t))
@@ -499,7 +611,7 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 
 	private func updateChipsUI() {
 		let has = !assignedTags.isEmpty
-		emptyTagsLabel.isHidden = has
+		emptyTagsMessageView.isHidden = has
 		chipsContainer.isHidden = !has
 		guard has else {
 			chipsHeightConstraint?.update(offset: 0)
@@ -509,13 +621,19 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 		recomputeChipDisplay()
 		chipsCollectionView.reloadData()
 		chipsCollectionView.layoutIfNeeded()
+		let contentHeight = chipsCollectionView.collectionViewLayout.collectionViewContentSize.height
 		let height: CGFloat
 		if canCollapseChips && !chipsExpanded {
-			height = maxCollapsedChipsHeight
+			height = min(maxCollapsedChipsHeight, contentHeight)
 		} else {
-			height = chipsCollectionView.collectionViewLayout.collectionViewContentSize.height
+			height = contentHeight
 		}
-		chipsHeightConstraint?.update(offset: height)
+		let maxHeight = tagsBodyContainer.bounds.height
+		if maxHeight > 0 {
+			chipsHeightConstraint?.update(offset: min(height, maxHeight))
+		} else {
+			chipsHeightConstraint?.update(offset: height)
+		}
 	}
 
 	private func presentAlert(title: String, message: String?) {
@@ -550,7 +668,14 @@ final class FileTagsManagementViewController: UIViewController, Themeable {
 	private func createAndAssignOnServer(name: String) {
 		guard let fileID = item.fileID else { return }
 		showLoading(true)
-		core.connection.createAndAssignTag(withName: name, userVisible: true, userAssignable: true, toFileWithID: fileID) { [weak self] error, newTag in
+		core.connection.createAndAssignTag(
+			withName: name,
+			userVisible: true,
+			userAssignable: true,
+			canAssign: true,
+			userEditable: true,
+			toFileWithID: fileID
+		) { [weak self] error, newTag in
 			OnMainThread {
 				self?.showLoading(false)
 				if let error {
@@ -629,41 +754,10 @@ extension FileTagsManagementViewController: UITableViewDataSource, UITableViewDe
 	}
 
 	func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-		cell.backgroundColor = .clear
-		cell.contentView.backgroundColor = .clear
-		cell.selectionStyle = .default
-		var config = cell.defaultContentConfiguration()
-		config.image = nil
-		cell.backgroundConfiguration = UIBackgroundConfiguration.clear()
+		let cell = tableView.dequeueReusableCell(withIdentifier: TagDropdownTableViewCell.reuseId, for: indexPath) as! TagDropdownTableViewCell
 		let isDark = Theme.shared.activeCollection.isDark
-		switch dropdownRows[indexPath.row] {
-			case .hint(let s):
-				config.text = s
-				config.textProperties.color = HCColor.Content.textSecondary(isDark)
-				config.textProperties.numberOfLines = 0
-				config.textProperties.lineBreakMode = .byWordWrapping
-				cell.selectionStyle = .none
-			case .error(let s):
-				let errorColor = HCColor.Symbolic.error(isDark)
-				config.image = HCIcon.errorIcon?.withRenderingMode(.alwaysTemplate)
-				config.imageProperties.maximumSize = CGSize(width: 24, height: 24)
-				config.imageProperties.tintColor = errorColor
-				config.text = s
-				config.textProperties.color = errorColor
-				config.textProperties.numberOfLines = 0
-				config.textProperties.lineBreakMode = .byWordWrapping
-				cell.selectionStyle = .none
-			case .tag(let t):
-				config.text = t.displayName
-				config.textProperties.color = HCColor.Content.textPrimary(isDark)
-				config.textProperties.numberOfLines = 1
-			case .addNew(let name):
-				config.text = String(format: HCL10n.TagManage.addTagFormat, name)
-				config.textProperties.color = HCColor.Interaction.primarySolidNormal(isDark)
-				config.textProperties.numberOfLines = 1
-		}
-		cell.contentConfiguration = config
+		let isLast = indexPath.row == dropdownRows.count - 1
+		cell.configure(row: dropdownRows[indexPath.row], isLast: isLast, isDark: isDark)
 		return cell
 	}
 

@@ -14,6 +14,13 @@ public final class HCBorderView: UIView {
 		return label
 	}()
 
+	private lazy var backgroundLayer: CAShapeLayer = {
+		let layer = CAShapeLayer()
+		layer.fillColor = UIColor.clear.cgColor
+		layer.isHidden = true
+		return layer
+	}()
+
 	private lazy var borderLayer = {
 		let layer = CAShapeLayer()
 		layer.fillColor = UIColor.clear.cgColor
@@ -61,6 +68,19 @@ public final class HCBorderView: UIView {
 		}
 	}
 
+	/// When `true`, fills the field area with `backgroundFillColor` using the same rounded shape as the border.
+	public var showsBackground: Bool = false {
+		didSet {
+			updateView()
+		}
+	}
+
+	public var backgroundFillColor: UIColor? {
+		didSet {
+			updateView()
+		}
+	}
+
 	override init(frame: CGRect) {
 		super.init(frame: frame)
 
@@ -76,6 +96,7 @@ public final class HCBorderView: UIView {
 	private func commonInit() {
 		backgroundColor = .clear
 		borderLayer.mask = maskLayer
+		layer.addSublayer(backgroundLayer)
 		layer.addSublayer(borderLayer)
 
 		addSubview(floatingLabel)
@@ -86,6 +107,7 @@ public final class HCBorderView: UIView {
 	public override func layoutSubviews() {
 		super.layoutSubviews()
 
+		backgroundLayer.frame = bounds
 		borderLayer.frame = bounds
 		maskLayer.frame = bounds
 
@@ -101,10 +123,21 @@ public final class HCBorderView: UIView {
 		floatingLabel.alpha = shouldDisplayTitle ? 1.0 : 0.0
 		floatingLabel.textColor = titleColor
 
-		borderLayer.path = UIBezierPath.trueRoundedRect(
+		let roundedPath = UIBezierPath.trueRoundedRect(
 			rect: bounds,
 			cornerRadius: Constants.cornerRadius
-		).cgPath
+		)
+
+		if showsBackground, let backgroundFillColor {
+			backgroundLayer.isHidden = false
+			backgroundLayer.path = roundedPath.cgPath
+			backgroundLayer.fillColor = backgroundFillColor.cgColor
+		} else {
+			backgroundLayer.isHidden = true
+			backgroundLayer.path = nil
+		}
+
+		borderLayer.path = roundedPath.cgPath
 		borderLayer.strokeColor = (borderColor ?? .clear).cgColor
 		borderLayer.lineWidth = borderWidth
 
