@@ -93,7 +93,7 @@ class ImportPasteboardAction : Action {
 							return
 						}
 
-						if core.bookmark.uuid.uuidString == bookmarkUUID {
+						if core.bookmark.uuidString == bookmarkUUID {
 							// Copy within account
 							core.copy(item, to: rootItem, withName: name, options: nil, resultHandler: { (error, _, _, _) in
 								if error != nil {
@@ -136,7 +136,7 @@ class ImportPasteboardAction : Action {
 							return
 						}
 
-						if core.bookmark.uuid.uuidString == bookmarkUUID {
+						if core.bookmark.uuidString == bookmarkUUID {
 							// Move within same account
 							core.move(item, to: rootItem, withName: name, options: nil) { (error, _, _, _) in
 								if error != nil {

@@ -24,7 +24,7 @@ public class AccountControllerSection: CollectionViewSection {
 
 	public init(with accountController: AccountController) {
 		self.accountController = accountController
-		let uuid = accountController.connection?.bookmark.uuid.uuidString ?? "_missing_bookmark_"
+		let uuid = accountController.connection?.bookmark.uuidString ?? "_missing_bookmark_"
 		super.init(identifier: "account.\(uuid)", dataSource: accountController.accountSectionDataSource, cellStyle: CollectionViewCellStyle(with: .sideBar), cellLayout: .list(appearance: accountController.configuration.sectionAppearance), clientContext: accountController.clientContext)
 		accountController.accountControllerSection = self
 	}

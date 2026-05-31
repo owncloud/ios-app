@@ -64,7 +64,7 @@
 	OCVFSNode *vfsNode = nil;
 	OCVFSItemID vfsItemID = nil, parentVFSItemID = nil;
 
-	item.bookmarkUUID = self.bookmark.uuid.UUIDString;
+	item.bookmarkUUID = self.bookmark.uuidString;
 
 	switch (item.type)
 	{

@@ -25,10 +25,10 @@ extension OCBookmarkManager {
 	var accountList : [Account] {
 		var accountList : [Account] = []
 		accountList = OCBookmarkManager.shared.bookmarks.map { (bookmark) -> Account in
-			let account = Account(identifier: bookmark.uuid.uuidString, display: bookmark.shortName)
+			let account = Account(identifier: bookmark.uuidString, display: bookmark.shortName)
 			account.name = bookmark.shortName
 			account.serverURL = bookmark.url
-			account.uuid = bookmark.uuid.uuidString
+			account.uuid = bookmark.uuidString
 
 			return account
 		}
@@ -38,10 +38,10 @@ extension OCBookmarkManager {
 
 	func accountBookmark(for uuidString: String) -> (OCBookmark, Account)? {
 		if let bookmark = bookmark(forUUIDString: uuidString) {
-			let account = Account(identifier: bookmark.uuid.uuidString, display: bookmark.shortName)
+			let account = Account(identifier: bookmark.uuidString, display: bookmark.shortName)
 			account.name = bookmark.shortName
 			account.serverURL = bookmark.url
-			account.uuid = bookmark.uuid.uuidString
+			account.uuid = bookmark.uuidString
 
 			return (bookmark, account)
 		}

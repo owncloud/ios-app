@@ -36,7 +36,7 @@
 {
 	OCLicenseEnvironment *environment = [self new];
 
-	environment.identifier = bookmark.uuid.UUIDString;
+	environment.identifier = bookmark.uuidString;
 	environment.bookmarkUUID = bookmark.uuid;
 	environment.bookmark = bookmark;
 	environment.hostname = bookmark.url.host;

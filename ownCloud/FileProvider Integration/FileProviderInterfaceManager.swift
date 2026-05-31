@@ -63,7 +63,7 @@ class FileProviderInterfaceManager: NSObject {
 
 				// Collect info on bookmarks
 				for bookmark in bookmarks {
-					let bookmarkUUIDString = bookmark.uuid.uuidString
+					let bookmarkUUIDString = bookmark.uuidString
 
 					bookmarkUUIDStrings.append(bookmarkUUIDString)
 					bookmarksByUUIDString[bookmarkUUIDString] = bookmark

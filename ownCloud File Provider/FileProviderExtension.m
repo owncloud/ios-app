@@ -292,7 +292,7 @@
 
 	if ((item = [self.core cachedItemInParent:parentItem withName:name isDirectory:isDirectory error:outError]) != nil)
 	{
-		item.bookmarkUUID = self.core.bookmark.uuid.UUIDString;
+		item.bookmarkUUID = self.core.bookmark.uuidString; // ensure bookmarkUUID is present so that vfsItemID / itemIdentifier succeed
 	}
 
 	return (item);
@@ -566,14 +566,18 @@
 		__block BOOL calledCompletionHandler = NO;
 
 		[self.core createFolder:directoryName inside:parentItem options:nil placeholderCompletionHandler:^(NSError * _Nullable error, OCItem * _Nullable item) {
-			FPLogCmd(@"Completed placeholder creation with item=%@, error=%@", item, error);
+			FPLogCmd(@"Completed placeholder creation with item=%@, error=%@, offline=%d", item, error, (self.core.connectionStatus != OCCoreConnectionStatusOnline));
 
-			if (!calledCompletionHandler)
+			if (!calledCompletionHandler &&
+			    (self.core.connectionStatus != OCCoreConnectionStatusOnline)) // Only return placeholder item right away if we're offline - otherwise wait for actual outcome (avoids DB race condition)
 			{
 				calledCompletionHandler = YES;
+				item.bookmarkUUID = self.bookmark.uuidString; // ensure bookmarkUUID is present so that vfsItemID / itemIdentifier succeed
 				completionHandler(item, [error translatedError]);
 			}
 		} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+			item.bookmarkUUID = self.core.bookmark.uuidString; // ensure bookmarkUUID is present so that vfsItemID / itemIdentifier succeed
+
 			if (error != nil)
 			{
 				if (error.HTTPStatus.code == OCHTTPStatusCodeMETHOD_NOT_ALLOWED)
@@ -637,6 +641,7 @@
 		[self.core moveItem:item to:parentItem withName:((newName != nil) ? newName : item.name) options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
 
+			item.bookmarkUUID = self.core.bookmark.uuidString; // ensure bookmarkUUID is present so that vfsItemID / itemIdentifier succeed
 			completionHandler(item, [error translatedError]);
 		}];
 	}
@@ -671,6 +676,8 @@
 
 		[self.core renameItem:item to:itemName options:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 			FPLogCmd(@"Completed with item=%@, error=%@", item, error);
+
+			item.bookmarkUUID = self.core.bookmark.uuidString; // ensure bookmarkUUID is present so that vfsItemID / itemIdentifier succeed
 			completionHandler(item, [error translatedError]);
 		}];
 	}
@@ -783,7 +790,7 @@
 				OCCoreOptionImportByCopying : @(importByCopying)
 			} placeholderCompletionHandler:^(NSError *error, OCItem *item) {
 				FPLogCmd(@"Completed with placeholderItem=%@, error=%@", item, error);
-				item.bookmarkUUID = self.core.bookmark.uuid.UUIDString; // ensure bookmarkUUID is present so that vfsItemID / itemIdentifier succeed
+				item.bookmarkUUID = self.core.bookmark.uuidString; // ensure bookmarkUUID is present so that vfsItemID / itemIdentifier succeed
 				completionHandler(item, [error translatedError]);
 			} resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
 				if ([error.domain isEqual:OCHTTPStatusErrorDomain] && (error.code == OCHTTPStatusCodePRECONDITION_FAILED))
@@ -1321,7 +1328,7 @@
 
 				UNNotificationRequest *request;
 
-				request = [UNNotificationRequest requestWithIdentifier:ComposeNotificationIdentifier(NotificationAuthErrorForwarder, bookmark.uuid.UUIDString) content:content trigger:nil];
+				request = [UNNotificationRequest requestWithIdentifier:ComposeNotificationIdentifier(NotificationAuthErrorForwarder, bookmark.uuidString) content:content trigger:nil];
 
 				[NotificationManager.sharedNotificationManager addNotificationRequest:request withCompletionHandler:^(NSError * _Nonnull error) {
 					OCLogDebug(@"Add Notification error: %@", error);

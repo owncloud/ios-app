@@ -37,7 +37,7 @@ public class AccountConnectionPool: NSObject {
 
 	public func connection(for bookmark: OCBookmark) -> AccountConnection? {
 		var connection: AccountConnection?
-		let bookmarkUUID = bookmark.uuid.uuidString
+		let bookmarkUUID = bookmark.uuidString
 
 		OCSynchronized(self) {
 			OCSynchronized(connectionsByBookmarkUUID) {
