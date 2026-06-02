@@ -1,73 +1,116 @@
-# [ownCloud](https://owncloud.org) iOS App
+# ownCloud iOS App
 
-## 📲 Download
+<!-- OSPO-managed README | Generated: 2026-04-16 | v2 -->
 
-Our iOS app is free for downloading available on the AppStore
+[![License](https://img.shields.io/badge/License-GPL--3.0-blue.svg)](LICENSE) [![ownCloud OSPO](https://img.shields.io/badge/OSPO-ownCloud-blue)](https://kiteworks.com/opensource)
 
-<a href="https://apps.apple.com/app/id1359583808?itsct=apps_box_badge&amp;itscg=30200" style="display: inline-block; overflow: hidden; border-radius: 13px; width: 250px; height: 83px;"><img src="https://tools.applemediaservices.com/api/badges/download-on-the-app-store/black/en-us?size=250x83&amp;releaseDate=1561593600" alt="Download on the App Store" style="border-radius: 13px; width: 250px; height: 83px;"></a>
+The official ownCloud iOS application, built entirely in Swift for iOS 16+. It provides seamless file sync and share functionality with native iPadOS support, multi-account management, drag-and-drop operations, certificate management, password manager integration, and deep integration with the iOS Files app for cross-app collaboration.
 
-####  🌎 https://ownCloud.com
+## Getting Started
 
-| Account List                                                 | File List                                                    | File Actions                                                 | Preview Files                                                | Quick Access                                                 | Settings                                                     |
-| ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| <img src="doc/images/en-US/iPhone 11 Pro Max-11_ios_accounts_list_demo.png" alt="Simulator Screen Shot - iPhone 11 Pro"> | <img src="doc/images/en-US/iPhone 11 Pro Max-20_ios_files_list_demo.png" alt="Simulator Screen Shot - iPhone 11 Pro"> | <img src="doc/images/en-US/iPhone 11 Pro Max-21_ios_files_actions_demo.png" alt="Simulator Screen Shot - iPhone 11 Pro"> | <img src="doc/images/en-US/iPhone 11 Pro Max-22_ios_files_preview_pdf_demo.png" alt="Simulator Screen Shot - iPhone 11 Pro"> | <img src="doc/images/en-US/iPhone 11 Pro Max-40_ios_quick_access_demo.png" alt="Simulator Screen Shot - iPhone 11 Pro"> | <img src="doc/images/en-US/iPhone 11 Pro Max-60_ios_settings_demo.png" alt="Simulator Screen Shot - iPhone 11 Pro"> |
+Follow the steps below to build the iOS app from source.
 
-## 😍 Features
+### Prerequisites
 
-* 🦋 Using the current iOS frameworks
-* ⭐️ Exclusively built for iOS
-* 🛠 Written in Swift
-* 📂 Seamless integration with iOS files for improved collaboration
-* 🕹 Multi-select with drag and drop features for efficient file management
-* 👑 Using iPadOS features for pro users
-* ✅ Certificate management and password manager integration for boosting security
-* 🏳️‍🌈 Multiple UI themes with dark and light colors
-* 🚢 Free on the AppStore
-* 🇪🇺 Localised in many languages
-* 📱iOS 11+
-* 🧩 License: [GPLv3](https://github.com/owncloud/ios-app/LICENSE)
+- Xcode (latest stable)
+- iOS 16+ deployment target
+- CocoaPods or Swift Package Manager
 
-## 🛠 Build our App
+### Build
 
-To build our App, please read our [SETUP.md](https://github.com/owncloud/ios-app/blob/master/SETUP.md)
+For detailed build instructions, see [SETUP.md](SETUP.md).
 
-```
-$ read SETUP.md
+```bash
+# Clone with submodules (includes ios-sdk)
+git clone --recursive https://github.com/owncloud/ios-app.git
 ```
 
-## 📖 Documentation & Help
+## Documentation
 
-The documentation for the app can be viewed here: [iOS Documentation](https://doc.owncloud.com/ios-app/)
+- [iOS App Documentation](https://doc.owncloud.com/ios-app/)
+- [Build Setup Guide](SETUP.md)
+- [Docs & Guides](https://owncloud.com/docs-guides/)
+- [Translations on Transifex](https://www.transifex.com/owncloud/)
 
-Support and help can be found here: [Docs & Guides](https://owncloud.com/docs-guides/)
+## Part of the ownCloud Mobile Ecosystem
 
-## 🇪🇺 Translate
+This is the native iOS client for [ownCloud](https://owncloud.com). It connects to both ownCloud Infinite Scale (oCIS) and ownCloud Server 10 instances.
 
-The App is translated in many languages. If your language is missing or if you want to improve a string, you are welcome!
-This can be done in [Transifex](https://www.transifex.com/signup/?join_project=owncloud).
+Available as a free download on the [App Store](https://apps.apple.com/app/id1359583808).
 
+## Community & Support
 
-## 💡 Found a bug or have some ideas for improvement?
+**[Star](https://github.com/owncloud/ios-app)** this repo and **Watch** for release notifications!
 
-- 💬 Open a new issue on [Github](https://github.com/owncloud/ios-app/issues/new)
-- 🐥 Don't forget to follow us on [Twitter](https://twitter.com/owncloud) 
+- [ownCloud Website](https://owncloud.com)
+- [Community Discussions](https://github.com/orgs/owncloud/discussions)
+- [Matrix Chat](https://app.element.io/#/room/#owncloud:matrix.org)
+- [Documentation](https://doc.owncloud.com)
+- [Enterprise Support](https://owncloud.com/contact-us/)
+- [OSPO Home](https://kiteworks.com/opensource)
 
-## 📋 Start Contributing
+## Contributing
 
-Make sure you read [SETUP.md](https://github.com/owncloud/ios-app/blob/master/SETUP.md) when you start working on this project. Basically: Fork this repository and contribute back using pull requests to the master branch.
-Easy starting points are also reviewing [pull requests](https://github.com/owncloud/ios-app/pulls) and working on [good first issue](https://github.com/owncloud/ios-app/labels/good%20first%20issue).
+We welcome contributions! Please read the [Contributing Guidelines](CONTRIBUTING.md)
+and our [Code of Conduct](CODE_OF_CONDUCT.md) before getting started.
 
-## ☁️ ownCloud Server
+### Workflow
 
-[Learn](https://owncloud.org/news/how-to-set-up-an-owncloud-in-3-minutes/), how you can easily setup your own ownCloud server in 3 minutes or test our ownCloud iOS app with our demo server:
+- **Rebase Early, Rebase Often!** We use a rebase workflow. Always rebase on the target branch before submitting a PR.
+- **Dependabot**: Automated dependency updates are managed via Dependabot. Review and merge dependency PRs promptly.
+- **Signed Commits**: All commits **must** be PGP/GPG signed. See [GitHub's signing guide](https://docs.github.com/en/authentication/managing-commit-signature-verification).
+- **DCO Sign-off**: Every commit must carry a `Signed-off-by` line:
+  ```
+  git commit -s -S -m "your commit message"
+  ```
+- **GitHub Actions Policy**: Workflows may only use actions that are (a) owned by `owncloud`, (b) created by GitHub (`actions/*`), or (c) verified in the GitHub Marketplace.
 
-- [Download](https://apps.apple.com/app/id1359583808) our iOS App
-- Add account 
+## Translations
 
-### Demo credentials
+Help translate this project on Transifex:
+**<https://explore.transifex.com/owncloud-org/owncloud-ios/>**
 
-| Server URL | demo.owncloud.com |
-| ---------- | ----------------- |
-| User       | demo              |
-| Password   | demo              |
+Please submit translations via Transifex -- do not open pull requests for translation changes.
 
+## Security
+
+**Do not open a public GitHub issue for security vulnerabilities.**
+
+Report vulnerabilities at **<https://security.owncloud.com>** -- see [SECURITY.md](SECURITY.md).
+
+Bug bounty: [YesWeHack ownCloud Program](https://yeswehack.com/programs/owncloud-bug-bounty-program)
+
+## License
+
+This project is licensed under the [GPL-3.0](LICENSE).
+
+## About the ownCloud OSPO
+
+The [Kiteworks Open Source Program Office](https://kiteworks.com/opensource), operating under
+the [ownCloud](https://owncloud.com) brand, launched on May 5, 2026, to steward the open source
+ecosystem around ownCloud's products. The OSPO ensures transparent governance, license compliance,
+community health, and sustainable collaboration between the open source community and
+[Kiteworks](https://www.kiteworks.com), which acquired ownCloud in 2023.
+
+- **OSPO Home**: <https://kiteworks.com/opensource>
+- **GitHub**: <https://github.com/owncloud>
+- **ownCloud**: <https://owncloud.com>
+
+For questions about the OSPO or licensing, contact ospo@kiteworks.com.
+
+### License Migration to Apache 2.0
+
+The OSPO is driving a strategic relicensing of ownCloud repositories toward the
+[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0), following
+the [Apache Software Foundation's third-party license policy](https://www.apache.org/legal/resolved.html).
+
+Individual repositories will migrate as their audit is completed. The LICENSE file
+in each repo reflects its **current** license status (not the target).
+
+**Current license: GPL-3.0** (Category X per Apache policy -- cannot be included in Apache-2.0 works).
+
+Migration prerequisites for this repository:
+
+- **CLA/DCO coverage**: All past contributors must have signed agreements permitting relicensing
+- **Copyleft dependency audit**: All GPL dependencies must be replaced or isolated
+- **Complete relicensing**: GPL-3.0 is a strong copyleft license; migration requires full relicensing of all files
