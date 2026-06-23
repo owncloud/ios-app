@@ -32,10 +32,11 @@ jobs:
         with:
           app-id: ${{ secrets.TRANSLATION_APP_ID }}
           private-key: ${{ secrets.TRANSLATION_APP_PRIVATE_KEY }}
-      - uses: GuillaumeFalourd/git-commit-push@205c043bca2f932f7a48a28a8d619ba30eb84baf # v1.3
+      - uses: planetscale/ghcommit-action@a6b150b81dca5dd027baa898604418eec9e11465 # v0.2.22
         with:
-          access_token: ${{ steps.app-token.outputs.token }}
-          email: devops@owncloud.com
-          name: ownClouders
           commit_message: "Configuration documentation updated"
-          files: doc/CONFIGURATION.json doc/configuration.adoc
+          repo: ${{ github.repository }}
+          branch: ${{ github.head_ref || github.ref_name }}
+          file_pattern: 'CONFIGURATION.json configuration.adoc'
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
