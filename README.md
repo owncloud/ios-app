@@ -57,7 +57,7 @@ This can be done in [Transifex](https://www.transifex.com/signup/?join_project=o
 Make sure you read [SETUP.md](https://github.com/owncloud/ios-app/blob/master/SETUP.md) when you start working on this project. Basically: Fork this repository and contribute back using pull requests to the master branch.
 Easy starting points are also reviewing [pull requests](https://github.com/owncloud/ios-app/pulls) and working on [good first issue](https://github.com/owncloud/ios-app/labels/good%20first%20issue).
 
-## ☁️ ownCloud Server
+## ☁️ ownCloud Classic
 
 [Learn](https://owncloud.org/news/how-to-set-up-an-owncloud-in-3-minutes/), how you can easily setup your own ownCloud server in 3 minutes or test our ownCloud iOS app with our demo server:
 

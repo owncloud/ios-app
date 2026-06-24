@@ -175,7 +175,7 @@ OpenID Configuration     | `GET`              | `$serverURL/.well-known/openid-c
 
 ##### WebDAV endpoint
 
-For historic reasons (ownCloud 10), the availability of Basic Auth and OAuth2 is determined by the response to an unauthenticated `PROPFIND` request to the WebDAV endpoint. 
+For historic reasons (ownCloud Classic), the availability of Basic Auth and OAuth2 is determined by the response to an unauthenticated `PROPFIND` request to the WebDAV endpoint. 
 
 This request is skipped if `$skipWWWAuthenticateChecks` is `true`, which is the case when OpenID Connect Discovery was successful or `authentication.skip-www-authenticate-checks` was set to true.
 
@@ -241,7 +241,7 @@ Query parameter         | Contents                | Status   | Comment
 `client_id`             | configured value        | required | The value of `authentication-oauth2.oa2-client-id` (default: `mxd5OQDk6es5LzOzRvidJNfXLUZS2oN3oUFeXPP8LpPrhx3UroJFduGEYIBOxkY1`).
 `redirect_uri`          | configured value        | required | The value of `authentication-oauth2.oa2-redirect-uri` (default: `oc://ios.owncloud.com`).
 `state`                 | random UUID             | optional | A pre-filled UUID. See [the specification](https://datatracker.ietf.org/doc/html/draft-ietf-oauth-v2-1-00#section-4.1.1.3) for details.
-`user`                  | `$username`             | optional | Filled with pre-provided username (supported by the ownCloud 10 OAuth2 implementation).
+`user`                  | `$username`             | optional | Filled with pre-provided username (supported by the ownCloud Classic OAuth2 implementation).
 
 It then uses `$serverURL` and the configured OAuth2 Authorization Endpoint path (`authentication-oauth2.oa2-authorization-endpoint`) to compose the `$authorizationURL`:
 
