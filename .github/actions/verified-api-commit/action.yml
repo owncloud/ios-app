@@ -34,7 +34,14 @@ runs:
           if [[ -n "$(git status --porcelain "$FILE" 2>/dev/null)" ]]; then
             if [[ -f "$FILE" ]]; then
               echo "Detected changes in: $FILE"
-              B64_CONTENT=$(base64 -w 0 "$FILE")
+              
+              # OS-Specific Base64 Encoding
+              if [[ "$RUNNER_OS" == "macOS" ]]; then
+                B64_CONTENT=$(base64 -b 0 -i "$FILE")
+              else
+                B64_CONTENT=$(base64 -w 0 "$FILE")
+              fi
+              
               ADDITIONS_JSON=$(echo "$ADDITIONS_JSON" | jq --arg path "$FILE" --arg contents "$B64_CONTENT" '. + [{path: $path, contents: $contents}]')
             else
               echo "Warning: $FILE was deleted. Skipping addition."
