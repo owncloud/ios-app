@@ -1,9 +1,9 @@
 name: 'Verified API Commit'
-description: 'Commits specifically changed files via the GitHub API to generate a Verified signature.'
+description: 'Commits specifically changed files and folders via the GitHub API to generate a Verified signature.'
 
 inputs:
   files:
-    description: 'A multiline list of files to check and commit'
+    description: 'A multiline list of files and/or folders to check and commit'
     required: true
   commit-message:
     description: 'The commit message to use'
@@ -24,38 +24,67 @@ runs:
         COMMIT_MESSAGE: ${{ inputs.commit-message }}
       run: |
         ADDITIONS_JSON="[]"
+        declare -a PROCESSED_FILES=()
         
-        # Loop through the multiline input securely
-        while IFS= read -r FILE || [[ -n "$FILE" ]]; do
+        # 1. Loop through the multiline input securely (supports files and folders)
+        while IFS= read -r ITEM || [[ -n "$ITEM" ]]; do
           # Skip empty lines
-          if [[ -z "$FILE" ]]; then continue; fi
+          if [[ -z "$ITEM" ]]; then continue; fi
           
-          # Check if Git sees modifications for this specific file
-          if [[ -n "$(git status --porcelain "$FILE" 2>/dev/null)" ]]; then
-            if [[ -f "$FILE" ]]; then
-              echo "Detected changes in: $FILE"
+          # 2. Check if Git sees modifications for this specific file or folder
+          # Passing a folder to git status returns all changed files inside it
+          while IFS= read -r STATUS_LINE || [[ -n "$STATUS_LINE" ]]; do
+            if [[ -z "$STATUS_LINE" ]]; then continue; fi
+            
+            # Extract the file path from porcelain output (removes the "M  " prefix)
+            # If it was renamed ("R  old -> new"), keep only the new path
+            FILE_PATH=$(echo "$STATUS_LINE" | cut -c4- | sed -e 's/.* -> //')
+            
+            # Remove surrounding quotes if Git added them (for paths with spaces)
+            FILE_PATH="${FILE_PATH%\"}"
+            FILE_PATH="${FILE_PATH#\"}"
+
+            # Ensure the path is actually a file (this skips deleted files or directories)
+            if [[ -f "$FILE_PATH" ]]; then
               
-              # OS-Specific Base64 Encoding
+              # Check for duplicates in case inputs overlap (e.g., "doc/" and "doc/config.json")
+              IS_DUPLICATE=false
+              for PROCESSED in "${PROCESSED_FILES[@]}"; do
+                if [[ "$PROCESSED" == "$FILE_PATH" ]]; then
+                  IS_DUPLICATE=true
+                  break
+                fi
+              done
+              
+              if [[ "$IS_DUPLICATE" == true ]]; then continue; fi
+              PROCESSED_FILES+=("$FILE_PATH")
+
+              echo "Detected changes in: $FILE_PATH"
+              
+              # Base64 encode without line wrapping (OS-Specific arguments)
               if [[ "$RUNNER_OS" == "macOS" ]]; then
-                B64_CONTENT=$(base64 -b 0 -i "$FILE")
+                # macOS (BSD) requires -i for input and -b 0 to disable line breaks
+                B64_CONTENT=$(base64 -b 0 -i "$FILE_PATH")
               else
-                B64_CONTENT=$(base64 -w 0 "$FILE")
+                # Linux (GNU) requires -w 0 to disable line breaks and accepts the file directly
+                B64_CONTENT=$(base64 -w 0 "$FILE_PATH")
               fi
               
-              ADDITIONS_JSON=$(echo "$ADDITIONS_JSON" | jq --arg path "$FILE" --arg contents "$B64_CONTENT" '. + [{path: $path, contents: $contents}]')
+              # Use jq to safely append the object to our JSON array
+              ADDITIONS_JSON=$(echo "$ADDITIONS_JSON" | jq --arg path "$FILE_PATH" --arg contents "$B64_CONTENT" '. + [{path: $path, contents: $contents}]')
             else
-              echo "Warning: $FILE was deleted. Skipping addition."
+              echo "Warning: $FILE_PATH is not a file or was deleted. Skipping addition."
             fi
-          fi
+          done <<< "$(git status --porcelain "$ITEM" 2>/dev/null)"
         done <<< "$FILES_INPUT"
 
-        # If the array is still empty, no files from the list changed
+        # 3. If the array is still empty, no files from the list changed
         if [[ "$ADDITIONS_JSON" == "[]" ]]; then
-          echo "None of the specified files changed. Skipping commit."
+          echo "None of the specified files or folders changed. Skipping commit."
           exit 0
         fi
 
-        # Prepare the GraphQL Payload using jq
+        # 4. Prepare the GraphQL Payload using jq
         HEAD_OID=$(git rev-parse HEAD)
         
         QUERY='mutation CreateCommitOnBranch($repo: String!, $branch: String!, $oid: GitObjectID!, $msg: String!, $files: [FileAddition!]!) {
@@ -67,6 +96,7 @@ runs:
           }) { commit { url } }
         }'
 
+        # Build the full GraphQL JSON payload and pipe it directly to gh api
         jq -n \
           --arg query "$QUERY" \
           --arg repo "$GITHUB_REPOSITORY" \
