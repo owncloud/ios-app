@@ -39,8 +39,9 @@ jobs:
         with:
           commit-message: "Configuration documentation updated"
           files: |
-            doc/CONFIGURATION.json
-            doc/configuration.adoc
+            doc/
+#            doc/CONFIGURATION.json
+#            doc/configuration.adoc
 
 #      - name: Commit and push configuration documentation update
 #        uses: suzuki-shunsuke/commit-action@06e3b49d4706498d325d29bd85adc82ecf2f5d8f #v1.0.0
