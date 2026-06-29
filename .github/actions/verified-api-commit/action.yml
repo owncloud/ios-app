@@ -1,0 +1,83 @@
+name: 'Verified API Commit'
+description: 'Commits specifically changed files via the GitHub API to generate a Verified signature.'
+
+inputs:
+  files:
+    description: 'A multiline list of files to check and commit'
+    required: true
+  commit-message:
+    description: 'The commit message to use'
+    required: true
+  github-token:
+    description: 'The GITHUB_TOKEN to use for the API call'
+    required: true
+    default: ${{ github.token }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Commit specifically changed files
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        FILES_INPUT: ${{ inputs.files }}
+        COMMIT_MESSAGE: ${{ inputs.commit-message }}
+      run: |
+        ADDITIONS_JSON="[]"
+        
+        # Loop through the multiline input securely
+        while IFS= read -r FILE || [[ -n "$FILE" ]]; do
+          # Skip empty lines
+          if [[ -z "$FILE" ]]; then continue; fi
+          
+          # Check if Git sees modifications for this specific file
+          if [[ -n "$(git status --porcelain "$FILE" 2>/dev/null)" ]]; then
+            if [[ -f "$FILE" ]]; then
+              echo "Detected changes in: $FILE"
+              B64_CONTENT=$(base64 -w 0 "$FILE")
+              ADDITIONS_JSON=$(echo "$ADDITIONS_JSON" | jq --arg path "$FILE" --arg contents "$B64_CONTENT" '. + [{path: $path, contents: $contents}]')
+            else
+              echo "Warning: $FILE was deleted. Skipping addition."
+            fi
+          fi
+        done <<< "$FILES_INPUT"
+
+        # If the array is still empty, no files from the list changed
+        if [[ "$ADDITIONS_JSON" == "[]" ]]; then
+          echo "None of the specified files changed. Skipping commit."
+          exit 0
+        fi
+
+        # Prepare the GraphQL Payload using jq
+        HEAD_OID=$(git rev-parse HEAD)
+        
+        QUERY='mutation CreateCommitOnBranch($repo: String!, $branch: String!, $oid: GitObjectID!, $msg: String!, $files: [FileAddition!]!) {
+          createCommitOnBranch(input: {
+            branch: { repositoryNameWithOwner: $repo, branchName: $branch },
+            message: { headline: $msg },
+            fileChanges: { additions: $files },
+            expectedHeadOid: $oid
+          }) { commit { url } }
+        }'
+
+        jq -n \
+          --arg query "$QUERY" \
+          --arg repo "$GITHUB_REPOSITORY" \
+          --arg branch "${GITHUB_HEAD_REF:-$GITHUB_REF_NAME}" \
+          --arg oid "$HEAD_OID" \
+          --arg msg "$COMMIT_MESSAGE" \
+          --argjson files "$ADDITIONS_JSON" \
+          '{
+            query: $query,
+            variables: {
+              repo: $repo,
+              branch: $branch,
+              oid: $oid,
+              msg: $msg,
+              files: $files
+            }
+          }' | gh api graphql --input -
+        
+        echo "Successfully created verified commit!"
+
+# Created by Gemini 3.1 Pro Thinking
