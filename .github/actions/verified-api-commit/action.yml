@@ -146,7 +146,7 @@ runs:
             }' | gh api graphql --input - 2>&1) || true
           
           # 6. Handle Concurrency Mismatch
-          if echo "$RESPONSE" | grep -q "expectedHeadOid"; then
+          if echo "$RESPONSE" | grep -q "STALE_DATA" || echo "$RESPONSE" | grep -q "Expected branch to point to"; then
             if [[ "$RETRY_ON_CONFLICT" == "true" && $((RETRY_COUNT+1)) -lt $MAX_RETRIES ]]; then
               echo "⚠️ OID Mismatch detected (another workflow pushed concurrently). Retrying... ($((RETRY_COUNT+1))/$MAX_RETRIES)"
               
