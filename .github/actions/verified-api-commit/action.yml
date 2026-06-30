@@ -143,7 +143,7 @@ runs:
                 msg: $msg,
                 files: $files
               }
-            }' | gh api graphql --input - 2>&1)
+            }' | gh api graphql --input - 2>&1) || true
           
           # 6. Handle Concurrency Mismatch
           if echo "$RESPONSE" | grep -q "expectedHeadOid"; then
