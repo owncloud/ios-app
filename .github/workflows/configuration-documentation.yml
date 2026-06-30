@@ -13,7 +13,6 @@ on:
     - fix/*
     - feature/*
     - release/*
-    - chore/*
 
 jobs:
   build:
