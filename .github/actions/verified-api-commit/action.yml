@@ -46,7 +46,7 @@
 
 name: 'Verified API Commit'
 description: 'Commits specifically changed files and folders via the GitHub API to generate a Verified signature.'
-author: 'Your Name'
+author: 'Felix Schwarz'
 
 inputs:
   files:
@@ -152,7 +152,7 @@ runs:
               else
                 echo "Warning: $FILE_PATH is not a file or was deleted. Skipping addition."
               fi
-            done <<< "$(git status --porcelain "$ITEM" 2>/dev/null)"
+            done <<< "$(git status --porcelain -- "$ITEM" 2>/dev/null)"
           done <<< "$FILES_INPUT"
 
           # 4. If the array is still empty, no files from the list changed
