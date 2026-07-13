@@ -1,8 +1,17 @@
 name: "Pull icons from ocis/web"
+
+# Queue this workflow so it only runs one at a time for this specific branch,
+# avoiding race conditions when commiting changes
+concurrency:
+  group: push-queue-${{ github.ref }}
+  cancel-in-progress: false # Wait in line instead of cancelling
+
+# This workflow is triggered on pushes to the repository.
 on:
   workflow_dispatch:
-  pull_request:
-    branches: ["release/*"]
+  push:
+    branches:
+      - "release/*"
 permissions:
   contents: write
 
@@ -11,9 +20,10 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2 (previously v4)
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          ssh-key: ${{ secrets.DEPLOYMENT_SSH_KEY }}
+          persist-credentials: false
+          submodules: true  
 
       - name: Build MakeTVG
         run: |
@@ -38,8 +48,16 @@ jobs:
              --icon-map img/tvg-icons/icon-map.json \
              --output img/tvg-icons
 
-      - uses: GuillaumeFalourd/git-commit-push@205c043bca2f932f7a48a28a8d619ba30eb84baf # v1.3
+      - name: Generate GitHub App token
+        id: app-token
+        uses: actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 # v3.1.1
         with:
-          email: devops@owncloud.com
-          name: ownClouders
-          commit_message: "[icons] updated icons from ocis and ocis web"
+          client-id: ${{ secrets.TRANSLATION_APP_ID }}
+          private-key: ${{ secrets.TRANSLATION_APP_PRIVATE_KEY }}
+      - name: Commit and sign modified files via API
+        uses: ./.github/actions/verified-api-commit
+        with:
+          commit-message: "[icons] updated icons from ocis and ocis web"
+          retry-on-conflict: 'true'
+          files: |
+            img/tvg-icons/
