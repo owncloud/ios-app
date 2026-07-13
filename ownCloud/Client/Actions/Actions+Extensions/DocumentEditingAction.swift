@@ -86,6 +86,7 @@ class DocumentEditingAction : Action {
 						let navigationController = ThemeNavigationController(rootViewController: editDocumentViewController)
 
 						editDocumentViewController.pdfViewController = hostViewController as? PDFViewerViewController
+						editDocumentViewController.isModalInPresentation = true // prevent dismissal via pinch gesture
 						navigationController.modalPresentationStyle = .overFullScreen
 						viewController.present(navigationController, animated: true)
 					} else {
