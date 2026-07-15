@@ -82,6 +82,11 @@
 	return (NSFileProviderItemCapabilitiesAllowsContentEnumerating);
 }
 
+- (NSNumber *)documentSize
+{
+	return (nil); // Despite being documented as optional, this method is invoked when copying a space from one account to another space of another account via drag and drop
+}
+
 @end
 
 #endif /* OC_FEATURE_AVAILABLE_FILEPROVIDER */
