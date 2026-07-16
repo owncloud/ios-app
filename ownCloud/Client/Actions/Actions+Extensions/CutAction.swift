@@ -46,7 +46,7 @@ class CutAction : Action {
 		}
 
 		let items = context.items
-		let uuid = core.bookmark.uuid.uuidString
+		let uuid = core.bookmark.uuidString
 		var itemProviderItems: [NSItemProvider] = []
 		let globalPasteboard = UIPasteboard.general
 		globalPasteboard.items = []

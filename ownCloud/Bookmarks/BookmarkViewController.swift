@@ -1113,7 +1113,7 @@ extension BookmarkViewController {
 
 			if let bookmark {
 				// Retrieve latest version of bookmark from OCBookmarkManager
-				if let latestStoredBookmarkVersion = OCBookmarkManager.shared.bookmark(forUUIDString: bookmark.uuid.uuidString) {
+				if let latestStoredBookmarkVersion = OCBookmarkManager.shared.bookmark(forUUIDString: bookmark.uuidString) {
 					editBookmark = latestStoredBookmarkVersion
 				}
 			}

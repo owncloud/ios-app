@@ -581,7 +581,7 @@
 	    ((content.query == nil) && (content != nil)))
 	{
 		NSArray <OCItem *> *queryResults = content.query.queryResults;
-		OCBookmarkUUIDString bookmarkUUIDString = content.core.bookmark.uuid.UUIDString;
+		OCBookmarkUUIDString bookmarkUUIDString = content.core.bookmark.uuidString;
 
 		for (OCItem *item in queryResults)
 		{
@@ -620,7 +620,7 @@
 	OCLogDebug(@"##### PROVIDE ITEMS TO %lu --CHANGE-- OBSERVER FOR %@: %@", _changeObservers.count, content.query.queryLocation.path, content.query.queryResults);
 
 	NSArray <OCItem *> *queryResults = content.query.queryResults;
-	OCBookmarkUUIDString bookmarkUUIDString = content.core.bookmark.uuid.UUIDString;
+	OCBookmarkUUIDString bookmarkUUIDString = content.core.bookmark.uuidString;
 
 	for (OCItem *item in queryResults)
 	{

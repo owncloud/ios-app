@@ -65,6 +65,6 @@ public class AppStateActionConnect: AppStateAction {
 
 public extension AppStateAction {
 	static func connection(with bookmark: OCBookmark, children: [AppStateAction]? = nil) -> AppStateActionConnect {
-		return AppStateActionConnect(bookmarkUUID: bookmark.uuid.uuidString, children: children)
+		return AppStateActionConnect(bookmarkUUID: bookmark.uuidString, children: children)
 	}
 }

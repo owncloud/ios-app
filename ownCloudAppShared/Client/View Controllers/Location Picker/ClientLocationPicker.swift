@@ -564,7 +564,7 @@ public class ClientLocationPicker : NSObject {
 					}
 				} else if let item, location == nil {
 					// Add missing location for item
-					if item.bookmarkUUID == nil, let bookmarkUUID = context?.core?.bookmark.uuid.uuidString {
+					if item.bookmarkUUID == nil, let bookmarkUUID = context?.core?.bookmark.uuidString {
 						item.bookmarkUUID = bookmarkUUID
 					}
 					if let itemLocation = item.location, let core = context?.core {
