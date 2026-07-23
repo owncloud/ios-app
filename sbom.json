@@ -8,10 +8,10 @@
         {
           "group": "@cyclonedx",
           "name": "cdxgen",
-          "version": "12.5.1",
-          "purl": "pkg:npm/%40cyclonedx/cdxgen@12.5.1",
+          "version": "12.7.1",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@12.7.1",
           "type": "application",
-          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@12.5.1",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@12.7.1",
           "publisher": "OWASP Foundation",
           "authors": [
             {
@@ -63,7 +63,29 @@
         {
           "license": {
             "url": "https://github.com/johnxnguyen/Down/blob/master/LICENSE",
-            "id": "MIT"
+            "id": "MIT",
+            "properties": [
+              {
+                "name": "cdx:license:category",
+                "value": "Permissive"
+              },
+              {
+                "name": "cdx:license:foss",
+                "value": "true"
+              },
+              {
+                "name": "cdx:license:osiApproved",
+                "value": "true"
+              },
+              {
+                "name": "cdx:license:fsfLibre",
+                "value": "true"
+              },
+              {
+                "name": "cdx:license:deprecated",
+                "value": "false"
+              }
+            ]
           }
         }
       ],
@@ -80,6 +102,10 @@
         {
           "name": "SrcFile",
           "value": "ownCloud.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
+        },
+        {
+          "name": "cdx:license:category",
+          "value": "Permissive"
         }
       ],
       "evidence": {
@@ -107,7 +133,29 @@
         {
           "license": {
             "url": "https://github.com/krzyzanowskim/OpenSSL/blob/main/LICENSE.txt",
-            "id": "0BSD"
+            "id": "0BSD",
+            "properties": [
+              {
+                "name": "cdx:license:category",
+                "value": "Permissive"
+              },
+              {
+                "name": "cdx:license:foss",
+                "value": "true"
+              },
+              {
+                "name": "cdx:license:osiApproved",
+                "value": "true"
+              },
+              {
+                "name": "cdx:license:fsfLibre",
+                "value": "false"
+              },
+              {
+                "name": "cdx:license:deprecated",
+                "value": "false"
+              }
+            ]
           }
         }
       ],
@@ -128,6 +176,10 @@
         {
           "name": "SrcFile",
           "value": "ios-sdk/ownCloudSDK.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
+        },
+        {
+          "name": "cdx:license:category",
+          "value": "Permissive"
         }
       ],
       "evidence": {
@@ -155,7 +207,29 @@
         {
           "license": {
             "url": "https://github.com/microsoft/plcrashreporter/blob/master/LICENSE",
-            "id": "Apache-2.0"
+            "id": "Apache-2.0",
+            "properties": [
+              {
+                "name": "cdx:license:category",
+                "value": "Permissive"
+              },
+              {
+                "name": "cdx:license:foss",
+                "value": "true"
+              },
+              {
+                "name": "cdx:license:osiApproved",
+                "value": "true"
+              },
+              {
+                "name": "cdx:license:fsfLibre",
+                "value": "true"
+              },
+              {
+                "name": "cdx:license:deprecated",
+                "value": "false"
+              }
+            ]
           }
         }
       ],
@@ -172,6 +246,10 @@
         {
           "name": "SrcFile",
           "value": "ownCloud.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
+        },
+        {
+          "name": "cdx:license:category",
+          "value": "Permissive"
         }
       ],
       "evidence": {
@@ -199,7 +277,29 @@
         {
           "license": {
             "url": "https://github.com/pocketsvg/PocketSVG/blob/master/LICENSE",
-            "id": "MIT"
+            "id": "MIT",
+            "properties": [
+              {
+                "name": "cdx:license:category",
+                "value": "Permissive"
+              },
+              {
+                "name": "cdx:license:foss",
+                "value": "true"
+              },
+              {
+                "name": "cdx:license:osiApproved",
+                "value": "true"
+              },
+              {
+                "name": "cdx:license:fsfLibre",
+                "value": "true"
+              },
+              {
+                "name": "cdx:license:deprecated",
+                "value": "false"
+              }
+            ]
           }
         }
       ],
@@ -216,6 +316,10 @@
         {
           "name": "SrcFile",
           "value": "ownCloud.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
+        },
+        {
+          "name": "cdx:license:category",
+          "value": "Permissive"
         }
       ],
       "evidence": {
@@ -284,10 +388,10 @@
         "component": {
           "group": "@cyclonedx",
           "name": "cdxgen",
-          "version": "12.5.1",
-          "purl": "pkg:npm/%40cyclonedx/cdxgen@12.5.1",
+          "version": "12.7.1",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@12.7.1",
           "type": "application",
-          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@12.5.1",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@12.7.1",
           "publisher": "OWASP Foundation",
           "authors": [
             {
