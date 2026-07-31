@@ -388,6 +388,42 @@
     "categoryTag" : "actions",
     "classIdentifier" : "action",
     "className" : "ownCloudAppShared.Action",
+    "defaultValue" : "with-default-browser",
+    "description" : "Determines how to open links that an web app (presented in-app) wants to open in a new window.",
+    "flatIdentifier" : "action.in-app-web-app-link-open-mode",
+    "key" : "in-app-web-app-link-open-mode",
+    "label" : "In-app WebApp link open mode",
+    "possibleValues" : [
+      {
+        "description" : "Asks the user whether to open the link in the in-app browser or the default browser.",
+        "value" : "choice"
+      },
+      {
+        "description" : "Denies opening the link and informs the user.",
+        "value" : "deny"
+      },
+      {
+        "description" : "Opens the link in the in-app browser, possibly navigating away from the WebApp.",
+        "value" : "navigate"
+      },
+      {
+        "description" : "Silently denies opening the link without bringing up an alert, logging that a link-opening was denied.",
+        "value" : "silent-deny"
+      },
+      {
+        "description" : "Opens the link in the default browser.",
+        "value" : "with-default-browser"
+      }
+    ],
+    "status" : "advanced",
+    "type" : "string"
+  },
+  {
+    "autoExpansion" : "none",
+    "category" : "Actions",
+    "categoryTag" : "actions",
+    "classIdentifier" : "action",
+    "className" : "ownCloudAppShared.Action",
     "defaultValue" : "auto",
     "description" : "Determines how to open a document in a web app.",
     "flatIdentifier" : "action.open-in-web-app-mode",
