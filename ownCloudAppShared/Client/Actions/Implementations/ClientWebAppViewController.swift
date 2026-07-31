@@ -53,6 +53,60 @@ open class ClientWebAppViewController: UIViewController, WKUIDelegate {
 		return configuration
 	}
 
+	public func webView(_ webView: WKWebView, createWebViewWith configuration: WKWebViewConfiguration, for navigationAction: WKNavigationAction, windowFeatures: WKWindowFeatures) -> WKWebView? {
+		if navigationAction.targetFrame == nil, let url = navigationAction.request.url,
+		   let openModeRaw = OpenInWebAppAction.classSetting(forOCClassSettingsKey: .inAppWebAppLinkOpenMode) as? String,
+		   let openMode = InAppWebAppLinkOpenMode(rawValue: openModeRaw) {
+			// Web app wants to open a link in a new window
+			var title: String
+			var openAction, navigateAction: UIAlertAction?
+
+			title = OCLocalizedString("Web app requests to open link", nil)
+			openAction = UIAlertAction(title: "Open", style: .default) { (_) in
+				OCAuthenticationBrowserSessionCustomScheme.open(url) // Open in default browser
+			}
+			navigateAction = UIAlertAction(title: "Navigate", style: .default) { (_) in
+				webView.load(navigationAction.request) // Navigate
+			}
+
+			switch openMode {
+				case .withDefaultBrowser:
+					navigateAction = nil
+
+				case .navigate:
+					openAction = nil
+
+				case .choice:
+					// allow all actions
+					break
+
+				case .deny:
+					title = OCLocalizedString("The web app attempted to open the URL below. Opening was denied by configuration.", nil)
+					openAction = nil
+					navigateAction = nil
+
+				case .silentDeny:
+					Log.debug("ClientWebAppViewController denied opening a link.")
+					return nil
+			}
+
+			let alert = ThemedAlertController(title: title, message: url.absoluteString, preferredStyle: .alert)
+			let cancelAction = UIAlertAction(title: OCLocalizedString("Cancel", nil), style: .cancel)
+
+			if let openAction {
+				alert.addAction(openAction)
+			}
+			if let navigateAction {
+				alert.addAction(navigateAction)
+			}
+			alert.addAction(cancelAction)
+
+			present(alert, animated: true)
+		}
+
+		return nil // nil -> do not open; webView -> open in originating webView (default)
+	}
+
 	override public func loadView() {
 		let rootView = UIView()
 

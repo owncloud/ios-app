@@ -21,6 +21,7 @@ import ownCloudSDK
 
 public extension OCClassSettingsKey {
 	static let openInWebAppMode = OCClassSettingsKey("open-in-web-app-mode")
+	static let inAppWebAppLinkOpenMode = OCClassSettingsKey("in-app-web-app-link-open-mode")
 }
 
 public enum OpenInWebAppActionMode: String {
@@ -30,10 +31,19 @@ public enum OpenInWebAppActionMode: String {
 	case inAppWithDefaultBrowserOption = "in-app-with-default-browser-option"
 }
 
+public enum InAppWebAppLinkOpenMode: String {
+	case withDefaultBrowser = "with-default-browser"
+	case navigate = "navigate"
+	case choice = "choice"
+	case deny = "deny"
+	case silentDeny = "silent-deny"
+}
+
 public class OpenInWebAppAction: Action {
 	public static func registerSettings() {
 		self.registerOCClassSettingsDefaults([
-			.openInWebAppMode : OpenInWebAppActionMode.auto.rawValue
+			.openInWebAppMode : OpenInWebAppActionMode.auto.rawValue,
+			.inAppWebAppLinkOpenMode : InAppWebAppLinkOpenMode.withDefaultBrowser.rawValue
 		], metadata: [
 			.openInWebAppMode : [
 				.type 		: OCClassSettingsMetadataType.string,
@@ -57,6 +67,36 @@ public class OpenInWebAppAction: Action {
 					[
 						OCClassSettingsMetadataKey.value 	: OpenInWebAppActionMode.inAppWithDefaultBrowserOption.rawValue,
 						OCClassSettingsMetadataKey.description 	: "Open inline in an in-app browser, but provide a button to open the document in the default browser (may require the user to sign in)."
+					]
+				]
+			],
+
+			.inAppWebAppLinkOpenMode : [
+				.type 		: OCClassSettingsMetadataType.string,
+				.label		: "In-app WebApp link open mode",
+				.description 	: "Determines how to open links that an web app (presented in-app) wants to open in a new window.",
+				.status		: OCClassSettingsKeyStatus.advanced,
+				.category	: "Actions",
+				.possibleValues : [
+					[
+						OCClassSettingsMetadataKey.value 	: InAppWebAppLinkOpenMode.withDefaultBrowser.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Opens the link in the default browser."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: InAppWebAppLinkOpenMode.navigate.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Opens the link in the in-app browser, possibly navigating away from the WebApp."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: InAppWebAppLinkOpenMode.choice.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Asks the user whether to open the link in the in-app browser or the default browser."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: InAppWebAppLinkOpenMode.deny.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Denies opening the link and informs the user."
+					],
+					[
+						OCClassSettingsMetadataKey.value 	: InAppWebAppLinkOpenMode.silentDeny.rawValue,
+						OCClassSettingsMetadataKey.description 	: "Silently denies opening the link without bringing up an alert, logging that a link-opening was denied."
 					]
 				]
 			]
