@@ -2,6 +2,8 @@
 
 # update_fastlane # fastlane automatically update itself
 
+require "fileutils"
+
 default_platform(:ios)
 
 platform :ios do
@@ -416,19 +418,74 @@ end
   end
 
   lane :generate_appicon do
-  
-    iconPath = "ownCloud/Resources/Theming/branding-assets/"
-    iconName = "branding-icon.png"  
-    outputIconPath = "../ownCloud/Resources/Assets.xcassets/"
-    outputIconName = "AppIcon.appiconset"
-    if File.exist?("../" + iconPath + iconName)
-      sh("rm -rf " + outputIconPath + outputIconName + "/*")
-      appicon(
-        appicon_image_file: iconPath + iconName,
-        appicon_devices: [:ipad, :iphone, :ios_marketing],
-        appicon_path: "ownCloud/Resources/Assets.xcassets/",
-        appicon_name: outputIconName
+    iconPath = "../ownCloud/Resources/Theming/branding-assets"
+    iconName = "branding-icon.png"
+    outputIconPackagePath = "../ownCloud/Resources/AppIcon.icon"
+
+    pngIconPath = File.join(iconPath, iconName)
+    brandedIconPath = File.join(iconPath, "AppIcon.icon")
+
+    if File.exist?(pngIconPath) && !File.directory?(brandedIconPath)
+      # In absence of a branded AppIcon.icon, create one from the branding-icon PNG file
+
+      outputIconPath = brandedIconPath
+      outputIconAssetsPath = File.join(outputIconPath, "Assets")
+
+      # Structure:
+      #     AppIcon.icon/                 - outputIconPath (== brandedIconPath)
+      #         icon.json                 - outputIconPath + "icon.json"
+      #         Assets/                   - outputIconAssetsPath
+      #             branding-icon.png     - outputIconAssetsPath + "branding-icon.png"
+
+      UI.message("Generating AppIcon.icon from branding-icon.png.")
+      FileUtils.mkdir_p(outputIconPath)
+      FileUtils.mkdir_p(outputIconAssetsPath)
+      FileUtils.cp(pngIconPath, File.join(outputIconAssetsPath, "branding-icon.png"))
+
+      # Generate the JSON for a single-layer icon with no effects at all
+      # (derived by creating a minimal icon in Icon Composer and looking at its JSON file)
+      fallbackIconJson = {
+        "fill" => "automatic",
+        "groups" => [
+          {
+            "hidden" => false,
+            "layers" => [
+              {
+                "fill" => "none",
+                "glass" => false,
+                "hidden" => false,
+                "image-name" => "branding-icon.png",
+                "name" => "branding-icon"
+              }
+            ],
+            "shadow" => {
+              "kind" => "neutral",
+              "opacity" => 0.5
+            },
+            "specular" => false,
+            "translucency" => {
+              "enabled" => false,
+              "value" => 0.5
+            }
+          }
+        ],
+        "supported-platforms" => {
+          "squares" => "shared"
+        }
+      }
+
+      File.write(
+        File.join(outputIconPath, "icon.json"),
+        JSON.pretty_generate(fallbackIconJson)
       )
+    end
+
+    if File.directory?(brandedIconPath)
+      # Use the branded AppIcon.icon
+      UI.message("Using branded AppIcon.icon package.")
+      FileUtils.rm_rf(outputIconPackagePath)
+      FileUtils.mkdir_p(outputIconPackagePath)
+      FileUtils.cp_r("#{brandedIconPath}/.", outputIconPackagePath)
     end
   end
 
