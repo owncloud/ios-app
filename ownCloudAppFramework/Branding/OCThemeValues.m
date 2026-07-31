@@ -95,6 +95,7 @@
 {
 	OCResourceRequest *iconResourceRequest = [OCResourceRequestURLItem requestURLItem:[_core.connection.bookmark.url URLByAppendingPathComponent: self.logo] identifier:nil version:OCResourceRequestURLItem.daySpecificVersion structureDescription:@"icon" waitForConnectivity:YES changeHandler:changeHandler];
 	iconResourceRequest.lifetime = OCResourceRequestLifetimeSingleRun;
+	iconResourceRequest.retryIfNotFound = NO;
 
 	OCResourceManager *resourceManager = self.core.vault.resourceManager;
 	[resourceManager startRequest:iconResourceRequest];
