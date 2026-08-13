@@ -62,10 +62,10 @@ open class ClientWebAppViewController: UIViewController, WKUIDelegate {
 			var openAction, navigateAction: UIAlertAction?
 
 			title = OCLocalizedString("Web app requests to open link", nil)
-			openAction = UIAlertAction(title: "Open", style: .default) { (_) in
+			openAction = UIAlertAction(title: OCLocalizedString("Open", nil), style: .default) { (_) in
 				OCAuthenticationBrowserSessionCustomScheme.open(url) // Open in default browser
 			}
-			navigateAction = UIAlertAction(title: "Navigate", style: .default) { (_) in
+			navigateAction = UIAlertAction(title: OCLocalizedString("Navigate", nil), style: .default) { (_) in
 				webView.load(navigationAction.request) // Navigate
 			}
 

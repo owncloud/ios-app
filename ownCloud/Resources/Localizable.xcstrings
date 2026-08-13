@@ -57865,6 +57865,16 @@
         }
       }
     },
+    "Navigate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigieren"
+          }
+        }
+      }
+    },
     "Network unavailable" : {
       "localizations" : {
         "ar" : {
@@ -63215,6 +63225,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Online"
+          }
+        }
+      }
+    },
+    "Open" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnen"
           }
         }
       }
