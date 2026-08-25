@@ -23,25 +23,7 @@
 
 - (BOOL)isLocatedWithinVaultStorage
 {
-	if (!self.isFileURL)
-	{
-		return (NO);
-	}
-
-	NSString *vaultRootPath = OCVault.storageRootURL.path;
-	NSString *path = self.path;
-
-	if (vaultRootPath == nil)
-	{
-		return (NO);
-	}
-
-	if (![vaultRootPath hasSuffix:@"/"])
-	{
-		vaultRootPath = [vaultRootPath stringByAppendingString:@"/"];
-	}
-
-	return ([path hasPrefix:vaultRootPath]);
+	return ([self isLocatedWithin:OCVault.storageRootURL standardizeParent:NO]); // OCVault.storageRootURL is already standardized
 }
 
 - (BOOL)isLocalFile
