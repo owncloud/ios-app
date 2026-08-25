@@ -32319,6 +32319,7 @@
       }
     },
     "Enabling this option will attempt to mask private data, so it does not become part of any log. Since logging is a development and debugging feature, though, we can't guarantee that the log file will be free of any private data even with this option enabled. Therefore, please look through any log file and verify its free of any data you're not comfortable sharing before sharing it with anybody." : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -53874,6 +53875,7 @@
       }
     },
     "Mask private data" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -57859,6 +57861,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "names"
+          }
+        }
+      }
+    },
+    "Navigate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigieren"
           }
         }
       }
@@ -63213,6 +63225,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Online"
+          }
+        }
+      }
+    },
+    "Open" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öffnen"
           }
         }
       }
@@ -72802,6 +72824,7 @@
       }
     },
     "Privacy" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -98725,6 +98748,16 @@
         }
       }
     },
+    "The web app attempted to open the URL below. Opening was denied by configuration." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Webanwendung hat versucht die nachstehende URL zu öffnen. Das Öffnen wurde per Konfiguration abgelehnt."
+          }
+        }
+      }
+    },
     "Theme" : {
       "comment" : "User Interface Settings",
       "localizations" : {
@@ -99289,6 +99322,7 @@
       }
     },
     "This folder is empty. Fill it with content:" : {
+      "extractionState" : "stale",
       "localizations" : {
         "ar" : {
           "stringUnit" : {
@@ -107551,6 +107585,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "警告"
+          }
+        }
+      }
+    },
+    "Web app requests to open link" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webanwendung möchte Link öffnen"
           }
         }
       }

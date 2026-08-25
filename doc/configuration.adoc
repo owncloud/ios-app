@@ -296,6 +296,35 @@ action.create-document-mode
 
 |advanced `candidate`
 
+|**In-app WebApp link open mode** +
+ +
+action.in-app-web-app-link-open-mode
+|string
+|`with-default-browser`
+|Determines how to open links that an web app (presented in-app) wants to open in a new window.
+[cols="1,1"]
+!===
+! Value
+! Description
+! `choice`
+! Asks the user whether to open the link in the in-app browser or the default browser.
+
+! `deny`
+! Denies opening the link and informs the user.
+
+! `navigate`
+! Opens the link in the in-app browser, possibly navigating away from the WebApp.
+
+! `silent-deny`
+! Silently denies opening the link without bringing up an alert, logging that a link-opening was denied.
+
+! `with-default-browser`
+! Opens the link in the default browser.
+
+!===
+
+|advanced `candidate`
+
 |**Open In WebApp mode** +
  +
 action.open-in-web-app-mode
