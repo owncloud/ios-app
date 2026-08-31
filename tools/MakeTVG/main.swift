@@ -197,11 +197,12 @@ class YAMLParser {
 }
 
 if CommandLine.argc < 3 {
-	print("MakeTVG --makefile [make.json] [--icon-ts icon.ts] [--web-theme theme.json] [--file-filter only-matches] [--icon-map icon-map.json] [--legacy-input [old/app-specific icons folder]] --input [input folder] --output [output folder]")
+	print("MakeTVG --makefile [make.json] [--icon-ts icon.ts] [--web-theme theme.json] [--web-theme-filter-names [names]] [--file-filter only-matches] [--icon-map icon-map.json] [--legacy-input [old/app-specific icons folder]] --input [input folder] --output [output folder]")
 } else {
 	var iconMapURL, targetDirectoryURL: URL?
 	var sourceURLs : [URL] = []
 	var ocisIconTSFileURL, webThemeFileURL, colorYAMLFileURL: URL?
+	var webThemeFilterNames: [String]?
 	var fileFilter: String?
 	var makeDict: NSMutableDictionary?
 
@@ -219,6 +220,9 @@ if CommandLine.argc < 3 {
 
 				case "web-theme":
 					webThemeFileURL = URL(fileURLWithPath: cmdArg)
+
+				case "web-theme-filter-names":
+					webThemeFilterNames = cmdArg.split(separator: ",").map({ subString in String.init(subString) })
 
 				case "color-yaml":
 					colorYAMLFileURL = URL(fileURLWithPath: cmdArg)
@@ -284,17 +288,53 @@ if CommandLine.argc < 3 {
 		// Extract colors from theme.json
 		if let webTheme = try? JSONSerialization.jsonObject(with: webThemeData, options: [.json5Allowed]) as? NSDictionary {
 			if let themes = webTheme.value(forKeyPath: "clients.web.themes") as? [NSDictionary] {
+				var processedThemes : Set<String> = []
 				for theme in themes {
+					// Filter theme names for white list
+					let name = theme["name"] as? String
+					if let webThemeFilterNames, let name {
+						if !webThemeFilterNames.contains(name) {
+							print ("Skipping theme \(name) (not in web-theme-filter-names)")
+							continue
+						}
+					}
+
+					// Exclude special modes (i.e. vault mode)
+					let mode = theme["mode"] as? String
+					if let mode, let name, mode != "" {
+						print ("Skipping theme \(name) for mode \(mode)")
+						continue
+					}
+
 					let isDark = theme["isDark"] as? Bool ?? false
 					let styleName = isDark ? "dark" : "light"
+
+					// Ensure only one (the first) theme for each style is used
+					// - background: modern versions of the theme file contain multiple dark and light themes for different modes (f.ex. vault mode) and
+					if processedThemes.contains(styleName) {
+						print ("Skipping theme \(name ?? "unnamed") for color scheme \(styleName) as it is not the first for this color scheme")
+						continue
+					} else {
+						processedThemes.insert(styleName)
+					}
+
 					if let colorPalette = theme.value(forKeyPath: "designTokens.colorPalette") as? [String:String] {
 						for colorVar in colorPalette.keys {
 							if let colorValue = colorPalette[colorVar] {
+								var effectiveColorValue = colorValue
 								if colorVariables[colorVar] == nil {
 									colorVariables[colorVar] = [:]
 								}
-								colorVariables[colorVar]?[styleName] = colorValue
-								print("Adding color for \(colorVar)/\(styleName) as '\(colorValue)' based on '\(webThemeFileURL.lastPathComponent)'")
+
+								if colorValue.hasPrefix("oklch") {
+									if let convertedColorValue = oklchToRGB(colorValue) {
+										print("Converted oklch-color from \(colorValue) to \(convertedColorValue)")
+										effectiveColorValue = convertedColorValue
+									}
+								}
+
+								colorVariables[colorVar]?[styleName] = effectiveColorValue
+								print("Adding color for \(colorVar)/\(styleName) as '\(effectiveColorValue)' based on '\(webThemeFileURL.lastPathComponent)'")
 							}
 						}
 					}
@@ -319,6 +359,13 @@ if CommandLine.argc < 3 {
 						if let resolvedColor = parser.yamlTree.value(forKeyPath: effectiveColorValue.trimmingCharacters(in: CharacterSet(charactersIn: "{}")) + ".value") as? String {
 							effectiveColorValue = resolvedColor
 							resolveCount += 1
+						}
+					}
+
+					if effectiveColorValue.hasPrefix("oklch") {
+						if let convertedColorValue = oklchToRGB(effectiveColorValue) {
+							print("Converted oklch-color from \(effectiveColorValue) to \(convertedColorValue)")
+							effectiveColorValue = convertedColorValue
 						}
 					}
 
@@ -476,5 +523,117 @@ if CommandLine.argc < 3 {
 			"by-type": fileTypeIconMap,
 			"by-suffix": suffixIconMap
 		], options: [.sortedKeys]))?.write(to: iconMapURL)
+	}
+}
+
+// Helper function to convert oklch()-formatted colors to rgb()/rgba() equivalents
+// Generated using Gemini 3.7 Flash on 2026-08-31 by Felix Schwarz
+
+/// Converts a CSS `oklch(...)` string into standard `rgb(...)` or `rgba(...)` notation.
+/// - Parameter oklchString: e.g. "oklch(13% 0.028 261.692)" or "oklch(0.6 0.15 180 / 0.8)"
+/// - Returns: Formatted `rgb(...)` / `rgba(...)` string, or `nil` if parsing fails.
+func oklchToRGB(_ oklchString: String) -> String? {
+	let pattern = #"^oklch\(\s*([0-9.]+%?)\s+([0-9.]+%?)\s+([0-9.]+(?:deg|grad|rad|turn)?|none)(?:\s*\/\s*([0-9.]+%?))?\s*\)$"#
+	guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive),
+	      let match = regex.firstMatch(in: oklchString, range: NSRange(oklchString.startIndex..., in: oklchString)) else {
+		return nil
+	}
+
+	func extractSubstring(at index: Int) -> String? {
+		guard index < match.numberOfRanges else { return nil }
+		let range = match.range(at: index)
+		guard range.location != NSNotFound, let swiftRange = Range(range, in: oklchString) else { return nil }
+		return String(oklchString[swiftRange])
+	}
+
+	// 1. Parse Lightness (0.0 ... 1.0 or 0% ... 100%)
+	guard let lStr = extractSubstring(at: 1) else { return nil }
+	let lightness: Double
+	if lStr.hasSuffix("%") {
+		lightness = (Double(lStr.dropLast()) ?? 0.0) / 100.0
+	} else {
+		lightness = Double(lStr) ?? 0.0
+	}
+
+	// 2. Parse Chroma (number or percentage where 100% = 0.4 in CSS Color 4)
+	guard let cStr = extractSubstring(at: 2) else { return nil }
+	let chroma: Double
+	if cStr.hasSuffix("%") {
+		chroma = ((Double(cStr.dropLast()) ?? 0.0) / 100.0) * 0.4
+	} else {
+		chroma = Double(cStr) ?? 0.0
+	}
+
+	// 3. Parse Hue (deg, rad, grad, turn, or unitless degrees)
+	guard let hStr = extractSubstring(at: 3) else { return nil }
+	let hueDegrees: Double
+	if hStr.lowercased() == "none" {
+		hueDegrees = 0.0
+	} else if hStr.hasSuffix("deg") {
+		hueDegrees = Double(hStr.dropLast(3)) ?? 0.0
+	} else if hStr.hasSuffix("grad") {
+		hueDegrees = (Double(hStr.dropLast(4)) ?? 0.0) * 0.9
+	} else if hStr.hasSuffix("rad") {
+		hueDegrees = (Double(hStr.dropLast(3)) ?? 0.0) * (180.0 / .pi)
+	} else if hStr.hasSuffix("turn") {
+		hueDegrees = (Double(hStr.dropLast(4)) ?? 0.0) * 360.0
+	} else {
+		hueDegrees = Double(hStr) ?? 0.0
+	}
+
+	// 4. Parse Alpha (optional, defaults to 1.0)
+	let alpha: Double
+	if let aStr = extractSubstring(at: 4) {
+		if aStr.hasSuffix("%") {
+			alpha = (Double(aStr.dropLast()) ?? 100.0) / 100.0
+		} else {
+			alpha = Double(aStr) ?? 1.0
+		}
+	} else {
+		alpha = 1.0
+	}
+
+	// 5. Convert OKLCH to Oklab
+	let hueRadians = hueDegrees * (.pi / 180.0)
+	let a = chroma * cos(hueRadians)
+	let b = chroma * sin(hueRadians)
+
+	// 6. Convert Oklab to LMS
+	let l_ = lightness + 0.3963377774 * a + 0.2158037573 * b
+	let m_ = lightness - 0.1055613458 * a - 0.0638541728 * b
+	let s_ = lightness - 0.0894841775 * a - 1.2914855480 * b
+
+	let l = l_ * l_ * l_
+	let m = m_ * m_ * m_
+	let s = s_ * s_ * s_
+
+	// 7. Convert LMS to Linear sRGB
+	let rLinear = +4.0767416621 * l - 3.3077115913 * m + 0.2309699292 * s
+	let gLinear = -1.2684380046 * l + 2.6097574011 * m - 0.3413193965 * s
+	let bLinear = -0.0041960863 * l - 0.7034186147 * m + 1.7076147010 * s
+
+	// 8. sRGB Gamma Transfer function and Gamut Clamping
+	func gammaEncode(_ value: Double) -> Int {
+		let clampedLinear = max(0.0, min(1.0, value))
+		let srgb: Double
+		if clampedLinear <= 0.0031308 {
+			srgb = 12.92 * clampedLinear
+		} else {
+			srgb = 1.055 * pow(clampedLinear, 1.0 / 2.4) - 0.055
+		}
+		let clampedSrgb = max(0.0, min(1.0, srgb))
+		return Int(round(clampedSrgb * 255.0))
+	}
+
+	let r = gammaEncode(rLinear)
+	let g = gammaEncode(gLinear)
+	let bVal = gammaEncode(bLinear)
+
+	// 9. Format output
+	if alpha < 1.0 {
+		let formattedAlpha = String(format: "%.3g", alpha)
+		return "rgba(\(r), \(g), \(bVal), \(formattedAlpha))"
+	} else {
+		return "rgb(\(r), \(g), \(bVal))"
 	}
 }

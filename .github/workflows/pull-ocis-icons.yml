@@ -40,6 +40,7 @@ jobs:
              --makefile img/make.json \
              --icon-ts /tmp/ocis-git/web/packages/web-pkg/src/helpers/resource/icon.ts \
              --web-theme /tmp/ocis-git/services/web/assets/themes/owncloud/theme.json \
+             --web-theme-filter-names "Light Theme,Dark Theme" \
              --color-yaml /tmp/ocis-git/web/packages/design-system/src/tokens/ods/color.yaml \
              --legacy-input img/icons \
              --input /tmp/ocis-git/web/packages/design-system/src/assets/icons \
