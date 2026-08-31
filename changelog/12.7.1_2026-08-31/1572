@@ -1,0 +1,12 @@
+Enhancement: Configuration options for in-app web-app URL opening
+
+Adds a new option `action.in-app-web-app-link-open-mode` to allow configuring behavior when in-app web apps want to open a URL in a new window.
+
+Possible values:
+- `with-default-browser`: ask the user if the link should be opened in the default browser **(default)**
+- `navigate`: ask the user if the in-app browser hosting the web apps should navigate to the link
+- `choice`: ask the user whether to delegate link opening to the default browser or perform an in-app navigation 
+- `deny`: deny opening the link and tell the user
+- `silent-deny`: silently deny opening the link (effectively turning it into a no-op) and log a debug message (not including the URL)
+
+https://github.com/owncloud/ios-app/pull/1572

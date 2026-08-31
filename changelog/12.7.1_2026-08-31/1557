@@ -1,0 +1,5 @@
+Bugfix: Fix recursive copy in File Provider
+
+This PR fixes an issue where trying to copy and paste a whole folder hierarchy into the File Provider could render inconsistent and incomplete results.
+
+https://github.com/owncloud/ios-app/pull/1557

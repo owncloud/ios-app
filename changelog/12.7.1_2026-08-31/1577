@@ -1,0 +1,12 @@
+Bugfix: Support for additional Drive ID formats
+
+This PR adds `OCVault` support for Drive IDs in formats other than the standard oCIS-format (like f.ex. `166d1210-cdb9-50ab-9f1e-ecb9ef12a304$2e81b56f-9284-409a-9dd0-364604df62ce`) or that are longer than supported by APFS (defined by iOS as `NAME_MAX`, currently `255`):
+- Drive IDs matching `/^[A-Za-z0-9\\-\\$]{1,}$/` and shorter than `NAME_MAX` are kept as-is, keeping the vault structure backwards-compatible
+- Drive IDs not matching that regex are transparently base64-en-/decoded  before use
+- Drive IDs longer than `NAME_MAX` (before or after base64-encoding) are replaced with their SHA-256 checksum, while preserving the original Drive ID in a new `metadata.plist` file at the root level of the respective drive's folder in the vault
+
+Furthermore this PR:
+- rejects nameless `OCItem`s in WebDAV responses, returning an `OCError` instead
+- verifies an item's parent folder location before removing it from the vault
+
+https://github.com/owncloud/ios-app/pull/1577
