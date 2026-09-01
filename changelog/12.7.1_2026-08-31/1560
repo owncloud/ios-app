@@ -1,0 +1,5 @@
+Bugfix: Prevent accidental dismissal of markup UI via pinch gesture
+
+Prevents the accidental dismissal of markup UI via pinch gesture.
+
+https://github.com/owncloud/ios-app/pull/1560

@@ -73,7 +73,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "/tmp/web-git/packages/web-pkg/src/helpers/resource/icon.ts"
+            argument = "/tmp/ocis-git/web/packages/web-pkg/src/helpers/resource/icon.ts"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -85,11 +85,19 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
+            argument = "--web-theme-filter-names"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
+            argument = "&quot;Light Theme,Dark Theme&quot;"
+            isEnabled = "YES">
+         </CommandLineArgument>
+         <CommandLineArgument
             argument = "--color-yaml"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "/tmp/web-git/packages/design-system/src/tokens/ods/color.yaml"
+            argument = "/tmp/ocis-git/web/packages/design-system/src/tokens/ods/color.yaml"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
@@ -105,7 +113,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "/tmp/web-git/packages/design-system/src/assets/icons"
+            argument = "/tmp/ocis-git/web/packages/design-system/src/assets/icons"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

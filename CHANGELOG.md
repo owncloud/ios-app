@@ -1,5 +1,6 @@
 # Table of Contents
 
+* [Changelog for 12.7.1](#changelog-for-owncloud-ios-client-1271-2026-08-31)
 * [Changelog for 12.7.0](#changelog-for-owncloud-ios-client-1270-2026-03-27)
 * [Changelog for 12.6.1](#changelog-for-owncloud-ios-client-1261-2025-12-09)
 * [Changelog for 12.6.0](#changelog-for-owncloud-ios-client-1260-2025-08-08)
@@ -31,6 +32,77 @@
 * [Changelog for 11.5.1](#changelog-for-owncloud-ios-client-1151-2021-02-17)
 * [Changelog for 11.5.0](#changelog-for-owncloud-ios-client-1150-2021-02-10)
 * [Changelog for 11.4.5 versions and below](#changelog-for-1145-versions-and-below)
+# Changelog for ownCloud iOS Client [12.7.1] (2026-08-31)
+The following sections list the changes in ownCloud iOS Client 12.7.1 relevant to
+ownCloud admins and users.
+
+[12.7.1]: https://github.com/owncloud/ios-app/compare/milestone/12.7.0...milestone/12.7.1
+
+## Summary
+
+* Bugfix - Fix recursive copy in File Provider: [#1557](https://github.com/owncloud/ios-app/pull/1557)
+* Bugfix - Prevent accidental dismissal of markup UI via pinch gesture: [#1560](https://github.com/owncloud/ios-app/pull/1560)
+* Bugfix - Fix infinite icon loading retries - #1573: [#1573](https://github.com/owncloud/ios-app/pull/1573)
+* Bugfix - Support for additional Drive ID formats: [#1577](https://github.com/owncloud/ios-app/pull/1577)
+* Enhancement - Configuration options for in-app web-app URL opening: [#1572](https://github.com/owncloud/ios-app/pull/1572)
+
+## Details
+
+* Bugfix - Fix recursive copy in File Provider: [#1557](https://github.com/owncloud/ios-app/pull/1557)
+
+   This PR fixes an issue where trying to copy and paste a whole folder hierarchy
+   into the File Provider could render inconsistent and incomplete results.
+
+   https://github.com/owncloud/ios-app/pull/1557
+
+* Bugfix - Prevent accidental dismissal of markup UI via pinch gesture: [#1560](https://github.com/owncloud/ios-app/pull/1560)
+
+   Prevents the accidental dismissal of markup UI via pinch gesture.
+
+   https://github.com/owncloud/ios-app/pull/1560
+
+* Bugfix - Fix infinite icon loading retries - #1573: [#1573](https://github.com/owncloud/ios-app/pull/1573)
+
+   Fixes an infinite loop trying to load the icon of a web app if that icon does
+   not exist.
+
+   https://github.com/owncloud/ios-app/pull/1573
+
+* Bugfix - Support for additional Drive ID formats: [#1577](https://github.com/owncloud/ios-app/pull/1577)
+
+   This PR adds `OCVault` support for Drive IDs in formats other than the standard
+   oCIS-format (like f.ex.
+   `166d1210-cdb9-50ab-9f1e-ecb9ef12a304$2e81b56f-9284-409a-9dd0-364604df62ce`) or
+   that are longer than supported by APFS (defined by iOS as `NAME_MAX`, currently
+   `255`): - Drive IDs matching `/^[A-Za-z0-9\\-\\$]{1,}$/` and shorter than
+   `NAME_MAX` are kept as-is, keeping the vault structure backwards-compatible -
+   Drive IDs not matching that regex are transparently base64-en-/decoded before
+   use - Drive IDs longer than `NAME_MAX` (before or after base64-encoding) are
+   replaced with their SHA-256 checksum, while preserving the original Drive ID in
+   a new `metadata.plist` file at the root level of the respective drive's folder
+   in the vault
+
+   Furthermore this PR: - rejects nameless `OCItem`s in WebDAV responses, returning
+   an `OCError` instead - verifies an item's parent folder location before removing
+   it from the vault
+
+   https://github.com/owncloud/ios-app/pull/1577
+
+* Enhancement - Configuration options for in-app web-app URL opening: [#1572](https://github.com/owncloud/ios-app/pull/1572)
+
+   Adds a new option `action.in-app-web-app-link-open-mode` to allow configuring
+   behavior when in-app web apps want to open a URL in a new window.
+
+   Possible values: - `with-default-browser`: ask the user if the link should be
+   opened in the default browser **(default)** - `navigate`: ask the user if the
+   in-app browser hosting the web apps should navigate to the link - `choice`: ask
+   the user whether to delegate link opening to the default browser or perform an
+   in-app navigation - `deny`: deny opening the link and tell the user -
+   `silent-deny`: silently deny opening the link (effectively turning it into a
+   no-op) and log a debug message (not including the URL)
+
+   https://github.com/owncloud/ios-app/pull/1572
+
 # Changelog for ownCloud iOS Client [12.7.0] (2026-03-27)
 The following sections list the changes in ownCloud iOS Client 12.7.0 relevant to
 ownCloud admins and users.

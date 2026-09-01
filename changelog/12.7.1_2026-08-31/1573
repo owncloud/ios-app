@@ -1,0 +1,5 @@
+Bugfix: Fix infinite icon loading retries - #1573
+
+Fixes an infinite loop trying to load the icon of a web app if that icon does not exist.
+
+https://github.com/owncloud/ios-app/pull/1573
