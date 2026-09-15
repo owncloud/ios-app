@@ -8,10 +8,10 @@
         {
           "group": "@cyclonedx",
           "name": "cdxgen",
-          "version": "12.8.2",
-          "purl": "pkg:npm/%40cyclonedx/cdxgen@12.8.2",
+          "version": "12.8.4",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@12.8.4",
           "type": "application",
-          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@12.8.2",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@12.8.4",
           "publisher": "OWASP Foundation",
           "authors": [
             {
@@ -129,36 +129,6 @@
       "group": "github.com/krzyzanowskim",
       "name": "OpenSSL",
       "version": "3.6.3000",
-      "licenses": [
-        {
-          "license": {
-            "url": "https://github.com/krzyzanowskim/OpenSSL/blob/main/LICENSE.txt",
-            "id": "0BSD",
-            "properties": [
-              {
-                "name": "cdx:license:category",
-                "value": "Permissive"
-              },
-              {
-                "name": "cdx:license:foss",
-                "value": "true"
-              },
-              {
-                "name": "cdx:license:osiApproved",
-                "value": "true"
-              },
-              {
-                "name": "cdx:license:fsfLibre",
-                "value": "false"
-              },
-              {
-                "name": "cdx:license:deprecated",
-                "value": "false"
-              }
-            ]
-          }
-        }
-      ],
       "purl": "pkg:swift/github.com/krzyzanowskim/OpenSSL@3.6.3000",
       "externalReferences": [
         {
@@ -176,10 +146,6 @@
         {
           "name": "SrcFile",
           "value": "ios-sdk/ownCloudSDK.xcodeproj/project.xcworkspace/xcshareddata/swiftpm/Package.resolved"
-        },
-        {
-          "name": "cdx:license:category",
-          "value": "Permissive"
         }
       ],
       "evidence": {
@@ -388,10 +354,10 @@
         "component": {
           "group": "@cyclonedx",
           "name": "cdxgen",
-          "version": "12.8.2",
-          "purl": "pkg:npm/%40cyclonedx/cdxgen@12.8.2",
+          "version": "12.8.4",
+          "purl": "pkg:npm/%40cyclonedx/cdxgen@12.8.4",
           "type": "application",
-          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@12.8.2",
+          "bom-ref": "pkg:npm/@cyclonedx/cdxgen@12.8.4",
           "publisher": "OWASP Foundation",
           "authors": [
             {
