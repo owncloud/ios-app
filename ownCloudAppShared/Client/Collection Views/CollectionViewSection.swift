@@ -395,8 +395,22 @@ public class CollectionViewSection: NSObject, OCDataItem, OCDataItemVersioning {
 			}
 
 			if let wrappedItems = collectionViewController?.wrap(references: datasourceSnapshot.items, forSection: identifier) {
-				snapshot.appendItems(wrappedItems, toSection: identifier)
-				// Log.debug("Section[\(identifier)] contents: \(wrappedItems.debugDescription)")
+				// Diffable data sources require item identifiers to be unique across the entire snapshot (not just within a section).
+				// Defensively drop duplicates - e.g. an item that occurs twice in the data source, or the same reference appearing in
+				// more than one section - to avoid a fatal "supplied item identifiers are not unique" exception (NSInternalInconsistencyException).
+				var seenItems = Set<CollectionViewController.ItemRef>(snapshot.itemIdentifiers)
+				var uniqueWrappedItems : [CollectionViewController.ItemRef] = []
+
+				for wrappedItem in wrappedItems {
+					if seenItems.insert(wrappedItem).inserted {
+						uniqueWrappedItems.append(wrappedItem)
+					} else {
+						Log.warning("Dropping duplicate item \(wrappedItem) while populating snapshot for section \(identifier)")
+					}
+				}
+
+				snapshot.appendItems(uniqueWrappedItems, toSection: identifier)
+				// Log.debug("Section[\(identifier)] contents: \(uniqueWrappedItems.debugDescription)")
 			}
 
 			if let updatedItems = datasourceSnapshot.updatedItems, updatedItems.count > 0,
