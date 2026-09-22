@@ -284,6 +284,12 @@ if CommandLine.argc < 3 {
 	}
 	makeDict.removeObject(forKey: ".type-icon-map")
 
+	let customSuffixIconMap = makeDict[".suffix-icon-map"] as? [String : String]
+	if let customSuffixIconMap {
+		suffixIconMap = customSuffixIconMap
+	}
+	makeDict.removeObject(forKey: ".suffix-icon-map")
+
 	if let webThemeFileURL, let webThemeData = try? Data(NSData(contentsOf: webThemeFileURL)) {
 		// Extract colors from theme.json
 		if let webTheme = try? JSONSerialization.jsonObject(with: webThemeData, options: [.json5Allowed]) as? NSDictionary {
