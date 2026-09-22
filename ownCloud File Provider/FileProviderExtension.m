@@ -414,12 +414,17 @@
 	 */
 }
 
-
 - (void)itemChangedAtURL:(NSURL *)changedItemURL
 {
 	NSError *error = nil;
 	NSFileProviderItemIdentifier itemIdentifier = nil;
 	NSFileProviderItem item = nil, parentItem = nil;
+
+	if (changedItemURL == nil)
+	{
+		OCLogError(@"-itemChangedAtURL: called with changedItemURL=nil - doing nothing");
+		return;
+	}
 
 	if ((itemIdentifier = [self persistentIdentifierForItemAtURL:changedItemURL]) != nil)
 	{
@@ -429,6 +434,8 @@
 			{
 				OCItem *ocItem = OCTypedCast(item, OCItem);
 				OCItem *ocParentItem = OCTypedCast(parentItem, OCItem);
+
+				FPLogCmdBegin(@"ItemChanged", @"Start of itemChangedAtURL=%@, itemIdentifier=%@, attributes=%@", changedItemURL, itemIdentifier, [NSFileManager.defaultManager attributesOfItemAtPath:changedItemURL.path error:nil]);
 
 				if ((ocParentItem == nil) && (ocItem != nil))
 				{
@@ -443,8 +450,13 @@
 
 				if ((ocItem != nil) && (ocParentItem != nil))
 				{
-					[self.core reportLocalModificationOfItem:(OCItem *)item parentItem:(OCItem *)ocParentItem withContentsOfFileAtURL:changedItemURL isSecurityScoped:NO options:nil placeholderCompletionHandler:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
-						OCLogDebug(@"Upload of update finished with error=%@ item=%@", error, item);
+					// Check if changedItemURL is a directory
+					[_fileCoordinator coordinateReadingItemAtURL:changedItemURL options:NSFileCoordinatorReadingWithoutChanges|NSFileCoordinatorReadingForUploading error:&error byAccessor:^(NSURL * _Nonnull readURL) {
+						FPLogCmd(@"Coordinated read, uploading readURL=%@, attributes=%@", readURL, [NSFileManager.defaultManager attributesOfItemAtPath:readURL.path error:nil]);
+
+						[self.core reportLocalModificationOfItem:(OCItem *)item parentItem:(OCItem *)ocParentItem withContentsOfFileAtURL:readURL isSecurityScoped:YES options:nil placeholderCompletionHandler:nil resultHandler:^(NSError *error, OCCore *core, OCItem *item, id parameter) {
+							FPLogCmd(@"Upload of changed file completed with error=%@, item=%@", error, item);
+						}];
 					}];
 
 					return;
@@ -453,7 +465,7 @@
 		 }
 	}
 
-	OCLogError(@"-itemChangedAtURL: called, but item and/or parentItem couldn't be resolved properly: item=%@, parentItem=%@", item, parentItem);
+	OCLogError(@"-itemChangedAtURL: called, but item and/or parentItem couldn't be resolved properly: itemIdentifier=%@, item=%@, parentItem=%@", itemIdentifier, item, parentItem);
 
 	// ### Apple template comments: ###
 
