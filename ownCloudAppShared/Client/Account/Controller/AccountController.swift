@@ -207,9 +207,15 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			if configuration.showUserSidebarItems, userSidebarItemsDataSource == nil {
 				userSidebarItemsDataSource = OCDataSourceKVO(object: vault, keyPath: "sidebarItems")
 			}
+
+			// Keep sidebar items in sync with their folders (renamed, moved or deleted)
+			if configuration.showUserSidebarItems, let core = connection.core, sidebarItemsCore !== core {
+				startSidebarItemTracking(core: core)
+			}
 		} else {
 			savedSearchesDataSource = nil
 			userSidebarItemsDataSource = nil
+			stopSidebarItemTracking()
 		}
 
 		switch status {
@@ -237,6 +243,77 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			// Send connection closed navigation event
 			NavigationRevocationEvent.connectionClosed(bookmarkUUID: connection.bookmark.uuid).send()
 		}
+	}
+
+	// MARK: - Sidebar item tracking
+	weak var sidebarItemsCore: OCCore?
+	var sidebarItemTrackings: [String : OCCoreItemTracking] = [:]
+
+	func startSidebarItemTracking(core: OCCore) {
+		stopSidebarItemTracking()
+
+		sidebarItemsCore = core
+
+		core.vault.addSidebarItemObserver(self, withInitial: true, updateHandler: { [weak core] owner, sidebarItems, _ in
+			if let core, let accountController = owner as? AccountController {
+				accountController.updateSidebarItemTrackings(for: sidebarItems ?? [], core: core)
+			}
+		})
+	}
+
+	func stopSidebarItemTracking() {
+		sidebarItemsCore?.vault.keyValueStore?.removeObserver(forOwner: self, forKey: .sidebarItems)
+		sidebarItemsCore = nil
+		sidebarItemTrackings.removeAll()
+	}
+
+	func sidebarItemTrackingKey(for sidebarItem: OCSidebarItem) -> String? {
+		guard let location = sidebarItem.location else { return nil }
+		return "\(sidebarItem.uuid):\(location.string)"
+	}
+
+	func updateSidebarItemTrackings(for sidebarItems: [OCSidebarItem], core: OCCore) {
+		let trackingKeys = Set(sidebarItems.compactMap { sidebarItemTrackingKey(for: $0) })
+
+		// Stop tracking items that are no longer in the sidebar or have a new location
+		sidebarItemTrackings = sidebarItemTrackings.filter { trackingKeys.contains($0.key) }
+
+		for sidebarItem in sidebarItems {
+			guard let trackingKey = sidebarItemTrackingKey(for: sidebarItem), sidebarItemTrackings[trackingKey] == nil, let location = sidebarItem.location else {
+				continue
+			}
+
+			var fileID: String?
+
+			sidebarItemTrackings[trackingKey] = core.trackItem(at: location, trackingHandler: { [weak self, weak core] error, item, _ in
+				if let item {
+					fileID = item.fileID
+				} else if error == nil, let core {
+					// No error and no item: the item was removed or moved
+					self?.handleRemovedSidebarItemTarget(sidebarItem, fileID: fileID, core: core)
+				}
+			})
+		}
+	}
+
+	func handleRemovedSidebarItemTarget(_ sidebarItem: OCSidebarItem, fileID: String?, core: OCCore) {
+		guard let fileID, let database = core.vault.database else {
+			core.vault.delete(sidebarItem)
+			return
+		}
+
+		// Check if the item was moved (f.ex. renamed) rather than deleted
+		database.retrieveCacheItem(forFileID: fileID, completionHandler: { [weak core] _, _, _, item in
+			guard let core else { return }
+
+			if let item, let location = item.location {
+				location.bookmarkUUID = core.bookmark.uuid
+				sidebarItem.location = location
+				core.vault.update(sidebarItem)
+			} else {
+				core.vault.delete(sidebarItem)
+			}
+		})
 	}
 
 	// MARK: - Authentication failures
