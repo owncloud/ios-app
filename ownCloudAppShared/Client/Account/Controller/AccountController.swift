@@ -207,9 +207,15 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 			if configuration.showUserSidebarItems, userSidebarItemsDataSource == nil {
 				userSidebarItemsDataSource = OCDataSourceKVO(object: vault, keyPath: "sidebarItems")
 			}
+
+			// Remove sidebar items whose target no longer exists
+			if configuration.showUserSidebarItems, let core = connection.core, sidebarItemsCore !== core {
+				startSidebarItemTracking(core: core)
+			}
 		} else {
 			savedSearchesDataSource = nil
 			userSidebarItemsDataSource = nil
+			stopSidebarItemTracking()
 		}
 
 		switch status {
@@ -236,6 +242,48 @@ public class AccountController: NSObject, OCDataItem, OCDataItemVersioning, Acco
 
 			// Send connection closed navigation event
 			NavigationRevocationEvent.connectionClosed(bookmarkUUID: connection.bookmark.uuid).send()
+		}
+	}
+
+	// MARK: - Sidebar item tracking
+	weak var sidebarItemsCore: OCCore?
+	var sidebarItemTrackings: [String : OCCoreItemTracking] = [:]
+
+	func startSidebarItemTracking(core: OCCore) {
+		stopSidebarItemTracking()
+
+		sidebarItemsCore = core
+
+		core.vault.addSidebarItemObserver(self, withInitial: true, updateHandler: { [weak core] owner, sidebarItems, _ in
+			if let core, let accountController = owner as? AccountController {
+				accountController.updateSidebarItemTrackings(for: sidebarItems ?? [], core: core)
+			}
+		})
+	}
+
+	func stopSidebarItemTracking() {
+		sidebarItemsCore?.vault.keyValueStore?.removeObserver(forOwner: self, forKey: .sidebarItems)
+		sidebarItemsCore = nil
+		sidebarItemTrackings.removeAll()
+	}
+
+	func updateSidebarItemTrackings(for sidebarItems: [OCSidebarItem], core: OCCore) {
+		let sidebarItemUUIDs = Set(sidebarItems.map { $0.uuid as String })
+
+		// Stop tracking items that are no longer in the sidebar
+		sidebarItemTrackings = sidebarItemTrackings.filter { sidebarItemUUIDs.contains($0.key) }
+
+		for sidebarItem in sidebarItems {
+			guard sidebarItemTrackings[sidebarItem.uuid as String] == nil, let location = sidebarItem.location else {
+				continue
+			}
+
+			sidebarItemTrackings[sidebarItem.uuid as String] = core.trackItem(at: location, trackingHandler: { [weak core] error, item, _ in
+				// No error and no item: the item was removed (or moved) on the server
+				if error == nil, item == nil {
+					core?.vault.delete(sidebarItem)
+				}
+			})
 		}
 	}
 
