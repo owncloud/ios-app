@@ -1,0 +1,5 @@
+Bugfix: Remove sidebar items of deleted folders
+
+Folders added to the sidebar are now removed from it when they are deleted, either in the app or on the server.
+
+https://github.com/owncloud/ios-app/issues/1357
