@@ -216,10 +216,12 @@ extension OCItem: UniversalItemListCellContentProvider {
 
 		// - Description
 		var detailString: String = sizeLocalized
-		
+		var isFolderOnKiteworksServer = false
+
 		if type == .collection {
 			if let core = context?.core, core.connection.isKiteworksServer {
 				detailString = ""
+				isFolderOnKiteworksServer = true
 			}
 		}
 
@@ -227,7 +229,7 @@ extension OCItem: UniversalItemListCellContentProvider {
 			detailString = driveQuotaLocalized(core: core)
 		}
 
-		if size < 0 {
+		if size < 0, !isFolderOnKiteworksServer {
 			detailString = OCLocalizedString("Pending", nil)
 		}
 		if state == .serverSideProcessing {
