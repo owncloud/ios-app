@@ -148,7 +148,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : " couldn't download file(s)"
+            "value" : "nepodařilo se stáhnout soubor(y)"
           }
         },
         "de" : {
@@ -557,7 +557,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "{{fileName}} (file)"
+            "value" : "{{fileName}} (soubor)"
           }
         },
         "de" : {
@@ -687,7 +687,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "{{folderName}} (folder)"
+            "value" : "{{folderName}} (složka)"
           }
         },
         "de" : {
@@ -953,7 +953,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "{{itemCount}} items with {{totalSize}} total ({{fileCount}} files, {{folderCount}} folders)"
+            "value" : "{{itemCount}} položek s {{totalSize}} celkem ({{fileCount}} souborů, {{folderCount}} složek)"
           }
         },
         "de" : {
@@ -1083,7 +1083,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "{{itemName}} ({{link}}) | password: {{password}}"
+            "value" : "{{itemName}} ({{link}}) | heslo: {{password}}"
           }
         },
         "de" : {
@@ -1213,7 +1213,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "{{link}} | password: {{password}}"
+            "value" : "{{link}} | heslo: {{password}}"
           }
         },
         "de" : {
@@ -1894,7 +1894,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ / %@ – starting immediately"
+            "value" : "%@ / %@ – začíná ihned"
           }
         },
         "de" : {
@@ -2037,7 +2037,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ is not available for this item."
+            "value" : "%@ není dostupné pro tuto položku"
           }
         },
         "de" : {
@@ -2310,7 +2310,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ of %@"
+            "value" : "%@ z %@"
           }
         },
         "de" : {
@@ -2452,7 +2452,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%@ was updated"
+            "value" : "%@ byla aktualizována"
           }
         },
         "de" : {
@@ -2860,7 +2860,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%ld Item was copied to the clipboard"
+            "value" : "%ld položka byla zkopírována do schránky"
           }
         },
         "de" : {
@@ -2996,7 +2996,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "%ld Items were copied to the clipboard"
+            "value" : "%ld položky byly zkopírovány do schránky"
           }
         },
         "de" : {
@@ -3132,7 +3132,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "+ %ld more"
+            "value" : "+ %ld více"
           }
         },
         "de" : {
@@ -3404,7 +3404,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Accept or decline"
+            "value" : "Přijmout nebo odmítnout"
           }
         },
         "de" : {
@@ -3534,7 +3534,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Accept share"
+            "value" : "Accept Share"
           }
         },
         "de" : {
@@ -3670,7 +3670,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Accept Share failed"
+            "value" : "Accept Share selhalo"
           }
         },
         "de" : {
@@ -4652,7 +4652,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Acknowledgements"
+            "value" : "Licence třetích stran"
           }
         },
         "de" : {
@@ -4794,7 +4794,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Action"
+            "value" : "Akce"
           }
         },
         "de" : {
@@ -5209,7 +5209,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add"
+            "value" : "Přidat"
           }
         },
         "de" : {
@@ -5487,7 +5487,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add item"
+            "value" : "Přidat položku"
           }
         },
         "de" : {
@@ -5617,7 +5617,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add members"
+            "value" : "Přidat členy"
           }
         },
         "de" : {
@@ -5747,7 +5747,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Add to sidebar"
+            "value" : "Přidat do postranního panelu"
           }
         },
         "de" : {
@@ -6026,7 +6026,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "after %@"
+            "value" : "za %@"
           }
         },
         "de" : {
@@ -6168,7 +6168,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "After %ld seconds"
+            "value" : "Za %ld sekund"
           }
         },
         "de" : {
@@ -6730,7 +6730,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "after free %@ trial"
+            "value" : "po %@ zkušební lhůtě"
           }
         },
         "de" : {
@@ -6872,7 +6872,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Agree"
+            "value" : "Souhlas"
           }
         },
         "de" : {
@@ -7151,7 +7151,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "All done"
+            "value" : "Všechno hotové"
           }
         },
         "de" : {
@@ -7566,7 +7566,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Altitude"
+            "value" : "Převýšení"
           }
         },
         "de" : {
@@ -7702,7 +7702,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "An error occurred"
+            "value" : "Nastala chyba"
           }
         },
         "de" : {
@@ -7838,7 +7838,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "An item with the same name already exists in this location."
+            "value" : "Položka se stejným jménem v tomto místě již existuje."
           }
         },
         "de" : {
@@ -7974,7 +7974,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "An operation is currently performed that prevents connecting to '%@'. Please try again later."
+            "value" : "Právě probíhá operace, která blokuje připojení k '%@'. Zkuste to prosím později."
           }
         },
         "de" : {
@@ -8116,7 +8116,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aperture"
+            "value" : "Clona"
           }
         },
         "de" : {
@@ -8252,7 +8252,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Aperture priority"
+            "value" : "Priorita clony"
           }
         },
         "de" : {
@@ -8388,7 +8388,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "App Version"
+            "value" : "Verze aplikace"
           }
         },
         "de" : {
@@ -8524,7 +8524,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apply choice to all similar issues"
+            "value" : "Použít výběr na všechny podobné problémy"
           }
         },
         "de" : {
@@ -8660,7 +8660,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Apply to all"
+            "value" : "Použít na všechno"
           }
         },
         "de" : {
@@ -9080,7 +9080,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to delete these items from the server?"
+            "value" : "Opravdu chcete smazat tyto položky ze serveru?"
           }
         },
         "de" : {
@@ -9222,7 +9222,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to delete this item from the server?"
+            "value" : "Opravdu chcete smazat tuto položku ze serveru?"
           }
         },
         "de" : {
@@ -9494,7 +9494,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to unshare these items?"
+            "value" : "Opravdu chcete zrušit sdílení těchto položek?"
           }
         },
         "de" : {
@@ -9636,7 +9636,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Are you sure you want to unshare this item?"
+            "value" : "Opravdu chcete zrušit sdílení této položky?"
           }
         },
         "de" : {
@@ -9772,7 +9772,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ascending"
+            "value" : "vzestupně"
           }
         },
         "de" : {
@@ -9910,7 +9910,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Audio"
+            "value" : "Zvuk"
           }
         },
         "de" : {
@@ -10046,7 +10046,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Audios"
+            "value" : "Zvuk"
           }
         },
         "de" : {
@@ -10324,7 +10324,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Přihlášen"
+            "value" : "Přihlášen přes"
           }
         },
         "de" : {
@@ -10602,7 +10602,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Authentication error"
+            "value" : "Chyba při autentizaci"
           }
         },
         "de" : {
@@ -10732,7 +10732,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Authentication failed"
+            "value" : "Autentizace selhalo"
           }
         },
         "de" : {
@@ -10868,7 +10868,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Authentication with %@ is no longer allowed. Re-authentication needed."
+            "value" : "Přihlášení s %@ již není povoleno. Je nutné se přihlásit znovu."
           }
         },
         "de" : {
@@ -11004,7 +11004,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Authoring"
+            "value" : "Autorizace"
           }
         },
         "de" : {
@@ -11140,7 +11140,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Authorization failed"
+            "value" : "Autorizace selhala"
           }
         },
         "de" : {
@@ -11554,7 +11554,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Auto Upload"
+            "value" : "Automatické nahrávání"
           }
         },
         "de" : {
@@ -11684,7 +11684,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Auto upload disabled"
+            "value" : "Automatické nahrávání vypnuto"
           }
         },
         "de" : {
@@ -11820,7 +11820,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Auto upload of media was disabled since configured account / folder was not found"
+            "value" : "Automatické nahrávání bylo vypnuto, jelikož nastavený účet / složka nebyla nalezena"
           }
         },
         "de" : {
@@ -11962,7 +11962,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Auto Upload Photos"
+            "value" : "Automatické nahrávání fotek"
           }
         },
         "de" : {
@@ -12104,7 +12104,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Auto Upload Videos"
+            "value" : "Automatické nahrávání videí"
           }
         },
         "de" : {
@@ -12246,7 +12246,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Auto-approved"
+            "value" : "Automaticky povoleno"
           }
         },
         "de" : {
@@ -12382,7 +12382,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Available offline"
+            "value" : "Dostupné offline"
           }
         },
         "de" : {
@@ -12518,7 +12518,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Available Offline"
+            "value" : "Dostupné Offline"
           }
         },
         "de" : {
@@ -12790,7 +12790,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Average"
+            "value" : "Průměr"
           }
         },
         "de" : {
@@ -14036,7 +14036,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Busy"
+            "value" : "Zaneprázdněn"
           }
         },
         "de" : {
@@ -15125,7 +15125,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cellular Data Usage"
+            "value" : "Používání mobilních dat"
           }
         },
         "de" : {
@@ -15261,7 +15261,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cellular Data Usage have been disabled via MDM configuration. Please contact your administrator for more information."
+            "value" : "Používání mobilních dat bylo vypnuto přes MDM konfiguraci. Prosím kontaktujte svého administrátora pro více informací."
           }
         },
         "de" : {
@@ -15959,7 +15959,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Certificate was rejected by user."
+            "value" : "Certifikát byl odmítnut uživatelem."
           }
         },
         "de" : {
@@ -16102,7 +16102,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Certificates"
+            "value" : "Certifikáty"
           }
         },
         "de" : {
@@ -16380,7 +16380,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Change password"
+            "value" : "Změnit heslo"
           }
         },
         "de" : {
@@ -16517,7 +16517,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Change Sort Order"
+            "value" : "Zmenit řazení"
           }
         },
         "de" : {
@@ -16653,7 +16653,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Changed {{settingID}} to {{newValue}}."
+            "value" : "{{settingID}} změněno na {{newValue}}."
           }
         },
         "de" : {
@@ -16919,7 +16919,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Choose destination directory…"
+            "value" : "Vyber cílovou složku…"
           }
         },
         "de" : {
@@ -17049,7 +17049,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Clear"
+            "value" : "Smazat"
           }
         },
         "de" : {
@@ -17179,7 +17179,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cleared {{settingID}}."
+            "value" : "Smazáno {{settingID}}."
           }
         },
         "de" : {
@@ -17309,7 +17309,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cleared all."
+            "value" : "Vše smazáno."
           }
         },
         "de" : {
@@ -17575,7 +17575,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Close actions menu"
+            "value" : "Zavřít menu akcí"
           }
         },
         "de" : {
@@ -17718,7 +17718,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Close Search"
+            "value" : "Zavřít vyhledávání"
           }
         },
         "de" : {
@@ -17854,7 +17854,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Close Window"
+            "value" : "Zavřít okno"
           }
         },
         "de" : {
@@ -18954,7 +18954,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Connecting"
+            "value" : "Připojování"
           }
         },
         "de" : {
@@ -19090,7 +19090,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Connecting..."
+            "value" : "Připojování..."
           }
         },
         "de" : {
@@ -20067,7 +20067,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Continue offline"
+            "value" : "Pokračovat offline"
           }
         },
         "de" : {
@@ -20209,7 +20209,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Convert HEIC to JPEG"
+            "value" : "Převést HEIC do JPEG"
           }
         },
         "de" : {
@@ -20351,7 +20351,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Convert videos to MP4"
+            "value" : "Převést videa do MP4"
           }
         },
         "de" : {
@@ -20493,7 +20493,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Coordinates"
+            "value" : "Souřadnice"
           }
         },
         "de" : {
@@ -20771,7 +20771,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copy \"{{itemName}}\""
+            "value" : "Zkopírovat \"{{itemName}}\""
           }
         },
         "de" : {
@@ -20907,7 +20907,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copy {{itemCount}} items"
+            "value" : "Zkopírovat {{itemCount}} položek"
           }
         },
         "de" : {
@@ -21043,7 +21043,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copy here"
+            "value" : "Kopírovat sem"
           }
         },
         "de" : {
@@ -21179,7 +21179,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copy Permanent Link"
+            "value" : "Zkopírovat permanentní link"
           }
         },
         "de" : {
@@ -21315,7 +21315,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copy Private Link"
+            "value" : "Zkopírovat privátní link"
           }
         },
         "de" : {
@@ -21451,7 +21451,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copy to clipboard"
+            "value" : "Zkopírovat do schránky"
           }
         },
         "de" : {
@@ -21587,7 +21587,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Copying %ld items…"
+            "value" : "Kopírování %ld položek…"
           }
         },
         "de" : {
@@ -22705,7 +22705,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create link"
+            "value" : "Vytvořit link"
           }
         },
         "de" : {
@@ -22977,7 +22977,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Create shortcut"
+            "value" : "Vytvořit zkratku"
           }
         },
         "de" : {
@@ -23244,7 +23244,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Creating %ld folders…"
+            "value" : "Vytváření %ld složek…"
           }
         },
         "de" : {
@@ -23664,7 +23664,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Cut"
+            "value" : "Zkopírovat a smazat"
           }
         },
         "de" : {
@@ -23949,7 +23949,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Data usage"
+            "value" : "Použití dat"
           }
         },
         "de" : {
@@ -24227,7 +24227,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Date"
+            "value" : "Datum"
           }
         },
         "de" : {
@@ -24635,7 +24635,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Decline share"
+            "value" : "Zamítnout sdílení"
           }
         },
         "de" : {
@@ -24771,7 +24771,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Decline Share failed"
+            "value" : "Decline Share selhalo"
           }
         },
         "de" : {
@@ -33444,7 +33444,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error creating {{itemName}}"
+            "value" : "Chyba při vytváření {{itemName}}"
           }
         },
         "de" : {
@@ -34656,7 +34656,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Error opening {{itemName}} in {{appName}}"
+            "value" : "Chyba při otevírání {{itemName}} v {{appName}}"
           }
         },
         "de" : {
@@ -48108,7 +48108,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Item removed"
+            "value" : "Položka odebrána"
           }
         },
         "de" : {
@@ -57867,10 +57867,130 @@
     },
     "Navigate" : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigovat"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Navigieren"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navegar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ນຳທາງ"
+          }
+        },
+        "mk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigera"
+          }
+        },
+        "th-TH" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Navigate"
           }
         }
       }
@@ -63231,10 +63351,130 @@
     },
     "Open" : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Otevřít"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ເປີດ"
+          }
+        },
+        "mk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Öppna"
+          }
+        },
+        "th-TH" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Open"
           }
         }
       }
@@ -67928,7 +68168,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Permanent Link"
+            "value" : "Permanentní link"
           }
         },
         "de" : {
@@ -89082,7 +89322,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Shared with others"
+            "value" : "Sdíleno s ostatními"
           }
         },
         "de" : {
@@ -94516,7 +94756,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Subtitle"
+            "value" : "Podnadpis"
           }
         },
         "de" : {
@@ -94783,7 +95023,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sync disabled"
+            "value" : "Synchronizace vypnuta"
           }
         },
         "de" : {
@@ -94913,7 +95153,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Sync enabled"
+            "value" : "Synchronizace zapnuta"
           }
         },
         "de" : {
@@ -98750,10 +98990,130 @@
     },
     "The web app attempted to open the URL below. Opening was denied by configuration." : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webová aplikace se pokusila otevřít URL. Otevření bylo zamítnuto konfigurací."
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Die Webanwendung hat versucht die nachstehende URL zu öffnen. Das Öffnen wurde per Konfiguration abgelehnt."
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La aplicación web intentó abrir la URL. Se denegó por configuración."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ເວັບແອັບພະຍາຍາມເປີດ URL ດ້ານລຸ່ມ. ການເປີດຖືກປະຕິເສດໂດຍການຕັ້ງຄ່າ."
+          }
+        },
+        "mk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webbappen försökte öppna webbadressen nedan. Öppnandet nekades av konfigurationen."
+          }
+        },
+        "th-TH" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The web app attempted to open the URL below. Opening was denied by configuration."
           }
         }
       }
@@ -99611,7 +99971,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "This item no longer exists on the server."
+            "value" : "Tato položka na serveru již neexistuje."
           }
         },
         "de" : {
@@ -105126,7 +105486,7 @@
         "cs" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "User"
+            "value" : "Uživatel"
           }
         },
         "de" : {
@@ -107591,10 +107951,130 @@
     },
     "Web app requests to open link" : {
       "localizations" : {
+        "ca" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "cs" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webová aplikace žádá o otevření odkazu"
+          }
+        },
         "de" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Webanwendung möchte Link öffnen"
+          }
+        },
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "en-GB" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La app web solicita abrir un enlace"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "it" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "lo" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ເວັບແອັບຮ້ອງຂໍເປີດລິ້ງ"
+          }
+        },
+        "mk" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "nb-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "nn-NO" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "pt-PT" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "ru" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "sq" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "sv" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Webbappen begär att få öppna länken"
+          }
+        },
+        "th-TH" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "tr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
+          }
+        },
+        "zh-Hans" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Web app requests to open link"
           }
         }
       }
