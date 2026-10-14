@@ -41,10 +41,11 @@ public extension UIViewController {
 		var responder: UIResponder? = self.navigationController
 		while responder != nil {
 			if let application = responder as? UIApplication {
-				return application.perform(#selector(openURL(_:)), with: url) != nil
+				application.open(url, options: [:], completionHandler: nil)
+				return true
 			}
 			responder = responder?.next
 		}
-		return true
+		return false
 	}
 }
