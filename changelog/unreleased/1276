@@ -1,0 +1,11 @@
+Bugfix: Fix parallel playback of multiple audio files
+
+Fixed a bug where multiple audio files could play in parallel: media view
+controllers kept their lock screen / Control Center remote command handlers
+registered after another media item was opened, so pressing play on the lock
+screen resumed every previously opened player. Remote command handlers are
+now removed when a media view controller loses focus and re-registered when
+it reappears.
+
+https://github.com/owncloud/ios-app/issues/1276
+https://github.com/owncloud/ios-app/pull/1592
