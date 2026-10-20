@@ -98,5 +98,11 @@
 		"x-office-document": "document.tvg",
 		"x-office-presentation": "presentation.tvg",
 		"x-office-spreadsheet": "spreadsheet.tvg"
+	},
+
+	".suffix-icon-map" : {
+		"pages" : "document.tvg",
+		"key" : "presentation.tvg",
+		"numbers" : "spreadsheet.tvg"
 	}
 }

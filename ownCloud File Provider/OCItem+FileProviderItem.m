@@ -146,7 +146,11 @@ static NSMutableDictionary<OCLocalID, NSError *> *sOCItemUploadingErrors;
 			@"mindnode"	: @"com.mindnode.mindnode.mindmap",
 			@"itmz"		: @"com.toketaware.uti.ithoughts.itmz",
 
-			@"pdf"		: @"com.adobe.pdf"
+			@"pdf"		: @"com.adobe.pdf",
+
+			@"key"		: @"com.apple.keynote.key",
+			@"pages"	: @"com.apple.iwork.pages.sffpages",
+			@"numbers"	: @"com.apple.iwork.numbers.sffnumbers"
 		};
 	});
 
