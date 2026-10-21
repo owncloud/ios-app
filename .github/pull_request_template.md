@@ -42,11 +42,12 @@ Please note that any kind of change first has to be submitted to the master bran
 - [ ] All new and existing tests passed.
 - [ ] Added changelog files for the fixed issues in folder changelog/unreleased
 
-## AI usage disclosure
+## AI tool usage disclosure
+<!--- Go over all the following points, and put an `x` in all the boxes that apply. -->
 - [ ] I did not use any AI tool
 - [ ] I used one or more AI tools: _____________ _(name them here)_
     - [ ] I have read and understood the [AI-assisted development: ownCloud Contribution Guide](https://www.kiteworks.com/open-source/ai-assisted-development-owncloud-contributions/) and follow its guidance
     - [ ] I understand what the code does and can explain my changes
     - [ ] I am able to make changes myself, without AI assistance, f.ex. in response to a code review
     - [ ] I reviewed the code myself prior to submission, removing redundant and unused code and duplications, and making sure its style, structure and quality are on par with the rest of the project
-    - [ ] I made sure no code from other projects with incompatible licenses was introduced by my changes
+    - [ ] I made sure no code from other projects with incompatible licenses was introduced
