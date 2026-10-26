@@ -5,8 +5,10 @@ on:
     branches:
     - master
 
+# GITHUB_TOKEN only reads (cdxgen's license lookup); the PR is opened with
+# the SBOM App token.
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
