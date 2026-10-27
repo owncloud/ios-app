@@ -54,8 +54,9 @@ jobs:
         with:
           client-id: ${{ secrets.TRANSLATION_APP_ID }}
           private-key: ${{ secrets.TRANSLATION_APP_PRIVATE_KEY }}
+          permission-contents: write
       - name: Commit and sign modified files via API
-        uses: ./.github/actions/verified-api-commit
+        uses: $/.github/actions/verified-api-commit
         with:
           commit-message: "[icons] updated icons from ocis and ocis web"
           retry-on-conflict: 'true'

@@ -6,12 +6,17 @@ on:
     branches:
       - master
 
+permissions:
+  contents: read
+
 jobs:
   push-translations:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
 
       - name: l10n-push-source
         uses: transifex/cli-action@584fd205cbe598773b5a81ce711fa44842678189 # v2

@@ -5,8 +5,10 @@ on:
     branches:
     - master
 
+# GITHUB_TOKEN only reads (cdxgen's license lookup); the PR is opened with
+# the SBOM App token.
 permissions:
-  contents: write
+  contents: read
 
 jobs:
   build:
@@ -57,6 +59,8 @@ jobs:
         with:
           app-id: ${{ secrets.SBOM_APP_ID }}
           private-key: ${{ secrets.SBOM_APP_PRIVATE_KEY }}
+          permission-contents: write
+          permission-pull-requests: write
       - name: Create or update SBOM PR
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
