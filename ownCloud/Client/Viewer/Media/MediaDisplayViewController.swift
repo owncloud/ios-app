@@ -46,6 +46,12 @@ class MediaDisplayViewController : DisplayViewController {
 	private var player: AVPlayer?
 	private var playerViewController: AVPlayerViewController?
 
+	// Registered MPRemoteCommandCenter targets, so they can be removed
+	// when the view controller no longer has focus (or is deallocated).
+	// Otherwise handlers of previously shown media view controllers stay
+	// registered and make several players react to lock screen controls.
+	private var remoteCommandTargets: [(command: MPRemoteCommand, target: Any)] = []
+
 	// Information for now playing
 	private var mediaItemArtwork: MPMediaItemArtwork?
 	private var mediaItemTitle: String?
@@ -63,6 +69,8 @@ class MediaDisplayViewController : DisplayViewController {
 	deinit {
 		playerStatusObservation?.invalidate()
 		playerItemStatusObservation?.invalidate()
+
+		removeRemoteCommandHandlers()
 
 		MPNowPlayingInfoCenter.default().nowPlayingInfo = nil
 
@@ -118,6 +126,12 @@ class MediaDisplayViewController : DisplayViewController {
 		super.viewDidAppear(animated)
 
 		hasFocus = true
+
+		// Re-register remote command handlers (they are removed in viewDidDisappear)
+		if player != nil {
+			setupRemoteTransportControls()
+		}
+
 		player?.play()
 	}
 
@@ -126,6 +140,11 @@ class MediaDisplayViewController : DisplayViewController {
 
 		hasFocus = false
 		player?.pause()
+
+		// Remove remote command handlers, so this view controller's player
+		// no longer reacts to lock screen / control center commands once
+		// another media item is being shown
+		removeRemoteCommandHandlers()
 	}
 
 	override func viewSafeAreaInsetsDidChange() {
@@ -319,12 +338,26 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 	}
 
+	private func addRemoteCommandHandler(to command: MPRemoteCommand, handler: @escaping (MPRemoteCommandEvent) -> MPRemoteCommandHandlerStatus) {
+		remoteCommandTargets.append((command, command.addTarget(handler: handler)))
+	}
+
+	private func removeRemoteCommandHandlers() {
+		for (command, target) in remoteCommandTargets {
+			command.removeTarget(target)
+		}
+		remoteCommandTargets.removeAll()
+	}
+
 	private func setupRemoteTransportControls() {
 		// Get the shared MPRemoteCommandCenter
 		let commandCenter = MPRemoteCommandCenter.shared()
 
+		// Remove previously registered handlers to avoid double registration
+		removeRemoteCommandHandlers()
+
 		// Add handler for Play Command
-		commandCenter.playCommand.addTarget { [weak self] _ in
+		addRemoteCommandHandler(to: commandCenter.playCommand) { [weak self] _ in
 			if let player = self?.player {
 				if player.rate == 0.0 {
 					player.play()
@@ -337,7 +370,7 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 
 		// Add handler for Pause Command
-		commandCenter.pauseCommand.addTarget { [weak self] _ in
+		addRemoteCommandHandler(to: commandCenter.pauseCommand) { [weak self] _ in
 			if let player = self?.player {
 				if player.rate == 1.0 {
 					player.pause()
@@ -351,7 +384,7 @@ class MediaDisplayViewController : DisplayViewController {
 
 		// Add handler for skip forward command
 		commandCenter.skipForwardCommand.isEnabled = true
-		commandCenter.skipForwardCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+		addRemoteCommandHandler(to: commandCenter.skipForwardCommand) { [weak self] (_) -> MPRemoteCommandHandlerStatus in
 			if let player = self?.player {
 				let time = player.currentTime() + CMTime(seconds: 10.0, preferredTimescale: 1)
 				player.seek(to: time) { (finished) in
@@ -366,7 +399,7 @@ class MediaDisplayViewController : DisplayViewController {
 
 		// Add handler for skip backward command
 		commandCenter.skipBackwardCommand.isEnabled = true
-		commandCenter.skipBackwardCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+		addRemoteCommandHandler(to: commandCenter.skipBackwardCommand) { [weak self] (_) -> MPRemoteCommandHandlerStatus in
 			if let player = self?.player {
 				let time = player.currentTime() - CMTime(seconds: 10.0, preferredTimescale: 1)
 				player.seek(to: time) { (finished) in
@@ -402,7 +435,7 @@ class MediaDisplayViewController : DisplayViewController {
 		commandCenter.previousTrackCommand.isEnabled = enablePreviousTrackCommand
 
 		// Add handler for seek forward command
-		commandCenter.nextTrackCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+		addRemoteCommandHandler(to: commandCenter.nextTrackCommand) { [weak self] (_) -> MPRemoteCommandHandlerStatus in
 			if let player = self?.player {
 				player.pause()
 				OnMainThread {
@@ -414,7 +447,7 @@ class MediaDisplayViewController : DisplayViewController {
 		}
 
 		// Add handler for seek backward command
-		commandCenter.previousTrackCommand.addTarget { [weak self] (_) -> MPRemoteCommandHandlerStatus in
+		addRemoteCommandHandler(to: commandCenter.previousTrackCommand) { [weak self] (_) -> MPRemoteCommandHandlerStatus in
 			if let player = self?.player {
 				player.pause()
 				OnMainThread {
