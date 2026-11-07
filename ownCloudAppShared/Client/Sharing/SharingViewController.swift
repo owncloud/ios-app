@@ -74,12 +74,18 @@ open class SharingViewController: CollectionViewController {
 			context.originatingViewController = owner as? UIViewController
 		}
 
-		// Invite section
-		addRecipientDataSource = OCDataSourceArray(items: [])
+		// Sharing (recipients, public links) requires the Sharing API. When it is
+		// disabled on the server, only the private link section remains available.
+		let sharingAPIEnabled = clientContext.core?.connection.capabilities?.sharingAPIEnabled == 1
 
-		// Recipients section
-		itemSharesQuery = OCShareQuery(scope: .itemWithReshares, item: item)
-		itemSharesQuery?.refreshInterval = 5
+		if sharingAPIEnabled {
+			// Invite section
+			addRecipientDataSource = OCDataSourceArray(items: [])
+
+			// Recipients section
+			itemSharesQuery = OCShareQuery(scope: .itemWithReshares, item: item)
+			itemSharesQuery?.refreshInterval = 5
+		}
 
 		if let itemSharesQueryDataSource = itemSharesQuery?.dataSource, let addRecipientDataSource {
 			recipientsSectionDatasource = OCDataSourceComposition(sources: [
