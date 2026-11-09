@@ -134,7 +134,7 @@ extension ImageScrollView {
 	}
 
 	func analyzeImage(image: UIImage) {
-		if #available(iOS 16, *) {
+		if #available(iOS 17, *) {
 			guard ImageAnalyzer.isSupported else {
 				return
 			}
