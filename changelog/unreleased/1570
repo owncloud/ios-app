@@ -1,0 +1,12 @@
+Bugfix: Keep private links available when Sharing API is disabled
+
+On oC10 servers with the Sharing API disabled, the "Sharing" menu item was
+hidden entirely, making private links unreachable, since they can only be
+accessed via the Sharing view. The Sharing menu item now remains available
+whenever the server supports private links. Inside the Sharing view, the
+recipients and links sections are shown depending on the Sharing API and
+public sharing capabilities, while the private link section is shown
+depending on the private links capability.
+
+https://github.com/owncloud/ios-app/issues/1570
+https://github.com/owncloud/ios-app/pull/1598
