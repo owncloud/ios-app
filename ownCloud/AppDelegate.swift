@@ -37,6 +37,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 		// Set up license management
 		OCLicenseManager.shared.setupLicenseManagement()
 
+		// Use an in-app browser session for OAuth2/OIDC logins to servers that require a TLS client certificate (mTLS)
+		OCAuthenticationMethodOAuth2.mutualTLSBrowserSessionClass = MutualTLSBrowserSession.self
+
 		// Set up HTTP pipelines
 		OCHTTPPipelineManager.setupPersistentPipelines()
 
