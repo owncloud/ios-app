@@ -20,7 +20,7 @@ import UIKit
 import ownCloudSDK
 import WebKit
 
-open class ClientWebAppViewController: UIViewController, WKUIDelegate {
+open class ClientWebAppViewController: UIViewController, WKUIDelegate, WKNavigationDelegate {
 	public typealias DoneHandler = (ClientWebAppViewController) -> Void
 
 	public var urlRequest: URLRequest
@@ -107,12 +107,21 @@ open class ClientWebAppViewController: UIViewController, WKUIDelegate {
 		return nil // nil -> do not open; webView -> open in originating webView (default)
 	}
 
+	// MARK: - WKNavigationDelegate
+	open func webView(_ webView: WKWebView, didReceive challenge: URLAuthenticationChallenge, completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?) -> Void) {
+		// Present the TLS client certificate (mTLS) stored for exactly this host, if any
+		if !OCClientIdentityStore.shared.handle(webViewChallenge: challenge, completionHandler: completionHandler) {
+			completionHandler(.performDefaultHandling, nil)
+		}
+	}
+
 	override public func loadView() {
 		let rootView = UIView()
 
 		webView = WKWebView(frame: .zero, configuration: webViewConfiguration)
 		webView?.translatesAutoresizingMaskIntoConstraints = false
 		webView?.uiDelegate = self
+		webView?.navigationDelegate = self
 
 		rootView.addSubview(webView!)
 

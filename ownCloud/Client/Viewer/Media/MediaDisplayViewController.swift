@@ -24,6 +24,20 @@ import ownCloudAppShared
 import CoreServices
 import UniformTypeIdentifiers
 
+/// Answers client certificate (mTLS) challenges AVFoundation raises while streaming from the server.
+final class MutualTLSResourceLoaderDelegate: NSObject, AVAssetResourceLoaderDelegate {
+	static let shared = MutualTLSResourceLoaderDelegate()
+
+	func resourceLoader(_ resourceLoader: AVAssetResourceLoader, shouldWaitForResponseTo authenticationChallenge: URLAuthenticationChallenge) -> Bool {
+		guard let credential = OCClientIdentityStore.shared.credential(for: authenticationChallenge) else {
+			return false
+		}
+
+		authenticationChallenge.sender?.use(credential, for: authenticationChallenge)
+		return true
+	}
+}
+
 extension AVPlayer {
     var isAudioAvailable: Bool? {
         return self.currentItem?.asset.tracks.filter({$0.mediaType == .audio}).count != 0
@@ -196,6 +210,7 @@ class MediaDisplayViewController : DisplayViewController {
 			player?.pause()
 
 			let asset = AVURLAsset(url: directURL, options: self.httpAuthHeaders != nil ? ["AVURLAssetHTTPHeaderFieldsKey" : self.httpAuthHeaders!] : nil )
+			asset.resourceLoader.setDelegate(MutualTLSResourceLoaderDelegate.shared, queue: .main) // present TLS client certificate (mTLS) when streaming
 			playerItem = AVPlayerItem(asset: asset)
 
 			playerItemStatusObservation = playerItem?.observe(\AVPlayerItem.status, options: [.initial, .new], changeHandler: { [weak self] (item, _) in

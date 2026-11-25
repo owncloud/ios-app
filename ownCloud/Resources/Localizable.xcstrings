@@ -15942,6 +15942,16 @@
         }
       }
     },
+    "Certificate password" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zertifikatspasswort"
+          }
+        }
+      }
+    },
     "Certificate was rejected by user." : {
       "localizations" : {
         "ar" : {
@@ -17424,6 +17434,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cleared all."
+          }
+        }
+      }
+    },
+    "Client certificate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client-Zertifikat"
+          }
+        }
+      }
+    },
+    "Client Certificate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client-Zertifikat"
           }
         }
       }
@@ -33149,6 +33179,26 @@
         }
       }
     },
+    "Enter the password for {{file}}." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib das Passwort für {{file}} ein."
+          }
+        }
+      }
+    },
+    "Enter the server URL to manage its client certificate." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gib die Server-URL ein, um das zugehörige Client-Zertifikat zu verwalten."
+          }
+        }
+      }
+    },
     "Enter the user or group you want to invite." : {
       "localizations" : {
         "ar" : {
@@ -35594,6 +35644,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "过期日期"
+          }
+        }
+      }
+    },
+    "expired {{date}}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "abgelaufen am {{date}}"
+          }
+        }
+      }
+    },
+    "expires {{date}}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "läuft ab am {{date}}"
           }
         }
       }
@@ -45328,6 +45398,16 @@
         }
       }
     },
+    "Import" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Importieren"
+          }
+        }
+      }
+    },
     "Import \"{{itemName}}\"" : {
       "localizations" : {
         "ar" : {
@@ -45596,6 +45676,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Import {{itemCount}} files"
+          }
+        }
+      }
+    },
+    "Import certificate…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zertifikat importieren…"
+          }
+        }
+      }
+    },
+    "Import failed" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Import fehlgeschlagen"
           }
         }
       }
@@ -52752,6 +52852,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Login"
+          }
+        }
+      }
+    },
+    "Login page could not be loaded" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anmeldeseite konnte nicht geladen werden"
           }
         }
       }
@@ -59934,6 +60044,16 @@
         }
       }
     },
+    "No client certificate is installed for {{host}}. Import a PKCS#12 (.p12/.pfx) file if the server or a reverse proxy in front of it requires one." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für {{host}} ist kein Client-Zertifikat installiert. Importiere eine PKCS#12-Datei (.p12/.pfx), falls der Server oder ein vorgeschalteter Reverse-Proxy eines verlangt."
+          }
+        }
+      }
+    },
     "No contents" : {
       "comment" : "Client Messages",
       "localizations" : {
@@ -61842,6 +61962,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "none"
+          }
+        }
+      }
+    },
+    "None installed for {{host}}. Only needed if the server or a reverse proxy in front of it requires a TLS client certificate." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Keines für {{host}} installiert. Nur erforderlich, wenn der Server oder ein vorgeschalteter Reverse-Proxy ein TLS-Client-Zertifikat verlangt."
           }
         }
       }
@@ -70596,6 +70726,16 @@
         }
       }
     },
+    "Please enter a valid server URL first." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bitte gib zuerst eine gültige Server-URL ein."
+          }
+        }
+      }
+    },
     "Please note: Folders can only be pasted into the %@ app and the same account." : {
       "localizations" : {
         "ar" : {
@@ -72372,6 +72512,26 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Presentation Mode"
+          }
+        }
+      }
+    },
+    "Presented to {{host}} when the server requests a client certificate:\n{{summary}}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird {{host}} vorgelegt, wenn der Server ein Client-Zertifikat anfordert:\n{{summary}}"
+          }
+        }
+      }
+    },
+    "Presented to {{host}}: {{summary}}" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wird {{host}} vorgelegt: {{summary}}"
           }
         }
       }
@@ -76806,6 +76966,16 @@
         }
       }
     },
+    "Remove certificate" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zertifikat entfernen"
+          }
+        }
+      }
+    },
     "Remove expiration date" : {
       "localizations" : {
         "ca" : {
@@ -77616,6 +77786,16 @@
         }
       }
     },
+    "Replace certificate…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zertifikat ersetzen…"
+          }
+        }
+      }
+    },
     "Resolving link…" : {
       "comment" : "Universal Links",
       "localizations" : {
@@ -78183,6 +78363,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "继续"
+          }
+        }
+      }
+    },
+    "Retry" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erneut versuchen"
           }
         }
       }
@@ -97344,6 +97534,16 @@
         }
       }
     },
+    "The certificate could not be saved to the keychain." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Zertifikat konnte nicht im Schlüsselbund gespeichert werden."
+          }
+        }
+      }
+    },
     "The connection's access token has expired or become invalid. Sign in again to re-gain access." : {
       "localizations" : {
         "ar" : {
@@ -98042,6 +98242,26 @@
         }
       }
     },
+    "The file could not be read as a PKCS#12 (.p12/.pfx) certificate file." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei konnte nicht als PKCS#12-Zertifikatsdatei (.p12/.pfx) gelesen werden."
+          }
+        }
+      }
+    },
+    "The file does not contain a certificate together with its private key." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Die Datei enthält kein Zertifikat zusammen mit dem zugehörigen privaten Schlüssel."
+          }
+        }
+      }
+    },
     "The following steps will guide you through the setup process." : {
       "localizations" : {
         "ar" : {
@@ -98316,6 +98536,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最后10条激活的日志会保留在设备上-每条日志覆盖24小时的使用时间。当分享时请注意日志可能会包含敏感信息例如服务器的域名和用户特定的信息。"
+          }
+        }
+      }
+    },
+    "The password for the certificate file is incorrect." : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Passwort für die Zertifikatsdatei ist falsch."
           }
         }
       }
@@ -101735,6 +101965,16 @@
         }
       }
     },
+    "Try again" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erneut versuchen"
+          }
+        }
+      }
+    },
     "Type" : {
       "localizations" : {
         "ar" : {
@@ -105057,6 +105297,16 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Usage terms"
+          }
+        }
+      }
+    },
+    "Use a client certificate…" : {
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Client-Zertifikat verwenden…"
           }
         }
       }
