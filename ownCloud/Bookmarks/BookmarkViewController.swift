@@ -39,6 +39,9 @@ class BookmarkViewController: StaticTableViewController {
 	var urlChanged = false
 	var certificateRow : StaticTableViewRow?
 
+	var clientCertificateSection : StaticTableViewSection?
+	var clientCertificateRow : StaticTableViewRow?
+
 	var credentialsSection : StaticTableViewSection?
 	var usernameRow : StaticTableViewRow?
 	var passwordRow : StaticTableViewRow?
@@ -154,6 +157,7 @@ class BookmarkViewController: StaticTableViewController {
 				var placeholderString = OCLocalizedString("Name", nil)
 				var changedBookmark = false
 				self?.urlChanged = true
+				self?.updateClientCertificateSummary()
 
 				// Disable Continue button if there is no url
 				if textField.text != "" {
@@ -209,6 +213,16 @@ class BookmarkViewController: StaticTableViewController {
 		}, title: OCLocalizedString("Certificate Details", nil), accessoryType: .disclosureIndicator, accessoryView: BorderedLabel(), identifier: "row-url-certificate")
 
 		urlSection = StaticTableViewSection(headerTitle: OCLocalizedString("Server URL", nil), footerTitle: nil, identifier: "section-url", rows: [ urlRow! ])
+
+		// Client certificate (mTLS) section + row
+		clientCertificateRow = StaticTableViewRow(rowWithAction: { [weak self] (row, _) in
+			guard let self else { return }
+			ClientCertificateManager.present(for: self.clientCertificateHost, on: self, sourceView: row.cell, changeHandler: { [weak self] in
+				self?.updateClientCertificateSummary()
+			})
+		}, title: OCLocalizedString("Client Certificate", nil), accessoryType: .disclosureIndicator, identifier: "row-client-certificate")
+
+		clientCertificateSection = StaticTableViewSection(headerTitle: OCLocalizedString("Client Certificate", nil), footerTitle: nil, identifier: "section-client-certificate", rows: [ clientCertificateRow! ])
 
 		// Credentials section + rows
 		usernameRow = StaticTableViewRow(textFieldWithAction: { [weak self] (_, sender, action) in
@@ -984,8 +998,42 @@ class BookmarkViewController: StaticTableViewController {
 			}
 		}
 
+		if let clientCertificateSection {
+			if clientCertificateSection.attached {
+				clientCertificateSection.footerTitle = clientCertificateSummary
+			} else {
+				clientCertificateSection.footerTitle = clientCertificateSummary
+				self.insertSection(clientCertificateSection, at: self.sections.count, animated: animated)
+			}
+		}
+
 		if helpSection?.attached == false {
 			self.insertSection(helpSection!, at: self.sections.count, animated: animated)
+		}
+	}
+
+	// MARK: - Client certificate (mTLS)
+	var clientCertificateHost: String? {
+		if let urlString = urlRow?.textField?.text, !urlString.isEmpty,
+		   let normalizedURL = NSURL(username: nil, password: nil, afterNormalizingURLString: urlString, protocolWasPrepended: nil) {
+			return normalizedURL.host
+		}
+		return bookmark?.url?.host
+	}
+
+	var clientCertificateSummary: String {
+		guard let host = clientCertificateHost else {
+			return OCLocalizedString("Enter the server URL to manage its client certificate.", nil)
+		}
+		if let info = OCClientIdentityStore.shared.identityInfo(forHost: host) {
+			return OCLocalizedFormat("Presented to {{host}}: {{summary}}", ["host" : host, "summary" : info.displaySummary])
+		}
+		return OCLocalizedFormat("None installed for {{host}}. Only needed if the server or a reverse proxy in front of it requires a TLS client certificate.", ["host" : host])
+	}
+
+	func updateClientCertificateSummary() {
+		if clientCertificateSection?.attached == true {
+			clientCertificateSection?.updateFooter(title: clientCertificateSummary)
 		}
 	}
 

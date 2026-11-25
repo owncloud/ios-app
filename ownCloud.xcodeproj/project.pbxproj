@@ -22,6 +22,7 @@
 		0287DD7D249131E000C912CA /* AppStatistics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0287DD7C249131E000C912CA /* AppStatistics.swift */; };
 		02D4C82A255208E60000E299 /* PDFSearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02D4C829255208E60000E299 /* PDFSearchResultsView.swift */; };
 		02DC7C9024CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 02DC7C8F24CB354800DCB2C6 /* ProPhotoUploadSettingsSection.swift */; };
+		0856E3F8DD6F1403F8FCDE97 /* MutualTLSBrowserSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4121BB4089B57EC73CAEEBD9 /* MutualTLSBrowserSession.swift */; };
 		232F7CAF2097260400EE22E4 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 232F7CAE2097260400EE22E4 /* SettingsViewController.swift */; };
 		233BDEA0204FEFE500C06732 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 233BDE9F204FEFE500C06732 /* AppDelegate.swift */; };
 		233BDEA7204FEFE500C06732 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 233BDEA6204FEFE500C06732 /* Assets.xcassets */; };
@@ -131,6 +132,7 @@
 		4CC46D212284C677009E938F /* BookmarkInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC46D202284C677009E938F /* BookmarkInfoViewController.swift */; };
 		4CC4A21222FA20AD00AE7E2C /* URL+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC4A21122FA20AD00AE7E2C /* URL+Extensions.swift */; };
 		4CC4A21922FB4F4C00AE7E2C /* MediaUploadQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4CC4A21822FB4F4C00AE7E2C /* MediaUploadQueue.swift */; };
+		5819CCA61B71EC0F5B803C6C /* OCClientIdentityStore+UI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4A7089B732CB47A3575907A7 /* OCClientIdentityStore+UI.swift */; };
 		6E3A103E219D5BBA00F90C96 /* RenameAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3A103D219D5BBA00F90C96 /* RenameAction.swift */; };
 		6E3A104D219D6F0100F90C96 /* DuplicateAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E3A104C219D6F0100F90C96 /* DuplicateAction.swift */; };
 		6E4F1734217749910049A71B /* ImageDisplayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E4F1733217749910049A71B /* ImageDisplayViewController.swift */; };
@@ -1122,7 +1124,9 @@
 		39EF06AF25D6C3FC001E1E19 /* PresentationModeAction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PresentationModeAction.swift; sourceTree = "<group>"; };
 		39F689A922EF5EDC00E63429 /* ownCloud Intents.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "ownCloud Intents.entitlements"; sourceTree = "<group>"; };
 		39F689AA22F018C100E63429 /* GetDirectoryListingIntentHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GetDirectoryListingIntentHandler.swift; sourceTree = "<group>"; };
+		4121BB4089B57EC73CAEEBD9 /* MutualTLSBrowserSession.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = MutualTLSBrowserSession.swift; sourceTree = "<group>"; };
 		42866B2892DC9EDC65D844E7 /* Pods_ownCloud_Screenshots_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ownCloud_Screenshots_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		4A7089B732CB47A3575907A7 /* OCClientIdentityStore+UI.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = "OCClientIdentityStore+UI.swift"; sourceTree = "<group>"; };
 		4C05D8A4238708D40073EF50 /* MediaUploadStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaUploadStorage.swift; sourceTree = "<group>"; };
 		4C11EE5A22E88D4200B84869 /* InstantMediaUploadTaskExtension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InstantMediaUploadTaskExtension.swift; sourceTree = "<group>"; };
 		4C235CED21F88C0300A989A8 /* UIViewController+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extension.swift"; sourceTree = "<group>"; };
@@ -2022,6 +2026,7 @@
 				DC4FEAE6209E3A7700D4476B /* OCIssue+DisplayIssues.swift */,
 				DCB5D60A25FC14B6004C52D9 /* OCIssue+Extension.swift */,
 				DCE20271249AB50E0015A22A /* OCMessage+Extension.swift */,
+				4A7089B732CB47A3575907A7 /* OCClientIdentityStore+UI.swift */,
 			);
 			path = "SDK Extensions";
 			sourceTree = "<group>";
@@ -2381,6 +2386,7 @@
 				DC2323DF2AA7C59400BFF393 /* BookmarkSetupViewController.swift */,
 				DC2323E22AA85D0300BFF393 /* BookmarkSetupStepViewController.swift */,
 				DC2323E72AA865DD00BFF393 /* Steps */,
+				4121BB4089B57EC73CAEEBD9 /* MutualTLSBrowserSession.swift */,
 			);
 			path = Setup;
 			sourceTree = "<group>";
@@ -4605,6 +4611,7 @@
 				6E586D002199A78E00F680C4 /* DeleteAction.swift in Sources */,
 				DC0196AB20F7690C00C41B78 /* OCBookmark+FileProvider.m in Sources */,
 				394E1FDA233E2D64009D2897 /* FavoriteAction.swift in Sources */,
+				0856E3F8DD6F1403F8FCDE97 /* MutualTLSBrowserSession.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4873,6 +4880,7 @@
 				DCD68A2F291D9BE400993FF5 /* AccountControllerCell.swift in Sources */,
 				DC89EA6929958DF500BFF393 /* UIViewController+BrowserNavigation.swift in Sources */,
 				DC0A358B24C0E44B00FB58FC /* ThemeRoundedButton.swift in Sources */,
+				5819CCA61B71EC0F5B803C6C /* OCClientIdentityStore+UI.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
