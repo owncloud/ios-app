@@ -9,5 +9,5 @@ the server it was imported for. OAuth2/OpenID Connect logins to such
 servers use an in-app browser session that can present the certificate.
 
 https://github.com/owncloud/ios-sdk/issues/11
-https://github.com/owncloud/ios-app/pull/1606
+https://github.com/owncloud/ios-app/pull/1607
 https://github.com/owncloud/ios-sdk/pull/180
