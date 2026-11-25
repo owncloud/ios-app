@@ -1,0 +1,13 @@
+Enhancement: Support for TLS client certificates (mTLS)
+
+The app can now connect to servers - or reverse proxies in front of them -
+that require a TLS client certificate. A PKCS#12 (.p12/.pfx) file and its
+password can be imported when adding an account or later in the account
+editor. The certificate is stored in the shared keychain, so the File
+Provider and the other extensions use it too, and it is only presented to
+the server it was imported for. OAuth2/OpenID Connect logins to such
+servers use an in-app browser session that can present the certificate.
+
+https://github.com/owncloud/ios-sdk/issues/11
+https://github.com/owncloud/ios-app/pull/1606
+https://github.com/owncloud/ios-sdk/pull/180
